@@ -1,5 +1,5 @@
 {
-  "schema_version": 10,
+  "schema_version": 11,
   "allowed_statuses": [
     "未盘点",
     "已盘点",
@@ -347,7 +347,7 @@
     {
       "id": "ENGINE-LIFECYCLE-001",
       "category": "引擎",
-      "legacy_entry": "EngineManager 管理引擎选择、启动、重启和关闭；配置至少 21 个引擎时，主/副引擎菜单的更多引擎入口以模式 1/2 打开 ChooseMoreEngine 表格",
+      "legacy_entry": "EngineManager 管理引擎选择、启动、重启和关闭；手动启动流程用 LoadEngine 选择本次引擎和下次启动策略；配置至少 21 个引擎时，主/副引擎菜单的更多引擎入口以模式 1/2 打开 ChooseMoreEngine 表格",
       "legacy_menu_keys": [
         "Menu.moreEngines",
         "Menu.restartCurrentEngine",
@@ -360,7 +360,9 @@
       "legacy_shortcuts": [],
       "legacy_input_cases": [
         "ChooseMoreEngine:mouseClicked",
-        "ChooseMoreEngine:mouseReleased"
+        "ChooseMoreEngine:mouseReleased",
+        "LoadEngine:mouseClicked",
+        "LoadEngine:mouseReleased"
       ],
       "legacy_input_bindings": [
         "ChooseMoreEngine:mouseClicked#1",
@@ -368,30 +370,40 @@
         "ChooseMoreEngine:mouseClicked#3",
         "ChooseMoreEngine:mouseClicked#4",
         "ChooseMoreEngine:mouseClicked#5",
-        "ChooseMoreEngine:mouseReleased#1"
+        "ChooseMoreEngine:mouseReleased#1",
+        "LoadEngine:mouseClicked#1",
+        "LoadEngine:mouseClicked#2",
+        "LoadEngine:mouseClicked#3",
+        "LoadEngine:mouseReleased#1"
       ],
       "java_evidence": [
         { "path": "src/main/java/featurecat/lizzie/analysis/EngineManager.java", "symbol": "class EngineManager" },
         { "path": "src/main/java/featurecat/lizzie/gui/Menu.java", "symbol": "updateEngineMenuone" },
         { "path": "src/main/java/featurecat/lizzie/gui/ChooseMoreEngine.java", "symbol": "public static JDialog createDialog(int index)" },
         { "path": "src/main/java/featurecat/lizzie/gui/ChooseMoreEngine.java", "symbol": "public void mouseClicked(MouseEvent e)" },
-        { "path": "src/main/java/featurecat/lizzie/gui/ChooseMoreEngine.java", "symbol": "private void handleTableDoubleClick(int row, int col)" }
+        { "path": "src/main/java/featurecat/lizzie/gui/ChooseMoreEngine.java", "symbol": "private void handleTableDoubleClick(int row, int col)" },
+        { "path": "src/main/java/featurecat/lizzie/Lizzie.java", "symbol": "public static void main(String[] args)" },
+        { "path": "src/main/java/featurecat/lizzie/gui/LoadEngine.java", "symbol": "public LoadEngine()" },
+        { "path": "src/main/java/featurecat/lizzie/gui/LoadEngine.java", "symbol": "private void handleTableDoubleClick(int row, int col)" },
+        { "path": "src/main/java/featurecat/lizzie/gui/LoadEngine.java", "symbol": "public static JDialog createDialog()" }
       ],
-      "config_keys": ["engine-settings-list", "default-engine", "auto-check-engine-alive"],
-      "inputs_preconditions": "至少配置一个可执行的 GTP 引擎命令；更多引擎表格入口要求配置数达到 21，模式 1 选择主引擎、模式 2 选择副引擎。",
-      "success_behavior": "选择默认或指定引擎，建立进程和 GTP 会话，并可重启或有序关闭；更多引擎表格有效单元格在点击次数不等于 2 且不是右键时（包括左键和中键单击）只更新选择，随后确认切换；点击次数等于 2 或右击则隐藏窗口并立即按模式切换主/副引擎。",
-      "failure_cancel_behavior": "更多引擎表格的无效行列、空表头释放和空键监听明确无动作；未选择就确认时旧版先隐藏窗口再提示，点击处理或图标加载异常只打印堆栈。目标版需在命令无效、启动超时、进程异常、选择或资源失败时报告明确状态，保持窗口/选择一致且不残留失控进程。",
-      "data_io": "读取 engine-settings-list 展示索引、名称和命令；更新内存选择，并创建、切换、重启或关闭外部 GTP 进程。",
+      "config_keys": ["engine-settings-list", "default-engine", "last-engine", "autoload-default", "autoload-last", "autoload-empty", "auto-check-engine-alive"],
+      "inputs_preconditions": "手动启动时至少配置一个可选引擎；更多引擎表格入口要求配置数达到 21，模式 1 选择主引擎、模式 2 选择副引擎。",
+      "success_behavior": "LoadEngine 的有效表格在点击次数不等于 2 时会选中行，确认或点击次数等于 2 时先隐藏对话框，再按选中索引启动本次引擎；“不启动引擎”以索引 -1 进入主窗口。四个启动策略中，默认/上次/空引擎各自只置一个 autoload 标志，手动模式全部清零；读取冲突标志时按默认、上次、空引擎、手动的顺序取首个匹配。按钮选择的本次引擎与单选的下次启动策略彼此独立。更多引擎表格有效单元格在点击次数不等于 2 且不是右键时（包括左键和中键单击）只更新选择，随后确认切换；点击次数等于 2 或右击则隐藏窗口并立即按模式切换主/副引擎。",
+      "failure_cancel_behavior": "LoadEngine 在点击次数等于 2 时要求行列都有效，无效区域无动作；点击次数不等于 2 时不区分鼠标按键，行有效即选中，行无效才返回。未选中就确认时保持可见并提示；Escape、退出按钮或窗口关闭都终止应用，空键监听和空表头释放无动作；点击或图标异常只打印堆栈。更多引擎表格的无效行列、空表头释放和空键监听明确无动作；未选择就确认时旧版先隐藏窗口再提示。目标版需在命令无效、启动超时、进程异常、选择或资源失败时报告明确状态，保持窗口/选择一致且不残留失控进程。",
+      "data_io": "读取 engine-settings-list 展示索引、名称和命令；读写 autoload-default/autoload-last/autoload-empty，仅当 autoload-last 为真时才由正常退出流程把当前引擎索引写入 last-engine。LoadEngine 本身不调用 Config.save，启动策略依赖程序后续正常退出的全局保存；同时创建、切换、重启或关闭外部 GTP 进程。",
       "external_dependencies": ["GTP 引擎可执行文件", "操作系统进程管理"],
       "target_modules": ["Lizzie.Engine", "Lizzie.Desktop"],
       "automated_evidence": [
         { "path": "src/test/java/featurecat/lizzie/EngineStartupStatusTest.java", "symbol": "EngineStartupStatusTest" },
         { "path": "src/test/java/featurecat/lizzie/analysis/EngineStartupDialogPolicyTest.java", "symbol": "EngineStartupDialogPolicyTest" },
+        { "path": "src/test/java/featurecat/lizzie/analysis/remote/RemoteComputeConfigTest.java", "symbol": "startupWithoutRememberedZhiziLoginUsesLocalEngineForThisSessionOnly" },
+        { "path": "src/test/java/featurecat/lizzie/gui/LoadEngineLayoutTest.java", "symbol": "localizedHeadersCannotBeCompressedBelowTheirRenderedWidth" },
         { "path": "src/test/java/featurecat/lizzie/gui/MoreEnginesStartupModeTest.java", "symbol": "MoreEnginesStartupModeTest" }
       ],
-      "manual_acceptance": "配置至少 21 个引擎并分别从主/副菜单打开更多引擎窗口，覆盖有效/无效单元格的左键单击、中键单击、点击次数等于 2、右击、未选择确认、表头释放、键盘输入和窗口关闭；再用一个正常假引擎和一个立即退出的假引擎检查模式、索引、重启、错误提示和进程清理。",
+      "manual_acceptance": "以多个假引擎打开 LoadEngine，覆盖有效行及行外区域的左/中/右键单击与双击、未选中确认、直接不启动引擎、四种启动策略、表头释放、键盘输入、Escape、退出和窗口关闭；正常退出并重启后核对三个 autoload 标志和 last-engine。配置至少 21 个引擎后再分别从主/副菜单覆盖 ChooseMoreEngine，并用一个正常假引擎和一个立即退出的假引擎检查索引、重启、错误提示和进程清理。",
       "status": "已盘点",
-      "evidence": "生命周期类、配置和旧版回归测试已定位；ChooseMoreEngine 的空 keyPressed 来源、mouseClicked 五条路径与空 mouseReleased 路径已静态归一，非右键选择/双击或右击立即切换/无效区域及 try/catch 原子动作均保留；真实进程录制与新版实现待完成。"
+      "evidence": "生命周期类、配置和旧版回归测试已定位；LoadEngine 的空 keyPressed 来源、mouseClicked 三条路径与空 mouseReleased 路径已静态归一，选择、双击启动、无效区域、四种下次启动策略和 try/catch 原子动作均保留；ChooseMoreEngine 的六条 pointer 路径仍完整关联；真实进程录制与新版实现待完成。"
     },
     {
       "id": "ENGINE-GTP-001",
