@@ -1,5 +1,5 @@
 {
-  "schema_version": 23,
+  "schema_version": 24,
   "source": {
     "root": "../lizzieyzy-next-main",
     "version": "yzy2.5.3",
@@ -18,7 +18,7 @@
     "Menu literal labels cover active string-literal menu constructors; dynamic labels remain represented by their resource or runtime source.",
     "Menu accelerators cover explicit Menu.java setAccelerator calls and direct OS.isWindows guards; other input bindings remain T-003 work.",
     "Input key bindings symbolically expand Input.java, InputIndependentMainBoard.java, InputIndependentSubboard.java, InputSubboard.java, FloatBoard.java, AnalysisFrame table/window, DrawPainting.java, ChooseMoreEngine.java, LoadEngine.java, OtherPrograms.java, TencentKifuDownload.java, FoxKifuDownload.java, BrowserFrame.java, and CaptureTsumeGoFrame.java key dispatch, condition evaluations, executed statements, empty-listener and empty-statement paths, and switch fall-through; controlIsPressed means Control on every platform plus Meta on macOS, and BrowserFrame dispatches Enter through getKeyChar.",
-    "Pointer bindings symbolically expand the two indexed subboard listeners plus FloatBoard, AnalysisFrame, DrawPainting, ChooseMoreEngine, LoadEngine, OtherPrograms, TencentKifuDownload, FoxKifuDownload, BrowserFrame load/stop/label listeners, JFontTextArea, JFontTextField, JIMSendTextPane, the two DemoScrollBarUI2 arrow-button listeners, JPaintTextPane, WindowMenuStrip, and YikeLiveDialog across mouse, motion, drag, wheel, and release condition evaluations, early returns, executed statements, and explicit no-action paths; data-dependent loops and click try/catch handlers are preserved as normalized atomic statements.",
+    "Pointer bindings symbolically expand the two indexed subboard listeners plus FloatBoard, AnalysisFrame, DrawPainting, ChooseMoreEngine, LoadEngine, OtherPrograms, TencentKifuDownload, FoxKifuDownload, BrowserFrame load/stop/label listeners, JFontTextArea, JFontTextField, JIMSendTextPane, the two DemoScrollBarUI2 arrow-button listeners, JPaintTextPane, WindowMenuStrip, YikeLiveDialog, and IndependentSubBoard lock/close/top-button plus window listeners across mouse, motion, drag, wheel, and release condition evaluations, early returns, executed statements, and explicit no-action paths; data-dependent loops and click try/catch handlers are preserved as normalized atomic statements.",
     "Other key-listener and pointer-listener classes remain T-003 work."
   ],
   "matrix_summary": {
@@ -32,11 +32,11 @@
       "用户批准不迁移": 0
     },
     "active_config_leaf_keys": 596,
-    "mapped_config_leaf_keys": 83,
-    "unmapped_config_leaf_keys": 513,
+    "mapped_config_leaf_keys": 90,
+    "unmapped_config_leaf_keys": 506,
     "active_menu_resource_keys": 383,
-    "mapped_menu_resource_keys": 58,
-    "unmapped_menu_resource_keys": 325,
+    "mapped_menu_resource_keys": 59,
+    "unmapped_menu_resource_keys": 324,
     "active_menu_literal_labels": 12,
     "mapped_menu_literal_labels": 12,
     "unmapped_menu_literal_labels": 0,
@@ -49,11 +49,11 @@
     "active_input_key_bindings": 365,
     "mapped_input_key_bindings": 365,
     "unmapped_input_key_bindings": 0,
-    "active_input_pointer_events": 67,
-    "mapped_input_pointer_events": 67,
+    "active_input_pointer_events": 76,
+    "mapped_input_pointer_events": 76,
     "unmapped_input_pointer_events": 0,
-    "active_input_pointer_bindings": 124,
-    "mapped_input_pointer_bindings": 124,
+    "active_input_pointer_bindings": 150,
+    "mapped_input_pointer_bindings": 150,
     "unmapped_input_pointer_bindings": 0
   },
   "config": {
@@ -5544,7 +5544,9 @@
       {
         "key": "independent-sub-board",
         "reference_count": 6,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "UI-LAYOUT-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -5587,7 +5589,9 @@
       {
         "key": "independent-sub-board-position",
         "reference_count": 5,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "UI-LAYOUT-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -5624,7 +5628,9 @@
       {
         "key": "independent-sub-board-top",
         "reference_count": 2,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "UI-LAYOUT-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -5643,7 +5649,9 @@
       {
         "key": "independent-subboard-locked",
         "reference_count": 2,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "UI-LAYOUT-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -7912,7 +7920,9 @@
       {
         "key": "no-refresh-on-sub",
         "reference_count": 3,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "UI-LAYOUT-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -11621,7 +11631,9 @@
       {
         "key": "show-subboard",
         "reference_count": 9,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "UI-LAYOUT-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -12153,7 +12165,9 @@
       {
         "key": "showing-independent-sub",
         "reference_count": 2,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "UI-LAYOUT-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -15370,7 +15384,9 @@
       },
       {
         "key": "Menu.independentSubBoard",
-        "matrix_ids": [],
+        "matrix_ids": [
+          "UI-LAYOUT-001"
+        ],
         "lines": [
           1331
         ]
@@ -30698,10 +30714,34 @@
         "source": "src/main/java/featurecat/lizzie/gui/YikeLiveDialog.java",
         "active_pointer_events": 1,
         "active_pointer_bindings": 2
+      },
+      {
+        "id": "IndependentSubBoardLockButton",
+        "source": "src/main/java/featurecat/lizzie/gui/IndependentSubBoard.java",
+        "active_pointer_events": 2,
+        "active_pointer_bindings": 2
+      },
+      {
+        "id": "IndependentSubBoardCloseButton",
+        "source": "src/main/java/featurecat/lizzie/gui/IndependentSubBoard.java",
+        "active_pointer_events": 2,
+        "active_pointer_bindings": 2
+      },
+      {
+        "id": "IndependentSubBoardTopButton",
+        "source": "src/main/java/featurecat/lizzie/gui/IndependentSubBoard.java",
+        "active_pointer_events": 2,
+        "active_pointer_bindings": 2
+      },
+      {
+        "id": "IndependentSubBoardWindow",
+        "source": "src/main/java/featurecat/lizzie/gui/IndependentSubBoard.java",
+        "active_pointer_events": 3,
+        "active_pointer_bindings": 20
       }
     ],
-    "active_pointer_events": 67,
-    "active_pointer_bindings": 124,
+    "active_pointer_events": 76,
+    "active_pointer_bindings": 150,
     "pointer_events": [
       {
         "event_id": "InputIndependentSubboard:mouseClicked",
@@ -31371,6 +31411,96 @@
         "binding_count": 2,
         "matrix_ids": [
           "ONLINE-YIKE-001"
+        ]
+      },
+      {
+        "event_id": "IndependentSubBoardLockButton:mouseExited",
+        "source_id": "IndependentSubBoardLockButton",
+        "event": "mouseExited",
+        "line": 128,
+        "binding_count": 1,
+        "matrix_ids": [
+          "UI-LAYOUT-001"
+        ]
+      },
+      {
+        "event_id": "IndependentSubBoardLockButton:mouseEntered",
+        "source_id": "IndependentSubBoardLockButton",
+        "event": "mouseEntered",
+        "line": 134,
+        "binding_count": 1,
+        "matrix_ids": [
+          "UI-LAYOUT-001"
+        ]
+      },
+      {
+        "event_id": "IndependentSubBoardCloseButton:mouseExited",
+        "source_id": "IndependentSubBoardCloseButton",
+        "event": "mouseExited",
+        "line": 175,
+        "binding_count": 1,
+        "matrix_ids": [
+          "UI-LAYOUT-001"
+        ]
+      },
+      {
+        "event_id": "IndependentSubBoardCloseButton:mouseEntered",
+        "source_id": "IndependentSubBoardCloseButton",
+        "event": "mouseEntered",
+        "line": 181,
+        "binding_count": 1,
+        "matrix_ids": [
+          "UI-LAYOUT-001"
+        ]
+      },
+      {
+        "event_id": "IndependentSubBoardTopButton:mouseExited",
+        "source_id": "IndependentSubBoardTopButton",
+        "event": "mouseExited",
+        "line": 223,
+        "binding_count": 1,
+        "matrix_ids": [
+          "UI-LAYOUT-001"
+        ]
+      },
+      {
+        "event_id": "IndependentSubBoardTopButton:mouseEntered",
+        "source_id": "IndependentSubBoardTopButton",
+        "event": "mouseEntered",
+        "line": 229,
+        "binding_count": 1,
+        "matrix_ids": [
+          "UI-LAYOUT-001"
+        ]
+      },
+      {
+        "event_id": "IndependentSubBoardWindow:mousePressed",
+        "source_id": "IndependentSubBoardWindow",
+        "event": "mousePressed",
+        "line": 272,
+        "binding_count": 1,
+        "matrix_ids": [
+          "UI-LAYOUT-001"
+        ]
+      },
+      {
+        "event_id": "IndependentSubBoardWindow:mouseDragged",
+        "source_id": "IndependentSubBoardWindow",
+        "event": "mouseDragged",
+        "line": 279,
+        "binding_count": 13,
+        "matrix_ids": [
+          "UI-LAYOUT-001"
+        ]
+      },
+      {
+        "event_id": "IndependentSubBoardWindow:mouseMoved",
+        "source_id": "IndependentSubBoardWindow",
+        "event": "mouseMoved",
+        "line": 314,
+        "binding_count": 6,
+        "matrix_ids": [
+          "UI-LAYOUT-001"
         ]
       }
     ],
@@ -34946,6 +35076,1059 @@
         "statements": [],
         "matrix_ids": [
           "ONLINE-YIKE-001"
+        ]
+      },
+      {
+        "binding": "IndependentSubBoardLockButton:mouseExited#1",
+        "event_id": "IndependentSubBoardLockButton:mouseExited",
+        "source_id": "IndependentSubBoardLockButton",
+        "event": "mouseExited",
+        "line": 128,
+        "conditions": [],
+        "statements": [
+          {
+            "line": 129,
+            "statement": "lockUnlock.setVisible(false);"
+          },
+          {
+            "line": 130,
+            "statement": "btnClose.setVisible(false);"
+          },
+          {
+            "line": 131,
+            "statement": "topUntop.setVisible(false);"
+          }
+        ],
+        "matrix_ids": [
+          "UI-LAYOUT-001"
+        ]
+      },
+      {
+        "binding": "IndependentSubBoardLockButton:mouseEntered#1",
+        "event_id": "IndependentSubBoardLockButton:mouseEntered",
+        "source_id": "IndependentSubBoardLockButton",
+        "event": "mouseEntered",
+        "line": 134,
+        "conditions": [],
+        "statements": [
+          {
+            "line": 135,
+            "statement": "btnClose.setVisible(true);"
+          },
+          {
+            "line": 136,
+            "statement": "lockUnlock.setVisible(true);"
+          },
+          {
+            "line": 137,
+            "statement": "topUntop.setVisible(true);"
+          }
+        ],
+        "matrix_ids": [
+          "UI-LAYOUT-001"
+        ]
+      },
+      {
+        "binding": "IndependentSubBoardCloseButton:mouseExited#1",
+        "event_id": "IndependentSubBoardCloseButton:mouseExited",
+        "source_id": "IndependentSubBoardCloseButton",
+        "event": "mouseExited",
+        "line": 175,
+        "conditions": [],
+        "statements": [
+          {
+            "line": 176,
+            "statement": "lockUnlock.setVisible(false);"
+          },
+          {
+            "line": 177,
+            "statement": "btnClose.setVisible(false);"
+          },
+          {
+            "line": 178,
+            "statement": "topUntop.setVisible(false);"
+          }
+        ],
+        "matrix_ids": [
+          "UI-LAYOUT-001"
+        ]
+      },
+      {
+        "binding": "IndependentSubBoardCloseButton:mouseEntered#1",
+        "event_id": "IndependentSubBoardCloseButton:mouseEntered",
+        "source_id": "IndependentSubBoardCloseButton",
+        "event": "mouseEntered",
+        "line": 181,
+        "conditions": [],
+        "statements": [
+          {
+            "line": 182,
+            "statement": "btnClose.setVisible(true);"
+          },
+          {
+            "line": 183,
+            "statement": "lockUnlock.setVisible(true);"
+          },
+          {
+            "line": 184,
+            "statement": "topUntop.setVisible(true);"
+          }
+        ],
+        "matrix_ids": [
+          "UI-LAYOUT-001"
+        ]
+      },
+      {
+        "binding": "IndependentSubBoardTopButton:mouseExited#1",
+        "event_id": "IndependentSubBoardTopButton:mouseExited",
+        "source_id": "IndependentSubBoardTopButton",
+        "event": "mouseExited",
+        "line": 223,
+        "conditions": [],
+        "statements": [
+          {
+            "line": 224,
+            "statement": "topUntop.setVisible(false);"
+          },
+          {
+            "line": 225,
+            "statement": "lockUnlock.setVisible(false);"
+          },
+          {
+            "line": 226,
+            "statement": "btnClose.setVisible(false);"
+          }
+        ],
+        "matrix_ids": [
+          "UI-LAYOUT-001"
+        ]
+      },
+      {
+        "binding": "IndependentSubBoardTopButton:mouseEntered#1",
+        "event_id": "IndependentSubBoardTopButton:mouseEntered",
+        "source_id": "IndependentSubBoardTopButton",
+        "event": "mouseEntered",
+        "line": 229,
+        "conditions": [],
+        "statements": [
+          {
+            "line": 230,
+            "statement": "topUntop.setVisible(true);"
+          },
+          {
+            "line": 231,
+            "statement": "lockUnlock.setVisible(true);"
+          },
+          {
+            "line": 232,
+            "statement": "btnClose.setVisible(true);"
+          }
+        ],
+        "matrix_ids": [
+          "UI-LAYOUT-001"
+        ]
+      },
+      {
+        "binding": "IndependentSubBoardWindow:mousePressed#1",
+        "event_id": "IndependentSubBoardWindow:mousePressed",
+        "source_id": "IndependentSubBoardWindow",
+        "event": "mousePressed",
+        "line": 272,
+        "conditions": [],
+        "statements": [
+          {
+            "line": 273,
+            "statement": "origin.x = e.getX();"
+          },
+          {
+            "line": 274,
+            "statement": "origin.y = e.getY();"
+          }
+        ],
+        "matrix_ids": [
+          "UI-LAYOUT-001"
+        ]
+      },
+      {
+        "binding": "IndependentSubBoardWindow:mouseDragged#1",
+        "event_id": "IndependentSubBoardWindow:mouseDragged",
+        "source_id": "IndependentSubBoardWindow",
+        "event": "mouseDragged",
+        "line": 279,
+        "conditions": [
+          {
+            "expression": "isLocked",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 280,
+            "statement": "return;"
+          }
+        ],
+        "matrix_ids": [
+          "UI-LAYOUT-001"
+        ]
+      },
+      {
+        "binding": "IndependentSubBoardWindow:mouseDragged#2",
+        "event_id": "IndependentSubBoardWindow:mouseDragged",
+        "source_id": "IndependentSubBoardWindow",
+        "event": "mouseDragged",
+        "line": 279,
+        "conditions": [
+          {
+            "expression": "isLocked",
+            "expected": false
+          },
+          {
+            "expression": "top",
+            "expected": true
+          },
+          {
+            "expression": "subBoardRenderer.bestmovesNum >= 1",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 281,
+            "statement": "Dimension dimension = getSize();"
+          },
+          {
+            "line": 283,
+            "statement": "dimension.setSize(dimension.getHeight() - e.getY(), dimension.getHeight() - e.getY());"
+          },
+          {
+            "line": 284,
+            "statement": "setSize(dimension);"
+          },
+          {
+            "line": 285,
+            "statement": "setLocation(getLocationOnScreen().x, getLocationOnScreen().y + e.getY());"
+          },
+          {
+            "line": 303,
+            "statement": "subBoardRenderer.statChanged = true;"
+          },
+          {
+            "line": 304,
+            "statement": "subBoardRenderer.bestmovesNum--;"
+          },
+          {
+            "line": 305,
+            "statement": "refresh();"
+          }
+        ],
+        "matrix_ids": [
+          "UI-LAYOUT-001"
+        ]
+      },
+      {
+        "binding": "IndependentSubBoardWindow:mouseDragged#3",
+        "event_id": "IndependentSubBoardWindow:mouseDragged",
+        "source_id": "IndependentSubBoardWindow",
+        "event": "mouseDragged",
+        "line": 279,
+        "conditions": [
+          {
+            "expression": "isLocked",
+            "expected": false
+          },
+          {
+            "expression": "top",
+            "expected": true
+          },
+          {
+            "expression": "subBoardRenderer.bestmovesNum >= 1",
+            "expected": false
+          }
+        ],
+        "statements": [
+          {
+            "line": 281,
+            "statement": "Dimension dimension = getSize();"
+          },
+          {
+            "line": 283,
+            "statement": "dimension.setSize(dimension.getHeight() - e.getY(), dimension.getHeight() - e.getY());"
+          },
+          {
+            "line": 284,
+            "statement": "setSize(dimension);"
+          },
+          {
+            "line": 285,
+            "statement": "setLocation(getLocationOnScreen().x, getLocationOnScreen().y + e.getY());"
+          }
+        ],
+        "matrix_ids": [
+          "UI-LAYOUT-001"
+        ]
+      },
+      {
+        "binding": "IndependentSubBoardWindow:mouseDragged#4",
+        "event_id": "IndependentSubBoardWindow:mouseDragged",
+        "source_id": "IndependentSubBoardWindow",
+        "event": "mouseDragged",
+        "line": 279,
+        "conditions": [
+          {
+            "expression": "isLocked",
+            "expected": false
+          },
+          {
+            "expression": "top",
+            "expected": false
+          },
+          {
+            "expression": "down",
+            "expected": true
+          },
+          {
+            "expression": "subBoardRenderer.bestmovesNum >= 1",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 281,
+            "statement": "Dimension dimension = getSize();"
+          },
+          {
+            "line": 287,
+            "statement": "dimension.setSize(e.getY(), e.getY());"
+          },
+          {
+            "line": 288,
+            "statement": "setSize(dimension);"
+          },
+          {
+            "line": 303,
+            "statement": "subBoardRenderer.statChanged = true;"
+          },
+          {
+            "line": 304,
+            "statement": "subBoardRenderer.bestmovesNum--;"
+          },
+          {
+            "line": 305,
+            "statement": "refresh();"
+          }
+        ],
+        "matrix_ids": [
+          "UI-LAYOUT-001"
+        ]
+      },
+      {
+        "binding": "IndependentSubBoardWindow:mouseDragged#5",
+        "event_id": "IndependentSubBoardWindow:mouseDragged",
+        "source_id": "IndependentSubBoardWindow",
+        "event": "mouseDragged",
+        "line": 279,
+        "conditions": [
+          {
+            "expression": "isLocked",
+            "expected": false
+          },
+          {
+            "expression": "top",
+            "expected": false
+          },
+          {
+            "expression": "down",
+            "expected": true
+          },
+          {
+            "expression": "subBoardRenderer.bestmovesNum >= 1",
+            "expected": false
+          }
+        ],
+        "statements": [
+          {
+            "line": 281,
+            "statement": "Dimension dimension = getSize();"
+          },
+          {
+            "line": 287,
+            "statement": "dimension.setSize(e.getY(), e.getY());"
+          },
+          {
+            "line": 288,
+            "statement": "setSize(dimension);"
+          }
+        ],
+        "matrix_ids": [
+          "UI-LAYOUT-001"
+        ]
+      },
+      {
+        "binding": "IndependentSubBoardWindow:mouseDragged#6",
+        "event_id": "IndependentSubBoardWindow:mouseDragged",
+        "source_id": "IndependentSubBoardWindow",
+        "event": "mouseDragged",
+        "line": 279,
+        "conditions": [
+          {
+            "expression": "isLocked",
+            "expected": false
+          },
+          {
+            "expression": "top",
+            "expected": false
+          },
+          {
+            "expression": "down",
+            "expected": false
+          },
+          {
+            "expression": "left",
+            "expected": true
+          },
+          {
+            "expression": "subBoardRenderer.bestmovesNum >= 1",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 281,
+            "statement": "Dimension dimension = getSize();"
+          },
+          {
+            "line": 290,
+            "statement": "dimension.setSize(dimension.getWidth() - e.getX(), dimension.getWidth() - e.getX());"
+          },
+          {
+            "line": 291,
+            "statement": "setSize(dimension);"
+          },
+          {
+            "line": 292,
+            "statement": "setLocation(getLocationOnScreen().x + e.getX(), getLocationOnScreen().y);"
+          },
+          {
+            "line": 303,
+            "statement": "subBoardRenderer.statChanged = true;"
+          },
+          {
+            "line": 304,
+            "statement": "subBoardRenderer.bestmovesNum--;"
+          },
+          {
+            "line": 305,
+            "statement": "refresh();"
+          }
+        ],
+        "matrix_ids": [
+          "UI-LAYOUT-001"
+        ]
+      },
+      {
+        "binding": "IndependentSubBoardWindow:mouseDragged#7",
+        "event_id": "IndependentSubBoardWindow:mouseDragged",
+        "source_id": "IndependentSubBoardWindow",
+        "event": "mouseDragged",
+        "line": 279,
+        "conditions": [
+          {
+            "expression": "isLocked",
+            "expected": false
+          },
+          {
+            "expression": "top",
+            "expected": false
+          },
+          {
+            "expression": "down",
+            "expected": false
+          },
+          {
+            "expression": "left",
+            "expected": true
+          },
+          {
+            "expression": "subBoardRenderer.bestmovesNum >= 1",
+            "expected": false
+          }
+        ],
+        "statements": [
+          {
+            "line": 281,
+            "statement": "Dimension dimension = getSize();"
+          },
+          {
+            "line": 290,
+            "statement": "dimension.setSize(dimension.getWidth() - e.getX(), dimension.getWidth() - e.getX());"
+          },
+          {
+            "line": 291,
+            "statement": "setSize(dimension);"
+          },
+          {
+            "line": 292,
+            "statement": "setLocation(getLocationOnScreen().x + e.getX(), getLocationOnScreen().y);"
+          }
+        ],
+        "matrix_ids": [
+          "UI-LAYOUT-001"
+        ]
+      },
+      {
+        "binding": "IndependentSubBoardWindow:mouseDragged#8",
+        "event_id": "IndependentSubBoardWindow:mouseDragged",
+        "source_id": "IndependentSubBoardWindow",
+        "event": "mouseDragged",
+        "line": 279,
+        "conditions": [
+          {
+            "expression": "isLocked",
+            "expected": false
+          },
+          {
+            "expression": "top",
+            "expected": false
+          },
+          {
+            "expression": "down",
+            "expected": false
+          },
+          {
+            "expression": "left",
+            "expected": false
+          },
+          {
+            "expression": "right",
+            "expected": true
+          },
+          {
+            "expression": "subBoardRenderer.bestmovesNum >= 1",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 281,
+            "statement": "Dimension dimension = getSize();"
+          },
+          {
+            "line": 294,
+            "statement": "dimension.setSize(e.getX(), e.getX());"
+          },
+          {
+            "line": 295,
+            "statement": "setSize(dimension);"
+          },
+          {
+            "line": 303,
+            "statement": "subBoardRenderer.statChanged = true;"
+          },
+          {
+            "line": 304,
+            "statement": "subBoardRenderer.bestmovesNum--;"
+          },
+          {
+            "line": 305,
+            "statement": "refresh();"
+          }
+        ],
+        "matrix_ids": [
+          "UI-LAYOUT-001"
+        ]
+      },
+      {
+        "binding": "IndependentSubBoardWindow:mouseDragged#9",
+        "event_id": "IndependentSubBoardWindow:mouseDragged",
+        "source_id": "IndependentSubBoardWindow",
+        "event": "mouseDragged",
+        "line": 279,
+        "conditions": [
+          {
+            "expression": "isLocked",
+            "expected": false
+          },
+          {
+            "expression": "top",
+            "expected": false
+          },
+          {
+            "expression": "down",
+            "expected": false
+          },
+          {
+            "expression": "left",
+            "expected": false
+          },
+          {
+            "expression": "right",
+            "expected": true
+          },
+          {
+            "expression": "subBoardRenderer.bestmovesNum >= 1",
+            "expected": false
+          }
+        ],
+        "statements": [
+          {
+            "line": 281,
+            "statement": "Dimension dimension = getSize();"
+          },
+          {
+            "line": 294,
+            "statement": "dimension.setSize(e.getX(), e.getX());"
+          },
+          {
+            "line": 295,
+            "statement": "setSize(dimension);"
+          }
+        ],
+        "matrix_ids": [
+          "UI-LAYOUT-001"
+        ]
+      },
+      {
+        "binding": "IndependentSubBoardWindow:mouseDragged#10",
+        "event_id": "IndependentSubBoardWindow:mouseDragged",
+        "source_id": "IndependentSubBoardWindow",
+        "event": "mouseDragged",
+        "line": 279,
+        "conditions": [
+          {
+            "expression": "isLocked",
+            "expected": false
+          },
+          {
+            "expression": "top",
+            "expected": false
+          },
+          {
+            "expression": "down",
+            "expected": false
+          },
+          {
+            "expression": "left",
+            "expected": false
+          },
+          {
+            "expression": "right",
+            "expected": false
+          },
+          {
+            "expression": "LizzieFrame.canGoAfterload",
+            "expected": true
+          },
+          {
+            "expression": "subBoardRenderer.bestmovesNum >= 1",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 281,
+            "statement": "Dimension dimension = getSize();"
+          },
+          {
+            "line": 298,
+            "statement": "Point p = getLocation();"
+          },
+          {
+            "line": 299,
+            "statement": "setLocation(p.x + e.getX() - origin.x, p.y + e.getY() - origin.y);"
+          },
+          {
+            "line": 303,
+            "statement": "subBoardRenderer.statChanged = true;"
+          },
+          {
+            "line": 304,
+            "statement": "subBoardRenderer.bestmovesNum--;"
+          },
+          {
+            "line": 305,
+            "statement": "refresh();"
+          }
+        ],
+        "matrix_ids": [
+          "UI-LAYOUT-001"
+        ]
+      },
+      {
+        "binding": "IndependentSubBoardWindow:mouseDragged#11",
+        "event_id": "IndependentSubBoardWindow:mouseDragged",
+        "source_id": "IndependentSubBoardWindow",
+        "event": "mouseDragged",
+        "line": 279,
+        "conditions": [
+          {
+            "expression": "isLocked",
+            "expected": false
+          },
+          {
+            "expression": "top",
+            "expected": false
+          },
+          {
+            "expression": "down",
+            "expected": false
+          },
+          {
+            "expression": "left",
+            "expected": false
+          },
+          {
+            "expression": "right",
+            "expected": false
+          },
+          {
+            "expression": "LizzieFrame.canGoAfterload",
+            "expected": true
+          },
+          {
+            "expression": "subBoardRenderer.bestmovesNum >= 1",
+            "expected": false
+          }
+        ],
+        "statements": [
+          {
+            "line": 281,
+            "statement": "Dimension dimension = getSize();"
+          },
+          {
+            "line": 298,
+            "statement": "Point p = getLocation();"
+          },
+          {
+            "line": 299,
+            "statement": "setLocation(p.x + e.getX() - origin.x, p.y + e.getY() - origin.y);"
+          }
+        ],
+        "matrix_ids": [
+          "UI-LAYOUT-001"
+        ]
+      },
+      {
+        "binding": "IndependentSubBoardWindow:mouseDragged#12",
+        "event_id": "IndependentSubBoardWindow:mouseDragged",
+        "source_id": "IndependentSubBoardWindow",
+        "event": "mouseDragged",
+        "line": 279,
+        "conditions": [
+          {
+            "expression": "isLocked",
+            "expected": false
+          },
+          {
+            "expression": "top",
+            "expected": false
+          },
+          {
+            "expression": "down",
+            "expected": false
+          },
+          {
+            "expression": "left",
+            "expected": false
+          },
+          {
+            "expression": "right",
+            "expected": false
+          },
+          {
+            "expression": "LizzieFrame.canGoAfterload",
+            "expected": false
+          },
+          {
+            "expression": "subBoardRenderer.bestmovesNum >= 1",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 281,
+            "statement": "Dimension dimension = getSize();"
+          },
+          {
+            "line": 303,
+            "statement": "subBoardRenderer.statChanged = true;"
+          },
+          {
+            "line": 304,
+            "statement": "subBoardRenderer.bestmovesNum--;"
+          },
+          {
+            "line": 305,
+            "statement": "refresh();"
+          }
+        ],
+        "matrix_ids": [
+          "UI-LAYOUT-001"
+        ]
+      },
+      {
+        "binding": "IndependentSubBoardWindow:mouseDragged#13",
+        "event_id": "IndependentSubBoardWindow:mouseDragged",
+        "source_id": "IndependentSubBoardWindow",
+        "event": "mouseDragged",
+        "line": 279,
+        "conditions": [
+          {
+            "expression": "isLocked",
+            "expected": false
+          },
+          {
+            "expression": "top",
+            "expected": false
+          },
+          {
+            "expression": "down",
+            "expected": false
+          },
+          {
+            "expression": "left",
+            "expected": false
+          },
+          {
+            "expression": "right",
+            "expected": false
+          },
+          {
+            "expression": "LizzieFrame.canGoAfterload",
+            "expected": false
+          },
+          {
+            "expression": "subBoardRenderer.bestmovesNum >= 1",
+            "expected": false
+          }
+        ],
+        "statements": [
+          {
+            "line": 281,
+            "statement": "Dimension dimension = getSize();"
+          }
+        ],
+        "matrix_ids": [
+          "UI-LAYOUT-001"
+        ]
+      },
+      {
+        "binding": "IndependentSubBoardWindow:mouseMoved#1",
+        "event_id": "IndependentSubBoardWindow:mouseMoved",
+        "source_id": "IndependentSubBoardWindow",
+        "event": "mouseMoved",
+        "line": 314,
+        "conditions": [
+          {
+            "expression": "isLocked",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 315,
+            "statement": "return;"
+          }
+        ],
+        "matrix_ids": [
+          "UI-LAYOUT-001"
+        ]
+      },
+      {
+        "binding": "IndependentSubBoardWindow:mouseMoved#2",
+        "event_id": "IndependentSubBoardWindow:mouseMoved",
+        "source_id": "IndependentSubBoardWindow",
+        "event": "mouseMoved",
+        "line": 314,
+        "conditions": [
+          {
+            "expression": "isLocked",
+            "expected": false
+          },
+          {
+            "expression": "e.getPoint().getY() <= 6",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 317,
+            "statement": "setCursor(Cursor.getPredefinedCursor(Cursor.N_RESIZE_CURSOR));"
+          },
+          {
+            "line": 318,
+            "statement": "top = true;"
+          }
+        ],
+        "matrix_ids": [
+          "UI-LAYOUT-001"
+        ]
+      },
+      {
+        "binding": "IndependentSubBoardWindow:mouseMoved#3",
+        "event_id": "IndependentSubBoardWindow:mouseMoved",
+        "source_id": "IndependentSubBoardWindow",
+        "event": "mouseMoved",
+        "line": 314,
+        "conditions": [
+          {
+            "expression": "isLocked",
+            "expected": false
+          },
+          {
+            "expression": "e.getPoint().getY() <= 6",
+            "expected": false
+          },
+          {
+            "expression": "Math.abs(e.getPoint().getY() - getSize().getHeight()) <= 7",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 320,
+            "statement": "setCursor(Cursor.getPredefinedCursor(Cursor.N_RESIZE_CURSOR));"
+          },
+          {
+            "line": 321,
+            "statement": "down = true;"
+          }
+        ],
+        "matrix_ids": [
+          "UI-LAYOUT-001"
+        ]
+      },
+      {
+        "binding": "IndependentSubBoardWindow:mouseMoved#4",
+        "event_id": "IndependentSubBoardWindow:mouseMoved",
+        "source_id": "IndependentSubBoardWindow",
+        "event": "mouseMoved",
+        "line": 314,
+        "conditions": [
+          {
+            "expression": "isLocked",
+            "expected": false
+          },
+          {
+            "expression": "e.getPoint().getY() <= 6",
+            "expected": false
+          },
+          {
+            "expression": "Math.abs(e.getPoint().getY() - getSize().getHeight()) <= 7",
+            "expected": false
+          },
+          {
+            "expression": "e.getPoint().getX() <= 6",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 323,
+            "statement": "setCursor(Cursor.getPredefinedCursor(Cursor.E_RESIZE_CURSOR));"
+          },
+          {
+            "line": 324,
+            "statement": "left = true;"
+          }
+        ],
+        "matrix_ids": [
+          "UI-LAYOUT-001"
+        ]
+      },
+      {
+        "binding": "IndependentSubBoardWindow:mouseMoved#5",
+        "event_id": "IndependentSubBoardWindow:mouseMoved",
+        "source_id": "IndependentSubBoardWindow",
+        "event": "mouseMoved",
+        "line": 314,
+        "conditions": [
+          {
+            "expression": "isLocked",
+            "expected": false
+          },
+          {
+            "expression": "e.getPoint().getY() <= 6",
+            "expected": false
+          },
+          {
+            "expression": "Math.abs(e.getPoint().getY() - getSize().getHeight()) <= 7",
+            "expected": false
+          },
+          {
+            "expression": "e.getPoint().getX() <= 6",
+            "expected": false
+          },
+          {
+            "expression": "Math.abs(e.getPoint().getX() - getSize().getWidth()) <= 7",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 326,
+            "statement": "setCursor(Cursor.getPredefinedCursor(Cursor.E_RESIZE_CURSOR));"
+          },
+          {
+            "line": 327,
+            "statement": "right = true;"
+          }
+        ],
+        "matrix_ids": [
+          "UI-LAYOUT-001"
+        ]
+      },
+      {
+        "binding": "IndependentSubBoardWindow:mouseMoved#6",
+        "event_id": "IndependentSubBoardWindow:mouseMoved",
+        "source_id": "IndependentSubBoardWindow",
+        "event": "mouseMoved",
+        "line": 314,
+        "conditions": [
+          {
+            "expression": "isLocked",
+            "expected": false
+          },
+          {
+            "expression": "e.getPoint().getY() <= 6",
+            "expected": false
+          },
+          {
+            "expression": "Math.abs(e.getPoint().getY() - getSize().getHeight()) <= 7",
+            "expected": false
+          },
+          {
+            "expression": "e.getPoint().getX() <= 6",
+            "expected": false
+          },
+          {
+            "expression": "Math.abs(e.getPoint().getX() - getSize().getWidth()) <= 7",
+            "expected": false
+          }
+        ],
+        "statements": [
+          {
+            "line": 329,
+            "statement": "setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));"
+          },
+          {
+            "line": 331,
+            "statement": "top = false;"
+          },
+          {
+            "line": 332,
+            "statement": "down = false;"
+          },
+          {
+            "line": 333,
+            "statement": "left = false;"
+          },
+          {
+            "line": 334,
+            "statement": "right = false;"
+          }
+        ],
+        "matrix_ids": [
+          "UI-LAYOUT-001"
         ]
       }
     ]
