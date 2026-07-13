@@ -1,5 +1,5 @@
 {
-  "schema_version": 16,
+  "schema_version": 17,
   "allowed_statuses": [
     "未盘点",
     "已盘点",
@@ -2225,6 +2225,61 @@
       "manual_acceptance": "以空配置、短名称数组、空命令槽、30/31 个条目和无效命令覆盖打开与迁移；检查有效行、空白行、表格外、表头的左/中/右键单击与双击，保存/重复保存/删除/取消/重排/隐藏/关闭/重启；在 Windows、macOS、Linux 覆盖文件选择取消与有效/无效路径，并用受控假程序验证参数边界、工作目录、失败提示、重复启动和进程退出清理。",
       "status": "已盘点",
       "evidence": "OtherPrograms 的空 keyPressed、无条件 mouseClicked 和空 mouseReleased 已归一为 2 个事件/2 条路径；菜单可见性、固定表格、并行数组压缩/持久化边界、文件选择和 FastLink 下游仅完成静态盘点，未执行任何用户配置命令或真实外部进程。"
+    },
+    {
+      "id": "UI-TEXT-EDIT-001",
+      "category": "界面显示",
+      "legacy_entry": "JFontTextArea 为分析引擎、引擎管理、外部程序、形势估算和浏览器初始化日志等 5 类窗口的 6 个多行文本框提供本地化复制/粘贴/剪切弹出菜单；鼠标右键按下时刷新菜单状态",
+      "legacy_menu_keys": [],
+      "legacy_menu_labels": [],
+      "legacy_shortcuts": [],
+      "legacy_input_cases": [
+        "JFontTextArea:mouseClicked",
+        "JFontTextArea:mousePressed",
+        "JFontTextArea:mouseReleased",
+        "JFontTextArea:mouseEntered",
+        "JFontTextArea:mouseExited"
+      ],
+      "legacy_input_bindings": [
+        "JFontTextArea:mouseClicked#1",
+        "JFontTextArea:mousePressed#1",
+        "JFontTextArea:mousePressed#2",
+        "JFontTextArea:mouseReleased#1",
+        "JFontTextArea:mouseEntered#1",
+        "JFontTextArea:mouseExited#1"
+      ],
+      "java_evidence": [
+        { "path": "src/main/java/featurecat/lizzie/gui/JFontTextArea.java", "symbol": "public void mousePressed(MouseEvent e)" },
+        { "path": "src/main/java/featurecat/lizzie/gui/JFontTextArea.java", "symbol": "public boolean isClipboardString()" },
+        { "path": "src/main/java/featurecat/lizzie/gui/AnalysisSettings.java", "symbol": "public void saveConfig()" },
+        { "path": "src/main/java/featurecat/lizzie/gui/BrowserInitializing.java", "symbol": "public BrowserInitializing(Window owner)" },
+        { "path": "src/main/java/featurecat/lizzie/gui/MoreEngines.java", "symbol": "private void saveCurrentEngineConfig()" },
+        { "path": "src/main/java/featurecat/lizzie/gui/OtherPrograms.java", "symbol": "private void saveEngineConfig()" },
+        { "path": "src/main/java/featurecat/lizzie/gui/SetEstimateParam.java", "symbol": "public SetEstimateParam()" }
+      ],
+      "config_keys": [
+        "frame-font-size",
+        "analysis-engine-command",
+        "analysis-engine-command-customized",
+        "engine-settings-list",
+        "program-command-list",
+        "estimate-command",
+        "use-estimate-command"
+      ],
+      "inputs_preconditions": "文本区可见且接收 pointer 输入；复制/剪切要求非空选区，粘贴要求系统剪贴板可用且提供字符串。旧版只在 mousePressed 的 BUTTON3 分支弹出，其他按键路径和 clicked/released/entered/exited 都是显式无动作；BrowserInitializing 的实例为只读，其余命令框还受各自 enabled/editable 状态约束。",
+      "success_behavior": "三个构造器统一使用 Config.sysDefaultFontName/Config.frameFontSize 并启用软换行，rows/columns 构造器另设置尺寸。旧版右键按下会按当前选区启用复制/剪切、通过读取系统剪贴板启用粘贴，并在指针坐标显示使用 JTextPane.copy/paste/cut 资源的菜单；三个动作再调用 JTextArea 内建 copy/paste/cut，菜单项标注固定 Ctrl+C/V/X。目标版优先使用 Avalonia TextBox 原生命令和剪贴板服务，只在原生能力有缺口时增加最小 ContextMenu；必须支持平台 popup 手势、键盘菜单、平台 Primary 修饰键、焦点与辅助技术，并按只读/禁用/选区/剪贴板状态准确启用。粘贴只更新文本，绝不自动保存或启动命令。",
+      "failure_cancel_behavior": "剪贴板为空、非文本、正被占用、权限拒绝、转换异常或服务不可用时保持文本与焦点不变，禁用粘贴并提供可诊断但不含剪贴板内容的反馈；读取前必须执行明确的字符数/字节数上限，超限内容不得完整物化，默认拒绝，确有业务需要时才可显式确认。不得空 catch、阻塞 UI 或让异常逃出输入事件。旧版 getSystemClipboard/getContents 位于 try 外、getTransferData 会先完整物化字符串且粘贴时再次读取，可能在 EDT 消耗大量时间与内存；只读/禁用文本区仍可能把剪切和粘贴显示为可用，且 BUTTON3/mousePressed 与固定 Ctrl 漏掉 macOS Ctrl-click、release popup、Shift+F10/Menu 键和触控。目标需修正这些差异；命令消费者在用户显式确认时仍须把粘贴文本当不可信输入，按进程安全边界校验和参数化，不得 shell 拼接。BrowserInitializing 另有下游可靠性边界：旧版全局替换 System.err 后不归属、不恢复，任意线程可直接 append 到 UI，日志无界且 PrintStream 未关闭；目标诊断接收器必须有明确所有者、UI 线程调度、有界缓冲和确定的关闭/恢复。",
+      "data_io": "构造时读取 Config.sysDefaultFontName 与 frame-font-size，设置字体、字号、软换行和可选行列尺寸；编辑时直接读写系统剪贴板文本和控件内存内容，不自行持久化。AnalysisSettings 把内容保存为 analysis-engine-command 并维护 customized 标志；MoreEngines 写入 engine-settings-list；OtherPrograms 写入 program-command-list；SetEstimateParam 写入 estimate-command/use-estimate-command。BrowserInitializing 只读实例显示全局 System.err 重定向内容，旧版该重定向不恢复且可由非 UI 线程无界追加。后续进程启动属于各消费工作流，右键或粘贴本身不得触发。",
+      "external_dependencies": [
+        "Windows/macOS/Linux 系统剪贴板、平台 popup 手势和主修饰键",
+        "本地化资源 JTextPane.copy/paste/cut",
+        "后续消费文本的引擎、估算与外部程序工作流"
+      ],
+      "target_modules": ["Lizzie.Desktop"],
+      "automated_evidence": [],
+      "manual_acceptance": "在 Windows、macOS、Linux 真实窗口覆盖可编辑/只读/禁用文本区，空/非空选区，空/文本/非文本/占用/拒绝剪贴板，右键、macOS Ctrl-click、release popup、Shift+F10/Menu 键、触控、Ctrl 或 Command+C/V/X，以及多行 Unicode 复制/剪切/粘贴；用零长度、恰好位于字符/字节上限和超限的剪贴板内容验证不完整物化、拒绝/确认策略及无内容回显。核对三个构造器的字体、字号、软换行和行列尺寸，并以后台线程写入 BrowserInitializing，验证 UI 调度、有界日志、关闭后恢复 System.err 且不再接收数据；同时断言粘贴及菜单打开不会保存配置或启动任何命令。",
+      "status": "已盘点",
+      "evidence": "JFontTextArea 的 5 个 pointer 事件/6 条路径已静态展开：仅 BUTTON3=true 路径刷新三项启用态并显示菜单，BUTTON3=false 与其余四个事件无动作；已追踪 3 个构造器、5 个调用类、6 个实例和命令/日志下游。独立复核补出剪贴板完整物化/双重读取的资源上限、BrowserInitializing 全局 stderr 所有权/线程/缓冲/关闭，以及字体和尺寸构造语义三项遗漏。旧版没有该控件、剪贴板、popup、选区、只读或平台手势专项测试；本轮未读取真实剪贴板、运行旧 GUI、保存用户配置或启动引擎/外部程序。"
     }
   ]
 }

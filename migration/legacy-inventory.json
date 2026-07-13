@@ -1,5 +1,5 @@
 {
-  "schema_version": 16,
+  "schema_version": 17,
   "source": {
     "root": "../lizzieyzy-next-main",
     "version": "yzy2.5.3",
@@ -18,22 +18,22 @@
     "Menu literal labels cover active string-literal menu constructors; dynamic labels remain represented by their resource or runtime source.",
     "Menu accelerators cover explicit Menu.java setAccelerator calls and direct OS.isWindows guards; other input bindings remain T-003 work.",
     "Input key bindings symbolically expand Input.java, InputIndependentMainBoard.java, InputIndependentSubboard.java, InputSubboard.java, FloatBoard.java, AnalysisFrame table/window, DrawPainting.java, ChooseMoreEngine.java, LoadEngine.java, OtherPrograms.java, TencentKifuDownload.java, FoxKifuDownload.java, BrowserFrame.java, and CaptureTsumeGoFrame.java key dispatch, condition evaluations, executed statements, empty-listener and empty-statement paths, and switch fall-through; controlIsPressed means Control on every platform plus Meta on macOS, and BrowserFrame dispatches Enter through getKeyChar.",
-    "Pointer bindings symbolically expand the two indexed subboard listeners plus FloatBoard, AnalysisFrame, DrawPainting, ChooseMoreEngine, LoadEngine, OtherPrograms, TencentKifuDownload, FoxKifuDownload, and BrowserFrame load/stop/label listeners across mouse, motion, drag, wheel, and release condition evaluations, early returns, executed statements, and explicit no-action paths; data-dependent loops and click try/catch handlers are preserved as normalized atomic statements.",
+    "Pointer bindings symbolically expand the two indexed subboard listeners plus FloatBoard, AnalysisFrame, DrawPainting, ChooseMoreEngine, LoadEngine, OtherPrograms, TencentKifuDownload, FoxKifuDownload, BrowserFrame load/stop/label listeners, and JFontTextArea across mouse, motion, drag, wheel, and release condition evaluations, early returns, executed statements, and explicit no-action paths; data-dependent loops and click try/catch handlers are preserved as normalized atomic statements.",
     "Other key-listener and pointer-listener classes remain T-003 work."
   ],
   "matrix_summary": {
-    "rows": 46,
+    "rows": 47,
     "statuses": {
       "未盘点": 0,
-      "已盘点": 46,
+      "已盘点": 47,
       "实施中": 0,
       "已实现待验证": 0,
       "已验证": 0,
       "用户批准不迁移": 0
     },
     "active_config_leaf_keys": 596,
-    "mapped_config_leaf_keys": 61,
-    "unmapped_config_leaf_keys": 535,
+    "mapped_config_leaf_keys": 65,
+    "unmapped_config_leaf_keys": 531,
     "active_menu_resource_keys": 383,
     "mapped_menu_resource_keys": 56,
     "unmapped_menu_resource_keys": 327,
@@ -49,11 +49,11 @@
     "active_input_key_bindings": 365,
     "mapped_input_key_bindings": 365,
     "unmapped_input_key_bindings": 0,
-    "active_input_pointer_events": 39,
-    "mapped_input_pointer_events": 39,
+    "active_input_pointer_events": 44,
+    "mapped_input_pointer_events": 44,
     "unmapped_input_pointer_events": 0,
-    "active_input_pointer_bindings": 85,
-    "mapped_input_pointer_bindings": 85,
+    "active_input_pointer_bindings": 91,
+    "mapped_input_pointer_bindings": 91,
     "unmapped_input_pointer_bindings": 0
   },
   "config": {
@@ -631,7 +631,8 @@
         "key": "analysis-engine-command",
         "reference_count": 8,
         "matrix_ids": [
-          "ANALYSIS-FULL-001"
+          "ANALYSIS-FULL-001",
+          "UI-TEXT-EDIT-001"
         ],
         "references": [
           {
@@ -687,7 +688,9 @@
       {
         "key": "analysis-engine-command-customized",
         "reference_count": 4,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "UI-TEXT-EDIT-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -4257,7 +4260,8 @@
         "key": "engine-settings-list",
         "reference_count": 5,
         "matrix_ids": [
-          "ENGINE-LIFECYCLE-001"
+          "ENGINE-LIFECYCLE-001",
+          "UI-TEXT-EDIT-001"
         ],
         "references": [
           {
@@ -4352,7 +4356,9 @@
       {
         "key": "estimate-command",
         "reference_count": 6,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "UI-TEXT-EDIT-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -4982,7 +4988,9 @@
       {
         "key": "frame-font-size",
         "reference_count": 3,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "UI-TEXT-EDIT-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -8275,7 +8283,8 @@
         "key": "program-command-list",
         "reference_count": 6,
         "matrix_ids": [
-          "EXTERNAL-PROGRAMS-001"
+          "EXTERNAL-PROGRAMS-001",
+          "UI-TEXT-EDIT-001"
         ],
         "references": [
           {
@@ -13151,7 +13160,9 @@
       {
         "key": "use-estimate-command",
         "reference_count": 2,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "UI-TEXT-EDIT-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -30588,10 +30599,16 @@
         "source": "src/main/java/featurecat/lizzie/gui/BrowserFrame.java",
         "active_pointer_events": 4,
         "active_pointer_bindings": 4
+      },
+      {
+        "id": "JFontTextArea",
+        "source": "src/main/java/featurecat/lizzie/gui/JFontTextArea.java",
+        "active_pointer_events": 5,
+        "active_pointer_bindings": 6
       }
     ],
-    "active_pointer_events": 39,
-    "active_pointer_bindings": 85,
+    "active_pointer_events": 44,
+    "active_pointer_bindings": 91,
     "pointer_events": [
       {
         "event_id": "InputIndependentSubboard:mouseClicked",
@@ -30981,6 +30998,56 @@
         "binding_count": 1,
         "matrix_ids": [
           "ONLINE-YIKE-001"
+        ]
+      },
+      {
+        "event_id": "JFontTextArea:mouseClicked",
+        "source_id": "JFontTextArea",
+        "event": "mouseClicked",
+        "line": 133,
+        "binding_count": 1,
+        "matrix_ids": [
+          "UI-TEXT-EDIT-001"
+        ]
+      },
+      {
+        "event_id": "JFontTextArea:mousePressed",
+        "source_id": "JFontTextArea",
+        "event": "mousePressed",
+        "line": 139,
+        "binding_count": 2,
+        "matrix_ids": [
+          "UI-TEXT-EDIT-001"
+        ]
+      },
+      {
+        "event_id": "JFontTextArea:mouseReleased",
+        "source_id": "JFontTextArea",
+        "event": "mouseReleased",
+        "line": 150,
+        "binding_count": 1,
+        "matrix_ids": [
+          "UI-TEXT-EDIT-001"
+        ]
+      },
+      {
+        "event_id": "JFontTextArea:mouseEntered",
+        "source_id": "JFontTextArea",
+        "event": "mouseEntered",
+        "line": 156,
+        "binding_count": 1,
+        "matrix_ids": [
+          "UI-TEXT-EDIT-001"
+        ]
+      },
+      {
+        "event_id": "JFontTextArea:mouseExited",
+        "source_id": "JFontTextArea",
+        "event": "mouseExited",
+        "line": 162,
+        "binding_count": 1,
+        "matrix_ids": [
+          "UI-TEXT-EDIT-001"
         ]
       }
     ],
@@ -33829,6 +33896,105 @@
         ],
         "matrix_ids": [
           "ONLINE-YIKE-001"
+        ]
+      },
+      {
+        "binding": "JFontTextArea:mouseClicked#1",
+        "event_id": "JFontTextArea:mouseClicked",
+        "source_id": "JFontTextArea",
+        "event": "mouseClicked",
+        "line": 133,
+        "conditions": [],
+        "statements": [],
+        "matrix_ids": [
+          "UI-TEXT-EDIT-001"
+        ]
+      },
+      {
+        "binding": "JFontTextArea:mousePressed#1",
+        "event_id": "JFontTextArea:mousePressed",
+        "source_id": "JFontTextArea",
+        "event": "mousePressed",
+        "line": 139,
+        "conditions": [
+          {
+            "expression": "e.getButton() == MouseEvent.BUTTON3",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 142,
+            "statement": "copy.setEnabled(isCanCopy());"
+          },
+          {
+            "line": 143,
+            "statement": "paste.setEnabled(isClipboardString());"
+          },
+          {
+            "line": 144,
+            "statement": "cut.setEnabled(isCanCopy());"
+          },
+          {
+            "line": 145,
+            "statement": "pop.show(this, e.getX(), e.getY());"
+          }
+        ],
+        "matrix_ids": [
+          "UI-TEXT-EDIT-001"
+        ]
+      },
+      {
+        "binding": "JFontTextArea:mousePressed#2",
+        "event_id": "JFontTextArea:mousePressed",
+        "source_id": "JFontTextArea",
+        "event": "mousePressed",
+        "line": 139,
+        "conditions": [
+          {
+            "expression": "e.getButton() == MouseEvent.BUTTON3",
+            "expected": false
+          }
+        ],
+        "statements": [],
+        "matrix_ids": [
+          "UI-TEXT-EDIT-001"
+        ]
+      },
+      {
+        "binding": "JFontTextArea:mouseReleased#1",
+        "event_id": "JFontTextArea:mouseReleased",
+        "source_id": "JFontTextArea",
+        "event": "mouseReleased",
+        "line": 150,
+        "conditions": [],
+        "statements": [],
+        "matrix_ids": [
+          "UI-TEXT-EDIT-001"
+        ]
+      },
+      {
+        "binding": "JFontTextArea:mouseEntered#1",
+        "event_id": "JFontTextArea:mouseEntered",
+        "source_id": "JFontTextArea",
+        "event": "mouseEntered",
+        "line": 156,
+        "conditions": [],
+        "statements": [],
+        "matrix_ids": [
+          "UI-TEXT-EDIT-001"
+        ]
+      },
+      {
+        "binding": "JFontTextArea:mouseExited#1",
+        "event_id": "JFontTextArea:mouseExited",
+        "source_id": "JFontTextArea",
+        "event": "mouseExited",
+        "line": 162,
+        "conditions": [],
+        "statements": [],
+        "matrix_ids": [
+          "UI-TEXT-EDIT-001"
         ]
       }
     ]
