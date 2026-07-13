@@ -78,11 +78,24 @@ INPUT_KEY_SOURCES = (
     ("InputSubboard", "src/main/java/featurecat/lizzie/gui/InputSubboard.java"),
 )
 INPUT_CONDITIONAL_KEY_SOURCES = (
-    ("FloatBoard", "src/main/java/featurecat/lizzie/gui/FloatBoard.java", {"keyPressed"}),
+    ("FloatBoard", "src/main/java/featurecat/lizzie/gui/FloatBoard.java", "keyPressed", 1),
+    (
+        "AnalysisFrameTable",
+        "src/main/java/featurecat/lizzie/gui/AnalysisFrame.java",
+        "keyPressed",
+        1,
+    ),
+    (
+        "AnalysisFrameWindow",
+        "src/main/java/featurecat/lizzie/gui/AnalysisFrame.java",
+        "keyPressed",
+        2,
+    ),
 )
 INPUT_POINTER_METHOD = re.compile(
     r"public\s+void\s+(?P<event>mouseClicked|mousePressed|mouseWheelMoved|mouseReleased|"
-    r"mouseEntered|mouseExited|mouseMoved)\s*\(\s*(?:MouseEvent|MouseWheelEvent)\s+"
+    r"mouseEntered|mouseExited|mouseMoved|mouseDragged)\s*\(\s*"
+    r"(?:MouseEvent|MouseWheelEvent)\s+"
     r"[A-Za-z_$][\w$]*\s*\)\s*\{"
 )
 INPUT_POINTER_SOURCES = (
@@ -114,6 +127,18 @@ INPUT_POINTER_SOURCES = (
         "FloatBoard",
         "src/main/java/featurecat/lizzie/gui/FloatBoard.java",
         {"mousePressed", "mouseExited", "mouseWheelMoved", "mouseMoved"},
+    ),
+    (
+        "AnalysisFrame",
+        "src/main/java/featurecat/lizzie/gui/AnalysisFrame.java",
+        {
+            "mouseDragged",
+            "mouseMoved",
+            "mouseWheelMoved",
+            "mouseExited",
+            "mouseClicked",
+            "mouseReleased",
+        },
     ),
 )
 INPUT_MODIFIER_CHECKS = (
@@ -312,6 +337,53 @@ def parse_java_body(source: str, index: int, end: int) -> tuple[list[dict[str, A
 
 def parse_java_statement(source: str, index: int, end: int) -> tuple[dict[str, Any], int]:
     index = skip_space(source, index, end)
+    if word_at(source, index, "try"):
+        body_open = skip_space(source, index + 3, end)
+        if body_open >= end or source[body_open] != "{":
+            raise ValueError(
+                f"Legacy input try statement must use a block at line {line_number(source, index)}"
+            )
+        cursor = closing_brace(source, body_open) + 1
+        has_handler = False
+        while True:
+            cursor = skip_space(source, cursor, end)
+            if cursor < end and word_at(source, cursor, "catch"):
+                parameter_open = skip_space(source, cursor + 5, end)
+                if parameter_open >= end or source[parameter_open] != "(":
+                    raise ValueError(
+                        f"Unsupported legacy input catch at line {line_number(source, cursor)}"
+                    )
+                parameter_close = closing_delimiter(source, parameter_open, "(", ")")
+                catch_open = skip_space(source, parameter_close + 1, end)
+                if catch_open >= end or source[catch_open] != "{":
+                    raise ValueError(
+                        f"Legacy input catch must use a block at line {line_number(source, cursor)}"
+                    )
+                cursor = closing_brace(source, catch_open) + 1
+                has_handler = True
+                continue
+            if cursor < end and word_at(source, cursor, "finally"):
+                finally_open = skip_space(source, cursor + 7, end)
+                if finally_open >= end or source[finally_open] != "{":
+                    raise ValueError(
+                        "Legacy input finally must use a block at line "
+                        f"{line_number(source, cursor)}"
+                    )
+                cursor = closing_brace(source, finally_open) + 1
+                has_handler = True
+            break
+        if not has_handler:
+            raise ValueError(
+                f"Legacy input try has no catch or finally at line {line_number(source, index)}"
+            )
+        return (
+            {
+                "kind": "action",
+                "statement": normalize_java(source[index:cursor]),
+                "line": line_number(source, index),
+            },
+            cursor,
+        )
     if word_at(source, index, "for"):
         condition_open = skip_space(source, index + 3, end)
         if condition_open >= end or source[condition_open] != "(":
@@ -523,6 +595,14 @@ def validate_input_parser() -> None:
         ["done();"],
     ]:
         raise ValueError("Input binding parser for-loop self-check failed")
+    guarded = "try { act(); } catch (Exception e) { report(); } done();"
+    continuing, completed = execute_java_nodes(
+        parse_java_sequence(guarded, 0, len(guarded)), initial
+    )
+    completed.extend(continuing)
+    statements = [[action["statement"] for action in path["actions"]] for path in completed]
+    if statements != [["try { act(); } catch (Exception e) { report(); }", "done();"]]:
+        raise ValueError("Input binding parser try/catch self-check failed")
     tracked = "boolean changed = false; if (ready()) changed = true; if (changed) apply();"
     continuing, completed = execute_java_nodes(
         parse_java_sequence(tracked, 0, len(tracked)), initial, True
@@ -797,72 +877,87 @@ def collect_switch_key_source(
 
 
 def collect_conditional_key_source(
-    legacy_root: Path, source_id: str, source_path: str, expected_events: set[str]
+    legacy_root: Path,
+    source_id: str,
+    source_path: str,
+    expected_event: str,
+    method_ordinal: int,
 ) -> dict[str, Any]:
     input_path = legacy_root / source_path
     source = strip_java_comments(input_path.read_text(encoding="utf-8", errors="replace"))
     cases: list[dict[str, Any]] = []
     bindings: list[dict[str, Any]] = []
-    seen_events: set[str] = set()
     indexed_keys: list[str] = []
-    for method_match in INPUT_KEY_METHOD.finditer(source):
-        event = method_match.group("event")
-        if event in seen_events:
-            raise ValueError(f"{input_path.name} contains duplicate {event} methods")
-        seen_events.add(event)
-        open_brace = method_match.end() - 1
-        method_end = closing_brace(source, open_brace)
-        nodes = parse_java_sequence(source, open_brace + 1, method_end)
-        parameter = re.escape(method_match.group("parameter"))
-        key_check = re.compile(
-            rf"{parameter}\.getKeyCode\s*\(\s*\)\s*==\s*KeyEvent\.(VK_[A-Z0-9_]+)"
+    method_matches = [
+        match
+        for match in INPUT_KEY_METHOD.finditer(source)
+        if match.group("event") == expected_event
+    ]
+    if method_ordinal < 1 or method_ordinal > len(method_matches):
+        raise ValueError(
+            f"{input_path.name} has no {expected_event} method ordinal {method_ordinal}"
         )
-        for node in nodes:
-            if node["kind"] != "if" or node["else"]:
-                raise ValueError(f"{input_path.name} {event} has unsupported key dispatch")
-            keys = key_check.findall(node["condition"])
-            reduced = key_check.sub("KEY", node["condition"])
-            if not keys or not re.fullmatch(r"KEY(?:\s*\|\|\s*KEY)*", reduced):
-                raise ValueError(f"{input_path.name} {event} has unsupported key condition")
-            for key in keys:
-                case_id = f"{source_id}:{event}:{key}"
-                continuing, completed = execute_java_nodes(
-                    node["then"],
-                    [{"conditions": [], "condition_values": {}, "actions": [], "case_chain": [case_id]}],
-                )
-                completed.extend(continuing)
-                if not completed:
-                    raise ValueError(f"{input_path.name} {case_id} produced no binding paths")
-                for ordinal, path in enumerate(completed, start=1):
-                    bindings.append(
-                        {
-                            "binding": f"{case_id}#{ordinal}",
-                            "case": case_id,
-                            "source_id": source_id,
-                            "event": event,
-                            "key": key,
-                            "line": node["line"],
-                            "conditions": path["conditions"],
-                            "case_chain": path["case_chain"],
-                            "statements": path["actions"],
-                        }
-                    )
-                cases.append(
+    method_match = method_matches[method_ordinal - 1]
+    open_brace = method_match.end() - 1
+    method_end = closing_brace(source, open_brace)
+    nodes = parse_java_sequence(source, open_brace + 1, method_end)
+    parameter = re.escape(method_match.group("parameter"))
+    key_check = re.compile(
+        rf"{parameter}\.getKeyCode\s*\(\s*\)\s*==\s*KeyEvent\.(VK_[A-Z0-9_]+)"
+    )
+    for node in nodes:
+        if node["kind"] != "if" or node["else"]:
+            raise ValueError(f"{input_path.name} {expected_event} has unsupported key dispatch")
+        keys = key_check.findall(node["condition"])
+        reduced = key_check.sub("KEY", node["condition"])
+        if not keys or not re.fullmatch(r"KEY(?:\s*\|\|\s*KEY)*", reduced):
+            raise ValueError(f"{input_path.name} {expected_event} has unsupported key condition")
+        for key in keys:
+            case_id = f"{source_id}:{expected_event}:{key}"
+            continuing, completed = execute_java_nodes(
+                node["then"],
+                [
                     {
+                        "conditions": [],
+                        "condition_values": {},
+                        "actions": [],
+                        "case_chain": [case_id],
+                    }
+                ],
+            )
+            completed.extend(continuing)
+            if not completed:
+                raise ValueError(f"{input_path.name} {case_id} produced no binding paths")
+            for ordinal, path in enumerate(completed, start=1):
+                bindings.append(
+                    {
+                        "binding": f"{case_id}#{ordinal}",
                         "case": case_id,
                         "source_id": source_id,
-                        "event": event,
+                        "event": expected_event,
                         "key": key,
                         "line": node["line"],
-                        "modifier_checks": [],
-                        "binding_count": len(completed),
+                        "conditions": path["conditions"],
+                        "case_chain": path["case_chain"],
+                        "statements": path["actions"],
                     }
                 )
-                indexed_keys.append(key)
+            cases.append(
+                {
+                    "case": case_id,
+                    "source_id": source_id,
+                    "event": expected_event,
+                    "key": key,
+                    "line": node["line"],
+                    "modifier_checks": [],
+                    "binding_count": len(completed),
+                }
+            )
+            indexed_keys.append(key)
 
-    if seen_events != expected_events:
-        raise ValueError(f"{input_path.name} key methods differ from expected: {sorted(seen_events)}")
-    if indexed_keys != re.findall(r"\bKeyEvent\.(VK_[A-Z0-9_]+)", source):
+    if indexed_keys != re.findall(
+        r"\bKeyEvent\.(VK_[A-Z0-9_]+)", source[open_brace + 1 : method_end]
+    ):
         raise ValueError(f"{input_path.name} contains a key constant outside the indexed dispatch")
     case_ids = [entry["case"] for entry in cases]
     binding_ids = [entry["binding"] for entry in bindings]
@@ -873,11 +968,8 @@ def collect_conditional_key_source(
         "source": relative_path(input_path, legacy_root),
         "active_key_cases": len(cases),
         "active_key_bindings": len(bindings),
-        "events": {
-            event: sum(entry["event"] == event for entry in cases)
-            for event in sorted(expected_events)
-        },
-        "post_dispatch_actions": {event: [] for event in sorted(expected_events)},
+        "events": {expected_event: len(cases)},
+        "post_dispatch_actions": {expected_event: []},
         "cases": cases,
         "bindings": bindings,
     }
@@ -950,8 +1042,10 @@ def collect_input_cases(legacy_root: Path) -> dict[str, Any]:
         for source_id, source_path in INPUT_KEY_SOURCES
     ]
     sources.extend(
-        collect_conditional_key_source(legacy_root, source_id, source_path, expected_events)
-        for source_id, source_path, expected_events in INPUT_CONDITIONAL_KEY_SOURCES
+        collect_conditional_key_source(
+            legacy_root, source_id, source_path, expected_event, method_ordinal
+        )
+        for source_id, source_path, expected_event, method_ordinal in INPUT_CONDITIONAL_KEY_SOURCES
     )
     cases = [entry for source in sources for entry in source["cases"]]
     bindings = [entry for source in sources for entry in source["bindings"]]
@@ -1033,8 +1127,8 @@ def validate_matrix(
     dict[str, list[str]],
     dict[str, list[str]],
 ]:
-    if matrix.get("schema_version") != 7:
-        raise ValueError("Matrix schema_version must be 7")
+    if matrix.get("schema_version") != 8:
+        raise ValueError("Matrix schema_version must be 8")
     allowed_statuses = matrix.get("allowed_statuses")
     if allowed_statuses != list(ALLOWED_STATUSES):
         raise ValueError("Matrix allowed_statuses differ from the repository contract")
@@ -1285,7 +1379,7 @@ def build_inventory(legacy_root: Path, matrix_path: Path) -> dict[str, Any]:
         raise ValueError("Every normalized legacy input path must map to the matrix")
 
     return {
-        "schema_version": 7,
+        "schema_version": 8,
         "source": {
             "root": "../lizzieyzy-next-main",
             "version": read_legacy_version(legacy_root),
@@ -1303,8 +1397,8 @@ def build_inventory(legacy_root: Path, matrix_path: Path) -> dict[str, Any]:
             "Menu keys cover active Menu.java resource lookups with Menu. or menu. prefixes.",
             "Menu literal labels cover active string-literal menu constructors; dynamic labels remain represented by their resource or runtime source.",
             "Menu accelerators cover explicit Menu.java setAccelerator calls and direct OS.isWindows guards; other input bindings remain T-003 work.",
-            "Input key bindings symbolically expand Input.java, InputIndependentMainBoard.java, InputIndependentSubboard.java, InputSubboard.java, and FloatBoard.java key dispatch, condition evaluations, executed statements, empty-statement paths, and switch fall-through; controlIsPressed means Control on every platform plus Meta on macOS.",
-            "Pointer bindings symbolically expand the two indexed subboard listeners plus FloatBoard mouse, motion, and wheel condition evaluations, early returns, executed statements, and explicit no-action paths; FloatBoard's candidate scan loop is preserved as one normalized statement because its runtime iteration count is data-dependent.",
+            "Input key bindings symbolically expand Input.java, InputIndependentMainBoard.java, InputIndependentSubboard.java, InputSubboard.java, FloatBoard.java, and the AnalysisFrame table/window key dispatch, condition evaluations, executed statements, empty-statement paths, and switch fall-through; controlIsPressed means Control on every platform plus Meta on macOS.",
+            "Pointer bindings symbolically expand the two indexed subboard listeners plus FloatBoard and AnalysisFrame mouse, motion, and wheel condition evaluations, early returns, executed statements, and explicit no-action paths; data-dependent loops and AnalysisFrame click try/catch handlers are preserved as normalized atomic statements.",
             "Other key-listener and pointer-listener classes remain T-003 work.",
         ],
         "matrix_summary": {

@@ -1,5 +1,5 @@
 {
-  "schema_version": 7,
+  "schema_version": 8,
   "source": {
     "root": "../lizzieyzy-next-main",
     "version": "yzy2.5.3",
@@ -17,23 +17,23 @@
     "Menu keys cover active Menu.java resource lookups with Menu. or menu. prefixes.",
     "Menu literal labels cover active string-literal menu constructors; dynamic labels remain represented by their resource or runtime source.",
     "Menu accelerators cover explicit Menu.java setAccelerator calls and direct OS.isWindows guards; other input bindings remain T-003 work.",
-    "Input key bindings symbolically expand Input.java, InputIndependentMainBoard.java, InputIndependentSubboard.java, InputSubboard.java, and FloatBoard.java key dispatch, condition evaluations, executed statements, empty-statement paths, and switch fall-through; controlIsPressed means Control on every platform plus Meta on macOS.",
-    "Pointer bindings symbolically expand the two indexed subboard listeners plus FloatBoard mouse, motion, and wheel condition evaluations, early returns, executed statements, and explicit no-action paths; FloatBoard's candidate scan loop is preserved as one normalized statement because its runtime iteration count is data-dependent.",
+    "Input key bindings symbolically expand Input.java, InputIndependentMainBoard.java, InputIndependentSubboard.java, InputSubboard.java, FloatBoard.java, and the AnalysisFrame table/window key dispatch, condition evaluations, executed statements, empty-statement paths, and switch fall-through; controlIsPressed means Control on every platform plus Meta on macOS.",
+    "Pointer bindings symbolically expand the two indexed subboard listeners plus FloatBoard and AnalysisFrame mouse, motion, and wheel condition evaluations, early returns, executed statements, and explicit no-action paths; data-dependent loops and AnalysisFrame click try/catch handlers are preserved as normalized atomic statements.",
     "Other key-listener and pointer-listener classes remain T-003 work."
   ],
   "matrix_summary": {
-    "rows": 43,
+    "rows": 44,
     "statuses": {
       "未盘点": 0,
-      "已盘点": 43,
+      "已盘点": 44,
       "实施中": 0,
       "已实现待验证": 0,
       "已验证": 0,
       "用户批准不迁移": 0
     },
     "active_config_leaf_keys": 596,
-    "mapped_config_leaf_keys": 36,
-    "unmapped_config_leaf_keys": 560,
+    "mapped_config_leaf_keys": 38,
+    "unmapped_config_leaf_keys": 558,
     "active_menu_resource_keys": 383,
     "mapped_menu_resource_keys": 48,
     "unmapped_menu_resource_keys": 335,
@@ -43,17 +43,17 @@
     "active_menu_accelerators": 2,
     "mapped_menu_accelerators": 2,
     "unmapped_menu_accelerators": 0,
-    "active_input_key_cases": 128,
-    "mapped_input_key_cases": 128,
+    "active_input_key_cases": 138,
+    "mapped_input_key_cases": 138,
     "unmapped_input_key_cases": 0,
-    "active_input_key_bindings": 349,
-    "mapped_input_key_bindings": 349,
+    "active_input_key_bindings": 359,
+    "mapped_input_key_bindings": 359,
     "unmapped_input_key_bindings": 0,
-    "active_input_pointer_events": 16,
-    "mapped_input_pointer_events": 16,
+    "active_input_pointer_events": 22,
+    "mapped_input_pointer_events": 22,
     "unmapped_input_pointer_events": 0,
-    "active_input_pointer_bindings": 39,
-    "mapped_input_pointer_bindings": 39,
+    "active_input_pointer_bindings": 57,
+    "mapped_input_pointer_bindings": 57,
     "unmapped_input_pointer_bindings": 0
   },
   "config": {
@@ -419,7 +419,9 @@
       {
         "key": "anaframe-use-mousemove",
         "reference_count": 2,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "UI-ANALYSIS-FRAME-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -12242,7 +12244,9 @@
       {
         "key": "suggestions-always-ontop",
         "reference_count": 4,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "UI-ANALYSIS-FRAME-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -17230,12 +17234,36 @@
         "post_dispatch_actions": {
           "keyPressed": []
         }
+      },
+      {
+        "id": "AnalysisFrameTable",
+        "source": "src/main/java/featurecat/lizzie/gui/AnalysisFrame.java",
+        "active_key_cases": 6,
+        "active_key_bindings": 6,
+        "events": {
+          "keyPressed": 6
+        },
+        "post_dispatch_actions": {
+          "keyPressed": []
+        }
+      },
+      {
+        "id": "AnalysisFrameWindow",
+        "source": "src/main/java/featurecat/lizzie/gui/AnalysisFrame.java",
+        "active_key_cases": 4,
+        "active_key_bindings": 4,
+        "events": {
+          "keyPressed": 4
+        },
+        "post_dispatch_actions": {
+          "keyPressed": []
+        }
       }
     ],
-    "active_key_cases": 128,
-    "active_key_bindings": 349,
+    "active_key_cases": 138,
+    "active_key_bindings": 359,
     "events": {
-      "keyPressed": 124,
+      "keyPressed": 134,
       "keyReleased": 4
     },
     "cases": [
@@ -19113,6 +19141,126 @@
         "binding_count": 1,
         "matrix_ids": [
           "ANALYSIS-PONDER-001"
+        ]
+      },
+      {
+        "case": "AnalysisFrameTable:keyPressed:VK_U",
+        "source_id": "AnalysisFrameTable",
+        "event": "keyPressed",
+        "key": "VK_U",
+        "line": 430,
+        "modifier_checks": [],
+        "binding_count": 1,
+        "matrix_ids": [
+          "ANALYSIS-DISPLAY-001"
+        ]
+      },
+      {
+        "case": "AnalysisFrameTable:keyPressed:VK_UP",
+        "source_id": "AnalysisFrameTable",
+        "event": "keyPressed",
+        "key": "VK_UP",
+        "line": 433,
+        "modifier_checks": [],
+        "binding_count": 1,
+        "matrix_ids": [
+          "BOARD-HISTORY-001"
+        ]
+      },
+      {
+        "case": "AnalysisFrameTable:keyPressed:VK_DOWN",
+        "source_id": "AnalysisFrameTable",
+        "event": "keyPressed",
+        "key": "VK_DOWN",
+        "line": 436,
+        "modifier_checks": [],
+        "binding_count": 1,
+        "matrix_ids": [
+          "BOARD-HISTORY-001"
+        ]
+      },
+      {
+        "case": "AnalysisFrameTable:keyPressed:VK_Y",
+        "source_id": "AnalysisFrameTable",
+        "event": "keyPressed",
+        "key": "VK_Y",
+        "line": 439,
+        "modifier_checks": [],
+        "binding_count": 1,
+        "matrix_ids": [
+          "ANALYSIS-DISPLAY-001"
+        ]
+      },
+      {
+        "case": "AnalysisFrameTable:keyPressed:VK_SPACE",
+        "source_id": "AnalysisFrameTable",
+        "event": "keyPressed",
+        "key": "VK_SPACE",
+        "line": 442,
+        "modifier_checks": [],
+        "binding_count": 1,
+        "matrix_ids": [
+          "ANALYSIS-PONDER-001"
+        ]
+      },
+      {
+        "case": "AnalysisFrameTable:keyPressed:VK_Q",
+        "source_id": "AnalysisFrameTable",
+        "event": "keyPressed",
+        "key": "VK_Q",
+        "line": 446,
+        "modifier_checks": [],
+        "binding_count": 1,
+        "matrix_ids": [
+          "UI-ANALYSIS-FRAME-001"
+        ]
+      },
+      {
+        "case": "AnalysisFrameWindow:keyPressed:VK_U",
+        "source_id": "AnalysisFrameWindow",
+        "event": "keyPressed",
+        "key": "VK_U",
+        "line": 454,
+        "modifier_checks": [],
+        "binding_count": 1,
+        "matrix_ids": [
+          "ANALYSIS-DISPLAY-001"
+        ]
+      },
+      {
+        "case": "AnalysisFrameWindow:keyPressed:VK_Y",
+        "source_id": "AnalysisFrameWindow",
+        "event": "keyPressed",
+        "key": "VK_Y",
+        "line": 457,
+        "modifier_checks": [],
+        "binding_count": 1,
+        "matrix_ids": [
+          "ANALYSIS-DISPLAY-001"
+        ]
+      },
+      {
+        "case": "AnalysisFrameWindow:keyPressed:VK_SPACE",
+        "source_id": "AnalysisFrameWindow",
+        "event": "keyPressed",
+        "key": "VK_SPACE",
+        "line": 460,
+        "modifier_checks": [],
+        "binding_count": 1,
+        "matrix_ids": [
+          "ANALYSIS-PONDER-001"
+        ]
+      },
+      {
+        "case": "AnalysisFrameWindow:keyPressed:VK_Q",
+        "source_id": "AnalysisFrameWindow",
+        "event": "keyPressed",
+        "key": "VK_Q",
+        "line": 464,
+        "modifier_checks": [],
+        "binding_count": 1,
+        "matrix_ids": [
+          "UI-ANALYSIS-FRAME-001"
         ]
       }
     ],
@@ -29783,6 +29931,216 @@
         "matrix_ids": [
           "ANALYSIS-PONDER-001"
         ]
+      },
+      {
+        "binding": "AnalysisFrameTable:keyPressed:VK_U#1",
+        "case": "AnalysisFrameTable:keyPressed:VK_U",
+        "source_id": "AnalysisFrameTable",
+        "event": "keyPressed",
+        "key": "VK_U",
+        "line": 430,
+        "conditions": [],
+        "case_chain": [
+          "AnalysisFrameTable:keyPressed:VK_U"
+        ],
+        "statements": [
+          {
+            "line": 431,
+            "statement": "Lizzie.frame.toggleBestMoves();"
+          }
+        ],
+        "matrix_ids": [
+          "ANALYSIS-DISPLAY-001"
+        ]
+      },
+      {
+        "binding": "AnalysisFrameTable:keyPressed:VK_UP#1",
+        "case": "AnalysisFrameTable:keyPressed:VK_UP",
+        "source_id": "AnalysisFrameTable",
+        "event": "keyPressed",
+        "key": "VK_UP",
+        "line": 433,
+        "conditions": [],
+        "case_chain": [
+          "AnalysisFrameTable:keyPressed:VK_UP"
+        ],
+        "statements": [
+          {
+            "line": 434,
+            "statement": "Lizzie.board.previousMove(true);"
+          }
+        ],
+        "matrix_ids": [
+          "BOARD-HISTORY-001"
+        ]
+      },
+      {
+        "binding": "AnalysisFrameTable:keyPressed:VK_DOWN#1",
+        "case": "AnalysisFrameTable:keyPressed:VK_DOWN",
+        "source_id": "AnalysisFrameTable",
+        "event": "keyPressed",
+        "key": "VK_DOWN",
+        "line": 436,
+        "conditions": [],
+        "case_chain": [
+          "AnalysisFrameTable:keyPressed:VK_DOWN"
+        ],
+        "statements": [
+          {
+            "line": 437,
+            "statement": "Lizzie.board.nextMove(true);"
+          }
+        ],
+        "matrix_ids": [
+          "BOARD-HISTORY-001"
+        ]
+      },
+      {
+        "binding": "AnalysisFrameTable:keyPressed:VK_Y#1",
+        "case": "AnalysisFrameTable:keyPressed:VK_Y",
+        "source_id": "AnalysisFrameTable",
+        "event": "keyPressed",
+        "key": "VK_Y",
+        "line": 439,
+        "conditions": [],
+        "case_chain": [
+          "AnalysisFrameTable:keyPressed:VK_Y"
+        ],
+        "statements": [
+          {
+            "line": 440,
+            "statement": "Lizzie.frame.toggleBadMoves();"
+          }
+        ],
+        "matrix_ids": [
+          "ANALYSIS-DISPLAY-001"
+        ]
+      },
+      {
+        "binding": "AnalysisFrameTable:keyPressed:VK_SPACE#1",
+        "case": "AnalysisFrameTable:keyPressed:VK_SPACE",
+        "source_id": "AnalysisFrameTable",
+        "event": "keyPressed",
+        "key": "VK_SPACE",
+        "line": 442,
+        "conditions": [],
+        "case_chain": [
+          "AnalysisFrameTable:keyPressed:VK_SPACE"
+        ],
+        "statements": [
+          {
+            "line": 443,
+            "statement": "Lizzie.frame.togglePonderMannul();"
+          }
+        ],
+        "matrix_ids": [
+          "ANALYSIS-PONDER-001"
+        ]
+      },
+      {
+        "binding": "AnalysisFrameTable:keyPressed:VK_Q#1",
+        "case": "AnalysisFrameTable:keyPressed:VK_Q",
+        "source_id": "AnalysisFrameTable",
+        "event": "keyPressed",
+        "key": "VK_Q",
+        "line": 446,
+        "conditions": [],
+        "case_chain": [
+          "AnalysisFrameTable:keyPressed:VK_Q"
+        ],
+        "statements": [
+          {
+            "line": 447,
+            "statement": "Lizzie.frame.toggleAnalysisFrameAlwaysontop();"
+          }
+        ],
+        "matrix_ids": [
+          "UI-ANALYSIS-FRAME-001"
+        ]
+      },
+      {
+        "binding": "AnalysisFrameWindow:keyPressed:VK_U#1",
+        "case": "AnalysisFrameWindow:keyPressed:VK_U",
+        "source_id": "AnalysisFrameWindow",
+        "event": "keyPressed",
+        "key": "VK_U",
+        "line": 454,
+        "conditions": [],
+        "case_chain": [
+          "AnalysisFrameWindow:keyPressed:VK_U"
+        ],
+        "statements": [
+          {
+            "line": 455,
+            "statement": "Lizzie.frame.toggleBestMoves();"
+          }
+        ],
+        "matrix_ids": [
+          "ANALYSIS-DISPLAY-001"
+        ]
+      },
+      {
+        "binding": "AnalysisFrameWindow:keyPressed:VK_Y#1",
+        "case": "AnalysisFrameWindow:keyPressed:VK_Y",
+        "source_id": "AnalysisFrameWindow",
+        "event": "keyPressed",
+        "key": "VK_Y",
+        "line": 457,
+        "conditions": [],
+        "case_chain": [
+          "AnalysisFrameWindow:keyPressed:VK_Y"
+        ],
+        "statements": [
+          {
+            "line": 458,
+            "statement": "Lizzie.frame.toggleBadMoves();"
+          }
+        ],
+        "matrix_ids": [
+          "ANALYSIS-DISPLAY-001"
+        ]
+      },
+      {
+        "binding": "AnalysisFrameWindow:keyPressed:VK_SPACE#1",
+        "case": "AnalysisFrameWindow:keyPressed:VK_SPACE",
+        "source_id": "AnalysisFrameWindow",
+        "event": "keyPressed",
+        "key": "VK_SPACE",
+        "line": 460,
+        "conditions": [],
+        "case_chain": [
+          "AnalysisFrameWindow:keyPressed:VK_SPACE"
+        ],
+        "statements": [
+          {
+            "line": 461,
+            "statement": "Lizzie.frame.togglePonderMannul();"
+          }
+        ],
+        "matrix_ids": [
+          "ANALYSIS-PONDER-001"
+        ]
+      },
+      {
+        "binding": "AnalysisFrameWindow:keyPressed:VK_Q#1",
+        "case": "AnalysisFrameWindow:keyPressed:VK_Q",
+        "source_id": "AnalysisFrameWindow",
+        "event": "keyPressed",
+        "key": "VK_Q",
+        "line": 464,
+        "conditions": [],
+        "case_chain": [
+          "AnalysisFrameWindow:keyPressed:VK_Q"
+        ],
+        "statements": [
+          {
+            "line": 465,
+            "statement": "Lizzie.frame.toggleAnalysisFrameAlwaysontop();"
+          }
+        ],
+        "matrix_ids": [
+          "UI-ANALYSIS-FRAME-001"
+        ]
       }
     ],
     "pointer_sources": [
@@ -29803,10 +30161,16 @@
         "source": "src/main/java/featurecat/lizzie/gui/FloatBoard.java",
         "active_pointer_events": 4,
         "active_pointer_bindings": 20
+      },
+      {
+        "id": "AnalysisFrame",
+        "source": "src/main/java/featurecat/lizzie/gui/AnalysisFrame.java",
+        "active_pointer_events": 6,
+        "active_pointer_bindings": 18
       }
     ],
-    "active_pointer_events": 16,
-    "active_pointer_bindings": 39,
+    "active_pointer_events": 22,
+    "active_pointer_bindings": 57,
     "pointer_events": [
       {
         "event_id": "InputIndependentSubboard:mouseClicked",
@@ -29966,6 +30330,66 @@
         "binding_count": 10,
         "matrix_ids": [
           "BOARD-FLOAT-INPUT-001"
+        ]
+      },
+      {
+        "event_id": "AnalysisFrame:mouseDragged",
+        "source_id": "AnalysisFrame",
+        "event": "mouseDragged",
+        "line": 322,
+        "binding_count": 1,
+        "matrix_ids": [
+          "UI-ANALYSIS-FRAME-001"
+        ]
+      },
+      {
+        "event_id": "AnalysisFrame:mouseMoved",
+        "source_id": "AnalysisFrame",
+        "event": "mouseMoved",
+        "line": 328,
+        "binding_count": 6,
+        "matrix_ids": [
+          "UI-ANALYSIS-FRAME-001"
+        ]
+      },
+      {
+        "event_id": "AnalysisFrame:mouseWheelMoved",
+        "source_id": "AnalysisFrame",
+        "event": "mouseWheelMoved",
+        "line": 368,
+        "binding_count": 4,
+        "matrix_ids": [
+          "UI-ANALYSIS-FRAME-001"
+        ]
+      },
+      {
+        "event_id": "AnalysisFrame:mouseExited",
+        "source_id": "AnalysisFrame",
+        "event": "mouseExited",
+        "line": 384,
+        "binding_count": 3,
+        "matrix_ids": [
+          "UI-ANALYSIS-FRAME-001"
+        ]
+      },
+      {
+        "event_id": "AnalysisFrame:mouseClicked",
+        "source_id": "AnalysisFrame",
+        "event": "mouseClicked",
+        "line": 397,
+        "binding_count": 3,
+        "matrix_ids": [
+          "UI-ANALYSIS-FRAME-001"
+        ]
+      },
+      {
+        "event_id": "AnalysisFrame:mouseReleased",
+        "source_id": "AnalysisFrame",
+        "event": "mouseReleased",
+        "line": 472,
+        "binding_count": 1,
+        "matrix_ids": [
+          "UI-ANALYSIS-FRAME-001"
         ]
       }
     ],
@@ -31503,6 +31927,631 @@
         ],
         "matrix_ids": [
           "BOARD-FLOAT-INPUT-001"
+        ]
+      },
+      {
+        "binding": "AnalysisFrame:mouseDragged#1",
+        "event_id": "AnalysisFrame:mouseDragged",
+        "source_id": "AnalysisFrame",
+        "event": "mouseDragged",
+        "line": 322,
+        "conditions": [],
+        "statements": [
+          {
+            "line": 324,
+            "statement": "mouseMoved(e);"
+          }
+        ],
+        "matrix_ids": [
+          "UI-ANALYSIS-FRAME-001"
+        ]
+      },
+      {
+        "binding": "AnalysisFrame:mouseMoved#1",
+        "event_id": "AnalysisFrame:mouseMoved",
+        "source_id": "AnalysisFrame",
+        "event": "mouseMoved",
+        "line": 328,
+        "conditions": [
+          {
+            "expression": "!Lizzie.config.anaFrameUseMouseMove || clickOrder != -1",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 330,
+            "statement": "return;"
+          }
+        ],
+        "matrix_ids": [
+          "UI-ANALYSIS-FRAME-001"
+        ]
+      },
+      {
+        "binding": "AnalysisFrame:mouseMoved#2",
+        "event_id": "AnalysisFrame:mouseMoved",
+        "source_id": "AnalysisFrame",
+        "event": "mouseMoved",
+        "line": 328,
+        "conditions": [
+          {
+            "expression": "!Lizzie.config.anaFrameUseMouseMove || clickOrder != -1",
+            "expected": false
+          },
+          {
+            "expression": "row < 0",
+            "expected": true
+          },
+          {
+            "expression": "Lizzie.frame.suggestionclick != LizzieFrame.outOfBoundCoordinate",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 331,
+            "statement": "Point p = e.getPoint();"
+          },
+          {
+            "line": 332,
+            "statement": "int row = table.rowAtPoint(p);"
+          },
+          {
+            "line": 335,
+            "statement": "LizzieFrame.boardRenderer.startNormalBoard();"
+          },
+          {
+            "line": 336,
+            "statement": "LizzieFrame.boardRenderer.clearBranch();"
+          },
+          {
+            "line": 337,
+            "statement": "Lizzie.frame.suggestionclick = LizzieFrame.outOfBoundCoordinate;"
+          },
+          {
+            "line": 338,
+            "statement": "Lizzie.frame.mouseOverCoordinate = LizzieFrame.outOfBoundCoordinate;"
+          },
+          {
+            "line": 339,
+            "statement": "selectedorder = -1;"
+          },
+          {
+            "line": 340,
+            "statement": "currentRow = -1;"
+          },
+          {
+            "line": 341,
+            "statement": "clickOrder = -1;"
+          },
+          {
+            "line": 342,
+            "statement": "Lizzie.frame.refresh();"
+          },
+          {
+            "line": 344,
+            "statement": "return;"
+          }
+        ],
+        "matrix_ids": [
+          "UI-ANALYSIS-FRAME-001"
+        ]
+      },
+      {
+        "binding": "AnalysisFrame:mouseMoved#3",
+        "event_id": "AnalysisFrame:mouseMoved",
+        "source_id": "AnalysisFrame",
+        "event": "mouseMoved",
+        "line": 328,
+        "conditions": [
+          {
+            "expression": "!Lizzie.config.anaFrameUseMouseMove || clickOrder != -1",
+            "expected": false
+          },
+          {
+            "expression": "row < 0",
+            "expected": true
+          },
+          {
+            "expression": "Lizzie.frame.suggestionclick != LizzieFrame.outOfBoundCoordinate",
+            "expected": false
+          }
+        ],
+        "statements": [
+          {
+            "line": 331,
+            "statement": "Point p = e.getPoint();"
+          },
+          {
+            "line": 332,
+            "statement": "int row = table.rowAtPoint(p);"
+          },
+          {
+            "line": 344,
+            "statement": "return;"
+          }
+        ],
+        "matrix_ids": [
+          "UI-ANALYSIS-FRAME-001"
+        ]
+      },
+      {
+        "binding": "AnalysisFrame:mouseMoved#4",
+        "event_id": "AnalysisFrame:mouseMoved",
+        "source_id": "AnalysisFrame",
+        "event": "mouseMoved",
+        "line": 328,
+        "conditions": [
+          {
+            "expression": "!Lizzie.config.anaFrameUseMouseMove || clickOrder != -1",
+            "expected": false
+          },
+          {
+            "expression": "row < 0",
+            "expected": false
+          },
+          {
+            "expression": "table.getValueAt(row, 1).toString().startsWith(\"pass\")",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 331,
+            "statement": "Point p = e.getPoint();"
+          },
+          {
+            "line": 332,
+            "statement": "int row = table.rowAtPoint(p);"
+          },
+          {
+            "line": 346,
+            "statement": "return;"
+          }
+        ],
+        "matrix_ids": [
+          "UI-ANALYSIS-FRAME-001"
+        ]
+      },
+      {
+        "binding": "AnalysisFrame:mouseMoved#5",
+        "event_id": "AnalysisFrame:mouseMoved",
+        "source_id": "AnalysisFrame",
+        "event": "mouseMoved",
+        "line": 328,
+        "conditions": [
+          {
+            "expression": "!Lizzie.config.anaFrameUseMouseMove || clickOrder != -1",
+            "expected": false
+          },
+          {
+            "expression": "row < 0",
+            "expected": false
+          },
+          {
+            "expression": "table.getValueAt(row, 1).toString().startsWith(\"pass\")",
+            "expected": false
+          },
+          {
+            "expression": "selectedorder >= 0 && coords[0] == Lizzie.frame.suggestionclick[0] && coords[1] == Lizzie.frame.suggestionclick[1]",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 331,
+            "statement": "Point p = e.getPoint();"
+          },
+          {
+            "line": 332,
+            "statement": "int row = table.rowAtPoint(p);"
+          },
+          {
+            "line": 347,
+            "statement": "String coordsName = Board.maybeConvertOtherCoordsToNormal(table.getValueAt(row, 1).toString());"
+          },
+          {
+            "line": 349,
+            "statement": "int[] coords = Board.convertNameToCoordinates(coordsName);"
+          }
+        ],
+        "matrix_ids": [
+          "UI-ANALYSIS-FRAME-001"
+        ]
+      },
+      {
+        "binding": "AnalysisFrame:mouseMoved#6",
+        "event_id": "AnalysisFrame:mouseMoved",
+        "source_id": "AnalysisFrame",
+        "event": "mouseMoved",
+        "line": 328,
+        "conditions": [
+          {
+            "expression": "!Lizzie.config.anaFrameUseMouseMove || clickOrder != -1",
+            "expected": false
+          },
+          {
+            "expression": "row < 0",
+            "expected": false
+          },
+          {
+            "expression": "table.getValueAt(row, 1).toString().startsWith(\"pass\")",
+            "expected": false
+          },
+          {
+            "expression": "selectedorder >= 0 && coords[0] == Lizzie.frame.suggestionclick[0] && coords[1] == Lizzie.frame.suggestionclick[1]",
+            "expected": false
+          }
+        ],
+        "statements": [
+          {
+            "line": 331,
+            "statement": "Point p = e.getPoint();"
+          },
+          {
+            "line": 332,
+            "statement": "int row = table.rowAtPoint(p);"
+          },
+          {
+            "line": 347,
+            "statement": "String coordsName = Board.maybeConvertOtherCoordsToNormal(table.getValueAt(row, 1).toString());"
+          },
+          {
+            "line": 349,
+            "statement": "int[] coords = Board.convertNameToCoordinates(coordsName);"
+          },
+          {
+            "line": 354,
+            "statement": "LizzieFrame.boardRenderer.startNormalBoard();"
+          },
+          {
+            "line": 355,
+            "statement": "selectedorder = row;"
+          },
+          {
+            "line": 356,
+            "statement": "currentRow = row;"
+          },
+          {
+            "line": 358,
+            "statement": "Lizzie.frame.mouseOverCoordinate = coords;"
+          },
+          {
+            "line": 359,
+            "statement": "Lizzie.frame.suggestionclick = coords;"
+          },
+          {
+            "line": 360,
+            "statement": "Lizzie.frame.refresh();"
+          }
+        ],
+        "matrix_ids": [
+          "UI-ANALYSIS-FRAME-001"
+        ]
+      },
+      {
+        "binding": "AnalysisFrame:mouseWheelMoved#1",
+        "event_id": "AnalysisFrame:mouseWheelMoved",
+        "source_id": "AnalysisFrame",
+        "event": "mouseWheelMoved",
+        "line": 368,
+        "conditions": [
+          {
+            "expression": "clickOrder != -1",
+            "expected": true
+          },
+          {
+            "expression": "e.getWheelRotation() > 0",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 372,
+            "statement": "Lizzie.frame.doBranch(1);"
+          },
+          {
+            "line": 376,
+            "statement": "Lizzie.frame.refresh();"
+          }
+        ],
+        "matrix_ids": [
+          "UI-ANALYSIS-FRAME-001"
+        ]
+      },
+      {
+        "binding": "AnalysisFrame:mouseWheelMoved#2",
+        "event_id": "AnalysisFrame:mouseWheelMoved",
+        "source_id": "AnalysisFrame",
+        "event": "mouseWheelMoved",
+        "line": 368,
+        "conditions": [
+          {
+            "expression": "clickOrder != -1",
+            "expected": true
+          },
+          {
+            "expression": "e.getWheelRotation() > 0",
+            "expected": false
+          },
+          {
+            "expression": "e.getWheelRotation() < 0",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 374,
+            "statement": "Lizzie.frame.doBranch(-1);"
+          },
+          {
+            "line": 376,
+            "statement": "Lizzie.frame.refresh();"
+          }
+        ],
+        "matrix_ids": [
+          "UI-ANALYSIS-FRAME-001"
+        ]
+      },
+      {
+        "binding": "AnalysisFrame:mouseWheelMoved#3",
+        "event_id": "AnalysisFrame:mouseWheelMoved",
+        "source_id": "AnalysisFrame",
+        "event": "mouseWheelMoved",
+        "line": 368,
+        "conditions": [
+          {
+            "expression": "clickOrder != -1",
+            "expected": true
+          },
+          {
+            "expression": "e.getWheelRotation() > 0",
+            "expected": false
+          },
+          {
+            "expression": "e.getWheelRotation() < 0",
+            "expected": false
+          }
+        ],
+        "statements": [
+          {
+            "line": 376,
+            "statement": "Lizzie.frame.refresh();"
+          }
+        ],
+        "matrix_ids": [
+          "UI-ANALYSIS-FRAME-001"
+        ]
+      },
+      {
+        "binding": "AnalysisFrame:mouseWheelMoved#4",
+        "event_id": "AnalysisFrame:mouseWheelMoved",
+        "source_id": "AnalysisFrame",
+        "event": "mouseWheelMoved",
+        "line": 368,
+        "conditions": [
+          {
+            "expression": "clickOrder != -1",
+            "expected": false
+          }
+        ],
+        "statements": [
+          {
+            "line": 378,
+            "statement": "scrollpane.dispatchEvent(e);"
+          }
+        ],
+        "matrix_ids": [
+          "UI-ANALYSIS-FRAME-001"
+        ]
+      },
+      {
+        "binding": "AnalysisFrame:mouseExited#1",
+        "event_id": "AnalysisFrame:mouseExited",
+        "source_id": "AnalysisFrame",
+        "event": "mouseExited",
+        "line": 384,
+        "conditions": [
+          {
+            "expression": "!Lizzie.config.anaFrameUseMouseMove || clickOrder != -1",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 385,
+            "statement": "return;"
+          }
+        ],
+        "matrix_ids": [
+          "UI-ANALYSIS-FRAME-001"
+        ]
+      },
+      {
+        "binding": "AnalysisFrame:mouseExited#2",
+        "event_id": "AnalysisFrame:mouseExited",
+        "source_id": "AnalysisFrame",
+        "event": "mouseExited",
+        "line": 384,
+        "conditions": [
+          {
+            "expression": "!Lizzie.config.anaFrameUseMouseMove || clickOrder != -1",
+            "expected": false
+          },
+          {
+            "expression": "Lizzie.frame.suggestionclick != LizzieFrame.outOfBoundCoordinate",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 387,
+            "statement": "LizzieFrame.boardRenderer.startNormalBoard();"
+          },
+          {
+            "line": 388,
+            "statement": "LizzieFrame.boardRenderer.clearBranch();"
+          },
+          {
+            "line": 389,
+            "statement": "Lizzie.frame.suggestionclick = LizzieFrame.outOfBoundCoordinate;"
+          },
+          {
+            "line": 390,
+            "statement": "Lizzie.frame.mouseOverCoordinate = LizzieFrame.outOfBoundCoordinate;"
+          },
+          {
+            "line": 391,
+            "statement": "selectedorder = -1;"
+          },
+          {
+            "line": 392,
+            "statement": "currentRow = -1;"
+          },
+          {
+            "line": 393,
+            "statement": "Lizzie.frame.refresh();"
+          }
+        ],
+        "matrix_ids": [
+          "UI-ANALYSIS-FRAME-001"
+        ]
+      },
+      {
+        "binding": "AnalysisFrame:mouseExited#3",
+        "event_id": "AnalysisFrame:mouseExited",
+        "source_id": "AnalysisFrame",
+        "event": "mouseExited",
+        "line": 384,
+        "conditions": [
+          {
+            "expression": "!Lizzie.config.anaFrameUseMouseMove || clickOrder != -1",
+            "expected": false
+          },
+          {
+            "expression": "Lizzie.frame.suggestionclick != LizzieFrame.outOfBoundCoordinate",
+            "expected": false
+          }
+        ],
+        "statements": [],
+        "matrix_ids": [
+          "UI-ANALYSIS-FRAME-001"
+        ]
+      },
+      {
+        "binding": "AnalysisFrame:mouseClicked#1",
+        "event_id": "AnalysisFrame:mouseClicked",
+        "source_id": "AnalysisFrame",
+        "event": "mouseClicked",
+        "line": 397,
+        "conditions": [
+          {
+            "expression": "row >= 0 && col >= 0",
+            "expected": true
+          },
+          {
+            "expression": "e.getButton() == MouseEvent.BUTTON3",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 398,
+            "statement": "int row = table.rowAtPoint(e.getPoint());"
+          },
+          {
+            "line": 399,
+            "statement": "int col = table.columnAtPoint(e.getPoint());"
+          },
+          {
+            "line": 412,
+            "statement": "try { handleTableRightClick(row, col); } catch (Exception ex) { ex.printStackTrace(); }"
+          }
+        ],
+        "matrix_ids": [
+          "UI-ANALYSIS-FRAME-001"
+        ]
+      },
+      {
+        "binding": "AnalysisFrame:mouseClicked#2",
+        "event_id": "AnalysisFrame:mouseClicked",
+        "source_id": "AnalysisFrame",
+        "event": "mouseClicked",
+        "line": 397,
+        "conditions": [
+          {
+            "expression": "row >= 0 && col >= 0",
+            "expected": true
+          },
+          {
+            "expression": "e.getButton() == MouseEvent.BUTTON3",
+            "expected": false
+          }
+        ],
+        "statements": [
+          {
+            "line": 398,
+            "statement": "int row = table.rowAtPoint(e.getPoint());"
+          },
+          {
+            "line": 399,
+            "statement": "int col = table.columnAtPoint(e.getPoint());"
+          },
+          {
+            "line": 418,
+            "statement": "try { handleTableClick(row, col); } catch (Exception ex) { ex.printStackTrace(); }"
+          }
+        ],
+        "matrix_ids": [
+          "UI-ANALYSIS-FRAME-001"
+        ]
+      },
+      {
+        "binding": "AnalysisFrame:mouseClicked#3",
+        "event_id": "AnalysisFrame:mouseClicked",
+        "source_id": "AnalysisFrame",
+        "event": "mouseClicked",
+        "line": 397,
+        "conditions": [
+          {
+            "expression": "row >= 0 && col >= 0",
+            "expected": false
+          }
+        ],
+        "statements": [
+          {
+            "line": 398,
+            "statement": "int row = table.rowAtPoint(e.getPoint());"
+          },
+          {
+            "line": 399,
+            "statement": "int col = table.columnAtPoint(e.getPoint());"
+          }
+        ],
+        "matrix_ids": [
+          "UI-ANALYSIS-FRAME-001"
+        ]
+      },
+      {
+        "binding": "AnalysisFrame:mouseReleased#1",
+        "event_id": "AnalysisFrame:mouseReleased",
+        "source_id": "AnalysisFrame",
+        "event": "mouseReleased",
+        "line": 472,
+        "conditions": [],
+        "statements": [
+          {
+            "line": 473,
+            "statement": "int pick = header.columnAtPoint(e.getPoint());"
+          },
+          {
+            "line": 474,
+            "statement": "sortnum = pick;"
+          }
+        ],
+        "matrix_ids": [
+          "UI-ANALYSIS-FRAME-001"
         ]
       }
     ]

@@ -1,5 +1,5 @@
 {
-  "schema_version": 7,
+  "schema_version": 8,
   "allowed_statuses": [
     "未盘点",
     "已盘点",
@@ -90,7 +90,7 @@
     {
       "id": "BOARD-HISTORY-001",
       "category": "棋盘与对局",
-      "legacy_entry": "BoardHistoryList 与 BoardHistoryNode 管理主线、分支和前后导航；Input 与 InputIndependentMainBoard 提供主窗口和独立主棋盘键盘入口",
+      "legacy_entry": "BoardHistoryList 与 BoardHistoryNode 管理主线、分支和前后导航；Input、InputIndependentMainBoard 与 AnalysisFrame 候选表提供键盘入口",
       "legacy_menu_keys": ["Menu.backToMainBranch", "Menu.deleteBranch", "Menu.setAsMain"],
       "legacy_menu_labels": [],
       "legacy_shortcuts": [],
@@ -114,7 +114,9 @@
         "InputIndependentMainBoard:keyPressed:VK_HOME",
         "InputIndependentMainBoard:keyPressed:VK_END",
         "InputIndependentMainBoard:keyPressed:VK_B",
-        "InputIndependentMainBoard:keyPressed:VK_R"
+        "InputIndependentMainBoard:keyPressed:VK_R",
+        "AnalysisFrameTable:keyPressed:VK_UP",
+        "AnalysisFrameTable:keyPressed:VK_DOWN"
       ],
       "legacy_input_bindings": [
         "keyPressed:VK_RIGHT#1",
@@ -162,17 +164,20 @@
         "InputIndependentMainBoard:keyPressed:VK_HOME#3",
         "InputIndependentMainBoard:keyPressed:VK_END#1",
         "InputIndependentMainBoard:keyPressed:VK_B#3",
-        "InputIndependentMainBoard:keyPressed:VK_R#1"
+        "InputIndependentMainBoard:keyPressed:VK_R#1",
+        "AnalysisFrameTable:keyPressed:VK_UP#1",
+        "AnalysisFrameTable:keyPressed:VK_DOWN#1"
       ],
       "java_evidence": [
         { "path": "src/main/java/featurecat/lizzie/rules/BoardHistoryList.java", "symbol": "class BoardHistoryList" },
         { "path": "src/main/java/featurecat/lizzie/rules/BoardHistoryNode.java", "symbol": "class BoardHistoryNode" },
-        { "path": "src/main/java/featurecat/lizzie/gui/InputIndependentMainBoard.java", "symbol": "independentMainBoard.boardRenderer.isShowingBranch()" }
+        { "path": "src/main/java/featurecat/lizzie/gui/InputIndependentMainBoard.java", "symbol": "independentMainBoard.boardRenderer.isShowingBranch()" },
+        { "path": "src/main/java/featurecat/lizzie/gui/AnalysisFrame.java", "symbol": "Lizzie.board.previousMove(true)" }
       ],
       "config_keys": ["show-leelaz-variation", "new-move-number-in-branch"],
       "inputs_preconditions": "棋谱包含至少一个落子；分支场景需要同一节点存在多个后继。",
-      "success_behavior": "导航保持棋盘、提子、着手身份和分支结构一致；独立主棋盘获得焦点时，方向键使用其 renderer 预览和移动分支。",
-      "failure_cancel_behavior": "到达首尾节点时不得越界或破坏历史树；目标版不得把独立窗口的导航静默发送到错误棋盘上下文。",
+      "success_behavior": "导航保持棋盘、提子、着手身份和分支结构一致；独立主棋盘获得焦点时，方向键使用其 renderer 预览和移动分支；AnalysisFrame 候选表的 Up/Down 直接导航全局主棋盘前后一步。",
+      "failure_cancel_behavior": "到达首尾节点时不得越界或破坏历史树；目标版不得把独立窗口或 AnalysisFrame 的导航静默发送到错误棋盘上下文。",
       "data_io": "内存棋盘历史树。",
       "external_dependencies": [],
       "target_modules": ["Lizzie.Core", "Lizzie.Desktop"],
@@ -181,9 +186,9 @@
         { "path": "src/test/java/featurecat/lizzie/rules/BoardHistoryListSyncSnapshotTest.java", "symbol": "BoardHistoryListSyncSnapshotTest" },
         { "path": "src/test/java/featurecat/lizzie/rules/BoardHistoryNodeRemovedStoneReplayTest.java", "symbol": "BoardHistoryNodeRemovedStoneReplayTest" }
       ],
-      "manual_acceptance": "在主窗口和独立主棋盘分别用方向键及 PageUp/PageDown 穿行主线与两个分支，核对焦点目标、落子、提子和分支编号。",
+      "manual_acceptance": "在主窗口和独立主棋盘分别用方向键及 PageUp/PageDown 穿行主线与两个分支，再让 AnalysisFrame 候选表获得焦点测试 Up/Down，核对焦点目标、落子、提子和分支编号。",
       "status": "已盘点",
-      "evidence": "两个输入源的 46 条本行路径已反向关联；独立源的 Up/Down 使用 independentMainBoard renderer，但 PageUp/PageDown 仍引用主 renderer，是待动态确认的焦点语义差异，不得盲目照搬。"
+      "evidence": "主窗口与独立主棋盘的 46 条本行路径及 AnalysisFrame 表格的两条直接导航路径已反向关联；独立源的 Up/Down 使用 independentMainBoard renderer，但 PageUp/PageDown 仍引用主 renderer，而 AnalysisFrame 固定导航全局主棋盘，焦点差异不得盲目照搬。"
     },
     {
       "id": "KIFU-OPEN-001",
@@ -1051,7 +1056,7 @@
     {
       "id": "ANALYSIS-PONDER-001",
       "category": "分析",
-      "legacy_entry": "主窗口、独立主棋盘、独立副棋盘或外部读盘浮动棋盘的 Space 调用 LizzieFrame.togglePonderMannul 切换前台持续分析",
+      "legacy_entry": "主窗口、独立棋盘、外部读盘浮动棋盘或 AnalysisFrame 表格/窗口的 Space 调用 LizzieFrame.togglePonderMannul 切换前台持续分析",
       "legacy_menu_keys": [],
       "legacy_menu_labels": [],
       "legacy_shortcuts": [],
@@ -1059,18 +1064,23 @@
         "keyPressed:VK_SPACE",
         "InputIndependentMainBoard:keyPressed:VK_SPACE",
         "InputIndependentSubboard:keyPressed:VK_SPACE",
-        "FloatBoard:keyPressed:VK_SPACE"
+        "FloatBoard:keyPressed:VK_SPACE",
+        "AnalysisFrameTable:keyPressed:VK_SPACE",
+        "AnalysisFrameWindow:keyPressed:VK_SPACE"
       ],
       "legacy_input_bindings": [
         "keyPressed:VK_SPACE#1",
         "InputIndependentMainBoard:keyPressed:VK_SPACE#1",
         "InputIndependentSubboard:keyPressed:VK_SPACE#1",
-        "FloatBoard:keyPressed:VK_SPACE#1"
+        "FloatBoard:keyPressed:VK_SPACE#1",
+        "AnalysisFrameTable:keyPressed:VK_SPACE#1",
+        "AnalysisFrameWindow:keyPressed:VK_SPACE#1"
       ],
       "java_evidence": [
         { "path": "src/main/java/featurecat/lizzie/gui/Input.java", "symbol": "togglePonderMannul" },
         { "path": "src/main/java/featurecat/lizzie/gui/InputIndependentSubboard.java", "symbol": "Lizzie.frame.togglePonderMannul()" },
         { "path": "src/main/java/featurecat/lizzie/gui/FloatBoard.java", "symbol": "Lizzie.frame.togglePonderMannul()" },
+        { "path": "src/main/java/featurecat/lizzie/gui/AnalysisFrame.java", "symbol": "Lizzie.frame.togglePonderMannul()" },
         { "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "symbol": "togglePonderMannul" }
       ],
       "config_keys": [],
@@ -1083,7 +1093,7 @@
       "automated_evidence": [],
       "manual_acceptance": "用确定性与真实引擎分别反复开始/停止，核对请求停止、UI 状态、迟到响应和进程退出。",
       "status": "已盘点",
-      "evidence": "四个已盘点输入源的无修饰 Space 均落到同一动作；目标取消时序和真实引擎实测待建立。"
+      "evidence": "六个已盘点输入源的无修饰 Space 均落到同一动作；AnalysisFrame 的表格和窗口监听器分别保留独立焦点入口，目标取消时序和真实引擎实测待建立。"
     },
     {
       "id": "BOARD-VARIATION-001",
@@ -1296,9 +1306,66 @@
       "evidence": "11 个 FloatBoard 键 case 共 16 条路径另分配到本行及既有分析/变化行；4 个 pointer 事件展开为 20 条可达路径，候选扫描 for 循环保留为数据依赖原子语句，局部布尔赋值用于剪除不可达组合。"
     },
     {
+      "id": "UI-ANALYSIS-FRAME-001",
+      "category": "界面显示",
+      "legacy_entry": "AnalysisFrame 的表格、窗口和表头监听器处理 Q、候选悬停/点击、滚轮分支预览、滚动与列排序",
+      "legacy_menu_keys": [],
+      "legacy_menu_labels": [],
+      "legacy_shortcuts": [],
+      "legacy_input_cases": [
+        "AnalysisFrameTable:keyPressed:VK_Q",
+        "AnalysisFrameWindow:keyPressed:VK_Q",
+        "AnalysisFrame:mouseDragged",
+        "AnalysisFrame:mouseMoved",
+        "AnalysisFrame:mouseWheelMoved",
+        "AnalysisFrame:mouseExited",
+        "AnalysisFrame:mouseClicked",
+        "AnalysisFrame:mouseReleased"
+      ],
+      "legacy_input_bindings": [
+        "AnalysisFrameTable:keyPressed:VK_Q#1",
+        "AnalysisFrameWindow:keyPressed:VK_Q#1",
+        "AnalysisFrame:mouseDragged#1",
+        "AnalysisFrame:mouseMoved#1",
+        "AnalysisFrame:mouseMoved#2",
+        "AnalysisFrame:mouseMoved#3",
+        "AnalysisFrame:mouseMoved#4",
+        "AnalysisFrame:mouseMoved#5",
+        "AnalysisFrame:mouseMoved#6",
+        "AnalysisFrame:mouseWheelMoved#1",
+        "AnalysisFrame:mouseWheelMoved#2",
+        "AnalysisFrame:mouseWheelMoved#3",
+        "AnalysisFrame:mouseWheelMoved#4",
+        "AnalysisFrame:mouseExited#1",
+        "AnalysisFrame:mouseExited#2",
+        "AnalysisFrame:mouseExited#3",
+        "AnalysisFrame:mouseClicked#1",
+        "AnalysisFrame:mouseClicked#2",
+        "AnalysisFrame:mouseClicked#3",
+        "AnalysisFrame:mouseReleased#1"
+      ],
+      "java_evidence": [
+        { "path": "src/main/java/featurecat/lizzie/gui/AnalysisFrame.java", "symbol": "public void mouseMoved(MouseEvent e)" },
+        { "path": "src/main/java/featurecat/lizzie/gui/AnalysisFrame.java", "symbol": "private void handleTableClick(int row, int col)" },
+        { "path": "src/main/java/featurecat/lizzie/gui/AnalysisFrame.java", "symbol": "sortnum = pick;" },
+        { "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "symbol": "public void toggleAnalysisFrameAlwaysontop()" }
+      ],
+      "config_keys": ["anaframe-use-mousemove", "suggestions-always-ontop"],
+      "inputs_preconditions": "AnalysisFrame 已创建并获得相应表格或窗口焦点；候选交互需要表格存在有效、非 pass 行和对应引擎分析数据。",
+      "success_behavior": "Q 同步切换主/副候选窗口置顶并持久化；未固定候选且启用移动预览时，移动或拖动更新候选悬停，离开或越界清理；左右键按旧版规则固定、切换或取消候选；已固定时滚轮正负预览分支，否则把滚轮转发给滚动面板；表头释放选择后续取值所用的降序排序列。",
+      "failure_cancel_behavior": "禁用移动预览、已固定候选、pass 行、无效单元格或零方向滚轮按对应分支保持无动作或仅刷新；点击处理异常时旧版只打印堆栈，目标版必须报告失败并保持候选、分支和选择状态一致。",
+      "data_io": "读取引擎候选和棋盘历史；更新内存悬停、固定候选、分支 renderer、排序列与窗口置顶状态，并持久化 anaframe-use-mousemove 和 suggestions-always-ontop。",
+      "external_dependencies": ["GTP 引擎候选分析数据"],
+      "target_modules": ["Lizzie.Core", "Lizzie.Desktop"],
+      "automated_evidence": [],
+      "manual_acceptance": "让 AnalysisFrame 表格与窗口分别获得焦点测试 Q；覆盖移动预览开关、固定/未固定、有效/pass/越界行、左右键、滚轮正负/零、滚动转发、拖动、离开和各可排序表头列，核对主棋盘预览、选择、排序及重启后的置顶设置。",
+      "status": "已盘点",
+      "evidence": "两个 AnalysisFrame 键盘来源的 Q 各一条路径与 6 个 pointer 事件的 18 条可达路径已反向关联；click 的 try/catch 作为保留旧异常语义的原子动作记录，未推测异常内部控制流。"
+    },
+    {
       "id": "ANALYSIS-DISPLAY-001",
       "category": "分析",
-      "legacy_entry": "主窗口与独立主棋盘的 U/M/J/F/H/V/T/Y/K，以及 FloatBoard 的 F/H/T 快捷分支控制候选、变化、手数、热力图、策略和问题手显示",
+      "legacy_entry": "主窗口与独立主棋盘的 U/M/J/F/H/V/T/Y/K、FloatBoard 的 F/H/T，以及 AnalysisFrame 表格/窗口的 U/Y 快捷分支控制候选、变化、手数、热力图、策略和问题手显示",
       "legacy_menu_keys": [],
       "legacy_menu_labels": [],
       "legacy_shortcuts": [],
@@ -1323,7 +1390,11 @@
         "InputIndependentMainBoard:keyPressed:VK_K",
         "FloatBoard:keyPressed:VK_F",
         "FloatBoard:keyPressed:VK_H",
-        "FloatBoard:keyPressed:VK_T"
+        "FloatBoard:keyPressed:VK_T",
+        "AnalysisFrameTable:keyPressed:VK_U",
+        "AnalysisFrameTable:keyPressed:VK_Y",
+        "AnalysisFrameWindow:keyPressed:VK_U",
+        "AnalysisFrameWindow:keyPressed:VK_Y"
       ],
       "legacy_input_bindings": [
         "keyPressed:VK_U#1",
@@ -1356,12 +1427,17 @@
         "InputIndependentMainBoard:keyPressed:VK_K#2",
         "FloatBoard:keyPressed:VK_F#1",
         "FloatBoard:keyPressed:VK_H#1",
-        "FloatBoard:keyPressed:VK_T#1"
+        "FloatBoard:keyPressed:VK_T#1",
+        "AnalysisFrameTable:keyPressed:VK_U#1",
+        "AnalysisFrameTable:keyPressed:VK_Y#1",
+        "AnalysisFrameWindow:keyPressed:VK_U#1",
+        "AnalysisFrameWindow:keyPressed:VK_Y#1"
       ],
       "java_evidence": [
         { "path": "src/main/java/featurecat/lizzie/gui/Input.java", "symbol": "toggleBestMoves" },
         { "path": "src/main/java/featurecat/lizzie/Config.java", "symbol": "toggleShowMoveNumber" },
-        { "path": "src/main/java/featurecat/lizzie/gui/FloatBoard.java", "symbol": "toggleHide" }
+        { "path": "src/main/java/featurecat/lizzie/gui/FloatBoard.java", "symbol": "toggleHide" },
+        { "path": "src/main/java/featurecat/lizzie/gui/AnalysisFrame.java", "symbol": "Lizzie.frame.toggleBadMoves()" }
       ],
       "config_keys": ["show-suggestion-variations"],
       "inputs_preconditions": "主棋盘已显示；需要引擎数据的覆盖层只在相应数据存在时可见。",
@@ -1371,9 +1447,9 @@
       "external_dependencies": ["显示热力图或策略时的引擎分析结果"],
       "target_modules": ["Lizzie.Core", "Lizzie.Desktop"],
       "automated_evidence": [],
-      "manual_acceptance": "逐一执行主窗口 14 条路径及 FloatBoard 的 F/H/T，核对覆盖层、组合优先级、无数据/无修饰 K 的无动作和重启持久化。",
+      "manual_acceptance": "逐一执行主窗口 14 条路径、FloatBoard 的 F/H/T 及 AnalysisFrame 表格/窗口的 U/Y，核对焦点入口、覆盖层、组合优先级、无数据/无修饰 K 的无动作和重启持久化。",
       "status": "已盘点",
-      "evidence": "主窗口 14 条动作/无动作条件路径与 FloatBoard 的隐藏候选、热力图、策略入口已静态展开；各 toggle 的完整配置键与视觉基线仍待后续关联。"
+      "evidence": "主窗口 14 条动作/无动作条件路径、FloatBoard 的隐藏候选/热力图/策略入口，以及 AnalysisFrame 表格和窗口各自的 U/Y 入口已静态展开；各 toggle 的完整配置键与视觉基线仍待后续关联。"
     },
     {
       "id": "ANALYSIS-COUNTING-001",
