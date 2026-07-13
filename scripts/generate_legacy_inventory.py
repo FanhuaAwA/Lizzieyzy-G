@@ -322,6 +322,24 @@ INPUT_POINTER_SOURCES = (
         "src/main/java/featurecat/lizzie/gui/BottomToolbar.java",
         {"mouseClicked", "mousePressed", "mouseReleased", "mouseEntered", "mouseExited"},
     ),
+    (
+        "ConfigDialog2SidebarNav",
+        "src/main/java/featurecat/lizzie/gui/ConfigDialog2.java",
+        {"mousePressed"},
+        {"mousePressed": 1},
+    ),
+    (
+        "ConfigDialog2ToggleRow",
+        "src/main/java/featurecat/lizzie/gui/ConfigDialog2.java",
+        {"mouseClicked"},
+        {"mouseClicked": 1},
+    ),
+    (
+        "ConfigDialog2ColorLabel",
+        "src/main/java/featurecat/lizzie/gui/ConfigDialog2.java",
+        {"mouseClicked"},
+        {"mouseClicked": 2},
+    ),
 )
 INPUT_MODIFIER_CHECKS = (
     ("Alt", re.compile(r"\be\.isAltDown\s*\(\s*\)")),
@@ -1323,8 +1341,8 @@ def validate_matrix(
     dict[str, list[str]],
     dict[str, list[str]],
 ]:
-    if matrix.get("schema_version") != 27:
-        raise ValueError("Matrix schema_version must be 27")
+    if matrix.get("schema_version") != 28:
+        raise ValueError("Matrix schema_version must be 28")
     allowed_statuses = matrix.get("allowed_statuses")
     if allowed_statuses != list(ALLOWED_STATUSES):
         raise ValueError("Matrix allowed_statuses differ from the repository contract")
@@ -1575,7 +1593,7 @@ def build_inventory(legacy_root: Path, matrix_path: Path) -> dict[str, Any]:
         raise ValueError("Every normalized legacy input path must map to the matrix")
 
     return {
-        "schema_version": 27,
+        "schema_version": 28,
         "source": {
             "root": "../lizzieyzy-next-main",
             "version": read_legacy_version(legacy_root),
@@ -1594,7 +1612,7 @@ def build_inventory(legacy_root: Path, matrix_path: Path) -> dict[str, Any]:
             "Menu literal labels cover active string-literal menu constructors; dynamic labels remain represented by their resource or runtime source.",
             "Menu accelerators cover explicit Menu.java setAccelerator calls and direct OS.isWindows guards; other input bindings remain T-003 work.",
             "Input key bindings symbolically expand Input.java, InputIndependentMainBoard.java, InputIndependentSubboard.java, InputSubboard.java, FloatBoard.java, AnalysisFrame table/window, DrawPainting.java, ChooseMoreEngine.java, LoadEngine.java, OtherPrograms.java, TencentKifuDownload.java, FoxKifuDownload.java, BrowserFrame.java, and CaptureTsumeGoFrame.java key dispatch, condition evaluations, executed statements, empty-listener and empty-statement paths, and switch fall-through; controlIsPressed means Control on every platform plus Meta on macOS, and BrowserFrame dispatches Enter through getKeyChar.",
-            "Pointer bindings symbolically expand the two indexed subboard listeners plus FloatBoard, AnalysisFrame, DrawPainting, ChooseMoreEngine, LoadEngine, OtherPrograms, TencentKifuDownload, FoxKifuDownload, BrowserFrame load/stop/label listeners, JFontTextArea, JFontTextField, JIMSendTextPane, the two DemoScrollBarUI2 arrow-button listeners, JPaintTextPane, WindowMenuStrip, YikeLiveDialog, IndependentSubBoard lock/close/top-button plus window listeners, BlunderListPanel, SidebarHeaderPanel, and BottomToolbar across mouse, motion, drag, wheel, and release condition evaluations, early returns, executed statements, and explicit no-action paths; data-dependent loops and click try/catch handlers are preserved as normalized atomic statements.",
+            "Pointer bindings symbolically expand the two indexed subboard listeners plus FloatBoard, AnalysisFrame, DrawPainting, ChooseMoreEngine, LoadEngine, OtherPrograms, TencentKifuDownload, FoxKifuDownload, BrowserFrame load/stop/label listeners, JFontTextArea, JFontTextField, JIMSendTextPane, the two DemoScrollBarUI2 arrow-button listeners, JPaintTextPane, WindowMenuStrip, YikeLiveDialog, IndependentSubBoard lock/close/top-button plus window listeners, BlunderListPanel, SidebarHeaderPanel, BottomToolbar, and ConfigDialog2 sidebar-nav/toggle-row/color-label listeners across mouse, motion, drag, wheel, and release condition evaluations, early returns, executed statements, and explicit no-action paths; data-dependent loops and click try/catch handlers are preserved as normalized atomic statements.",
             "Other key-listener and pointer-listener classes remain T-003 work.",
         ],
         "matrix_summary": {

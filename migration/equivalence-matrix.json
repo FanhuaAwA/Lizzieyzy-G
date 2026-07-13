@@ -1,5 +1,5 @@
 {
-  "schema_version": 27,
+  "schema_version": 28,
   "allowed_statuses": [
     "未盘点",
     "已盘点",
@@ -768,7 +768,7 @@
     {
       "id": "SETTINGS-THEME-001",
       "category": "设置与外观",
-      "legacy_entry": "主题设置通过 ConfigDialog2 和 Theme 影响棋盘与窗口渲染",
+      "legacy_entry": "主题设置通过 ConfigDialog2 和 Theme 影响棋盘与窗口渲染；ColorLabel 色块 mouseClicked 打开颜色选择器并编辑十个主题颜色或问题手表格颜色",
       "legacy_menu_keys": [
         "Menu.theme",
         "Menu.appearanceTheme",
@@ -778,17 +778,34 @@
       ],
       "legacy_menu_labels": [],
       "legacy_shortcuts": [],
-      "legacy_input_cases": [],
-      "legacy_input_bindings": [],
+      "legacy_input_cases": ["ConfigDialog2ColorLabel:mouseClicked"],
+      "legacy_input_bindings": ["ConfigDialog2ColorLabel:mouseClicked#1"],
       "java_evidence": [
         { "path": "src/main/java/featurecat/lizzie/theme/Theme.java", "symbol": "class Theme" },
-        { "path": "src/main/java/featurecat/lizzie/gui/ConfigDialog2.java", "symbol": "class ConfigDialog2" }
+        { "path": "src/main/java/featurecat/lizzie/gui/ConfigDialog2.java", "symbol": "class ColorLabel" },
+        { "path": "src/main/java/featurecat/lizzie/gui/ConfigDialog2.java", "symbol": "public void chooseColor()" },
+        { "path": "src/main/java/featurecat/lizzie/gui/ConfigDialog2.java", "symbol": "private void writeThemeValues()" },
+        { "path": "src/main/java/featurecat/lizzie/gui/ConfigDialog2.java", "symbol": "private void finalizeEditedBlunderColors()" }
       ],
-      "config_keys": ["theme", "board-style"],
-      "inputs_preconditions": "用户打开外观设置并选择有效主题或棋盘样式。",
-      "success_behavior": "保存选择并使棋盘、颜色、字体和相关资源按契约更新。",
-      "failure_cancel_behavior": "取消保留原主题；缺失或损坏资源回退到安全默认值。",
-      "data_io": "读取主题资源并持久化主题配置。",
+      "config_keys": [
+        "theme",
+        "board-style",
+        "pure-background-color",
+        "pure-board-color",
+        "winrate-line-color",
+        "winrate-miss-line-color",
+        "blunder-bar-color",
+        "scoremean-line-color",
+        "comment-background-color",
+        "comment-font-color",
+        "best-move-color",
+        "comment-node-color",
+        "blunder-node-colors"
+      ],
+      "inputs_preconditions": "用户已进入主题页；十个字段 ColorLabel 和问题手表格当前 ColorEditor 共用第二个 mouseClicked 方法。listener 不检查鼠标键、次数或 modifier；常规色行另有 JButton 调用 chooseColor，纯背景/纯棋盘色块和表格编辑器主要依赖 pointer。非 Windows 会在打开 JColorChooser 前隐藏 owner。",
+      "success_behavior": "任意鼠标键和点击次数命中色块都会打开 JColorChooser；确认时只更新当前色块或表格编辑值，取消选择器保持原色，主设置保存后才把默认主题写入 uiConfig 或把命名主题写入 Theme 文件。问题手表格保存前 stopCellEditing 并排序，使颜色继续与所属阈值配对；board-style 仍由既有菜单路径处理。目标版使用可聚焦且具名称/动作的颜色按钮和可取消颜色对话框，区分需要 alpha 与强制不透明的字段，并把预览限制在可回滚编辑快照内。",
+      "failure_cancel_behavior": "右键、中键和双击同样可打开选择器；标准 JColorChooser 不编辑 alpha，选择新色通常把原透明颜色变成 alpha 255。非 Windows 隐藏 owner 没有 finally，异常可使设置窗保持隐藏并打断 modal/ponder 暂停语义。重复进入主题页会创建新的 100ms Swing Timer 并覆盖旧引用；OK/Cancel 仅隐藏且不停止 timer，Escape/关闭也只能停止最新实例。命名 Theme.save 与 Config.save 直接分步写入，后一步失败时不会回滚已改内存或主题文件。目标版取消必须恢复原草稿，验证或保存失败必须保留旧配置并显示错误；缺失/损坏资源回退到安全默认值。",
+      "data_io": "theme 与 board-style 保留既有映射。十个色块读写 pure-background-color、pure-board-color、winrate-line-color、winrate-miss-line-color、blunder-bar-color、scoremean-line-color、comment-background-color、comment-font-color、best-move-color、comment-node-color；表格 ColorEditor 写 blunder-node-colors，但不把同表的 blunder-winrate-thresholds 冒充为本 pointer 直接语义。默认主题保存到 uiConfig，命名主题保存到独立 Theme.config；当前实现不是跨文件原子事务。",
       "external_dependencies": ["主题资源文件"],
       "target_modules": ["Lizzie.Desktop"],
       "automated_evidence": [
@@ -796,9 +813,9 @@
         { "path": "src/test/java/featurecat/lizzie/util/NewThemeAssetsTest.java", "symbol": "NewThemeAssetsTest" },
         { "path": "src/test/java/featurecat/lizzie/gui/MessageThemeTest.java", "symbol": "MessageThemeTest" }
       ],
-      "manual_acceptance": "切换默认与自定义主题，重启后核对棋盘、字体、提示框及损坏资源回退。",
+      "manual_acceptance": "切换默认与自定义主题，重启后核对棋盘、字体、提示框及损坏资源回退；逐一测试十个色块和问题手表格颜色的左/中/右键、单/双击、键盘、选择/取消、alpha 保留、主设置取消及写入失败。Windows/macOS/Linux 分别验证 owner/焦点/ponder 恢复；重复进出主题页并关闭设置后确认无残留 timer、EDT repaint 或对话框引用。在浅/深/高对比、100/125/150/200% DPI、长翻译和 Narrator/VoiceOver/Orca 下核对名称、角色、状态和目标尺寸。",
       "status": "已盘点",
-      "evidence": "主题配置、资源测试已定位；像素与 DPI 基线仍待捕获。"
+      "evidence": "十个字段色块、一个表格 ColorEditor、chooseColor、默认/命名主题写入和 timer 生命周期已静态定位。现有 ConfigBoardStyleTest、NewThemeAssetsTest 与 MessageThemeTest 只覆盖棋盘样式、资源存在和提示颜色，不触发 ColorLabel、表格编辑、alpha、跨平台 modal、timer、取消回滚或保存失败；像素与 DPI 基线仍待捕获。"
     },
     {
       "id": "UI-COORDS-001",
@@ -1872,33 +1889,76 @@
     {
       "id": "SETTINGS-GENERAL-001",
       "category": "设置",
-      "legacy_entry": "Shift+X 调用 LizzieFrame.openConfigDialog2(0) 打开常规设置首个页签",
-      "legacy_menu_keys": [],
+      "legacy_entry": "Shift+X 或综合设置菜单调用 LizzieFrame.openConfigDialog2(0)；ConfigDialog2 的七项现代侧栏在父背景 mousePressed 时切换显示/棋谱/引擎/操作/高级/主题/关于，26 个现代开关行在左键点击启用行时 doClick",
+      "legacy_menu_keys": ["Menu.comprehensiveSettings", "Menu.about"],
       "legacy_menu_labels": [],
       "legacy_shortcuts": [],
       "legacy_input_cases": [
         "keyPressed:VK_X",
-        "InputIndependentMainBoard:keyPressed:VK_X"
+        "InputIndependentMainBoard:keyPressed:VK_X",
+        "ConfigDialog2SidebarNav:mousePressed",
+        "ConfigDialog2ToggleRow:mouseClicked"
       ],
       "legacy_input_bindings": [
         "keyPressed:VK_X#1",
-        "InputIndependentMainBoard:keyPressed:VK_X#1"
+        "InputIndependentMainBoard:keyPressed:VK_X#1",
+        "ConfigDialog2SidebarNav:mousePressed#1",
+        "ConfigDialog2ToggleRow:mouseClicked#1",
+        "ConfigDialog2ToggleRow:mouseClicked#2"
       ],
       "java_evidence": [
         { "path": "src/main/java/featurecat/lizzie/gui/Input.java", "symbol": "openConfigDialog2(0)" },
-        { "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "symbol": "public void openConfigDialog2(int index)" }
+        { "path": "src/main/java/featurecat/lizzie/gui/Menu.java", "symbol": "comprehensiveSettings" },
+        { "path": "src/main/java/featurecat/lizzie/gui/Menu.java", "symbol": "Lizzie.frame.openConfigDialog2(2)" },
+        { "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "symbol": "public void openConfigDialog2(int index)" },
+        { "path": "src/main/java/featurecat/lizzie/gui/ConfigDialog2.java", "symbol": "private void addSidebarNavItem" },
+        { "path": "src/main/java/featurecat/lizzie/gui/ConfigDialog2.java", "symbol": "private void selectModernSettingsSection" },
+        { "path": "src/main/java/featurecat/lizzie/gui/ConfigDialog2.java", "symbol": "private void installToggleRowClickTargets" },
+        { "path": "src/main/java/featurecat/lizzie/gui/ConfigDialog2.java", "symbol": "private boolean saveConfig()" },
+        { "path": "src/main/java/featurecat/lizzie/Config.java", "symbol": "public void toggleShowVariationGraph()" }
       ],
-      "config_keys": [],
-      "inputs_preconditions": "主引擎对象和设置窗口可用。",
-      "success_behavior": "暂停需要暂停的分析，打开常规设置页；关闭后恢复此前持续分析状态。",
-      "failure_cancel_behavior": "取消不保存修改；窗口创建或保存失败需报告并恢复此前分析状态。",
-      "data_io": "读取和按用户确认写入各设置；具体配置键由后续配置矩阵逐项关联。",
+      "config_keys": [
+        "auto-quick-analyze-on-load",
+        "load-sgf-last",
+        "load-estimate-engine",
+        "read-komi",
+        "show-winrate-graph",
+        "show-variation-graph",
+        "show-blunder-bar",
+        "show-mouse-over-winrate-graph",
+        "show-suggestion-maxred",
+        "allow-double-click",
+        "enable-click-review",
+        "allow-drag",
+        "show-comment",
+        "hide-blunder-table-control-pane",
+        "show-coordinates",
+        "no-refresh-on-sub",
+        "play-ponder",
+        "fast-engine-change",
+        "enable-lizzie-cache",
+        "stop-at-empty-board",
+        "enable-startup-benchmark",
+        "no-capture",
+        "mains-always-ontop",
+        "show-quick-links",
+        "show-status",
+        "show-subboard"
+      ],
+      "inputs_preconditions": "主引擎对象和设置窗口可用；openConfigDialog2 记录并暂停 pondering，构造 application-modal 对话框后按入口选择页签。七个 ModernTabComponent 只在父 JPanel 安装 mousePressed，子图标、文本 panel、标题和副标题不冒泡，故主要仅父边距/空隙可达；事件不检查按钮、次数或 modifier。26 个 addToggleRow 对每行五类非 AbstractButton 组件递归安装 mouseClicked；只有左键且对应 toggle enabled 时 doClick，checkbox 本体仍走原生动作。",
+      "success_behavior": "侧栏父背景按下时立即设置 activeModernNavIndex；前五项重建 tab0 的单一设置节，主题/关于选择 tab1/tab2，随后 invokeLater 定位滚动并同步选中绘制。开关行左键单击文字、空白或非按钮子组件时切换对应 checkbox；no-capture 开启会再要求确认。大部分值等待保存，但 show-winrate、show-variation、show-comment、show-subboard、show-status、show-coordinates 的 ChangeListener 会立即更新全局状态/布局，其中 show-variation 还立即调用 Config.save。对话框隐藏后 openConfigDialog2 恢复此前 pondering。目标版使用 Avalonia 原生 ListBox/TabControl 与带内容的 ToggleSwitch/CheckBox、单一可访问动作和 typed draft；仅验证通过的 Apply 原子更新配置与运行态。",
+      "failure_cancel_behavior": "点击导航图标/文字常无动作，右键/中键、拖动起始 press 仍可切页；导航 JPanel 不可聚焦且无名称、角色、动作或选中态。开关行双击通常 doClick 两次并重复副作用，disabled 行仍显示手形光标。旧 Cancel 只隐藏窗口：六个即时 ChangeListener 不回滚，变化图可能已经落盘；show-status 在 readMode 可造成 checkbox 与运行态分叉，show-comment 在受限布局会被强制改回 false。saveConfig 只先验证代理，此后逐步修改配置、窗口、棋盘和引擎，IOException 仅打印并返回 false，先前副作用不回滚；构造/显示异常也没有 finally 保证恢复 pondering。目标版取消/关闭不得改运行态，保存失败保持旧配置并显示字段/文件错误，分析恢复必须在 finally 语义中完成。",
+      "data_io": "本行只纳入 26 个 addToggleRow 直接绑定键：auto-quick-analyze-on-load、load-sgf-last、load-estimate-engine、read-komi、show-winrate-graph、show-variation-graph、show-blunder-bar、show-mouse-over-winrate-graph、show-suggestion-maxred、allow-double-click、enable-click-review、allow-drag、show-comment、hide-blunder-table-control-pane、show-coordinates、no-refresh-on-sub、play-ponder、fast-engine-change、enable-lizzie-cache、stop-at-empty-board、enable-startup-benchmark、no-capture、mains-always-ontop、show-quick-links、show-status、show-subboard；其他 ConfigDialog2 保存键仍待各自用例盘点。部分键在 uiConfig，部分在 leelazConfig；OK 最终调用 Config.save 并刷新菜单，变化图开关例外地在编辑阶段直接保存。",
       "external_dependencies": [],
       "target_modules": ["Lizzie.Core", "Lizzie.Engine", "Lizzie.Desktop"],
-      "automated_evidence": [],
-      "manual_acceptance": "在分析开/关两种状态打开并取消/保存，核对页签、配置变化和分析恢复。",
+      "automated_evidence": [
+        { "path": "src/test/java/featurecat/lizzie/gui/AccessibilitySupportTest.java", "symbol": "iconButtonsReceiveReadableSemanticsAndTooltip" },
+        { "path": "src/test/java/featurecat/lizzie/gui/UiLocalizationGuardTest.java", "symbol": "primaryUiDirectLiteralsStayOnTheExplicitNonLanguageWhitelist" },
+        { "path": "src/test/java/featurecat/lizzie/LocalizationResourceParityTest.java", "symbol": "allMaintainedBundlesHaveIdenticalKeysOrderAndPlaceholders" }
+      ],
+      "manual_acceptance": "在分析开/关两种状态从 Shift+X、综合设置、主题和关于菜单打开，覆盖七项导航的图标/文字/父空隙、左中右键、按下拖离、单/双击及 Tab/方向/Enter/Space。逐项覆盖 26 行的文字/空白/checkbox 本体、enabled/disabled、no-capture 确认、Cancel/Escape/关闭/保存，核对六项即时副作用、配置文件、布局和 pondering；注入 Config.save 失败确认无部分应用。重复进入主题与关闭设置后确认无 timer/EDT/窗口泄漏；在浅/深/高对比、100/125/150/200% DPI、最小窗、长中日韩/泰文及 Narrator/VoiceOver/Orca 下检查焦点、名称、角色、选中态、目标尺寸和裁切。",
       "status": "已盘点",
-      "evidence": "Shift+X 的唯一分支已定位；该对话框覆盖的大量设置仍需按配置键拆分，不以本行宣称设置全部完成。"
+      "evidence": "两个 Shift+X、三个菜单和三个主题内部重开入口、七个 nav 实例、26 个 toggle row、六个即时 ChangeListener、no-capture 确认、modal/ponder 生命周期及 saveConfig 部分写入已静态定位。共享测试只覆盖 AccessibilitySupport helper、ConfigDialog2 可见文字白名单和资源键顺序；没有 nav/row hit dispatch、键盘/焦点、Cancel 回滚、timer、ponder、保存失败、DPI 或辅助技术专项测试。其余 ConfigDialog2 输入与配置键仍需按用例盘点，不以本行宣称设置全部完成。"
     },
     {
       "id": "UI-CONTROLS-001",

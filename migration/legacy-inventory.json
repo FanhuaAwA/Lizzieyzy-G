@@ -1,5 +1,5 @@
 {
-  "schema_version": 27,
+  "schema_version": 28,
   "source": {
     "root": "../lizzieyzy-next-main",
     "version": "yzy2.5.3",
@@ -18,7 +18,7 @@
     "Menu literal labels cover active string-literal menu constructors; dynamic labels remain represented by their resource or runtime source.",
     "Menu accelerators cover explicit Menu.java setAccelerator calls and direct OS.isWindows guards; other input bindings remain T-003 work.",
     "Input key bindings symbolically expand Input.java, InputIndependentMainBoard.java, InputIndependentSubboard.java, InputSubboard.java, FloatBoard.java, AnalysisFrame table/window, DrawPainting.java, ChooseMoreEngine.java, LoadEngine.java, OtherPrograms.java, TencentKifuDownload.java, FoxKifuDownload.java, BrowserFrame.java, and CaptureTsumeGoFrame.java key dispatch, condition evaluations, executed statements, empty-listener and empty-statement paths, and switch fall-through; controlIsPressed means Control on every platform plus Meta on macOS, and BrowserFrame dispatches Enter through getKeyChar.",
-    "Pointer bindings symbolically expand the two indexed subboard listeners plus FloatBoard, AnalysisFrame, DrawPainting, ChooseMoreEngine, LoadEngine, OtherPrograms, TencentKifuDownload, FoxKifuDownload, BrowserFrame load/stop/label listeners, JFontTextArea, JFontTextField, JIMSendTextPane, the two DemoScrollBarUI2 arrow-button listeners, JPaintTextPane, WindowMenuStrip, YikeLiveDialog, IndependentSubBoard lock/close/top-button plus window listeners, BlunderListPanel, SidebarHeaderPanel, and BottomToolbar across mouse, motion, drag, wheel, and release condition evaluations, early returns, executed statements, and explicit no-action paths; data-dependent loops and click try/catch handlers are preserved as normalized atomic statements.",
+    "Pointer bindings symbolically expand the two indexed subboard listeners plus FloatBoard, AnalysisFrame, DrawPainting, ChooseMoreEngine, LoadEngine, OtherPrograms, TencentKifuDownload, FoxKifuDownload, BrowserFrame load/stop/label listeners, JFontTextArea, JFontTextField, JIMSendTextPane, the two DemoScrollBarUI2 arrow-button listeners, JPaintTextPane, WindowMenuStrip, YikeLiveDialog, IndependentSubBoard lock/close/top-button plus window listeners, BlunderListPanel, SidebarHeaderPanel, BottomToolbar, and ConfigDialog2 sidebar-nav/toggle-row/color-label listeners across mouse, motion, drag, wheel, and release condition evaluations, early returns, executed statements, and explicit no-action paths; data-dependent loops and click try/catch handlers are preserved as normalized atomic statements.",
     "Other key-listener and pointer-listener classes remain T-003 work."
   ],
   "matrix_summary": {
@@ -32,11 +32,11 @@
       "用户批准不迁移": 0
     },
     "active_config_leaf_keys": 596,
-    "mapped_config_leaf_keys": 103,
-    "unmapped_config_leaf_keys": 493,
+    "mapped_config_leaf_keys": 127,
+    "unmapped_config_leaf_keys": 469,
     "active_menu_resource_keys": 383,
-    "mapped_menu_resource_keys": 61,
-    "unmapped_menu_resource_keys": 322,
+    "mapped_menu_resource_keys": 63,
+    "unmapped_menu_resource_keys": 320,
     "active_menu_literal_labels": 12,
     "mapped_menu_literal_labels": 12,
     "unmapped_menu_literal_labels": 0,
@@ -49,11 +49,11 @@
     "active_input_key_bindings": 365,
     "mapped_input_key_bindings": 365,
     "unmapped_input_key_bindings": 0,
-    "active_input_pointer_events": 85,
-    "mapped_input_pointer_events": 85,
+    "active_input_pointer_events": 88,
+    "mapped_input_pointer_events": 88,
     "unmapped_input_pointer_events": 0,
-    "active_input_pointer_bindings": 165,
-    "mapped_input_pointer_bindings": 165,
+    "active_input_pointer_bindings": 169,
+    "mapped_input_pointer_bindings": 169,
     "unmapped_input_pointer_bindings": 0
   },
   "config": {
@@ -246,7 +246,9 @@
       {
         "key": "allow-double-click",
         "reference_count": 3,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "SETTINGS-GENERAL-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -271,7 +273,9 @@
       {
         "key": "allow-drag",
         "reference_count": 3,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "SETTINGS-GENERAL-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -1249,7 +1253,8 @@
         "matrix_ids": [
           "ONLINE-FOX-001",
           "ONLINE-TENCENT-001",
-          "ONLINE-YIKE-001"
+          "ONLINE-YIKE-001",
+          "SETTINGS-GENERAL-001"
         ],
         "references": [
           {
@@ -2256,7 +2261,9 @@
       {
         "key": "best-move-color",
         "reference_count": 3,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "SETTINGS-THEME-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/gui/ConfigDialog2.java",
@@ -2294,7 +2301,9 @@
       {
         "key": "blunder-bar-color",
         "reference_count": 3,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "SETTINGS-THEME-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/gui/ConfigDialog2.java",
@@ -2357,7 +2366,9 @@
       {
         "key": "blunder-node-colors",
         "reference_count": 6,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "SETTINGS-THEME-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -3186,6 +3197,7 @@
         "key": "comment-background-color",
         "reference_count": 3,
         "matrix_ids": [
+          "SETTINGS-THEME-001",
           "UI-BLUNDER-SCROLLBAR-001",
           "UI-TEXT-EDIT-001"
         ],
@@ -3214,6 +3226,7 @@
         "key": "comment-font-color",
         "reference_count": 3,
         "matrix_ids": [
+          "SETTINGS-THEME-001",
           "UI-TEXT-EDIT-001"
         ],
         "references": [
@@ -3273,7 +3286,9 @@
       {
         "key": "comment-node-color",
         "reference_count": 3,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "SETTINGS-THEME-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/gui/ConfigDialog2.java",
@@ -4061,7 +4076,9 @@
       {
         "key": "enable-click-review",
         "reference_count": 3,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "SETTINGS-GENERAL-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -4086,7 +4103,9 @@
       {
         "key": "enable-lizzie-cache",
         "reference_count": 3,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "SETTINGS-GENERAL-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -4111,7 +4130,9 @@
       {
         "key": "enable-startup-benchmark",
         "reference_count": 3,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "SETTINGS-GENERAL-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -4582,7 +4603,9 @@
       {
         "key": "fast-engine-change",
         "reference_count": 1,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "SETTINGS-GENERAL-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -5345,6 +5368,7 @@
         "key": "hide-blunder-table-control-pane",
         "reference_count": 2,
         "matrix_ids": [
+          "SETTINGS-GENERAL-001",
           "UI-BLUNDER-SCROLLBAR-001"
         ],
         "references": [
@@ -6740,7 +6764,9 @@
       {
         "key": "load-estimate-engine",
         "reference_count": 2,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "SETTINGS-GENERAL-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -6779,7 +6805,8 @@
         "key": "load-sgf-last",
         "reference_count": 2,
         "matrix_ids": [
-          "KIFU-OPEN-001"
+          "KIFU-OPEN-001",
+          "SETTINGS-GENERAL-001"
         ],
         "references": [
           {
@@ -7065,7 +7092,8 @@
         "key": "mains-always-ontop",
         "reference_count": 5,
         "matrix_ids": [
-          "ONLINE-YIKE-001"
+          "ONLINE-YIKE-001",
+          "SETTINGS-GENERAL-001"
         ],
         "references": [
           {
@@ -7916,7 +7944,9 @@
       {
         "key": "no-capture",
         "reference_count": 2,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "SETTINGS-GENERAL-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -7936,6 +7966,7 @@
         "key": "no-refresh-on-sub",
         "reference_count": 3,
         "matrix_ids": [
+          "SETTINGS-GENERAL-001",
           "UI-LAYOUT-001"
         ],
         "references": [
@@ -8202,7 +8233,9 @@
       {
         "key": "play-ponder",
         "reference_count": 2,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "SETTINGS-GENERAL-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -8464,6 +8497,7 @@
         "key": "pure-background-color",
         "reference_count": 3,
         "matrix_ids": [
+          "SETTINGS-THEME-001",
           "UI-TEXT-EDIT-001"
         ],
         "references": [
@@ -8490,7 +8524,9 @@
       {
         "key": "pure-board-color",
         "reference_count": 3,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "SETTINGS-THEME-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/gui/ConfigDialog2.java",
@@ -8556,7 +8592,8 @@
         "matrix_ids": [
           "KIFU-OPEN-001",
           "ONLINE-FOX-001",
-          "ONLINE-YIKE-001"
+          "ONLINE-YIKE-001",
+          "SETTINGS-GENERAL-001"
         ],
         "references": [
           {
@@ -9249,7 +9286,9 @@
       {
         "key": "scoremean-line-color",
         "reference_count": 3,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "SETTINGS-THEME-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/gui/ConfigDialog2.java",
@@ -9945,7 +9984,9 @@
       {
         "key": "show-blunder-bar",
         "reference_count": 5,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "SETTINGS-GENERAL-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -10039,6 +10080,7 @@
         "key": "show-comment",
         "reference_count": 8,
         "matrix_ids": [
+          "SETTINGS-GENERAL-001",
           "UI-BLUNDER-SCROLLBAR-001"
         ],
         "references": [
@@ -10121,6 +10163,7 @@
         "key": "show-coordinates",
         "reference_count": 3,
         "matrix_ids": [
+          "SETTINGS-GENERAL-001",
           "UI-COORDS-001"
         ],
         "references": [
@@ -10794,7 +10837,9 @@
       {
         "key": "show-mouse-over-winrate-graph",
         "reference_count": 3,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "SETTINGS-GENERAL-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -11333,7 +11378,8 @@
         "key": "show-quick-links",
         "reference_count": 2,
         "matrix_ids": [
-          "EXTERNAL-PROGRAMS-001"
+          "EXTERNAL-PROGRAMS-001",
+          "SETTINGS-GENERAL-001"
         ],
         "references": [
           {
@@ -11565,7 +11611,9 @@
       {
         "key": "show-status",
         "reference_count": 7,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "SETTINGS-GENERAL-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -11653,6 +11701,7 @@
         "key": "show-subboard",
         "reference_count": 9,
         "matrix_ids": [
+          "SETTINGS-GENERAL-001",
           "UI-LAYOUT-001"
         ],
         "references": [
@@ -11715,7 +11764,9 @@
       {
         "key": "show-suggestion-maxred",
         "reference_count": 3,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "SETTINGS-GENERAL-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -11944,7 +11995,9 @@
       {
         "key": "show-variation-graph",
         "reference_count": 6,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "SETTINGS-GENERAL-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -12024,7 +12077,9 @@
       {
         "key": "show-winrate-graph",
         "reference_count": 6,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "SETTINGS-GENERAL-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -12251,7 +12306,9 @@
       {
         "key": "stop-at-empty-board",
         "reference_count": 1,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "SETTINGS-GENERAL-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -14194,7 +14251,9 @@
       {
         "key": "winrate-line-color",
         "reference_count": 3,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "SETTINGS-THEME-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/gui/ConfigDialog2.java",
@@ -14219,7 +14278,9 @@
       {
         "key": "winrate-miss-line-color",
         "reference_count": 3,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "SETTINGS-THEME-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/gui/ConfigDialog2.java",
@@ -14485,7 +14546,9 @@
       },
       {
         "key": "Menu.about",
-        "matrix_ids": [],
+        "matrix_ids": [
+          "SETTINGS-GENERAL-001"
+        ],
         "lines": [
           5080
         ]
@@ -14963,7 +15026,9 @@
       },
       {
         "key": "Menu.comprehensiveSettings",
-        "matrix_ids": [],
+        "matrix_ids": [
+          "SETTINGS-GENERAL-001"
+        ],
         "lines": [
           5204
         ]
@@ -30792,10 +30857,28 @@
         "source": "src/main/java/featurecat/lizzie/gui/BottomToolbar.java",
         "active_pointer_events": 5,
         "active_pointer_bindings": 5
+      },
+      {
+        "id": "ConfigDialog2SidebarNav",
+        "source": "src/main/java/featurecat/lizzie/gui/ConfigDialog2.java",
+        "active_pointer_events": 1,
+        "active_pointer_bindings": 1
+      },
+      {
+        "id": "ConfigDialog2ToggleRow",
+        "source": "src/main/java/featurecat/lizzie/gui/ConfigDialog2.java",
+        "active_pointer_events": 1,
+        "active_pointer_bindings": 2
+      },
+      {
+        "id": "ConfigDialog2ColorLabel",
+        "source": "src/main/java/featurecat/lizzie/gui/ConfigDialog2.java",
+        "active_pointer_events": 1,
+        "active_pointer_bindings": 1
       }
     ],
-    "active_pointer_events": 85,
-    "active_pointer_bindings": 165,
+    "active_pointer_events": 88,
+    "active_pointer_bindings": 169,
     "pointer_events": [
       {
         "event_id": "InputIndependentSubboard:mouseClicked",
@@ -31645,6 +31728,36 @@
         "binding_count": 1,
         "matrix_ids": [
           "UI-DETAILED-TOOLBAR-001"
+        ]
+      },
+      {
+        "event_id": "ConfigDialog2SidebarNav:mousePressed",
+        "source_id": "ConfigDialog2SidebarNav",
+        "event": "mousePressed",
+        "line": 2361,
+        "binding_count": 1,
+        "matrix_ids": [
+          "SETTINGS-GENERAL-001"
+        ]
+      },
+      {
+        "event_id": "ConfigDialog2ToggleRow:mouseClicked",
+        "source_id": "ConfigDialog2ToggleRow",
+        "event": "mouseClicked",
+        "line": 3240,
+        "binding_count": 2,
+        "matrix_ids": [
+          "SETTINGS-GENERAL-001"
+        ]
+      },
+      {
+        "event_id": "ConfigDialog2ColorLabel:mouseClicked",
+        "source_id": "ConfigDialog2ColorLabel",
+        "event": "mouseClicked",
+        "line": 4986,
+        "binding_count": 1,
+        "matrix_ids": [
+          "SETTINGS-THEME-001"
         ]
       }
     ],
@@ -36700,6 +36813,79 @@
         "statements": [],
         "matrix_ids": [
           "UI-DETAILED-TOOLBAR-001"
+        ]
+      },
+      {
+        "binding": "ConfigDialog2SidebarNav:mousePressed#1",
+        "event_id": "ConfigDialog2SidebarNav:mousePressed",
+        "source_id": "ConfigDialog2SidebarNav",
+        "event": "mousePressed",
+        "line": 2361,
+        "conditions": [],
+        "statements": [
+          {
+            "line": 2362,
+            "statement": "selectModernSettingsSection(navIndex, targetTabIndex, scrollY);"
+          }
+        ],
+        "matrix_ids": [
+          "SETTINGS-GENERAL-001"
+        ]
+      },
+      {
+        "binding": "ConfigDialog2ToggleRow:mouseClicked#1",
+        "event_id": "ConfigDialog2ToggleRow:mouseClicked",
+        "source_id": "ConfigDialog2ToggleRow",
+        "event": "mouseClicked",
+        "line": 3240,
+        "conditions": [
+          {
+            "expression": "SwingUtilities.isLeftMouseButton(e) && toggle.isEnabled()",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 3242,
+            "statement": "toggle.doClick();"
+          }
+        ],
+        "matrix_ids": [
+          "SETTINGS-GENERAL-001"
+        ]
+      },
+      {
+        "binding": "ConfigDialog2ToggleRow:mouseClicked#2",
+        "event_id": "ConfigDialog2ToggleRow:mouseClicked",
+        "source_id": "ConfigDialog2ToggleRow",
+        "event": "mouseClicked",
+        "line": 3240,
+        "conditions": [
+          {
+            "expression": "SwingUtilities.isLeftMouseButton(e) && toggle.isEnabled()",
+            "expected": false
+          }
+        ],
+        "statements": [],
+        "matrix_ids": [
+          "SETTINGS-GENERAL-001"
+        ]
+      },
+      {
+        "binding": "ConfigDialog2ColorLabel:mouseClicked#1",
+        "event_id": "ConfigDialog2ColorLabel:mouseClicked",
+        "source_id": "ConfigDialog2ColorLabel",
+        "event": "mouseClicked",
+        "line": 4986,
+        "conditions": [],
+        "statements": [
+          {
+            "line": 4987,
+            "statement": "((ColorLabel) e.getSource()).chooseColor();"
+          }
+        ],
+        "matrix_ids": [
+          "SETTINGS-THEME-001"
         ]
       }
     ]
