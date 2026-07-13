@@ -20,24 +20,24 @@
     "Input key cases cover active Input.java keyPressed/keyReleased VK_* dispatch and local modifier checks; exact fall-through, branch combinations, actions, and mouse bindings remain T-003 work."
   ],
   "matrix_summary": {
-    "rows": 17,
+    "rows": 20,
     "statuses": {
       "未盘点": 0,
-      "已盘点": 17,
+      "已盘点": 20,
       "实施中": 0,
       "已实现待验证": 0,
       "已验证": 0,
       "用户批准不迁移": 0
     },
     "active_config_leaf_keys": 596,
-    "mapped_config_leaf_keys": 28,
-    "unmapped_config_leaf_keys": 568,
+    "mapped_config_leaf_keys": 34,
+    "unmapped_config_leaf_keys": 562,
     "active_menu_resource_keys": 383,
-    "mapped_menu_resource_keys": 47,
-    "unmapped_menu_resource_keys": 336,
+    "mapped_menu_resource_keys": 48,
+    "unmapped_menu_resource_keys": 335,
     "active_menu_literal_labels": 12,
-    "mapped_menu_literal_labels": 6,
-    "unmapped_menu_literal_labels": 6,
+    "mapped_menu_literal_labels": 12,
+    "unmapped_menu_literal_labels": 0,
     "active_menu_accelerators": 2,
     "mapped_menu_accelerators": 2,
     "unmapped_menu_accelerators": 0,
@@ -2163,7 +2163,9 @@
       {
         "key": "batch-analysis-history",
         "reference_count": 1,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "PRIVACY-CLEAR-DATA-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/gui/Menu.java",
@@ -4920,7 +4922,8 @@
         "key": "fox-recent-searches",
         "reference_count": 3,
         "matrix_ids": [
-          "ONLINE-FOX-001"
+          "ONLINE-FOX-001",
+          "PRIVACY-CLEAR-DATA-001"
         ],
         "references": [
           {
@@ -6874,7 +6877,9 @@
       {
         "key": "main-window-other",
         "reference_count": 4,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "UI-DETAILED-TOOLBAR-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -8468,7 +8473,9 @@
       {
         "key": "recent-files",
         "reference_count": 1,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "PRIVACY-CLEAR-DATA-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/gui/Menu.java",
@@ -9484,7 +9491,9 @@
       {
         "key": "share-history",
         "reference_count": 1,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "PRIVACY-CLEAR-DATA-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/gui/Menu.java",
@@ -10006,7 +10015,9 @@
       {
         "key": "show-detailed-toolbar-menu",
         "reference_count": 2,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "UI-DETAILED-TOOLBAR-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -12463,7 +12474,9 @@
       {
         "key": "toolbar-parameter",
         "reference_count": 4,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "UI-DETAILED-TOOLBAR-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -14134,7 +14147,9 @@
       },
       {
         "label": "使用详细工具栏",
-        "matrix_ids": [],
+        "matrix_ids": [
+          "UI-DETAILED-TOOLBAR-001"
+        ],
         "references": [
           {
             "type": "JFontCheckBoxMenuItem",
@@ -14156,7 +14171,9 @@
       },
       {
         "label": "显示拓展/隐藏详细工具栏按钮",
-        "matrix_ids": [],
+        "matrix_ids": [
+          "UI-DETAILED-TOOLBAR-001"
+        ],
         "references": [
           {
             "type": "JFontCheckBoxMenuItem",
@@ -14166,7 +14183,9 @@
       },
       {
         "label": "检查更新",
-        "matrix_ids": [],
+        "matrix_ids": [
+          "UPDATE-WINDOWS-001"
+        ],
         "references": [
           {
             "type": "JFontMenuItem",
@@ -14176,7 +14195,9 @@
       },
       {
         "label": "清除所有个人数据",
-        "matrix_ids": [],
+        "matrix_ids": [
+          "PRIVACY-CLEAR-DATA-001"
+        ],
         "references": [
           {
             "type": "JFontMenuItem",
@@ -14210,7 +14231,9 @@
       },
       {
         "label": "设置模块顺序",
-        "matrix_ids": [],
+        "matrix_ids": [
+          "UI-DETAILED-TOOLBAR-001"
+        ],
         "references": [
           {
             "type": "JFontMenuItem",
@@ -14220,7 +14243,9 @@
       },
       {
         "label": "详细工具栏(过时的)(仅中文)",
-        "matrix_ids": [],
+        "matrix_ids": [
+          "UI-DETAILED-TOOLBAR-001"
+        ],
         "references": [
           {
             "type": "JFontMenu",
@@ -14509,7 +14534,9 @@
       },
       {
         "key": "Menu.bottomToolBar",
-        "matrix_ids": [],
+        "matrix_ids": [
+          "UI-DETAILED-TOOLBAR-001"
+        ],
         "lines": [
           4341
         ]

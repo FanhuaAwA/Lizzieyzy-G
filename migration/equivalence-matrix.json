@@ -519,6 +519,94 @@
       "manual_acceptance": "使用本地可控 SSH/GTP 端点测试成功、错误凭据、超时和断连清理。",
       "status": "已盘点",
       "evidence": "配置与传输测试已在旧版通过；真实端点录制和新版实现待完成。"
+    },
+    {
+      "id": "UI-DETAILED-TOOLBAR-001",
+      "category": "界面显示",
+      "legacy_entry": "仅中文的详细工具栏子菜单允许启用过时详细栏、显示展开按钮并调整三个模块顺序",
+      "legacy_menu_keys": ["Menu.bottomToolBar"],
+      "legacy_menu_labels": [
+        "详细工具栏(过时的)(仅中文)",
+        "使用详细工具栏",
+        "显示拓展/隐藏详细工具栏按钮",
+        "设置模块顺序"
+      ],
+      "legacy_shortcuts": [],
+      "legacy_input_cases": [],
+      "java_evidence": [
+        { "path": "src/main/java/featurecat/lizzie/gui/Menu.java", "symbol": "showDetailedBar" },
+        { "path": "src/main/java/featurecat/lizzie/gui/Menu.java", "symbol": "showDetailedMenu" },
+        { "path": "src/main/java/featurecat/lizzie/gui/ToolbarPositionConfig.java", "symbol": "class ToolbarPositionConfig" },
+        { "path": "src/main/java/featurecat/lizzie/gui/BottomToolbar.java", "symbol": "anaPanelOrder" }
+      ],
+      "config_keys": ["show-detailed-toolbar-menu", "main-window-other", "toolbar-parameter"],
+      "inputs_preconditions": "资源中的 Lizzie.isChinese 为 yes 时显示该子菜单（现有 zh_CN/zh_TW/zh_HK）；主窗口和底部工具栏已创建。",
+      "success_behavior": "确认启用后把工具栏切换到详细高度；展开按钮选择被持久化；顺序对话框更新自动分析、引擎对战和自动落子三个面板顺序。",
+      "failure_cancel_behavior": "拒绝过时功能确认或取消顺序对话框时保持原状态；重复顺序和配置保存失败不得静默破坏已有布局。",
+      "data_io": "读写 show-detailed-toolbar-menu；工具栏高度存于 main-window-other 数组；三个顺序值存于 toolbar-parameter 数组索引 32–34。",
+      "external_dependencies": [],
+      "target_modules": ["Lizzie.Core", "Lizzie.Desktop"],
+      "automated_evidence": [],
+      "manual_acceptance": "在中文与非中文环境分别检查入口；覆盖启用确认/取消、展开按钮、三个唯一顺序、重复顺序拒绝及重启恢复。",
+      "status": "已盘点",
+      "evidence": "四个硬编码字面量、菜单监听器、布局字段和数组持久化位置已静态定位；旧版没有该工作流的专用自动测试，动态 UI 证据尚未捕获。"
+    },
+    {
+      "id": "UPDATE-WINDOWS-001",
+      "category": "更新与发布",
+      "legacy_entry": "帮助菜单“检查更新”调用 WindowsUpdateController.checkForUpdate，并通过 WindowsUpdateService 读取清单、下载校验和启动更新辅助进程",
+      "legacy_menu_keys": [],
+      "legacy_menu_labels": ["检查更新"],
+      "legacy_shortcuts": [],
+      "legacy_input_cases": [],
+      "java_evidence": [
+        { "path": "src/main/java/featurecat/lizzie/gui/Menu.java", "symbol": "checkUpdate" },
+        { "path": "src/main/java/featurecat/lizzie/update/WindowsUpdateController.java", "symbol": "checkForUpdate" },
+        { "path": "src/main/java/featurecat/lizzie/update/WindowsUpdateService.java", "symbol": "DEFAULT_MANIFEST_URL" },
+        { "path": "src/main/java/featurecat/lizzie/update/UpdateManifest.java", "symbol": "SHA256_PATTERN" },
+        { "path": "src/main/java/featurecat/lizzie/update/WindowsUpdateApplier.java", "symbol": "class WindowsUpdateApplier" }
+      ],
+      "config_keys": [],
+      "inputs_preconditions": "手动检查可在任意平台触发；实际自动更新要求 Windows、正式打包版本、可识别安装布局和可达的 HTTPS 清单。",
+      "success_behavior": "非 Windows 或开发版显示明确说明；无更新时提示最新；有更新时展示组件计划，用户选择后下载、校验 SHA-256、暂存并启动更新器。",
+      "failure_cancel_behavior": "网络、清单、下载、哈希、空间、权限或辅助进程失败时报告错误并保持当前安装；稍后或关闭对话框不安装，忽略版本只影响后续自动提示。",
+      "data_io": "读取 GitHub Release 更新清单和安装清单；写 staging、update-request.json 与已安装组件清单；windows-update-last-check-date 和 windows-update-ignored-version 通过常量间接访问，尚未进入 596 个字面量键口径。",
+      "external_dependencies": ["GitHub Releases HTTPS", "Windows 文件系统与更新辅助进程", "网络"],
+      "target_modules": ["Lizzie.Core", "Lizzie.Desktop"],
+      "automated_evidence": [
+        { "path": "src/test/java/featurecat/lizzie/update/WindowsUpdateServiceTest.java", "symbol": "fetchLatestManifestUsesConfiguredProxy" },
+        { "path": "src/test/java/featurecat/lizzie/update/UpdateManifestTest.java", "symbol": "rejectsBadSha256" },
+        { "path": "src/test/java/featurecat/lizzie/update/WindowsUpdatePlanTest.java", "symbol": "selectsCoreAndChangedMatchingResourceOnly" },
+        { "path": "src/test/java/featurecat/lizzie/update/WindowsUpdateApplierTest.java", "symbol": "rollsBackWhenLaterComponentFails" }
+      ],
+      "manual_acceptance": "仅用受控 HTTPS 端点和临时安装副本覆盖无更新、有更新、取消、断网、坏清单、哈希不符、空间不足、权限失败、回滚与重启；不得触碰正式安装或真实发布。",
+      "status": "已盘点",
+      "evidence": "旧版 Windows 更新入口、清单/计划/下载/应用测试及计算配置键已定位；旧实现包含动态 PowerShell 提权路径，只作为风险证据，不能成为新版后端或照搬实现。"
+    },
+    {
+      "id": "PRIVACY-CLEAR-DATA-001",
+      "category": "隐私与用户数据",
+      "legacy_entry": "帮助菜单“清除所有个人数据”经不可撤销确认后删除四个 uiConfig 键并调用 Config.save",
+      "legacy_menu_keys": [],
+      "legacy_menu_labels": ["清除所有个人数据"],
+      "legacy_shortcuts": [],
+      "legacy_input_cases": [],
+      "java_evidence": [
+        { "path": "src/main/java/featurecat/lizzie/gui/Menu.java", "symbol": "clearUserData" },
+        { "path": "src/main/java/featurecat/lizzie/gui/FoxKifuDownload.java", "symbol": "fox-recent-searches" },
+        { "path": "src/main/java/featurecat/lizzie/Config.java", "symbol": "public void save()" }
+      ],
+      "config_keys": ["fox-recent-searches", "recent-files", "batch-analysis-history", "share-history"],
+      "inputs_preconditions": "用户在警告对话框明确确认；测试必须使用隔离配置副本，禁止读取或删除真实用户目录。",
+      "success_behavior": "目标实现应仅删除明确列出的历史数据，原子保存成功后才显示完成，并保留其他设置、棋谱、模型和凭据。",
+      "failure_cancel_behavior": "取消不修改任何数据；保存失败时报告失败并恢复可重试状态。旧版捕获 IOException 后仍显示成功，这是已登记缺陷，不得迁移。",
+      "data_io": "删除 fox-recent-searches、recent-files、batch-analysis-history、share-history 后保存 uiConfig；当前静态证据中仅 fox-recent-searches 有活跃生产者，其余三键为 remove-only。",
+      "external_dependencies": [],
+      "target_modules": ["Lizzie.Core", "Lizzie.Desktop"],
+      "automated_evidence": [],
+      "manual_acceptance": "在临时配置中分别放入四类历史和无关设置，验证取消零变化、确认只删目标项、成功后重读一致、保存失败不报成功且原文件可恢复。",
+      "status": "已盘点",
+      "evidence": "确认文案、四个 remove 和 Config.save 已静态定位；recent-files、batch-analysis-history、share-history 没有活跃读写方，且旧版保存异常后仍显示成功，均需在迁移前裁决并补回归测试。"
     }
   ]
 }
