@@ -1,5 +1,5 @@
 {
-  "schema_version": 12,
+  "schema_version": 13,
   "source": {
     "root": "../lizzieyzy-next-main",
     "version": "yzy2.5.3",
@@ -17,8 +17,8 @@
     "Menu keys cover active Menu.java resource lookups with Menu. or menu. prefixes.",
     "Menu literal labels cover active string-literal menu constructors; dynamic labels remain represented by their resource or runtime source.",
     "Menu accelerators cover explicit Menu.java setAccelerator calls and direct OS.isWindows guards; other input bindings remain T-003 work.",
-    "Input key bindings symbolically expand Input.java, InputIndependentMainBoard.java, InputIndependentSubboard.java, InputSubboard.java, FloatBoard.java, AnalysisFrame table/window, DrawPainting.java, ChooseMoreEngine.java, LoadEngine.java, and OtherPrograms.java key dispatch, condition evaluations, executed statements, empty-listener and empty-statement paths, and switch fall-through; controlIsPressed means Control on every platform plus Meta on macOS.",
-    "Pointer bindings symbolically expand the two indexed subboard listeners plus FloatBoard, AnalysisFrame, DrawPainting, ChooseMoreEngine, LoadEngine, and OtherPrograms mouse, motion, drag, wheel, and release condition evaluations, early returns, executed statements, and explicit no-action paths; data-dependent loops and click try/catch handlers are preserved as normalized atomic statements.",
+    "Input key bindings symbolically expand Input.java, InputIndependentMainBoard.java, InputIndependentSubboard.java, InputSubboard.java, FloatBoard.java, AnalysisFrame table/window, DrawPainting.java, ChooseMoreEngine.java, LoadEngine.java, OtherPrograms.java, and TencentKifuDownload.java key dispatch, condition evaluations, executed statements, empty-listener and empty-statement paths, and switch fall-through; controlIsPressed means Control on every platform plus Meta on macOS.",
+    "Pointer bindings symbolically expand the two indexed subboard listeners plus FloatBoard, AnalysisFrame, DrawPainting, ChooseMoreEngine, LoadEngine, OtherPrograms, and TencentKifuDownload mouse, motion, drag, wheel, and release condition evaluations, early returns, executed statements, and explicit no-action paths; data-dependent loops and click try/catch handlers are preserved as normalized atomic statements.",
     "Other key-listener and pointer-listener classes remain T-003 work."
   ],
   "matrix_summary": {
@@ -32,28 +32,28 @@
       "用户批准不迁移": 0
     },
     "active_config_leaf_keys": 596,
-    "mapped_config_leaf_keys": 46,
-    "unmapped_config_leaf_keys": 550,
+    "mapped_config_leaf_keys": 50,
+    "unmapped_config_leaf_keys": 546,
     "active_menu_resource_keys": 383,
-    "mapped_menu_resource_keys": 51,
-    "unmapped_menu_resource_keys": 332,
+    "mapped_menu_resource_keys": 52,
+    "unmapped_menu_resource_keys": 331,
     "active_menu_literal_labels": 12,
     "mapped_menu_literal_labels": 12,
     "unmapped_menu_literal_labels": 0,
     "active_menu_accelerators": 2,
     "mapped_menu_accelerators": 2,
     "unmapped_menu_accelerators": 0,
-    "active_input_key_cases": 139,
-    "mapped_input_key_cases": 139,
+    "active_input_key_cases": 140,
+    "mapped_input_key_cases": 140,
     "unmapped_input_key_cases": 0,
-    "active_input_key_bindings": 360,
-    "mapped_input_key_bindings": 360,
+    "active_input_key_bindings": 361,
+    "mapped_input_key_bindings": 361,
     "unmapped_input_key_bindings": 0,
-    "active_input_pointer_events": 31,
-    "mapped_input_pointer_events": 31,
+    "active_input_pointer_events": 32,
+    "mapped_input_pointer_events": 32,
     "unmapped_input_pointer_events": 0,
-    "active_input_pointer_bindings": 74,
-    "mapped_input_pointer_bindings": 74,
+    "active_input_pointer_bindings": 76,
+    "mapped_input_pointer_bindings": 76,
     "unmapped_input_pointer_bindings": 0
   },
   "config": {
@@ -1237,7 +1237,9 @@
       {
         "key": "auto-quick-analyze-on-load",
         "reference_count": 3,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "ONLINE-TENCENT-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -4920,7 +4922,8 @@
         "key": "fox-after-get",
         "reference_count": 2,
         "matrix_ids": [
-          "ONLINE-FOX-001"
+          "ONLINE-FOX-001",
+          "ONLINE-TENCENT-001"
         ],
         "references": [
           {
@@ -7658,7 +7661,9 @@
       {
         "key": "network-proxy-host",
         "reference_count": 1,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "ONLINE-TENCENT-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -7671,7 +7676,9 @@
       {
         "key": "network-proxy-mode",
         "reference_count": 1,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "ONLINE-TENCENT-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -7684,7 +7691,9 @@
       {
         "key": "network-proxy-port",
         "reference_count": 1,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "ONLINE-TENCENT-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -16873,7 +16882,9 @@
       },
       {
         "key": "Menu.tencentKifuButton",
-        "matrix_ids": [],
+        "matrix_ids": [
+          "ONLINE-TENCENT-001"
+        ],
         "lines": [
           7810
         ]
@@ -17328,12 +17339,24 @@
         "post_dispatch_actions": {
           "keyPressed": []
         }
+      },
+      {
+        "id": "TencentKifuDownload",
+        "source": "src/main/java/featurecat/lizzie/gui/TencentKifuDownload.java",
+        "active_key_cases": 1,
+        "active_key_bindings": 1,
+        "events": {
+          "keyPressed": 1
+        },
+        "post_dispatch_actions": {
+          "keyPressed": []
+        }
       }
     ],
-    "active_key_cases": 139,
-    "active_key_bindings": 360,
+    "active_key_cases": 140,
+    "active_key_bindings": 361,
     "events": {
-      "keyPressed": 135,
+      "keyPressed": 136,
       "keyReleased": 4
     },
     "cases": [
@@ -19343,6 +19366,18 @@
         "binding_count": 1,
         "matrix_ids": [
           "UI-FREE-DRAWING-001"
+        ]
+      },
+      {
+        "case": "TencentKifuDownload:keyPressed:VK_ENTER",
+        "source_id": "TencentKifuDownload",
+        "event": "keyPressed",
+        "key": "VK_ENTER",
+        "line": 121,
+        "modifier_checks": [],
+        "binding_count": 1,
+        "matrix_ids": [
+          "ONLINE-TENCENT-001"
         ]
       }
     ],
@@ -30252,6 +30287,27 @@
         "matrix_ids": [
           "UI-FREE-DRAWING-001"
         ]
+      },
+      {
+        "binding": "TencentKifuDownload:keyPressed:VK_ENTER#1",
+        "case": "TencentKifuDownload:keyPressed:VK_ENTER",
+        "source_id": "TencentKifuDownload",
+        "event": "keyPressed",
+        "key": "VK_ENTER",
+        "line": 121,
+        "conditions": [],
+        "case_chain": [
+          "TencentKifuDownload:keyPressed:VK_ENTER"
+        ],
+        "statements": [
+          {
+            "line": 122,
+            "statement": "getTencentKifus();"
+          }
+        ],
+        "matrix_ids": [
+          "ONLINE-TENCENT-001"
+        ]
       }
     ],
     "pointer_sources": [
@@ -30302,10 +30358,16 @@
         "source": "src/main/java/featurecat/lizzie/gui/OtherPrograms.java",
         "active_pointer_events": 2,
         "active_pointer_bindings": 2
+      },
+      {
+        "id": "TencentKifuDownload",
+        "source": "src/main/java/featurecat/lizzie/gui/TencentKifuDownload.java",
+        "active_pointer_events": 1,
+        "active_pointer_bindings": 2
       }
     ],
-    "active_pointer_events": 31,
-    "active_pointer_bindings": 74,
+    "active_pointer_events": 32,
+    "active_pointer_bindings": 76,
     "pointer_events": [
       {
         "event_id": "InputIndependentSubboard:mouseClicked",
@@ -30615,6 +30677,16 @@
         "binding_count": 1,
         "matrix_ids": [
           "EXTERNAL-PROGRAMS-001"
+        ]
+      },
+      {
+        "event_id": "TencentKifuDownload:mouseClicked",
+        "source_id": "TencentKifuDownload",
+        "event": "mouseClicked",
+        "line": 206,
+        "binding_count": 2,
+        "matrix_ids": [
+          "ONLINE-TENCENT-001"
         ]
       }
     ],
@@ -33207,6 +33279,62 @@
         "statements": [],
         "matrix_ids": [
           "EXTERNAL-PROGRAMS-001"
+        ]
+      },
+      {
+        "binding": "TencentKifuDownload:mouseClicked#1",
+        "event_id": "TencentKifuDownload:mouseClicked",
+        "source_id": "TencentKifuDownload",
+        "event": "mouseClicked",
+        "line": 206,
+        "conditions": [
+          {
+            "expression": "e.getClickCount() == 2 && row >= 0 && col >= 0 && tencentReq != null",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 207,
+            "statement": "int row = table.rowAtPoint(e.getPoint());"
+          },
+          {
+            "line": 208,
+            "statement": "int col = table.columnAtPoint(e.getPoint());"
+          },
+          {
+            "line": 210,
+            "statement": "loadTencentKifu(table.getValueAt(row, 10).toString());"
+          }
+        ],
+        "matrix_ids": [
+          "ONLINE-TENCENT-001"
+        ]
+      },
+      {
+        "binding": "TencentKifuDownload:mouseClicked#2",
+        "event_id": "TencentKifuDownload:mouseClicked",
+        "source_id": "TencentKifuDownload",
+        "event": "mouseClicked",
+        "line": 206,
+        "conditions": [
+          {
+            "expression": "e.getClickCount() == 2 && row >= 0 && col >= 0 && tencentReq != null",
+            "expected": false
+          }
+        ],
+        "statements": [
+          {
+            "line": 207,
+            "statement": "int row = table.rowAtPoint(e.getPoint());"
+          },
+          {
+            "line": 208,
+            "statement": "int col = table.columnAtPoint(e.getPoint());"
+          }
+        ],
+        "matrix_ids": [
+          "ONLINE-TENCENT-001"
         ]
       }
     ]

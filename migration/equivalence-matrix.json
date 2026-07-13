@@ -1,5 +1,5 @@
 {
-  "schema_version": 12,
+  "schema_version": 13,
   "allowed_statuses": [
     "未盘点",
     "已盘点",
@@ -514,29 +514,59 @@
     {
       "id": "ONLINE-TENCENT-001",
       "category": "在线棋谱",
-      "legacy_entry": "TencentKifuDownload 搜索并下载腾讯围棋棋谱",
-      "legacy_menu_keys": ["Menu.tencentKifu"],
+      "legacy_entry": "菜单/工具栏 Menu.tencentKifu、Menu.tencentKifuButton 打开或复用 TencentKifuDownload；搜索按钮或查询框 Enter 请求列表，表格任意鼠标按键双击有效单元格或操作列按钮请求详情并载入当前棋盘",
+      "legacy_menu_keys": ["Menu.tencentKifu", "Menu.tencentKifuButton"],
       "legacy_menu_labels": [],
       "legacy_shortcuts": [],
-      "legacy_input_cases": [],
-      "legacy_input_bindings": [],
-      "java_evidence": [
-        { "path": "src/main/java/featurecat/lizzie/gui/TencentKifuDownload.java", "symbol": "class TencentKifuDownload" }
+      "legacy_input_cases": [
+        "TencentKifuDownload:keyPressed:VK_ENTER",
+        "TencentKifuDownload:mouseClicked"
       ],
-      "config_keys": ["tencent-recent-searches", "last-tencent-name", "tencent-after-get"],
-      "inputs_preconditions": "网络可用；用户提供有效搜索条件。",
-      "success_behavior": "搜索、展示并下载选中的腾讯围棋棋谱，保存最近搜索和后续动作设置。",
-      "failure_cancel_behavior": "网络、协议或下载失败时报告错误且允许重试；取消不载入不完整棋谱。",
-      "data_io": "腾讯围棋网络请求、响应解析、本地配置与可选棋谱文件。",
-      "external_dependencies": ["腾讯围棋网络接口", "HTTP 客户端"],
-      "target_modules": ["Lizzie.Core", "Lizzie.Desktop"],
+      "legacy_input_bindings": [
+        "TencentKifuDownload:keyPressed:VK_ENTER#1",
+        "TencentKifuDownload:mouseClicked#1",
+        "TencentKifuDownload:mouseClicked#2"
+      ],
+      "java_evidence": [
+        { "path": "src/main/java/featurecat/lizzie/gui/Menu.java", "symbol": "private void openTencentKifu()" },
+        { "path": "src/main/java/featurecat/lizzie/gui/TencentKifuDownload.java", "symbol": "class TencentKifuDownload" },
+        { "path": "src/main/java/featurecat/lizzie/analysis/GetTencentRequest.java", "symbol": "class GetTencentRequest" },
+        { "path": "src/main/java/featurecat/lizzie/util/NetworkProxy.java", "symbol": "class NetworkProxy" },
+        { "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "symbol": "loadDownloadedSgfString" },
+        { "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "symbol": "preloadQuickAnalysisEngineForKifuBrowsing" }
+      ],
+      "config_keys": [
+        "tencent-recent-searches",
+        "last-tencent-name",
+        "tencent-after-get",
+        "fox-after-get",
+        "auto-quick-analyze-on-load",
+        "network-proxy-mode",
+        "network-proxy-host",
+        "network-proxy-port"
+      ],
+      "inputs_preconditions": "主菜单已创建；打开入口会在 EDT 创建/复用窗口并预热快速分析引擎。查询必须非空；纯数字查询同时作为 srcuid。搜索和详情互斥，详情动作要求已有请求对象、非空 chessId 且未在载入。查询框 Enter 不检查修饰键；表格监听器不区分鼠标按键，只要求双击、有效行列和非空请求对象。",
+      "success_behavior": "列表接口每批请求 100 项、窗口每页显示 25 行，并用末项 chessId 游标继续取页；成功非空列表才把 uid/query 去重后插到最多 8 项最近搜索。详情响应中的 SGF 文本直接替换当前棋盘，不写棋谱文件；随后刷新，并在 auto-quick-analyze-on-load 启用、棋谱含真实着手且不处于对局/批量/试下等排除状态时强制走下载棋谱的静默快速全盘分析路径，否则恢复普通前台分析。载入成功后按 tencent-after-get 选择最小化、隐藏或保持窗口，并把焦点还给主窗口；该键缺失时旧版错误地沿用 fox-after-get 默认值。",
+      "failure_cancel_behavior": "空查询、搜索/载入冲突会提示后返回；分页越界保持当前页，连续到达空尾页后提示无更多棋谱。连接 20 秒、读取 25 秒，IOException 总计最多 3 次尝试、两次线性等待后重试；明确失败、JSON/SGF 解析或载入失败显示错误并恢复 busy 状态。旧版没有取消按钮，隐藏/关闭窗口不停止请求，只有新搜索会 shutdownNow 旧执行器；旧连接仍可能回调并污染新查询。成功但空白的 HTTP 响应不会回调，缺少 chesslist/chess 的成功 JSON 也不收尾，两者都会永久 busy；2xx–3xx 之外仍读取 error stream，全文无大小/条目/JSON 深度/SGF 上限，解析异常还把完整响应拼入提示。载入完成仅由 repaint 后固定 120ms 计时器触发，不代表首帧已呈现，且刷新抛错仍继续完成。目标版必须使用可取消异步请求、请求代次隔离、状态码校验、响应/列表/SGF 上限、有限错误摘要和确定性的 busy/呈现收尾；配置保存失败不得假装成功。",
+      "data_io": "通过 NetworkProxy 以 UTF-8 URL 编码 GET 固定 HTTPS 列表/详情接口，使用系统、手动 HTTP 代理或直连；旧版 Scanner 把响应全文读入内存并解析 JSON，详情 SGF 仅载入内存棋盘。触发搜索即保存 last-tencent-name，成功非空列表保存 tencent-recent-searches，后续动作选择保存 tencent-after-get；代理三键是多个联网调用共享配置。此流程不创建或覆盖本地棋谱文件。",
+      "external_dependencies": [
+        "腾讯围棋固定 HTTPS 接口 cgi.huanle.qq.com 与 happyapp.huanle.qq.com",
+        "系统/手动 HTTP 代理与 DNS/TLS",
+        "SGF 解析器、当前棋盘和可选外部 GTP 快速分析引擎"
+      ],
+      "target_modules": ["Lizzie.Core", "Lizzie.Engine", "Lizzie.Desktop"],
       "automated_evidence": [
         { "path": "src/test/java/featurecat/lizzie/analysis/GetTencentRequestTest.java", "symbol": "GetTencentRequestTest" },
-        { "path": "src/test/java/featurecat/lizzie/gui/TencentKifuDownloadTest.java", "symbol": "TencentKifuDownloadTest" }
+        { "path": "src/test/java/featurecat/lizzie/gui/TencentKifuDownloadTest.java", "symbol": "TencentKifuDownloadTest" },
+        { "path": "src/test/java/featurecat/lizzie/gui/KifuLoadFinisherTest.java", "symbol": "completionRunsEvenWhenRefreshThrows" },
+        { "path": "src/test/java/featurecat/lizzie/gui/LizzieFrameRegressionTest.java", "symbol": "downloadedKifuStartsSilentQuickAnalyzeAndForegroundAnalysis" },
+        { "path": "src/test/java/featurecat/lizzie/util/NetworkProxyTest.java", "symbol": "manualModeUsesConfiguredHttpProxy" },
+        { "path": "src/test/java/featurecat/lizzie/util/NetworkProxyInventoryTest.java", "symbol": "outboundJavaNetworkCallersUseNetworkProxyHelper" },
+        { "path": "src/test/java/featurecat/lizzie/ConfigNetworkProxyDefaultsTest.java", "symbol": "defaultConfigUsesDirectProxy" }
       ],
-      "manual_acceptance": "使用固定响应夹具核对搜索、下载、后续动作和失败重试。",
+      "manual_acceptance": "用受控本地服务/代理夹具覆盖菜单和工具栏复用、空/普通/纯数字/超长/Unicode 查询、Enter 各修饰键、每页 25/批次 100、首尾翻页、最近搜索去重/上限/清空确认和三种载入后动作；逐一测试任意鼠标按键的单击/双击、表格外、无请求、操作列重复点击。详情夹具覆盖合法/损坏/巨大 SGF、空白响应、非 2xx、慢连接/慢读取、重试、代理无效、关闭/隐藏/新搜索竞态及保存失败，核对旧版差异登记、目标版取消和代次隔离、当前棋盘替换、快速分析、副作用、焦点与无本地棋谱文件写入。",
       "status": "已盘点",
-      "evidence": "请求与下载测试已在旧版通过；外部接口契约快照尚未固化。"
+      "evidence": "已静态贯通两个入口、Enter 与表格双击路径、分页/最近搜索/配置持久化、固定接口/代理、SGF 载入和后续快速分析；旧测试只覆盖三项 URL 构造、段位格式、延迟收尾、代理与下载棋谱分析恢复，未覆盖真实 HTTP、响应解析、取消、超时、重试、大小限制、陈旧回调或窗口生命周期。未执行真实腾讯网络请求、下载、用户文件写入或旧版 GUI 动态录制。"
     },
     {
       "id": "ONLINE-YIKE-001",
