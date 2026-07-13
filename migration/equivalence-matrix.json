@@ -1,5 +1,5 @@
 {
-  "schema_version": 21,
+  "schema_version": 22,
   "allowed_statuses": [
     "未盘点",
     "已盘点",
@@ -2448,6 +2448,72 @@
       "manual_acceptance": "在 Windows、macOS、Linux 真实窗口覆盖单行/多行/富文本、可编辑/只读/禁用控件，空/非空选区，空/文本/非文本/占用/拒绝剪贴板，右键、macOS Ctrl-click、release popup、Shift+F10/Menu 键、触控及 Ctrl/Command+C/V/X；用零长度、恰好位于字符/字节上限和超限内容验证拒绝策略。核对 JFontTextArea 三个构造器、JFontTextField 两个构造器与 updateUI、JIMSendTextPane 的 true/false 构造，以及 JPaintTextPane 在线只读评论模式；覆盖无空格超长 Unicode/emoji/组合字符折行、字体/颜色回退、浅深高对比主题、光标、选区、焦点和辅助名称。用包含小于号、与号、script/a/img 形状文本、file/http URL、畸形标签和超限内容的本地 SGF 与受控在线夹具确认逐字显示、不导航、不加载资源、不卡 UI；切换在线同步/停止后评论内容、选择、滚动和焦点保持确定。节点注释覆盖多行粘贴、IME composition、提交、取消、切换节点、外部点击、关窗和 SGF 保存重读，确认只写原节点且失败零数据损坏；所有只读评论/控制台只能选择/复制，日志突发、超长行、隐藏/关闭和生产者停止时验证有界缓冲、UI 响应和资源回收。单行即时字段仍须证明完整有效值只原子产生一次副作用；BrowserInitializing 验证有界日志和恢复 System.err。",
       "status": "已盘点",
       "evidence": "JFontTextArea、JFontTextField、JIMSendTextPane 与 JPaintTextPane 各自实现的 5 个 pointer 事件/6 条路径均已静态展开：仅各自 BUTTON3=true 路径执行 copy/paste/cut 启用态刷新和 popup 显示，false 与其余四个事件在类内无动作；JPaint 实例另挂的 LizzieFrame click/enter/exit 监听器不冒充本来源覆盖，留待 LizzieFrame pointer 盘点。JFontTextArea 已追踪 3 个构造器、5 类/6 实例；JFontTextField 已追踪 2 个构造器、AppleStyleSupport/updateUI、27 类/122 个非注释构造，全部无参；JIMSendTextPane 已追踪 1 个布尔构造器、WarpEditorKit、4 类/4 个非注释构造，其中 1 个 true 节点注释可编辑、3 个 false 日志随后只读且覆盖字体。JPaintTextPane 已追踪 1 个无参构造器和 LizzieFrame 的唯一非注释构造点；调用方立即覆盖其 WarpEditorKit、设为透明只读，在线同步才切换显示。两种富文本类的 action 都以本地化显示文字分派三项动作，其他文字无动作；resetEditorKid/getPop/setPop 均无外部调用。静态调用链确认 JIM 粘贴不会发送 GTP，JPaint 只读评论来自 BoardHistory、截取日志及 OnlineDialog 远端 JSON/SGF，且 setComment 只替换换行/空格、不转义 HTML 元字符。配置仅新增追踪到的 use-pure-background、pure-background-color、comment-font-color、comment-background-color，不把 show-comment、hide-blunder-table-control-pane、在线协议或棋谱业务键冒充已覆盖。旧版无 JPaint/popup/剪贴板/纯文本安全/HTML 资源隔离专项测试；OnlineDialogYikeSessionStateTest 只验证分析载荷合并时保留评论，不覆盖渲染。现有 SilentGtpConsole 测试绕过构造，也不能证明控件行为。本轮未读取真实剪贴板、运行旧 GUI、保存棋谱/配置、联网或启动引擎/外部程序。"
+    },
+    {
+      "id": "UI-WINDOW-MENU-STRIP-001",
+      "category": "界面显示",
+      "legacy_entry": "LizzieFrame 用 WindowMenuStrip 把隐藏的源 JMenuBar 中当前可见且文字非空的顶级 JMenu 重建为窗口内按钮；按钮点击开关 popup，已有菜单展开时悬停另一个按钮会切换 popup，pointer 离开只重绘",
+      "legacy_menu_keys": [],
+      "legacy_menu_labels": [],
+      "legacy_shortcuts": [],
+      "legacy_input_cases": [
+        "WindowMenuStrip:mousePressed",
+        "WindowMenuStrip:mouseEntered",
+        "WindowMenuStrip:mouseExited"
+      ],
+      "legacy_input_bindings": [
+        "WindowMenuStrip:mousePressed#1",
+        "WindowMenuStrip:mousePressed#2",
+        "WindowMenuStrip:mouseEntered#1",
+        "WindowMenuStrip:mouseEntered#2",
+        "WindowMenuStrip:mouseExited#1"
+      ],
+      "java_evidence": [
+        { "path": "src/main/java/featurecat/lizzie/gui/WindowMenuStrip.java", "symbol": "public WindowMenuStrip(JMenuBar sourceMenuBar)" },
+        { "path": "src/main/java/featurecat/lizzie/gui/WindowMenuStrip.java", "symbol": "public void rebuild()" },
+        { "path": "src/main/java/featurecat/lizzie/gui/WindowMenuStrip.java", "symbol": "private void openMenu(MenuButton button, boolean toggleIfVisible)" },
+        { "path": "src/main/java/featurecat/lizzie/gui/WindowMenuStrip.java", "symbol": "private void closeMenu(JMenu menu)" },
+        { "path": "src/main/java/featurecat/lizzie/gui/WindowMenuStrip.java", "symbol": "private boolean shouldTreatPressAsCloseRequest(JMenu menu)" },
+        { "path": "src/main/java/featurecat/lizzie/gui/WindowMenuStrip.java", "symbol": "private void ensurePopupListener(JMenu menu)" },
+        { "path": "src/main/java/featurecat/lizzie/gui/WindowMenuStrip.java", "symbol": "private MenuButton(JMenu menu)" },
+        { "path": "src/main/java/featurecat/lizzie/gui/WindowMenuStrip.java", "symbol": "public void mousePressed(MouseEvent e)" },
+        { "path": "src/main/java/featurecat/lizzie/gui/WindowMenuStrip.java", "symbol": "public void mouseEntered(MouseEvent e)" },
+        { "path": "src/main/java/featurecat/lizzie/gui/WindowMenuStrip.java", "symbol": "public void mouseExited(MouseEvent e)" },
+        { "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "symbol": "windowMenuStrip = new WindowMenuStrip(menu);" },
+        { "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "symbol": "windowMenuStrip.rebuild();" },
+        { "path": "src/main/java/featurecat/lizzie/gui/Menu.java", "symbol": "public void setEngineMenuone2status(boolean status)" },
+        { "path": "src/main/java/featurecat/lizzie/gui/Menu.java", "symbol": "public void updateEngineMenu()" },
+        { "path": "src/main/java/featurecat/lizzie/gui/Menu.java", "symbol": "public void updateFastLinks()" },
+        { "path": "src/main/java/featurecat/lizzie/gui/Menu.java", "symbol": "contributeMenu.setVisible(Lizzie.config.showContribute);" },
+        { "path": "src/main/java/featurecat/lizzie/gui/AppleStyleSupport.java", "symbol": "public static void installPopupStyle(JPopupMenu popupMenu)" },
+        { "path": "src/main/java/featurecat/lizzie/gui/AppleStyleSupport.java", "symbol": "public static void paintToolbarSurface(Graphics2D graphics, int width, int height, boolean top)" },
+        { "path": "src/main/java/featurecat/lizzie/gui/AccessibilitySupport.java", "symbol": "public static void installWindowFocusCycling(" },
+        { "path": "src/main/java/featurecat/lizzie/theme/Theme.java", "symbol": "public Color glassPanelBorderColor()" },
+        { "path": "src/main/java/featurecat/lizzie/theme/Theme.java", "symbol": "public int glassCornerRadius()" }
+      ],
+      "config_keys": [
+        "frame-font-size",
+        "is-apple-style",
+        "use-morandi-colors",
+        "glass-panel-border-color",
+        "glass-corner-radius"
+      ],
+      "inputs_preconditions": "源 JMenuBar 已构造；rebuild 仅为可见、非 null、trim 后文字非空的顶级 JMenu 创建按钮。普通 ActionListener 点击不属于本轮 mouse-method 静态解析器，但作为本控件必要行为单独登记。mousePressed 在 popup 已可见，或同一菜单刚由 popup listener 隐藏且距当前 wall clock 不超过 250 ms 时走关闭请求；mouseEntered 仅在某个 popup 已可见而目标 popup 尚未显示时切换菜单，mouseExited 无条件重绘。",
+      "success_behavior": "rebuild 移除旧按钮并按源 JMenuBar 顺序重新创建；按钮复制当前 JMenu 文字并从源字体派生粗体与至少 frame-font-size/12 px 的字号，安装 popup listener、无障碍名称/描述及 Apple/Morandi 样式，但不与源 JMenu 的 enabled 状态同步。普通点击在未抑制时调用 openMenu：隐藏其他 popup、同步通知源 JMenu 的 MenuListener 刷新选中/启用态、安装 popup 样式，并把 popup 锚定在按钮下方；再次点击已打开菜单关闭它。已有菜单展开时进入另一按钮会直接切换而不要求点击，离开只更新 hover 外观。目标版优先使用 Avalonia 原生 Menu/MenuItem、真实 enabled 绑定、flyout placement、键盘导航、焦点视觉和自动屏幕边缘处理；具体菜单项命令继续归各业务矩阵行，不移植 Swing 的手工事件合成、250 ms 计时器或 resize 全量重建。",
+      "failure_cancel_behavior": "旧版 closeMenu 和 hideOtherPopups 在 setVisible(false) 触发 PopupMenuListener 后又手工发送 menuDeselected，且 hideOtherPopups 对所有其他菜单无条件发送，可能重复或虚假通知。按下关闭时 suppressNextAction=true；若该 press 因拖动、取消或平台事件顺序未产生随后的 ActionEvent，下一次键盘或 pointer 激活可能被误吞。recentlyHidden 使用可回拨 wall clock，250 ms 边界依赖平台输入顺序；本类只把 popup 固定锚定在按钮下方，屏幕边缘、RTL 与多显示器适配依赖 Swing/平台调整且旧测试未验证。popup listener 以 client property 只安装一次且捕获外层 strip，无 teardown；若同一 JMenuBar 被新 strip 复用，旧 listener 可保留旧 strip 并阻止新 listener。Menu.updateEngineMenu 会从源栏移除并新建引擎 JMenu 却不 rebuild，strip 可继续持有并打开已移除的旧菜单和旧动作，直到后续布局重算。目标必须保证每次状态转换只发一次语义事件，取消/拖动不污染下一次激活，菜单集合变化立即反映且窗口关闭或重建可回收所有订阅，并在窄屏、RTL、多显示器及辅助技术下保留可达焦点和关闭路径。",
+      "data_io": "WindowMenuStrip 不直接读取 ResourceBundle 或配置 JSON，也不持久化、联网、读写文件或启动进程；它读取源 JMenu 的当前 text/font/visible 和 popup 状态。样式与尺寸链读取 frame-font-size、is-apple-style、use-morandi-colors、glass-panel-border-color、glass-corner-radius；menuHeight 由 frame-font-size 派生，不是独立叶键，当前调用链不读取 glass-accent-color。show-Contribute、show-quick-links、extra-mode 及顶级 Menu.* 资源键属于上游 Menu 构造/可见性或引擎布局，不在本控件重复认领；前两个开关和 updateEngineMenu 替换菜单后都不会立即 rebuild，存在陈旧投影。打开或悬停切换会同步调用源 JMenu 的 MenuListener 读取棋局、引擎和配置状态以刷新菜单项，但不会自动执行叶菜单项命令。LizzieFrame 在构造、布局重算和第二引擎菜单可见性变化时 rebuild；每次布局都重建按钮与焦点节点。",
+      "external_dependencies": [
+        "Swing JMenuBar、JMenu、JPopupMenu、MenuListener/PopupMenuListener 事件顺序",
+        "Windows/macOS/Linux 原生窗口系统、屏幕工作区、DPI、主题和 pointer/键盘输入",
+        "源 Menu 的动态可见性、启用态及其业务 MenuListener"
+      ],
+      "target_modules": ["Lizzie.Desktop"],
+      "automated_evidence": [
+        { "path": "src/test/java/featurecat/lizzie/gui/WindowMenuStripTest.java", "symbol": "void secondPressOnOpenTopMenuClosesInsteadOfReopening()" }
+      ],
+      "manual_acceptance": "在 Windows、macOS、Linux 的浅色、深色、高对比、100%/150%/200% DPI、长本地化文字和 RTL 下，用鼠标、触控、Alt/F10、访问键、Tab、方向键、Enter、Space 与 Escape 覆盖首次打开、同菜单关闭、跨菜单点击/悬停切换、外部点击/取消、快速 press/release/拖动及 250 ms 边界；在窗口四边、多显示器和窄窗口确认 popup 不出可用工作区且焦点可见。动态隐藏/显示引擎和贡献菜单、反复 resize/rebuild、主题/字号切换及关闭重开窗口，确认顺序/状态正确、一次转换只通知一次、无吞键、无陈旧 listener/焦点节点或对象泄漏。用屏幕阅读器核对菜单角色、名称、展开/折叠/禁用状态和菜单项导航。",
+      "status": "已盘点",
+      "evidence": "WindowMenuStrip 的 mousePressed、mouseEntered、mouseExited 已由现有解析器精确展开为 3 个事件/5 条路径：pressed 的关闭请求真路径执行 suppressNextAction、closeMenu 和 consume，假路径无动作；entered 真路径在已有 popup 时切换，假路径 repaint；exited 只 repaint。普通点击/open/toggle 位于 ActionListener lambda，未冒充已归一 pointer binding，但已用静态调用链登记。生产仅 LizzieFrame 构造 1 次，旧测试另构造 1 次；唯一 WindowMenuStripTest 只覆盖 popup 已显示时 press 后 doClick 不重开，不覆盖正常打开、悬停切换、250 ms 边界、通知次数、popup 定位、键盘/触控、DPI/无障碍或 listener 生命周期。本轮未运行旧 GUI、点击真实菜单、修改配置/用户数据、联网、启动引擎或执行菜单项命令。"
     }
   ]
 }

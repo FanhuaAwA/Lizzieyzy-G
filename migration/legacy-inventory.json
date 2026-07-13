@@ -1,5 +1,5 @@
 {
-  "schema_version": 21,
+  "schema_version": 22,
   "source": {
     "root": "../lizzieyzy-next-main",
     "version": "yzy2.5.3",
@@ -18,14 +18,14 @@
     "Menu literal labels cover active string-literal menu constructors; dynamic labels remain represented by their resource or runtime source.",
     "Menu accelerators cover explicit Menu.java setAccelerator calls and direct OS.isWindows guards; other input bindings remain T-003 work.",
     "Input key bindings symbolically expand Input.java, InputIndependentMainBoard.java, InputIndependentSubboard.java, InputSubboard.java, FloatBoard.java, AnalysisFrame table/window, DrawPainting.java, ChooseMoreEngine.java, LoadEngine.java, OtherPrograms.java, TencentKifuDownload.java, FoxKifuDownload.java, BrowserFrame.java, and CaptureTsumeGoFrame.java key dispatch, condition evaluations, executed statements, empty-listener and empty-statement paths, and switch fall-through; controlIsPressed means Control on every platform plus Meta on macOS, and BrowserFrame dispatches Enter through getKeyChar.",
-    "Pointer bindings symbolically expand the two indexed subboard listeners plus FloatBoard, AnalysisFrame, DrawPainting, ChooseMoreEngine, LoadEngine, OtherPrograms, TencentKifuDownload, FoxKifuDownload, BrowserFrame load/stop/label listeners, JFontTextArea, JFontTextField, JIMSendTextPane, the two DemoScrollBarUI2 arrow-button listeners, and JPaintTextPane across mouse, motion, drag, wheel, and release condition evaluations, early returns, executed statements, and explicit no-action paths; data-dependent loops and click try/catch handlers are preserved as normalized atomic statements.",
+    "Pointer bindings symbolically expand the two indexed subboard listeners plus FloatBoard, AnalysisFrame, DrawPainting, ChooseMoreEngine, LoadEngine, OtherPrograms, TencentKifuDownload, FoxKifuDownload, BrowserFrame load/stop/label listeners, JFontTextArea, JFontTextField, JIMSendTextPane, the two DemoScrollBarUI2 arrow-button listeners, JPaintTextPane, and WindowMenuStrip across mouse, motion, drag, wheel, and release condition evaluations, early returns, executed statements, and explicit no-action paths; data-dependent loops and click try/catch handlers are preserved as normalized atomic statements.",
     "Other key-listener and pointer-listener classes remain T-003 work."
   ],
   "matrix_summary": {
-    "rows": 48,
+    "rows": 49,
     "statuses": {
       "未盘点": 0,
-      "已盘点": 48,
+      "已盘点": 49,
       "实施中": 0,
       "已实现待验证": 0,
       "已验证": 0,
@@ -49,11 +49,11 @@
     "active_input_key_bindings": 365,
     "mapped_input_key_bindings": 365,
     "unmapped_input_key_bindings": 0,
-    "active_input_pointer_events": 63,
-    "mapped_input_pointer_events": 63,
+    "active_input_pointer_events": 66,
+    "mapped_input_pointer_events": 66,
     "unmapped_input_pointer_events": 0,
-    "active_input_pointer_bindings": 117,
-    "mapped_input_pointer_bindings": 117,
+    "active_input_pointer_bindings": 122,
+    "mapped_input_pointer_bindings": 122,
     "unmapped_input_pointer_bindings": 0
   },
   "config": {
@@ -4999,7 +4999,8 @@
         "key": "frame-font-size",
         "reference_count": 3,
         "matrix_ids": [
-          "UI-TEXT-EDIT-001"
+          "UI-TEXT-EDIT-001",
+          "UI-WINDOW-MENU-STRIP-001"
         ],
         "references": [
           {
@@ -5117,7 +5118,8 @@
         "key": "glass-corner-radius",
         "reference_count": 1,
         "matrix_ids": [
-          "UI-TEXT-EDIT-001"
+          "UI-TEXT-EDIT-001",
+          "UI-WINDOW-MENU-STRIP-001"
         ],
         "references": [
           {
@@ -5145,7 +5147,8 @@
         "key": "glass-panel-border-color",
         "reference_count": 1,
         "matrix_ids": [
-          "UI-TEXT-EDIT-001"
+          "UI-TEXT-EDIT-001",
+          "UI-WINDOW-MENU-STRIP-001"
         ],
         "references": [
           {
@@ -5702,7 +5705,8 @@
         "key": "is-apple-style",
         "reference_count": 4,
         "matrix_ids": [
-          "UI-TEXT-EDIT-001"
+          "UI-TEXT-EDIT-001",
+          "UI-WINDOW-MENU-STRIP-001"
         ],
         "references": [
           {
@@ -13351,7 +13355,8 @@
         "reference_count": 3,
         "matrix_ids": [
           "UI-BLUNDER-SCROLLBAR-001",
-          "UI-TEXT-EDIT-001"
+          "UI-TEXT-EDIT-001",
+          "UI-WINDOW-MENU-STRIP-001"
         ],
         "references": [
           {
@@ -30672,10 +30677,16 @@
         "source": "src/main/java/featurecat/lizzie/gui/JPaintTextPane.java",
         "active_pointer_events": 5,
         "active_pointer_bindings": 6
+      },
+      {
+        "id": "WindowMenuStrip",
+        "source": "src/main/java/featurecat/lizzie/gui/WindowMenuStrip.java",
+        "active_pointer_events": 3,
+        "active_pointer_bindings": 5
       }
     ],
-    "active_pointer_events": 63,
-    "active_pointer_bindings": 117,
+    "active_pointer_events": 66,
+    "active_pointer_bindings": 122,
     "pointer_events": [
       {
         "event_id": "InputIndependentSubboard:mouseClicked",
@@ -31305,6 +31316,36 @@
         "binding_count": 1,
         "matrix_ids": [
           "UI-TEXT-EDIT-001"
+        ]
+      },
+      {
+        "event_id": "WindowMenuStrip:mousePressed",
+        "source_id": "WindowMenuStrip",
+        "event": "mousePressed",
+        "line": 243,
+        "binding_count": 2,
+        "matrix_ids": [
+          "UI-WINDOW-MENU-STRIP-001"
+        ]
+      },
+      {
+        "event_id": "WindowMenuStrip:mouseEntered",
+        "source_id": "WindowMenuStrip",
+        "event": "mouseEntered",
+        "line": 252,
+        "binding_count": 2,
+        "matrix_ids": [
+          "UI-WINDOW-MENU-STRIP-001"
+        ]
+      },
+      {
+        "event_id": "WindowMenuStrip:mouseExited",
+        "source_id": "WindowMenuStrip",
+        "event": "mouseExited",
+        "line": 261,
+        "binding_count": 1,
+        "matrix_ids": [
+          "UI-WINDOW-MENU-STRIP-001"
         ]
       }
     ],
@@ -34733,6 +34774,114 @@
         "statements": [],
         "matrix_ids": [
           "UI-TEXT-EDIT-001"
+        ]
+      },
+      {
+        "binding": "WindowMenuStrip:mousePressed#1",
+        "event_id": "WindowMenuStrip:mousePressed",
+        "source_id": "WindowMenuStrip",
+        "event": "mousePressed",
+        "line": 243,
+        "conditions": [
+          {
+            "expression": "shouldTreatPressAsCloseRequest(menu)",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 245,
+            "statement": "suppressNextAction = true;"
+          },
+          {
+            "line": 246,
+            "statement": "closeMenu(menu);"
+          },
+          {
+            "line": 247,
+            "statement": "e.consume();"
+          }
+        ],
+        "matrix_ids": [
+          "UI-WINDOW-MENU-STRIP-001"
+        ]
+      },
+      {
+        "binding": "WindowMenuStrip:mousePressed#2",
+        "event_id": "WindowMenuStrip:mousePressed",
+        "source_id": "WindowMenuStrip",
+        "event": "mousePressed",
+        "line": 243,
+        "conditions": [
+          {
+            "expression": "shouldTreatPressAsCloseRequest(menu)",
+            "expected": false
+          }
+        ],
+        "statements": [],
+        "matrix_ids": [
+          "UI-WINDOW-MENU-STRIP-001"
+        ]
+      },
+      {
+        "binding": "WindowMenuStrip:mouseEntered#1",
+        "event_id": "WindowMenuStrip:mouseEntered",
+        "source_id": "WindowMenuStrip",
+        "event": "mouseEntered",
+        "line": 252,
+        "conditions": [
+          {
+            "expression": "hasVisiblePopup() && !menu.getPopupMenu().isVisible()",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 254,
+            "statement": "openMenu(MenuButton.this, false);"
+          }
+        ],
+        "matrix_ids": [
+          "UI-WINDOW-MENU-STRIP-001"
+        ]
+      },
+      {
+        "binding": "WindowMenuStrip:mouseEntered#2",
+        "event_id": "WindowMenuStrip:mouseEntered",
+        "source_id": "WindowMenuStrip",
+        "event": "mouseEntered",
+        "line": 252,
+        "conditions": [
+          {
+            "expression": "hasVisiblePopup() && !menu.getPopupMenu().isVisible()",
+            "expected": false
+          }
+        ],
+        "statements": [
+          {
+            "line": 256,
+            "statement": "repaint();"
+          }
+        ],
+        "matrix_ids": [
+          "UI-WINDOW-MENU-STRIP-001"
+        ]
+      },
+      {
+        "binding": "WindowMenuStrip:mouseExited#1",
+        "event_id": "WindowMenuStrip:mouseExited",
+        "source_id": "WindowMenuStrip",
+        "event": "mouseExited",
+        "line": 261,
+        "conditions": [],
+        "statements": [
+          {
+            "line": 262,
+            "statement": "repaint();"
+          }
+        ],
+        "matrix_ids": [
+          "UI-WINDOW-MENU-STRIP-001"
         ]
       }
     ]
