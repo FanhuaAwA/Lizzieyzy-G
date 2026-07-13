@@ -1,5 +1,5 @@
 {
-  "schema_version": 19,
+  "schema_version": 20,
   "allowed_statuses": [
     "未盘点",
     "已盘点",
@@ -2225,6 +2225,69 @@
       "manual_acceptance": "以空配置、短名称数组、空命令槽、30/31 个条目和无效命令覆盖打开与迁移；检查有效行、空白行、表格外、表头的左/中/右键单击与双击，保存/重复保存/删除/取消/重排/隐藏/关闭/重启；在 Windows、macOS、Linux 覆盖文件选择取消与有效/无效路径，并用受控假程序验证参数边界、工作目录、失败提示、重复启动和进程退出清理。",
       "status": "已盘点",
       "evidence": "OtherPrograms 的空 keyPressed、无条件 mouseClicked 和空 mouseReleased 已归一为 2 个事件/2 条路径；菜单可见性、固定表格、并行数组压缩/持久化边界、文件选择和 FastLink 下游仅完成静态盘点，未执行任何用户配置命令或真实外部进程。"
+    },
+    {
+      "id": "UI-BLUNDER-SCROLLBAR-001",
+      "category": "界面显示",
+      "legacy_entry": "LizzieFrame 为变化列表安装普通 DemoScrollBarUI2(false)，为黑白恶手表的垂直滚动条各安装 DemoScrollBarUI2(true)；后者给上下箭头各增加一组侧栏 hover 监听器",
+      "legacy_menu_keys": [
+        "Menu.showCommentConrolPane",
+        "Menu.showCommentConrolPane.tooltip"
+      ],
+      "legacy_menu_labels": [],
+      "legacy_shortcuts": [],
+      "legacy_input_cases": [
+        "DemoScrollBarUI2Increase:mouseExited",
+        "DemoScrollBarUI2Increase:mouseEntered",
+        "DemoScrollBarUI2Decrease:mouseExited",
+        "DemoScrollBarUI2Decrease:mouseEntered"
+      ],
+      "legacy_input_bindings": [
+        "DemoScrollBarUI2Increase:mouseExited#1",
+        "DemoScrollBarUI2Increase:mouseExited#2",
+        "DemoScrollBarUI2Increase:mouseEntered#1",
+        "DemoScrollBarUI2Increase:mouseEntered#2",
+        "DemoScrollBarUI2Decrease:mouseExited#1",
+        "DemoScrollBarUI2Decrease:mouseExited#2",
+        "DemoScrollBarUI2Decrease:mouseEntered#1",
+        "DemoScrollBarUI2Decrease:mouseEntered#2"
+      ],
+      "java_evidence": [
+        { "path": "src/main/java/featurecat/lizzie/gui/DemoScrollBarUI2.java", "symbol": "public DemoScrollBarUI2(boolean needAddAction)" },
+        { "path": "src/main/java/featurecat/lizzie/gui/DemoScrollBarUI2.java", "symbol": "protected JButton createIncreaseButton(int orientation)" },
+        { "path": "src/main/java/featurecat/lizzie/gui/DemoScrollBarUI2.java", "symbol": "protected JButton createDecreaseButton(int orientation)" },
+        { "path": "src/main/java/featurecat/lizzie/gui/DemoScrollBarUI2.java", "symbol": "protected void paintThumb(Graphics g, JComponent c, Rectangle thumbBounds)" },
+        { "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "symbol": "public LizzieFrame()" },
+        { "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "symbol": "public void setBlunderControlPane(boolean fromComment, boolean resetPos)" },
+        { "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "symbol": "public void appendComment()" },
+        { "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "symbol": "public void requestProblemListRefresh()" },
+        { "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "symbol": "public void refreshProblemListSnapshot()" },
+        { "path": "src/main/java/featurecat/lizzie/gui/SidebarPanel.java", "symbol": "public void switchTo(String viewName)" },
+        { "path": "src/main/java/featurecat/lizzie/rules/SGFParser.java", "symbol": "public static void appendComment()" },
+        { "path": "src/main/java/featurecat/lizzie/gui/Menu.java", "symbol": "final JFontCheckBoxMenuItem showCommentConrolPane" }
+      ],
+      "config_keys": [
+        "hide-blunder-table-control-pane",
+        "show-comment",
+        "is-showing-blunder-table",
+        "use-morandi-colors",
+        "append-winrate-to-comment",
+        "analyze-update-interval-centisec"
+      ],
+      "inputs_preconditions": "三个已知构造点都把 UI delegate 安装到垂直滚动条；变化列表传 false，不添加本类 listener，黑白恶手表各传 true，BasicScrollBarUI 创建上下箭头时各安装一组 mouseEntered/mouseExited。事件不检查鼠标按键、点击次数或修饰键；hide-blunder-table-control-pane 为真时四个事件都在副作用前返回。",
+      "success_behavior": "旧版把首选宽高固定为 8 px，以 needAddAction 选择两组硬编码 track/thumb 灰色，用 0.7 alpha 绘制 9 px 滑块；三个已知垂直实例只加载 smallDown/smallUp，上下箭头进入且未隐藏控制时调用 setBlunderControlPane(false,true)。show-comment 为假时该方法先隐藏侧栏；为真时按 is-showing-blunder-table 调 SidebarPanel.switchTo，再显示侧栏，随后事件无条件显示旧 commentBlunderControlPane。switchTo 每次都把模式写入 uiConfig；COMMENTS 分支还同步 appendComment，满足引擎、间隔、候选和配置条件时可由 SGFParser.appendComment 改写当前节点评论，BLUNDERS 分支在 EDT 同步扫描并排序整条主线的问题列表。离开只隐藏旧面板，不撤销侧栏、配置、评论或问题列表副作用。菜单复选项反向切换 hide-blunder-table-control-pane。目标版复用 Avalonia 原生 ScrollViewer/ScrollBar、主题 token 和平台缩放；侧栏用显式、可聚焦且有无障碍名称的控件切换，不把必需功能或任何配置/棋谱写入藏在箭头 hover 中，也不移植 Swing UI delegate、自绘或旧 PNG。",
+      "failure_cancel_behavior": "隐藏配置为真时保持当前侧栏和旧面板状态不变。资源缺失会让 ImageIO.read(null) 抛出未捕获的 IllegalArgumentException，IOException 仅打印堆栈并留下空图标；四处 getResourceAsStream 均未关闭，且无已知水平实例会走 smallRight/smallLeft 分支。固定 8/9 px、负 margin、硬编码颜色和纯 pointer hover 不适配高 DPI、高对比、触控、键盘或辅助技术。commentBlunderControlPane 仅被创建为无子项黑色 JPanel，未发现 bounds/size 设置；setBlunderControlPane 的两个参数也已不再使用，因此不得把旧 hover 路径描述成可靠的“进入显示、离开隐藏”事务。重复进入可同步重做 O(主线长度 + 排序) 的 EDT 工作或在时钟条件满足时改评论。目标版资源或主题失败时保留可操作的原生滚动条和显式侧栏按钮；显式模式切换必须幂等、与评论保存解耦，并以可取消、合并且有资源上限的后台快照替代 hover 上的无界同步刷新。",
+      "data_io": "读取 hide-blunder-table-control-pane、show-comment、is-showing-blunder-table、append-winrate-to-comment、analyze-update-interval-centisec，以及同一 LizzieFrame 构造链为三个 scrollpane 背景读取的 use-morandi-colors（DemoScrollBarUI2 自身颜色仍是硬编码）。事件更新 sidebarPanel 模式/可见性和无内容 commentBlunderControlPane 可见性；SidebarPanel.switchTo 把 is-showing-blunder-table 写入 uiConfig，COMMENTS 链可读取引擎候选并修改当前 BoardHistoryNode.comment，BLUNDERS 链遍历主线并替换内存 ProblemListSnapshot。菜单把反向后的 hide-blunder-table-control-pane 写入 uiConfig；这些 put 不立即调用 Config.save，磁盘持久化依赖后续保存/退出。滚动条不访问网络。",
+      "external_dependencies": [
+        "Swing BasicScrollBarUI、鼠标 hover 与 UI 缩放",
+        "classpath assets/smallDown.png、smallRight.png、smallUp.png、smallLeft.png",
+        "当前棋盘主线、节点评论与 GTP 引擎候选分析数据"
+      ],
+      "target_modules": ["Lizzie.Desktop"],
+      "automated_evidence": [],
+      "manual_acceptance": "在 Windows、macOS、Linux 的浅色、深色、高对比和 100%/150%/200% DPI 下检查变化列表及黑白恶手表滚动条：拖动、轨道点击、滚轮、上下箭头、禁用/空/溢出状态均保持原生可用；用鼠标、触控、Tab/方向/Page/Home/End 和辅助技术操作显式侧栏控件，覆盖 show-comment/is-showing-blunder-table/hide-blunder-table-control-pane 组合、快速跨越箭头与侧栏、窗口缩放和主题切换。以超长主线和活跃引擎重复进入，确认 hover 不写配置或 SGF 评论、不在 UI 线程重建列表，显式切换幂等且焦点、模式、可见性和取消行为确定。",
+      "status": "已盘点",
+      "evidence": "DemoScrollBarUI2 的第 1/第 2 组 entered/exited 方法按 ordinal 分成上下箭头两个来源，共 4 个事件/8 条路径：每个事件都精确保留 hideBlunderControlPane 真时 return 与假时副作用。静态调用链确认 3 个垂直构造点、2 个 needAddAction=true 实例、实际使用的上下 PNG 与 dormant 水平左右 PNG、未关闭资源流、同一构造链的 Morandi 背景，以及无内容/无尺寸设置的旧 overlay；继续贯通 SidebarPanel.switchTo，确认每次模式 put、COMMENTS 的 appendComment/条件式 SGF 评论改写和 BLUNDERS 的主线遍历/排序快照，不能把 hover 归为纯视觉动作。旧测试无该类、侧栏 hover、资源失败或这些下游副作用专项覆盖，本轮未运行旧 GUI、修改配置、棋谱或用户数据。"
     },
     {
       "id": "UI-TEXT-EDIT-001",

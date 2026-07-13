@@ -1,5 +1,5 @@
 {
-  "schema_version": 19,
+  "schema_version": 20,
   "source": {
     "root": "../lizzieyzy-next-main",
     "version": "yzy2.5.3",
@@ -18,25 +18,25 @@
     "Menu literal labels cover active string-literal menu constructors; dynamic labels remain represented by their resource or runtime source.",
     "Menu accelerators cover explicit Menu.java setAccelerator calls and direct OS.isWindows guards; other input bindings remain T-003 work.",
     "Input key bindings symbolically expand Input.java, InputIndependentMainBoard.java, InputIndependentSubboard.java, InputSubboard.java, FloatBoard.java, AnalysisFrame table/window, DrawPainting.java, ChooseMoreEngine.java, LoadEngine.java, OtherPrograms.java, TencentKifuDownload.java, FoxKifuDownload.java, BrowserFrame.java, and CaptureTsumeGoFrame.java key dispatch, condition evaluations, executed statements, empty-listener and empty-statement paths, and switch fall-through; controlIsPressed means Control on every platform plus Meta on macOS, and BrowserFrame dispatches Enter through getKeyChar.",
-    "Pointer bindings symbolically expand the two indexed subboard listeners plus FloatBoard, AnalysisFrame, DrawPainting, ChooseMoreEngine, LoadEngine, OtherPrograms, TencentKifuDownload, FoxKifuDownload, BrowserFrame load/stop/label listeners, JFontTextArea, JFontTextField, and JIMSendTextPane across mouse, motion, drag, wheel, and release condition evaluations, early returns, executed statements, and explicit no-action paths; data-dependent loops and click try/catch handlers are preserved as normalized atomic statements.",
+    "Pointer bindings symbolically expand the two indexed subboard listeners plus FloatBoard, AnalysisFrame, DrawPainting, ChooseMoreEngine, LoadEngine, OtherPrograms, TencentKifuDownload, FoxKifuDownload, BrowserFrame load/stop/label listeners, JFontTextArea, JFontTextField, JIMSendTextPane, and the two DemoScrollBarUI2 arrow-button listeners across mouse, motion, drag, wheel, and release condition evaluations, early returns, executed statements, and explicit no-action paths; data-dependent loops and click try/catch handlers are preserved as normalized atomic statements.",
     "Other key-listener and pointer-listener classes remain T-003 work."
   ],
   "matrix_summary": {
-    "rows": 47,
+    "rows": 48,
     "statuses": {
       "未盘点": 0,
-      "已盘点": 47,
+      "已盘点": 48,
       "实施中": 0,
       "已实现待验证": 0,
       "已验证": 0,
       "用户批准不迁移": 0
     },
     "active_config_leaf_keys": 596,
-    "mapped_config_leaf_keys": 72,
-    "unmapped_config_leaf_keys": 524,
+    "mapped_config_leaf_keys": 77,
+    "unmapped_config_leaf_keys": 519,
     "active_menu_resource_keys": 383,
-    "mapped_menu_resource_keys": 56,
-    "unmapped_menu_resource_keys": 327,
+    "mapped_menu_resource_keys": 58,
+    "unmapped_menu_resource_keys": 325,
     "active_menu_literal_labels": 12,
     "mapped_menu_literal_labels": 12,
     "unmapped_menu_literal_labels": 0,
@@ -49,11 +49,11 @@
     "active_input_key_bindings": 365,
     "mapped_input_key_bindings": 365,
     "unmapped_input_key_bindings": 0,
-    "active_input_pointer_events": 54,
-    "mapped_input_pointer_events": 54,
+    "active_input_pointer_events": 58,
+    "mapped_input_pointer_events": 58,
     "unmapped_input_pointer_events": 0,
-    "active_input_pointer_bindings": 103,
-    "mapped_input_pointer_bindings": 103,
+    "active_input_pointer_bindings": 111,
+    "mapped_input_pointer_bindings": 111,
     "unmapped_input_pointer_bindings": 0
   },
   "config": {
@@ -877,7 +877,9 @@
       {
         "key": "analyze-update-interval-centisec",
         "reference_count": 2,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "UI-BLUNDER-SCROLLBAR-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -909,7 +911,9 @@
       {
         "key": "append-winrate-to-comment",
         "reference_count": 3,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "UI-BLUNDER-SCROLLBAR-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -5316,7 +5320,9 @@
       {
         "key": "hide-blunder-table-control-pane",
         "reference_count": 2,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "UI-BLUNDER-SCROLLBAR-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -5768,7 +5774,9 @@
       {
         "key": "is-showing-blunder-table",
         "reference_count": 2,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "UI-BLUNDER-SCROLLBAR-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -9980,7 +9988,9 @@
       {
         "key": "show-comment",
         "reference_count": 8,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "UI-BLUNDER-SCROLLBAR-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -13334,6 +13344,7 @@
         "key": "use-morandi-colors",
         "reference_count": 3,
         "matrix_ids": [
+          "UI-BLUNDER-SCROLLBAR-001",
           "UI-TEXT-EDIT-001"
         ],
         "references": [
@@ -16599,14 +16610,18 @@
       },
       {
         "key": "Menu.showCommentConrolPane",
-        "matrix_ids": [],
+        "matrix_ids": [
+          "UI-BLUNDER-SCROLLBAR-001"
+        ],
         "lines": [
           942
         ]
       },
       {
         "key": "Menu.showCommentConrolPane.tooltip",
-        "matrix_ids": [],
+        "matrix_ids": [
+          "UI-BLUNDER-SCROLLBAR-001"
+        ],
         "lines": [
           943
         ]
@@ -30631,10 +30646,22 @@
         "source": "src/main/java/featurecat/lizzie/gui/JIMSendTextPane.java",
         "active_pointer_events": 5,
         "active_pointer_bindings": 6
+      },
+      {
+        "id": "DemoScrollBarUI2Increase",
+        "source": "src/main/java/featurecat/lizzie/gui/DemoScrollBarUI2.java",
+        "active_pointer_events": 2,
+        "active_pointer_bindings": 4
+      },
+      {
+        "id": "DemoScrollBarUI2Decrease",
+        "source": "src/main/java/featurecat/lizzie/gui/DemoScrollBarUI2.java",
+        "active_pointer_events": 2,
+        "active_pointer_bindings": 4
       }
     ],
-    "active_pointer_events": 54,
-    "active_pointer_bindings": 103,
+    "active_pointer_events": 58,
+    "active_pointer_bindings": 111,
     "pointer_events": [
       {
         "event_id": "InputIndependentSubboard:mouseClicked",
@@ -31174,6 +31201,46 @@
         "binding_count": 1,
         "matrix_ids": [
           "UI-TEXT-EDIT-001"
+        ]
+      },
+      {
+        "event_id": "DemoScrollBarUI2Increase:mouseExited",
+        "source_id": "DemoScrollBarUI2Increase",
+        "event": "mouseExited",
+        "line": 180,
+        "binding_count": 2,
+        "matrix_ids": [
+          "UI-BLUNDER-SCROLLBAR-001"
+        ]
+      },
+      {
+        "event_id": "DemoScrollBarUI2Increase:mouseEntered",
+        "source_id": "DemoScrollBarUI2Increase",
+        "event": "mouseEntered",
+        "line": 187,
+        "binding_count": 2,
+        "matrix_ids": [
+          "UI-BLUNDER-SCROLLBAR-001"
+        ]
+      },
+      {
+        "event_id": "DemoScrollBarUI2Decrease:mouseExited",
+        "source_id": "DemoScrollBarUI2Decrease",
+        "event": "mouseExited",
+        "line": 235,
+        "binding_count": 2,
+        "matrix_ids": [
+          "UI-BLUNDER-SCROLLBAR-001"
+        ]
+      },
+      {
+        "event_id": "DemoScrollBarUI2Decrease:mouseEntered",
+        "source_id": "DemoScrollBarUI2Decrease",
+        "event": "mouseEntered",
+        "line": 242,
+        "binding_count": 2,
+        "matrix_ids": [
+          "UI-BLUNDER-SCROLLBAR-001"
         ]
       }
     ],
@@ -34319,6 +34386,190 @@
         "statements": [],
         "matrix_ids": [
           "UI-TEXT-EDIT-001"
+        ]
+      },
+      {
+        "binding": "DemoScrollBarUI2Increase:mouseExited#1",
+        "event_id": "DemoScrollBarUI2Increase:mouseExited",
+        "source_id": "DemoScrollBarUI2Increase",
+        "event": "mouseExited",
+        "line": 180,
+        "conditions": [
+          {
+            "expression": "Lizzie.config.hideBlunderControlPane",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 182,
+            "statement": "return;"
+          }
+        ],
+        "matrix_ids": [
+          "UI-BLUNDER-SCROLLBAR-001"
+        ]
+      },
+      {
+        "binding": "DemoScrollBarUI2Increase:mouseExited#2",
+        "event_id": "DemoScrollBarUI2Increase:mouseExited",
+        "source_id": "DemoScrollBarUI2Increase",
+        "event": "mouseExited",
+        "line": 180,
+        "conditions": [
+          {
+            "expression": "Lizzie.config.hideBlunderControlPane",
+            "expected": false
+          }
+        ],
+        "statements": [
+          {
+            "line": 184,
+            "statement": "Lizzie.frame.commentBlunderControlPane.setVisible(false);"
+          }
+        ],
+        "matrix_ids": [
+          "UI-BLUNDER-SCROLLBAR-001"
+        ]
+      },
+      {
+        "binding": "DemoScrollBarUI2Increase:mouseEntered#1",
+        "event_id": "DemoScrollBarUI2Increase:mouseEntered",
+        "source_id": "DemoScrollBarUI2Increase",
+        "event": "mouseEntered",
+        "line": 187,
+        "conditions": [
+          {
+            "expression": "Lizzie.config.hideBlunderControlPane",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 189,
+            "statement": "return;"
+          }
+        ],
+        "matrix_ids": [
+          "UI-BLUNDER-SCROLLBAR-001"
+        ]
+      },
+      {
+        "binding": "DemoScrollBarUI2Increase:mouseEntered#2",
+        "event_id": "DemoScrollBarUI2Increase:mouseEntered",
+        "source_id": "DemoScrollBarUI2Increase",
+        "event": "mouseEntered",
+        "line": 187,
+        "conditions": [
+          {
+            "expression": "Lizzie.config.hideBlunderControlPane",
+            "expected": false
+          }
+        ],
+        "statements": [
+          {
+            "line": 191,
+            "statement": "Lizzie.frame.setBlunderControlPane(false, true);"
+          },
+          {
+            "line": 192,
+            "statement": "Lizzie.frame.commentBlunderControlPane.setVisible(true);"
+          }
+        ],
+        "matrix_ids": [
+          "UI-BLUNDER-SCROLLBAR-001"
+        ]
+      },
+      {
+        "binding": "DemoScrollBarUI2Decrease:mouseExited#1",
+        "event_id": "DemoScrollBarUI2Decrease:mouseExited",
+        "source_id": "DemoScrollBarUI2Decrease",
+        "event": "mouseExited",
+        "line": 235,
+        "conditions": [
+          {
+            "expression": "Lizzie.config.hideBlunderControlPane",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 237,
+            "statement": "return;"
+          }
+        ],
+        "matrix_ids": [
+          "UI-BLUNDER-SCROLLBAR-001"
+        ]
+      },
+      {
+        "binding": "DemoScrollBarUI2Decrease:mouseExited#2",
+        "event_id": "DemoScrollBarUI2Decrease:mouseExited",
+        "source_id": "DemoScrollBarUI2Decrease",
+        "event": "mouseExited",
+        "line": 235,
+        "conditions": [
+          {
+            "expression": "Lizzie.config.hideBlunderControlPane",
+            "expected": false
+          }
+        ],
+        "statements": [
+          {
+            "line": 239,
+            "statement": "Lizzie.frame.commentBlunderControlPane.setVisible(false);"
+          }
+        ],
+        "matrix_ids": [
+          "UI-BLUNDER-SCROLLBAR-001"
+        ]
+      },
+      {
+        "binding": "DemoScrollBarUI2Decrease:mouseEntered#1",
+        "event_id": "DemoScrollBarUI2Decrease:mouseEntered",
+        "source_id": "DemoScrollBarUI2Decrease",
+        "event": "mouseEntered",
+        "line": 242,
+        "conditions": [
+          {
+            "expression": "Lizzie.config.hideBlunderControlPane",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 244,
+            "statement": "return;"
+          }
+        ],
+        "matrix_ids": [
+          "UI-BLUNDER-SCROLLBAR-001"
+        ]
+      },
+      {
+        "binding": "DemoScrollBarUI2Decrease:mouseEntered#2",
+        "event_id": "DemoScrollBarUI2Decrease:mouseEntered",
+        "source_id": "DemoScrollBarUI2Decrease",
+        "event": "mouseEntered",
+        "line": 242,
+        "conditions": [
+          {
+            "expression": "Lizzie.config.hideBlunderControlPane",
+            "expected": false
+          }
+        ],
+        "statements": [
+          {
+            "line": 246,
+            "statement": "Lizzie.frame.setBlunderControlPane(false, true);"
+          },
+          {
+            "line": 247,
+            "statement": "Lizzie.frame.commentBlunderControlPane.setVisible(true);"
+          }
+        ],
+        "matrix_ids": [
+          "UI-BLUNDER-SCROLLBAR-001"
         ]
       }
     ]
