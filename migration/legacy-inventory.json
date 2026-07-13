@@ -1,5 +1,5 @@
 {
-  "schema_version": 18,
+  "schema_version": 19,
   "source": {
     "root": "../lizzieyzy-next-main",
     "version": "yzy2.5.3",
@@ -18,7 +18,7 @@
     "Menu literal labels cover active string-literal menu constructors; dynamic labels remain represented by their resource or runtime source.",
     "Menu accelerators cover explicit Menu.java setAccelerator calls and direct OS.isWindows guards; other input bindings remain T-003 work.",
     "Input key bindings symbolically expand Input.java, InputIndependentMainBoard.java, InputIndependentSubboard.java, InputSubboard.java, FloatBoard.java, AnalysisFrame table/window, DrawPainting.java, ChooseMoreEngine.java, LoadEngine.java, OtherPrograms.java, TencentKifuDownload.java, FoxKifuDownload.java, BrowserFrame.java, and CaptureTsumeGoFrame.java key dispatch, condition evaluations, executed statements, empty-listener and empty-statement paths, and switch fall-through; controlIsPressed means Control on every platform plus Meta on macOS, and BrowserFrame dispatches Enter through getKeyChar.",
-    "Pointer bindings symbolically expand the two indexed subboard listeners plus FloatBoard, AnalysisFrame, DrawPainting, ChooseMoreEngine, LoadEngine, OtherPrograms, TencentKifuDownload, FoxKifuDownload, BrowserFrame load/stop/label listeners, JFontTextArea, and JFontTextField across mouse, motion, drag, wheel, and release condition evaluations, early returns, executed statements, and explicit no-action paths; data-dependent loops and click try/catch handlers are preserved as normalized atomic statements.",
+    "Pointer bindings symbolically expand the two indexed subboard listeners plus FloatBoard, AnalysisFrame, DrawPainting, ChooseMoreEngine, LoadEngine, OtherPrograms, TencentKifuDownload, FoxKifuDownload, BrowserFrame load/stop/label listeners, JFontTextArea, JFontTextField, and JIMSendTextPane across mouse, motion, drag, wheel, and release condition evaluations, early returns, executed statements, and explicit no-action paths; data-dependent loops and click try/catch handlers are preserved as normalized atomic statements.",
     "Other key-listener and pointer-listener classes remain T-003 work."
   ],
   "matrix_summary": {
@@ -32,8 +32,8 @@
       "用户批准不迁移": 0
     },
     "active_config_leaf_keys": 596,
-    "mapped_config_leaf_keys": 70,
-    "unmapped_config_leaf_keys": 526,
+    "mapped_config_leaf_keys": 72,
+    "unmapped_config_leaf_keys": 524,
     "active_menu_resource_keys": 383,
     "mapped_menu_resource_keys": 56,
     "unmapped_menu_resource_keys": 327,
@@ -49,11 +49,11 @@
     "active_input_key_bindings": 365,
     "mapped_input_key_bindings": 365,
     "unmapped_input_key_bindings": 0,
-    "active_input_pointer_events": 49,
-    "mapped_input_pointer_events": 49,
+    "active_input_pointer_events": 54,
+    "mapped_input_pointer_events": 54,
     "unmapped_input_pointer_events": 0,
-    "active_input_pointer_bindings": 97,
-    "mapped_input_pointer_bindings": 97,
+    "active_input_pointer_bindings": 103,
+    "mapped_input_pointer_bindings": 103,
     "unmapped_input_pointer_bindings": 0
   },
   "config": {
@@ -3226,7 +3226,9 @@
       {
         "key": "comment-font-size",
         "reference_count": 4,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "UI-TEXT-EDIT-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -13032,7 +13034,9 @@
       {
         "key": "ui-font-name",
         "reference_count": 8,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "UI-TEXT-EDIT-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/gui/ConfigDialog2.java",
@@ -30621,10 +30625,16 @@
         "source": "src/main/java/featurecat/lizzie/gui/JFontTextField.java",
         "active_pointer_events": 5,
         "active_pointer_bindings": 6
+      },
+      {
+        "id": "JIMSendTextPane",
+        "source": "src/main/java/featurecat/lizzie/gui/JIMSendTextPane.java",
+        "active_pointer_events": 5,
+        "active_pointer_bindings": 6
       }
     ],
-    "active_pointer_events": 49,
-    "active_pointer_bindings": 97,
+    "active_pointer_events": 54,
+    "active_pointer_bindings": 103,
     "pointer_events": [
       {
         "event_id": "InputIndependentSubboard:mouseClicked",
@@ -31111,6 +31121,56 @@
         "source_id": "JFontTextField",
         "event": "mouseExited",
         "line": 157,
+        "binding_count": 1,
+        "matrix_ids": [
+          "UI-TEXT-EDIT-001"
+        ]
+      },
+      {
+        "event_id": "JIMSendTextPane:mouseClicked",
+        "source_id": "JIMSendTextPane",
+        "event": "mouseClicked",
+        "line": 211,
+        "binding_count": 1,
+        "matrix_ids": [
+          "UI-TEXT-EDIT-001"
+        ]
+      },
+      {
+        "event_id": "JIMSendTextPane:mousePressed",
+        "source_id": "JIMSendTextPane",
+        "event": "mousePressed",
+        "line": 217,
+        "binding_count": 2,
+        "matrix_ids": [
+          "UI-TEXT-EDIT-001"
+        ]
+      },
+      {
+        "event_id": "JIMSendTextPane:mouseReleased",
+        "source_id": "JIMSendTextPane",
+        "event": "mouseReleased",
+        "line": 228,
+        "binding_count": 1,
+        "matrix_ids": [
+          "UI-TEXT-EDIT-001"
+        ]
+      },
+      {
+        "event_id": "JIMSendTextPane:mouseEntered",
+        "source_id": "JIMSendTextPane",
+        "event": "mouseEntered",
+        "line": 234,
+        "binding_count": 1,
+        "matrix_ids": [
+          "UI-TEXT-EDIT-001"
+        ]
+      },
+      {
+        "event_id": "JIMSendTextPane:mouseExited",
+        "source_id": "JIMSendTextPane",
+        "event": "mouseExited",
+        "line": 240,
         "binding_count": 1,
         "matrix_ids": [
           "UI-TEXT-EDIT-001"
@@ -34156,6 +34216,105 @@
         "source_id": "JFontTextField",
         "event": "mouseExited",
         "line": 157,
+        "conditions": [],
+        "statements": [],
+        "matrix_ids": [
+          "UI-TEXT-EDIT-001"
+        ]
+      },
+      {
+        "binding": "JIMSendTextPane:mouseClicked#1",
+        "event_id": "JIMSendTextPane:mouseClicked",
+        "source_id": "JIMSendTextPane",
+        "event": "mouseClicked",
+        "line": 211,
+        "conditions": [],
+        "statements": [],
+        "matrix_ids": [
+          "UI-TEXT-EDIT-001"
+        ]
+      },
+      {
+        "binding": "JIMSendTextPane:mousePressed#1",
+        "event_id": "JIMSendTextPane:mousePressed",
+        "source_id": "JIMSendTextPane",
+        "event": "mousePressed",
+        "line": 217,
+        "conditions": [
+          {
+            "expression": "e.getButton() == MouseEvent.BUTTON3",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 220,
+            "statement": "copy.setEnabled(isCanCopy());"
+          },
+          {
+            "line": 221,
+            "statement": "paste.setEnabled(isClipboardString());"
+          },
+          {
+            "line": 222,
+            "statement": "cut.setEnabled(isCanCopy());"
+          },
+          {
+            "line": 223,
+            "statement": "pop.show(this, e.getX(), e.getY());"
+          }
+        ],
+        "matrix_ids": [
+          "UI-TEXT-EDIT-001"
+        ]
+      },
+      {
+        "binding": "JIMSendTextPane:mousePressed#2",
+        "event_id": "JIMSendTextPane:mousePressed",
+        "source_id": "JIMSendTextPane",
+        "event": "mousePressed",
+        "line": 217,
+        "conditions": [
+          {
+            "expression": "e.getButton() == MouseEvent.BUTTON3",
+            "expected": false
+          }
+        ],
+        "statements": [],
+        "matrix_ids": [
+          "UI-TEXT-EDIT-001"
+        ]
+      },
+      {
+        "binding": "JIMSendTextPane:mouseReleased#1",
+        "event_id": "JIMSendTextPane:mouseReleased",
+        "source_id": "JIMSendTextPane",
+        "event": "mouseReleased",
+        "line": 228,
+        "conditions": [],
+        "statements": [],
+        "matrix_ids": [
+          "UI-TEXT-EDIT-001"
+        ]
+      },
+      {
+        "binding": "JIMSendTextPane:mouseEntered#1",
+        "event_id": "JIMSendTextPane:mouseEntered",
+        "source_id": "JIMSendTextPane",
+        "event": "mouseEntered",
+        "line": 234,
+        "conditions": [],
+        "statements": [],
+        "matrix_ids": [
+          "UI-TEXT-EDIT-001"
+        ]
+      },
+      {
+        "binding": "JIMSendTextPane:mouseExited#1",
+        "event_id": "JIMSendTextPane:mouseExited",
+        "source_id": "JIMSendTextPane",
+        "event": "mouseExited",
+        "line": 240,
         "conditions": [],
         "statements": [],
         "matrix_ids": [
