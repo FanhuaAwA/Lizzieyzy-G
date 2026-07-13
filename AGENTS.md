@@ -60,13 +60,13 @@
 
 ### 1.1 当前阶段
 
-**阶段 0：重构章程与质量体系定义。**
+**阶段 1：基线建设进行中。**
 
-目前只完成本总文档。新的 C#/.NET/Avalonia solution、产品代码、质量门脚本和 GitHub Actions 均尚未创建，因此不得声称新应用已开始实现或任何 .NET 质量门已通过。
+原生 C#/.NET 10 + Avalonia 最小新壳及其测试已建立并通过本地质量门；旧版行为/配置基线、质量门脚本、GitHub Actions 和正式功能纵切仍未创建，因此不得把当前空棋盘壳称为可替代旧版的产品。
 
 ### 1.2 已确认事实
 
-- 新版源码根目录：`F:/Lizzieyzy-GL/Lizzieyzy-G/`，当前仅含本文档；Git 已连接公开远端 `https://github.com/FanhuaAwA/Lizzieyzy-G` 的 `main` 分支，solution 和产品代码尚未创建。
+- 新版源码根目录：`F:/Lizzieyzy-GL/Lizzieyzy-G/`；Git 已连接公开远端 `https://github.com/FanhuaAwA/Lizzieyzy-G` 的 `main` 分支。仓库现有 `LizzieYzy.slnx`，包含 Core、Engine、Desktop 及三个对应 xUnit 测试项目。
 - 旧 Java 行为基准：`F:/Lizzieyzy-GL/lizzieyzy-next-main/`，即 `../lizzieyzy-next-main/`；当前副本不含 `.git` 元数据。
 - 旧项目使用 Maven；`pom.xml` 目标 Java 17，旧 GitHub CI 配置 JDK 21。
 - 静态盘点：约 276 个主 Java 文件、179,215 行，约 145 个测试 Java 文件。
@@ -74,7 +74,8 @@
 - `Config.java` 中静态检出约 548 个不同配置键，迁移前必须生成可核对清单。
 - AI 计算由外部 KataGo/Leela 进程承担；旧程序主要负责 GTP、规则/棋谱状态和 UI。
 - 本机检测到 JDK 21，但盘点时没有可用 `mvn` 命令；没有执行或宣称旧版 Maven 测试通过。
-- 本机 `PATH` 当前先解析到 `C:/Program Files (x86)/dotnet/dotnet.exe`，该 x86 host 没有 SDK；`C:/Program Files/dotnet/dotnet.exe` 为 x64 host，已安装稳定 SDK `10.0.103`，另有 `8.0.420` 和不得用于本项目的 `10.0.300-preview...`。T-002 开始前必须先让当前 shell 使用 x64 稳定 SDK并用 `dotnet --info` 取证。
+- 本机 `PATH` 当前先解析到 `C:/Program Files (x86)/dotnet/dotnet.exe`，该 x86 host 没有 SDK；项目命令必须显式使用 `C:/Program Files/dotnet/dotnet.exe` 的 x64 稳定 SDK。`global.json` 已固定 `10.0.103`、`latestPatch` 且禁止 preview；另有 `8.0.420` 和不得用于本项目的 `10.0.300-preview...`。
+- T-002 使用官方 `Avalonia.Templates 12.1.0` 创建 Desktop，新壳和 headless 测试统一使用 Avalonia `12.1.0`，测试统一使用 xUnit v3 `3.2.2`。
 
 ### 1.3 本文档已完成内容
 
@@ -650,7 +651,7 @@ push 成功但 CI 未通过时，任务状态仍是“进行中”。修复使�
 | ID | 状态 | 任务 | 完成条件/下一步 |
 | --- | --- | --- | --- |
 | T-001 | 完成 | 确定新版源码目录 | 用户已确认 `F:/Lizzieyzy-GL/Lizzieyzy-G/` 为重构后源码根目录 |
-| T-002 | 未开始 | 创建最小 .NET 10 + Avalonia SLNX solution | 按 §4.3 固定 SDK/依赖方向/仓库基线；3 个产品项目和对应 xUnit 测试，真实空棋盘壳可启动退出并通过 locked restore、format、Release build 和 tests，不放假按钮 |
+| T-002 | 完成 | 创建最小 .NET 10 + Avalonia SLNX solution | SDK/依赖/锁文件、3 个产品项目和对应测试、真实空棋盘启动退出、format、Release build、5 项 tests 和依赖审计均通过；实现提交 `c17873dde901b77637e770c241dbdc3e3037218a` 已推送，draft PR `#1` 为 OPEN/CLEAN；Actions 尚未建立并由 T-006 跟踪 |
 | T-003 | 未开始 | 建立旧版行为基线和功能等价矩阵 | 获得可运行旧版/Maven；逐项建立 §3.1 矩阵、约 548 键反向映射、语料、截图和性能数据，并记录机器可读清单路径/生成命令/摘要 |
 | T-004 | 未开始 | 配置兼容清单和迁移器 | 枚举约 548 键，备份、未知键保留、原子保存和回滚测试通过 |
 | T-005 | 未开始 | 实现本地质量门脚本 | solution 存在后创建跨平台 `scripts/quality.ps1`，实际执行并传播 format/build/test/smoke/实测失败，Windows/macOS/Linux 均验证非零退出 |
@@ -664,7 +665,7 @@ push 成功但 CI 未通过时，任务状态仍是“进行中”。修复使�
 | T-013 | 未开始 | 建立专业设计系统与组件展示页 | 用户批准视觉方向；design token、全状态组件、棋盘/图表规范、三平台视觉矩阵和无障碍实测通过 |
 | T-014 | 未开始 | 建立可靠性、恢复与长稳体系 | crash/恢复证据、故障注入、100 次棋谱循环、50 次引擎循环和 8 小时 soak 均按 §6.4 通过 |
 
-当前没有产品代码半成品；只有本文档完成。后续任何部分功能必须新增/拆分 ID，不得藏在“进行中”描述里。
+当前可用范围仅为能启动、显示 19×19 空棋盘并正常关闭的原生新壳；不包含棋谱、设置迁移、引擎或其他旧版功能，不能替代旧版。下一步按 T-003 建立行为基线和等价矩阵；后续任何部分功能必须新增/拆分 ID，不得藏在“进行中”描述里。
 
 ### 12.2 最近验证记录
 
@@ -675,6 +676,7 @@ push 成功但 CI 未通过时，任务状态仍是“进行中”。修复使�
 | 2026-07-13 | 低推理 AI 与 GitHub 交付加严 | PowerShell 复核 PASS：13 个编号章节、代码围栏成对、11 个任务 ID 唯一、无尾随空格；中/大变更的 Release build、测试、冒烟、实测、commit、push、Actions 闭环和失败处理均已明确；纯小范围变更豁免完整门 | 纯文档变更，产品编译/冒烟不适用；GitHub 地址尚未提供，无法初始化、commit 或 push |
 | 2026-07-13 | 最终 AI 编程可执行性审计 | PowerShell 退出码 0：严格 UTF-8、唯一总文档、0–12 章连续、代码围栏成对、14 个任务 ID 唯一且无悬空引用、无尾随空格、无旧 `.sln` 命令；首次建仓、功能矩阵、C#/异步/资源、测试分层、专业 UI、WCAG、高可用、低占用、长稳、安全工作流和 GitHub 闭环关键契约均存在；官方 .NET 10/Avalonia/WCAG 资料已复核 | 仅文档级变更，产品编译/测试/冒烟/视觉实测不适用；solution 与 `.git` 尚不存在，GitHub URL 尚未提供；T-002–T-010、T-013、T-014 仍未完成 |
 | 2026-07-13 | T-010 Git/GitHub 初始化 | 本地 `main` 连接用户确认的公开 `origin`；初始提交 `bc7f646b51dc7222a8e2e48dbd709224afaaa7b9` 已推送且 local/remote SHA 一致；严格 UTF-8、章节 0–12、代码围栏、任务 ID 唯一、尾随空格和秘密模式检查退出码 0；branch protection 要求 PR、线性历史、解决讨论并禁止删除/force-push | solution、产品测试、冒烟与 Actions 尚不存在；必需 status checks 待 T-006 创建并真实验证工作流后加入保护规则 |
+| 2026-07-13 | T-002 .NET/Avalonia 基线 | x64 SDK `10.0.103`、官方 `Avalonia.Templates 12.1.0`；六项目 SLNX 和依赖方向已核对；一次非 locked restore 生成六份真实锁文件，此后 locked restore 退出码 0；format verify 0 改动；Release build 0 警告/0 错误；Core 3 + Engine 1 + Desktop headless 1 共 5 项测试全通过；Release 可执行文件真实打开 `LizzieYzy GL` 960×752 窗口，截图确认 19×19 空棋盘后正常关闭并退出；六项目依赖审计未发现已知漏洞；实现提交 `c17873dde901b77637e770c241dbdc3e3037218a` 已推送且远端 SHA 一致，draft PR `https://github.com/FanhuaAwA/Lizzieyzy-G/pull/1` 为 OPEN/CLEAN | Windows 本地已验证；macOS/Linux、Actions、性能/长稳、完整无障碍和旧版功能等价不属于 T-002，分别由 T-003、T-006、T-009、T-013、T-014 及后续纵切完成；当前 PR 无 checks，原因是 T-006 尚未建立工作流，无 Actions run URL |
 
 ### 12.3 更新规则
 
