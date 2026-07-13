@@ -1,5 +1,5 @@
 {
-  "schema_version": 8,
+  "schema_version": 9,
   "source": {
     "root": "../lizzieyzy-next-main",
     "version": "yzy2.5.3",
@@ -17,43 +17,43 @@
     "Menu keys cover active Menu.java resource lookups with Menu. or menu. prefixes.",
     "Menu literal labels cover active string-literal menu constructors; dynamic labels remain represented by their resource or runtime source.",
     "Menu accelerators cover explicit Menu.java setAccelerator calls and direct OS.isWindows guards; other input bindings remain T-003 work.",
-    "Input key bindings symbolically expand Input.java, InputIndependentMainBoard.java, InputIndependentSubboard.java, InputSubboard.java, FloatBoard.java, and the AnalysisFrame table/window key dispatch, condition evaluations, executed statements, empty-statement paths, and switch fall-through; controlIsPressed means Control on every platform plus Meta on macOS.",
-    "Pointer bindings symbolically expand the two indexed subboard listeners plus FloatBoard and AnalysisFrame mouse, motion, and wheel condition evaluations, early returns, executed statements, and explicit no-action paths; data-dependent loops and AnalysisFrame click try/catch handlers are preserved as normalized atomic statements.",
+    "Input key bindings symbolically expand Input.java, InputIndependentMainBoard.java, InputIndependentSubboard.java, InputSubboard.java, FloatBoard.java, AnalysisFrame table/window, and DrawPainting.java key dispatch, condition evaluations, executed statements, empty-statement paths, and switch fall-through; controlIsPressed means Control on every platform plus Meta on macOS.",
+    "Pointer bindings symbolically expand the two indexed subboard listeners plus FloatBoard, AnalysisFrame, and DrawPainting mouse, motion, drag, wheel, and release condition evaluations, early returns, executed statements, and explicit no-action paths; data-dependent loops and AnalysisFrame click try/catch handlers are preserved as normalized atomic statements.",
     "Other key-listener and pointer-listener classes remain T-003 work."
   ],
   "matrix_summary": {
-    "rows": 44,
+    "rows": 45,
     "statuses": {
       "未盘点": 0,
-      "已盘点": 44,
+      "已盘点": 45,
       "实施中": 0,
       "已实现待验证": 0,
       "已验证": 0,
       "用户批准不迁移": 0
     },
     "active_config_leaf_keys": 596,
-    "mapped_config_leaf_keys": 38,
-    "unmapped_config_leaf_keys": 558,
+    "mapped_config_leaf_keys": 39,
+    "unmapped_config_leaf_keys": 557,
     "active_menu_resource_keys": 383,
-    "mapped_menu_resource_keys": 48,
-    "unmapped_menu_resource_keys": 335,
+    "mapped_menu_resource_keys": 49,
+    "unmapped_menu_resource_keys": 334,
     "active_menu_literal_labels": 12,
     "mapped_menu_literal_labels": 12,
     "unmapped_menu_literal_labels": 0,
     "active_menu_accelerators": 2,
     "mapped_menu_accelerators": 2,
     "unmapped_menu_accelerators": 0,
-    "active_input_key_cases": 138,
-    "mapped_input_key_cases": 138,
+    "active_input_key_cases": 139,
+    "mapped_input_key_cases": 139,
     "unmapped_input_key_cases": 0,
-    "active_input_key_bindings": 359,
-    "mapped_input_key_bindings": 359,
+    "active_input_key_bindings": 360,
+    "mapped_input_key_bindings": 360,
     "unmapped_input_key_bindings": 0,
-    "active_input_pointer_events": 22,
-    "mapped_input_pointer_events": 22,
+    "active_input_pointer_events": 25,
+    "mapped_input_pointer_events": 25,
     "unmapped_input_pointer_events": 0,
-    "active_input_pointer_bindings": 57,
-    "mapped_input_pointer_bindings": 57,
+    "active_input_pointer_bindings": 62,
+    "mapped_input_pointer_bindings": 62,
     "unmapped_input_pointer_bindings": 0
   },
   "config": {
@@ -6362,7 +6362,9 @@
       {
         "key": "last-painting-color",
         "reference_count": 2,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "UI-FREE-DRAWING-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -14962,7 +14964,9 @@
       },
       {
         "key": "Menu.drawPainting.toolTipText",
-        "matrix_ids": [],
+        "matrix_ids": [
+          "UI-FREE-DRAWING-001"
+        ],
         "lines": [
           8210
         ]
@@ -17258,12 +17262,24 @@
         "post_dispatch_actions": {
           "keyPressed": []
         }
+      },
+      {
+        "id": "DrawPainting",
+        "source": "src/main/java/featurecat/lizzie/gui/DrawPainting.java",
+        "active_key_cases": 1,
+        "active_key_bindings": 1,
+        "events": {
+          "keyPressed": 1
+        },
+        "post_dispatch_actions": {
+          "keyPressed": []
+        }
       }
     ],
-    "active_key_cases": 138,
-    "active_key_bindings": 359,
+    "active_key_cases": 139,
+    "active_key_bindings": 360,
     "events": {
-      "keyPressed": 134,
+      "keyPressed": 135,
       "keyReleased": 4
     },
     "cases": [
@@ -19261,6 +19277,18 @@
         "binding_count": 1,
         "matrix_ids": [
           "UI-ANALYSIS-FRAME-001"
+        ]
+      },
+      {
+        "case": "DrawPainting:keyPressed:VK_ESCAPE",
+        "source_id": "DrawPainting",
+        "event": "keyPressed",
+        "key": "VK_ESCAPE",
+        "line": 107,
+        "modifier_checks": [],
+        "binding_count": 1,
+        "matrix_ids": [
+          "UI-FREE-DRAWING-001"
         ]
       }
     ],
@@ -30141,6 +30169,35 @@
         "matrix_ids": [
           "UI-ANALYSIS-FRAME-001"
         ]
+      },
+      {
+        "binding": "DrawPainting:keyPressed:VK_ESCAPE#1",
+        "case": "DrawPainting:keyPressed:VK_ESCAPE",
+        "source_id": "DrawPainting",
+        "event": "keyPressed",
+        "key": "VK_ESCAPE",
+        "line": 107,
+        "conditions": [],
+        "case_chain": [
+          "DrawPainting:keyPressed:VK_ESCAPE"
+        ],
+        "statements": [
+          {
+            "line": 108,
+            "statement": "saveLastColor();"
+          },
+          {
+            "line": 109,
+            "statement": "setVisible(false);"
+          },
+          {
+            "line": 110,
+            "statement": "dispose();"
+          }
+        ],
+        "matrix_ids": [
+          "UI-FREE-DRAWING-001"
+        ]
       }
     ],
     "pointer_sources": [
@@ -30167,10 +30224,16 @@
         "source": "src/main/java/featurecat/lizzie/gui/AnalysisFrame.java",
         "active_pointer_events": 6,
         "active_pointer_bindings": 18
+      },
+      {
+        "id": "DrawPainting",
+        "source": "src/main/java/featurecat/lizzie/gui/DrawPainting.java",
+        "active_pointer_events": 3,
+        "active_pointer_bindings": 5
       }
     ],
-    "active_pointer_events": 22,
-    "active_pointer_bindings": 57,
+    "active_pointer_events": 25,
+    "active_pointer_bindings": 62,
     "pointer_events": [
       {
         "event_id": "InputIndependentSubboard:mouseClicked",
@@ -30390,6 +30453,36 @@
         "binding_count": 1,
         "matrix_ids": [
           "UI-ANALYSIS-FRAME-001"
+        ]
+      },
+      {
+        "event_id": "DrawPainting:mouseReleased",
+        "source_id": "DrawPainting",
+        "event": "mouseReleased",
+        "line": 117,
+        "binding_count": 3,
+        "matrix_ids": [
+          "UI-FREE-DRAWING-001"
+        ]
+      },
+      {
+        "event_id": "DrawPainting:mouseDragged",
+        "source_id": "DrawPainting",
+        "event": "mouseDragged",
+        "line": 131,
+        "binding_count": 1,
+        "matrix_ids": [
+          "UI-FREE-DRAWING-001"
+        ]
+      },
+      {
+        "event_id": "DrawPainting:mouseMoved",
+        "source_id": "DrawPainting",
+        "event": "mouseMoved",
+        "line": 140,
+        "binding_count": 1,
+        "matrix_ids": [
+          "UI-FREE-DRAWING-001"
         ]
       }
     ],
@@ -32552,6 +32645,111 @@
         ],
         "matrix_ids": [
           "UI-ANALYSIS-FRAME-001"
+        ]
+      },
+      {
+        "binding": "DrawPainting:mouseReleased#1",
+        "event_id": "DrawPainting:mouseReleased",
+        "source_id": "DrawPainting",
+        "event": "mouseReleased",
+        "line": 117,
+        "conditions": [
+          {
+            "expression": "e.getButton() == MouseEvent.BUTTON1",
+            "expected": true
+          },
+          {
+            "expression": "list.size() > 0",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 121,
+            "statement": "drawlist.add(list);"
+          },
+          {
+            "line": 122,
+            "statement": "list = new ArrayList<DrawPoint>();"
+          }
+        ],
+        "matrix_ids": [
+          "UI-FREE-DRAWING-001"
+        ]
+      },
+      {
+        "binding": "DrawPainting:mouseReleased#2",
+        "event_id": "DrawPainting:mouseReleased",
+        "source_id": "DrawPainting",
+        "event": "mouseReleased",
+        "line": 117,
+        "conditions": [
+          {
+            "expression": "e.getButton() == MouseEvent.BUTTON1",
+            "expected": true
+          },
+          {
+            "expression": "list.size() > 0",
+            "expected": false
+          }
+        ],
+        "statements": [],
+        "matrix_ids": [
+          "UI-FREE-DRAWING-001"
+        ]
+      },
+      {
+        "binding": "DrawPainting:mouseReleased#3",
+        "event_id": "DrawPainting:mouseReleased",
+        "source_id": "DrawPainting",
+        "event": "mouseReleased",
+        "line": 117,
+        "conditions": [
+          {
+            "expression": "e.getButton() == MouseEvent.BUTTON1",
+            "expected": false
+          }
+        ],
+        "statements": [],
+        "matrix_ids": [
+          "UI-FREE-DRAWING-001"
+        ]
+      },
+      {
+        "binding": "DrawPainting:mouseDragged#1",
+        "event_id": "DrawPainting:mouseDragged",
+        "source_id": "DrawPainting",
+        "event": "mouseDragged",
+        "line": 131,
+        "conditions": [],
+        "statements": [
+          {
+            "line": 134,
+            "statement": "DrawPoint p1 = new DrawPoint((e.getX()), (e.getY()), colorIndex);"
+          },
+          {
+            "line": 135,
+            "statement": "list.add(p1);"
+          },
+          {
+            "line": 136,
+            "statement": "draw();"
+          }
+        ],
+        "matrix_ids": [
+          "UI-FREE-DRAWING-001"
+        ]
+      },
+      {
+        "binding": "DrawPainting:mouseMoved#1",
+        "event_id": "DrawPainting:mouseMoved",
+        "source_id": "DrawPainting",
+        "event": "mouseMoved",
+        "line": 140,
+        "conditions": [],
+        "statements": [],
+        "matrix_ids": [
+          "UI-FREE-DRAWING-001"
         ]
       }
     ]

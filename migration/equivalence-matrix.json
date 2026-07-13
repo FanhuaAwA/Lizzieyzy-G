@@ -1,5 +1,5 @@
 {
-  "schema_version": 8,
+  "schema_version": 9,
   "allowed_statuses": [
     "未盘点",
     "已盘点",
@@ -1361,6 +1361,46 @@
       "manual_acceptance": "让 AnalysisFrame 表格与窗口分别获得焦点测试 Q；覆盖移动预览开关、固定/未固定、有效/pass/越界行、左右键、滚轮正负/零、滚动转发、拖动、离开和各可排序表头列，核对主棋盘预览、选择、排序及重启后的置顶设置。",
       "status": "已盘点",
       "evidence": "两个 AnalysisFrame 键盘来源的 Q 各一条路径与 6 个 pointer 事件的 18 条可达路径已反向关联；click 的 try/catch 作为保留旧异常语义的原子动作记录，未推测异常内部控制流。"
+    },
+    {
+      "id": "UI-FREE-DRAWING-001",
+      "category": "界面显示",
+      "legacy_entry": "主工具栏或 Controller 调用 LizzieFrame.drawPainting 打开透明 DrawPainting 覆盖层，支持 Escape、拖动、释放和移动输入",
+      "legacy_menu_keys": ["Menu.drawPainting.toolTipText"],
+      "legacy_menu_labels": [],
+      "legacy_shortcuts": [],
+      "legacy_input_cases": [
+        "DrawPainting:keyPressed:VK_ESCAPE",
+        "DrawPainting:mouseReleased",
+        "DrawPainting:mouseDragged",
+        "DrawPainting:mouseMoved"
+      ],
+      "legacy_input_bindings": [
+        "DrawPainting:keyPressed:VK_ESCAPE#1",
+        "DrawPainting:mouseReleased#1",
+        "DrawPainting:mouseReleased#2",
+        "DrawPainting:mouseReleased#3",
+        "DrawPainting:mouseDragged#1",
+        "DrawPainting:mouseMoved#1"
+      ],
+      "java_evidence": [
+        { "path": "src/main/java/featurecat/lizzie/gui/Menu.java", "symbol": "Menu.drawPainting.toolTipText" },
+        { "path": "src/main/java/featurecat/lizzie/gui/Controller.java", "symbol": "Lizzie.frame.drawPainting();" },
+        { "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "symbol": "public void drawPainting()" },
+        { "path": "src/main/java/featurecat/lizzie/gui/DrawPainting.java", "symbol": "public DrawPainting(" },
+        { "path": "src/main/java/featurecat/lizzie/gui/DrawPainting.java", "symbol": "protected void saveLastColor()" }
+      ],
+      "config_keys": ["last-painting-color"],
+      "inputs_preconditions": "主窗口已显示且可计算内容区边界；Escape 需要覆盖层取得键盘焦点，绘制需要指针拖动事件。",
+      "success_behavior": "两个入口都创建覆盖主内容区的透明绘图层；任意鼠标按键拖动逐点加入当前颜色笔迹并重绘，左键释放仅在当前笔迹非空时提交；蓝/绿/红按钮切换颜色，撤销删除最后一条已提交笔迹，清空移除全部笔迹；Escape 或关闭按钮记录末次颜色并隐藏、释放对话框；普通鼠标移动明确无动作。",
+      "failure_cancel_behavior": "非左键释放、空笔迹释放和无已提交笔迹时撤销均保持无动作；右键等拖动产生的未提交笔迹会保留到后续左键释放，这是旧版可观察语义；资源加载异常旧版仅打印堆栈，目标版必须保持可关闭、可键盘操作并报告可理解的降级状态；颜色保存失败不得伪报持久化成功。",
+      "data_io": "笔迹点、已提交笔迹和透明位图仅存内存；退出把 last-painting-color 写入 uiConfig，但 DrawPainting 本身不调用 Config.save，磁盘持久化依赖后续统一保存。",
+      "external_dependencies": ["内置绘图光标与工具栏图像资源"],
+      "target_modules": ["Lizzie.Desktop"],
+      "automated_evidence": [],
+      "manual_acceptance": "分别从主工具栏和 Controller 打开绘图层，覆盖三种颜色、任意鼠标按键拖动、左/非左键释放、空笔迹、普通移动、撤销空/非空、清空、Escape 与关闭按钮；核对覆盖范围、笔迹提交边界、焦点、重启颜色、多 DPI、资源缺失降级和对话框释放。",
+      "status": "已盘点",
+      "evidence": "DrawPainting 的 1 个 Escape case/1 条键路径与 3 个 pointer 事件/5 条可达路径已反向关联；mouseMoved 和两条 release 分支保留为空动作，颜色/撤销/清空/关闭 ActionListener 及 drawPainting 两个入口作为同一用户工作流的静态下游证据记录。"
     },
     {
       "id": "ANALYSIS-DISPLAY-001",
