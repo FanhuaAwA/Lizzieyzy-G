@@ -1,5 +1,5 @@
 {
-  "schema_version": 20,
+  "schema_version": 21,
   "allowed_statuses": [
     "未盘点",
     "已盘点",
@@ -2292,7 +2292,7 @@
     {
       "id": "UI-TEXT-EDIT-001",
       "category": "界面显示",
-      "legacy_entry": "JFontTextArea 的 5 个调用类/6 个多行实例、JFontTextField 的 27 个调用类/122 个非注释单行构造，以及 JIMSendTextPane 的 4 个调用类/4 个富文本实例共享本地化复制/粘贴/剪切弹出菜单；JIMSendTextPane 还强制超长单词折行，并分别承载可编辑棋谱节点注释和 3 个只读日志控制台",
+      "legacy_entry": "JFontTextArea 的 5 个调用类/6 个多行实例、JFontTextField 的 27 个调用类/122 个非注释单行构造、JIMSendTextPane 的 4 个调用类/4 个富文本实例，以及 LizzieFrame 唯一的 JPaintTextPane 只读评论实例共享本地化复制/粘贴/剪切弹出菜单；JIMSendTextPane 强制超长单词折行并分别承载可编辑棋谱节点注释和 3 个只读日志控制台，JPaintTextPane 则在在线同步时显示 HTML 解释后的节点评论",
       "legacy_menu_keys": [],
       "legacy_menu_labels": [],
       "legacy_shortcuts": [],
@@ -2311,7 +2311,12 @@
         "JIMSendTextPane:mousePressed",
         "JIMSendTextPane:mouseReleased",
         "JIMSendTextPane:mouseEntered",
-        "JIMSendTextPane:mouseExited"
+        "JIMSendTextPane:mouseExited",
+        "JPaintTextPane:mouseClicked",
+        "JPaintTextPane:mousePressed",
+        "JPaintTextPane:mouseReleased",
+        "JPaintTextPane:mouseEntered",
+        "JPaintTextPane:mouseExited"
       ],
       "legacy_input_bindings": [
         "JFontTextArea:mouseClicked#1",
@@ -2331,7 +2336,13 @@
         "JIMSendTextPane:mousePressed#2",
         "JIMSendTextPane:mouseReleased#1",
         "JIMSendTextPane:mouseEntered#1",
-        "JIMSendTextPane:mouseExited#1"
+        "JIMSendTextPane:mouseExited#1",
+        "JPaintTextPane:mouseClicked#1",
+        "JPaintTextPane:mousePressed#1",
+        "JPaintTextPane:mousePressed#2",
+        "JPaintTextPane:mouseReleased#1",
+        "JPaintTextPane:mouseEntered#1",
+        "JPaintTextPane:mouseExited#1"
       ],
       "java_evidence": [
         { "path": "src/main/java/featurecat/lizzie/gui/JFontTextArea.java", "symbol": "public void mousePressed(MouseEvent e)" },
@@ -2381,8 +2392,25 @@
         { "path": "src/main/java/featurecat/lizzie/analysis/TrackingEngine.java", "symbol": "private void readLoop()" },
         { "path": "src/main/java/featurecat/lizzie/analysis/EngineManager.java", "symbol": "public EngineManager(Config config, int index, boolean loadDefault)" },
         { "path": "src/main/java/featurecat/lizzie/rules/SGFParser.java", "symbol": "private static void saveToStream" },
+        { "path": "src/main/java/featurecat/lizzie/gui/JPaintTextPane.java", "symbol": "public JPaintTextPane()" },
+        { "path": "src/main/java/featurecat/lizzie/gui/JPaintTextPane.java", "symbol": "public float getMinimumSpan(int axis)" },
+        { "path": "src/main/java/featurecat/lizzie/gui/JPaintTextPane.java", "symbol": "public void paintComponent(Graphics g)" },
+        { "path": "src/main/java/featurecat/lizzie/gui/JPaintTextPane.java", "symbol": "public void mousePressed(MouseEvent e)" },
+        { "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "symbol": "private void setComment(boolean needReaddText)" },
+        { "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "symbol": "public void setCommentPaneOrArea(boolean isArea)" },
+        { "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "symbol": "private void setCommentComponet()" },
+        { "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "symbol": "private void setCommentText(String comment)" },
+        { "path": "src/main/java/featurecat/lizzie/gui/OnlineDialog.java", "symbol": "private void addComment(JSONObject c, boolean add)" },
+        { "path": "src/main/java/featurecat/lizzie/gui/OnlineDialog.java", "symbol": "private void applyChange()" },
+        { "path": "src/main/java/featurecat/lizzie/gui/OnlineDialog.java", "symbol": "public void moveDelete()" },
+        { "path": "src/main/java/featurecat/lizzie/gui/OnlineDialog.java", "symbol": "public void applyChangeWeb(String url)" },
+        { "path": "src/main/java/featurecat/lizzie/gui/OnlineDialog.java", "symbol": "public void stopSync()" },
         { "path": "src/main/java/featurecat/lizzie/theme/Theme.java", "symbol": "public String uiFontName()" },
-        { "path": "src/main/java/featurecat/lizzie/theme/Theme.java", "symbol": "public int commentFontSize()" }
+        { "path": "src/main/java/featurecat/lizzie/theme/Theme.java", "symbol": "public int commentFontSize()" },
+        { "path": "src/main/java/featurecat/lizzie/theme/Theme.java", "symbol": "public boolean usePureBackground(boolean onLoad)" },
+        { "path": "src/main/java/featurecat/lizzie/theme/Theme.java", "symbol": "public Color pureBackgroundColor()" },
+        { "path": "src/main/java/featurecat/lizzie/theme/Theme.java", "symbol": "public Color commentFontColor()" },
+        { "path": "src/main/java/featurecat/lizzie/theme/Theme.java", "symbol": "public Color commentBackgroundColor()" }
       ],
       "config_keys": [
         "frame-font-size",
@@ -2398,23 +2426,28 @@
         "glass-accent-color",
         "glass-corner-radius",
         "ui-font-name",
-        "comment-font-size"
+        "comment-font-size",
+        "use-pure-background",
+        "pure-background-color",
+        "comment-font-color",
+        "comment-background-color"
       ],
-      "inputs_preconditions": "文本控件可见且接收 pointer 输入；复制/剪切要求非空选区，粘贴要求系统剪贴板可用且提供字符串。旧版三个共享控件都只在 mousePressed 的 BUTTON3 分支弹出，BUTTON3=false 与 clicked/released/entered/exited 都是显式无动作；各调用方的 enabled/editable 状态另行约束实际编辑。JFontTextField 的 122 个非注释构造全部使用无参构造器；JIMSendTextPane 的 4 个非注释构造点中，LizzieFrame 以 true 创建可编辑节点注释，其余 3 个 false 实例随后均设为只读日志。菜单打开本身无提交动作；JFontTextField 的 paste() 可能触发同步 DocumentListener/KeyListener，JIMSendTextPane 的 paste() 只会修改可编辑注释草稿，旧版在外部点击、导航或引擎状态变化调用 setCommentEditable(false) 时隐式提交且没有显式取消。",
-      "success_behavior": "JFontTextArea 的三个构造器统一使用 Config.sysDefaultFontName/frame-font-size 并启用软换行；JFontTextField 的两个构造器设置相同字体并安装 AppleStyleSupport。JIMSendTextPane 的布尔构造器在注释模式读取 ui-font-name 与 comment-font-size（非正数回退 frame-font-size），控制台模式使用系统默认字体，随后安装 WarpEditorKit；其 WarpLabelView 把 X 轴 minimum span 固定为 0，使无空格长 token 折行，三个只读控制台再覆盖为等宽字体和分色日志。旧版右键按下会刷新复制/粘贴/剪切启用态并显示本地化菜单，动作调用 Swing 内建 copy/paste/cut，菜单项标注固定 Ctrl+C/V/X。目标版优先复用 Avalonia 原生文本、折行、主题、选择和剪贴板能力，只在能力缺口处增加最小 ContextMenu，并使用稳定命令身份而非本地化显示文字分派；可编辑注释与只读可选择日志应使用各自最小控件，支持平台 popup/Primary、键盘菜单、焦点、IME 和辅助技术。注释编辑会话绑定原节点，显式提交或取消；即时单行字段仅在完整新值通过逐字段校验后原子应用一次。",
-      "failure_cancel_behavior": "剪贴板为空、非文本、正被占用、权限拒绝、转换异常或服务不可用时保持文本与焦点不变，禁用粘贴并提供不含剪贴板内容的诊断；读取/接受前执行明确字符数和字节数上限，超限内容默认拒绝且不得无界保留。不得空 catch、阻塞 UI 或让异常逃出输入事件。旧版三个控件的 getSystemClipboard/getContents 位于 try 外、getTransferData 会完整物化且实际粘贴再次读取；只读/禁用控件仍可能显示剪切和粘贴可用，BUTTON3/mousePressed 与固定 Ctrl 也漏掉 release popup、macOS Ctrl-click、Shift+F10/Menu 键和触控。JFontTextField 下游必须按字段校验数值、路径、端口、协议和命令长度。JIMSendTextPane 的三个控制台不是 GTP 命令输入，目标必须始终禁用其剪切/粘贴；唯一可粘贴的节点注释需限制大小、保留 Unicode/换行和 SGF 转义，节点切换、关窗、焦点变化或 IME composition 中不得静默错存、丢失或由后台线程强制提交。GTP/贡献控制台的旧 ArrayDeque 生产与消费不同步、队列无界、executor 无限循环且后台线程直接改 Swing Document；目标日志接收器必须有容量、丢弃/截断策略、UI 调度、所有者和确定关闭，文件日志另需脱敏、显式编码、轮换与关闭。BrowserInitializing 的全局 stderr 同样需要所有权、有界缓冲和恢复。",
-      "data_io": "JFontTextArea 读取系统默认字体与 frame-font-size；JFontTextField 还经 AppleStyleSupport 读取 Apple/Morandi 和玻璃主题键；JIMSendTextPane 的注释模式经 Theme/Config 字段链读取 ui-font-name、comment-font-size 与 frame-font-size。三个控件直接读写系统剪贴板和控件内存，本身不持久化。JIMSendTextPane 的 4 个实例中，LizzieFrame 进入编辑时读取当前 BoardHistoryNode.comment 并为非空值临时追加换行，退出时删除至多一个尾随换行后写回内存注释，后续棋谱保存才进入 SGF；GtpConsolePane、ContributeView 和 TrackingConsolePane 显示带样式的引擎/贡献/跟踪日志，GTP 控制台内容还会在引擎管理器构造时清空，并在引擎加载期间取末 1000 字符显示到主状态区。GTP 命令输入实际由独立 JFontTextField 承担。多行命令调用方、单行 27 类/122 构造及其同步监听语义保持既有记录。resetEditorKid/getPop/setPop 无外部调用，不为这些 dormant API 宣称迁移完成；调用方业务配置、SGF 保存和 GTP 日志文件仍归各自矩阵行，本行只映射共享控件直接读取的样式键。",
+      "inputs_preconditions": "文本控件可见且接收 pointer 输入；复制/剪切要求非空选区，粘贴要求系统剪贴板可用且提供字符串。旧版四个共享控件自身都只在 mousePressed 的 BUTTON3 分支弹出，BUTTON3=false 与 clicked/released/entered/exited 都是显式无动作；各调用方的 enabled/editable 状态及另行安装的监听器约束完整运行时行为。JFontTextField 的 122 个非注释构造全部使用无参构造器；JIMSendTextPane 的 4 个非注释构造点中，LizzieFrame 以 true 创建可编辑节点注释，其余 3 个 false 实例随后均设为只读日志；JPaintTextPane 只有 LizzieFrame 的 1 个无参构造点，随即被设为透明、只读并换成 HtmlKit/HTMLDocument。菜单打开本身无提交动作；JFontTextField 的 paste() 可能触发同步 DocumentListener/KeyListener，JIMSendTextPane 的 paste() 只会修改可编辑注释草稿，旧版在外部点击、导航或引擎状态变化调用 setCommentEditable(false) 时隐式提交且没有显式取消。JPaintTextPane 自身只读，但旧 popup 仍会按剪贴板/选区把粘贴和剪切标为可用；LizzieFrame 额外注册的点击与悬停监听器属于尚未盘点的 LizzieFrame pointer 来源。",
+      "success_behavior": "JFontTextArea 的三个构造器统一使用 Config.sysDefaultFontName/frame-font-size 并启用软换行；JFontTextField 的两个构造器设置相同字体并安装 AppleStyleSupport。JIMSendTextPane 的布尔构造器在注释模式读取 ui-font-name 与 comment-font-size（非正数回退 frame-font-size），控制台模式使用系统默认字体，随后安装 WarpEditorKit；其 WarpLabelView 把 X 轴 minimum span 固定为 0，使无空格长 token 折行，三个只读控制台再覆盖为等宽字体和分色日志。JPaintTextPane 构造时同样安装 WarpEditorKit，并在 opaque 时按 use-pure-background 选择纯色或主窗背景纹理；唯一调用方随即 setOpaque(false)、用 HtmlKit/HTMLDocument 覆盖 EditorKit 并设为只读，所以这两段自定义换行/背景路径不承担该实例的实际显示。在线同步开始时 LizzieFrame 切到此 HTML 评论窗格，停止时切回 JLabel；评论只把换行替换为 br、空格替换为 nbsp 后交给 HTML 组件。旧版右键按下会刷新复制/粘贴/剪切启用态并显示本地化菜单，动作调用 Swing 内建 copy/paste/cut，菜单项标注固定 Ctrl+C/V/X。目标版优先复用 Avalonia 原生纯文本、折行、主题、选择和剪贴板能力，不移植 Swing ViewFactory、自绘背景或 HTML 解释器；只读评论/日志只提供选择和复制，只在能力缺口处增加最小 ContextMenu，并使用稳定命令身份，支持平台 popup/Primary、键盘菜单、焦点、IME 和辅助技术。注释编辑会话绑定原节点并显式提交或取消；即时单行字段仅在完整新值通过逐字段校验后原子应用一次。",
+      "failure_cancel_behavior": "剪贴板为空、非文本、正被占用、权限拒绝、转换异常或服务不可用时保持文本与焦点不变，禁用粘贴并提供不含剪贴板内容的诊断；读取/接受前执行明确字符数和字节数上限，超限内容默认拒绝且不得无界保留。不得空 catch、阻塞 UI 或让异常逃出输入事件。旧版四个控件的 getSystemClipboard/getContents 位于 try 外、getTransferData 会完整物化且实际粘贴再次读取；只读/禁用控件仍可能显示剪切和粘贴可用，BUTTON3/mousePressed 与固定 Ctrl 也漏掉 release popup、macOS Ctrl-click、Shift+F10/Menu 键和触控。JFontTextField 下游必须按字段校验数值、路径、端口、协议和命令长度。JIMSendTextPane 的三个控制台不是 GTP 命令输入，目标必须始终禁用其剪切/粘贴；唯一可粘贴的节点注释需限制大小、保留 Unicode/换行和 SGF 转义，节点切换、关窗、焦点变化或 IME composition 中不得静默错存、丢失或由后台线程强制提交。JPaintTextPane 的输入可来自不可信 SGF、引擎日志和在线 JSON，旧转换不转义小于号、大于号、引号或与号，且缓存原文/HTML 后交给 Swing HTML 解释器；目标必须按有界纯文本显示，任何标签、链接或图片语法都不得执行、导航或加载外部/本地资源，过长评论需确定截断/拒绝且 UI 保持响应。旧版在 checkUrl 返回后不论结果都切换 HTML/JLabel 模式，type<=0 或 proc 异常时不恢复；cachedRawComment/cachedComment 又未把显示模式纳入键，切换后可抑制新可见控件刷新。目标应使用单一纯文本视图和不可变快照，不复制这套双控件/双缓存状态。GTP/贡献控制台的旧 ArrayDeque 生产与消费不同步、队列无界、executor 无限循环且后台线程直接改 Swing Document；目标日志接收器必须有容量、丢弃/截断策略、UI 调度、所有者和确定关闭，文件日志另需脱敏、显式编码、轮换与关闭。BrowserInitializing 的全局 stderr 同样需要所有权、有界缓冲和恢复。",
+      "data_io": "JFontTextArea 读取系统默认字体与 frame-font-size；JFontTextField 还经 AppleStyleSupport 读取 Apple/Morandi 和玻璃主题键；JIMSendTextPane 的注释模式经 Theme/Config 字段链读取 ui-font-name、comment-font-size 与 frame-font-size；JPaintTextPane 构造器读取同一字体/字号，paintComponent 读取 use-pure-background/pure-background-color，LizzieFrame 另用 comment-font-color/comment-background-color 配置其 HTML 样式和容器。四个控件直接读写系统剪贴板和控件内存，本身不持久化。JIMSendTextPane 的 4 个实例中，LizzieFrame 进入编辑时读取当前 BoardHistoryNode.comment 并为非空值临时追加换行，退出时删除至多一个尾随换行后写回内存注释，后续棋谱保存才进入 SGF；GtpConsolePane、ContributeView 和 TrackingConsolePane 显示带样式的引擎/贡献/跟踪日志，GTP 控制台内容还会在引擎管理器构造时清空，并在引擎加载期间取末 1000 字符显示到主状态区。JPaintTextPane 的唯一实例读取同一 BoardHistoryNode.comment，也可在引擎载入期显示截取后的控制台尾部；OnlineDialog 开始 URL/弈客同步时切到该窗格，把远端 JSON/SGF 评论写入 BoardHistory 后显示，stopSync 切回普通评论区。GTP 命令输入实际由独立 JFontTextField 承担。多行命令调用方、单行 27 类/122 构造及其同步监听语义保持既有记录。两种富文本类的 resetEditorKid/getPop/setPop 都无外部调用，不为这些 dormant API 宣称迁移完成；show-comment、hide-blunder-table-control-pane、在线协议键、SGF 保存和 GTP 日志文件仍归各自矩阵行，本行只新增实际追踪到的四个主题键。",
       "external_dependencies": [
         "Windows/macOS/Linux 系统剪贴板、平台 popup 手势和主修饰键",
         "本地化资源 JTextPane.copy/paste/cut",
         "后续消费文本的本地/远端 GTP 引擎、文件系统和固定在线棋谱服务",
-        "节点注释/SGF 保存，以及本地 GTP、贡献和跟踪日志生产者"
+        "节点注释/SGF 保存，以及本地 GTP、贡献和跟踪日志生产者",
+        "ONLINE-YIKE-001 的在线 JSON/SGF 评论输入与同步会话生命周期"
       ],
       "target_modules": ["Lizzie.Desktop"],
       "automated_evidence": [],
-      "manual_acceptance": "在 Windows、macOS、Linux 真实窗口覆盖单行/多行/富文本、可编辑/只读/禁用控件，空/非空选区，空/文本/非文本/占用/拒绝剪贴板，右键、macOS Ctrl-click、release popup、Shift+F10/Menu 键、触控及 Ctrl/Command+C/V/X；用零长度、恰好位于字符/字节上限和超限内容验证拒绝策略。核对 JFontTextArea 三个构造器、JFontTextField 两个构造器与 updateUI，以及 JIMSendTextPane 的 true/false 构造、无空格超长 Unicode/emoji/组合字符折行、字体回退、浅深高对比主题、光标、选区、焦点和辅助名称。节点注释覆盖多行粘贴、IME composition、提交、取消、切换节点、外部点击、关窗和 SGF 保存重读，确认只写原节点且失败零数据损坏；三个只读控制台只能选择/复制，日志突发、超长行、隐藏/关闭和生产者停止时验证有界缓冲、UI 响应和资源回收。单行即时字段仍须证明完整有效值只原子产生一次副作用；BrowserInitializing 验证有界日志和恢复 System.err。",
+      "manual_acceptance": "在 Windows、macOS、Linux 真实窗口覆盖单行/多行/富文本、可编辑/只读/禁用控件，空/非空选区，空/文本/非文本/占用/拒绝剪贴板，右键、macOS Ctrl-click、release popup、Shift+F10/Menu 键、触控及 Ctrl/Command+C/V/X；用零长度、恰好位于字符/字节上限和超限内容验证拒绝策略。核对 JFontTextArea 三个构造器、JFontTextField 两个构造器与 updateUI、JIMSendTextPane 的 true/false 构造，以及 JPaintTextPane 在线只读评论模式；覆盖无空格超长 Unicode/emoji/组合字符折行、字体/颜色回退、浅深高对比主题、光标、选区、焦点和辅助名称。用包含小于号、与号、script/a/img 形状文本、file/http URL、畸形标签和超限内容的本地 SGF 与受控在线夹具确认逐字显示、不导航、不加载资源、不卡 UI；切换在线同步/停止后评论内容、选择、滚动和焦点保持确定。节点注释覆盖多行粘贴、IME composition、提交、取消、切换节点、外部点击、关窗和 SGF 保存重读，确认只写原节点且失败零数据损坏；所有只读评论/控制台只能选择/复制，日志突发、超长行、隐藏/关闭和生产者停止时验证有界缓冲、UI 响应和资源回收。单行即时字段仍须证明完整有效值只原子产生一次副作用；BrowserInitializing 验证有界日志和恢复 System.err。",
       "status": "已盘点",
-      "evidence": "JFontTextArea、JFontTextField 与 JIMSendTextPane 各自的 5 个 pointer 事件/6 条路径均已静态展开：仅各自 BUTTON3=true 路径执行 copy/paste/cut 启用态刷新和 popup 显示，false 与其余四个事件无动作。JFontTextArea 已追踪 3 个构造器、5 类/6 实例；JFontTextField 已追踪 2 个构造器、AppleStyleSupport/updateUI、27 类/122 个非注释构造，全部无参；JIMSendTextPane 已追踪 1 个布尔构造器、WarpEditorKit、4 类/4 个非注释构造，其中 1 个 true 节点注释可编辑、3 个 false 日志随后只读且覆盖字体。JIM 的 action 以本地化显示文字分派三项动作，其他文字无动作；resetEditorKid/getPop/setPop 无外部调用。静态调用链确认 JIM 粘贴不会发送 GTP，唯一编辑下游是内存节点注释；同时登记注释隐式提交/IME 和三个日志消费者的线程、队列、文件生命周期风险。配置仅新增共享控件字段链真实读取的 ui-font-name/comment-font-size，不把 gtp-console-position、log-gtp-to-file、contribute-hide-console 或棋谱业务键冒充已覆盖。旧版无 JIM/Warp/popup/剪贴板/IME/折行专项测试；现有 SilentGtpConsole 测试绕过构造，不能证明控件行为。本轮未读取真实剪贴板、运行旧 GUI、保存棋谱/配置、联网或启动引擎/外部程序。"
+      "evidence": "JFontTextArea、JFontTextField、JIMSendTextPane 与 JPaintTextPane 各自实现的 5 个 pointer 事件/6 条路径均已静态展开：仅各自 BUTTON3=true 路径执行 copy/paste/cut 启用态刷新和 popup 显示，false 与其余四个事件在类内无动作；JPaint 实例另挂的 LizzieFrame click/enter/exit 监听器不冒充本来源覆盖，留待 LizzieFrame pointer 盘点。JFontTextArea 已追踪 3 个构造器、5 类/6 实例；JFontTextField 已追踪 2 个构造器、AppleStyleSupport/updateUI、27 类/122 个非注释构造，全部无参；JIMSendTextPane 已追踪 1 个布尔构造器、WarpEditorKit、4 类/4 个非注释构造，其中 1 个 true 节点注释可编辑、3 个 false 日志随后只读且覆盖字体。JPaintTextPane 已追踪 1 个无参构造器和 LizzieFrame 的唯一非注释构造点；调用方立即覆盖其 WarpEditorKit、设为透明只读，在线同步才切换显示。两种富文本类的 action 都以本地化显示文字分派三项动作，其他文字无动作；resetEditorKid/getPop/setPop 均无外部调用。静态调用链确认 JIM 粘贴不会发送 GTP，JPaint 只读评论来自 BoardHistory、截取日志及 OnlineDialog 远端 JSON/SGF，且 setComment 只替换换行/空格、不转义 HTML 元字符。配置仅新增追踪到的 use-pure-background、pure-background-color、comment-font-color、comment-background-color，不把 show-comment、hide-blunder-table-control-pane、在线协议或棋谱业务键冒充已覆盖。旧版无 JPaint/popup/剪贴板/纯文本安全/HTML 资源隔离专项测试；OnlineDialogYikeSessionStateTest 只验证分析载荷合并时保留评论，不覆盖渲染。现有 SilentGtpConsole 测试绕过构造，也不能证明控件行为。本轮未读取真实剪贴板、运行旧 GUI、保存棋谱/配置、联网或启动引擎/外部程序。"
     }
   ]
 }

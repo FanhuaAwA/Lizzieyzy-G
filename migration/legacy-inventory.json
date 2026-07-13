@@ -1,5 +1,5 @@
 {
-  "schema_version": 20,
+  "schema_version": 21,
   "source": {
     "root": "../lizzieyzy-next-main",
     "version": "yzy2.5.3",
@@ -18,7 +18,7 @@
     "Menu literal labels cover active string-literal menu constructors; dynamic labels remain represented by their resource or runtime source.",
     "Menu accelerators cover explicit Menu.java setAccelerator calls and direct OS.isWindows guards; other input bindings remain T-003 work.",
     "Input key bindings symbolically expand Input.java, InputIndependentMainBoard.java, InputIndependentSubboard.java, InputSubboard.java, FloatBoard.java, AnalysisFrame table/window, DrawPainting.java, ChooseMoreEngine.java, LoadEngine.java, OtherPrograms.java, TencentKifuDownload.java, FoxKifuDownload.java, BrowserFrame.java, and CaptureTsumeGoFrame.java key dispatch, condition evaluations, executed statements, empty-listener and empty-statement paths, and switch fall-through; controlIsPressed means Control on every platform plus Meta on macOS, and BrowserFrame dispatches Enter through getKeyChar.",
-    "Pointer bindings symbolically expand the two indexed subboard listeners plus FloatBoard, AnalysisFrame, DrawPainting, ChooseMoreEngine, LoadEngine, OtherPrograms, TencentKifuDownload, FoxKifuDownload, BrowserFrame load/stop/label listeners, JFontTextArea, JFontTextField, JIMSendTextPane, and the two DemoScrollBarUI2 arrow-button listeners across mouse, motion, drag, wheel, and release condition evaluations, early returns, executed statements, and explicit no-action paths; data-dependent loops and click try/catch handlers are preserved as normalized atomic statements.",
+    "Pointer bindings symbolically expand the two indexed subboard listeners plus FloatBoard, AnalysisFrame, DrawPainting, ChooseMoreEngine, LoadEngine, OtherPrograms, TencentKifuDownload, FoxKifuDownload, BrowserFrame load/stop/label listeners, JFontTextArea, JFontTextField, JIMSendTextPane, the two DemoScrollBarUI2 arrow-button listeners, and JPaintTextPane across mouse, motion, drag, wheel, and release condition evaluations, early returns, executed statements, and explicit no-action paths; data-dependent loops and click try/catch handlers are preserved as normalized atomic statements.",
     "Other key-listener and pointer-listener classes remain T-003 work."
   ],
   "matrix_summary": {
@@ -32,8 +32,8 @@
       "用户批准不迁移": 0
     },
     "active_config_leaf_keys": 596,
-    "mapped_config_leaf_keys": 77,
-    "unmapped_config_leaf_keys": 519,
+    "mapped_config_leaf_keys": 81,
+    "unmapped_config_leaf_keys": 515,
     "active_menu_resource_keys": 383,
     "mapped_menu_resource_keys": 58,
     "unmapped_menu_resource_keys": 325,
@@ -49,11 +49,11 @@
     "active_input_key_bindings": 365,
     "mapped_input_key_bindings": 365,
     "unmapped_input_key_bindings": 0,
-    "active_input_pointer_events": 58,
-    "mapped_input_pointer_events": 58,
+    "active_input_pointer_events": 63,
+    "mapped_input_pointer_events": 63,
     "unmapped_input_pointer_events": 0,
-    "active_input_pointer_bindings": 111,
-    "mapped_input_pointer_bindings": 111,
+    "active_input_pointer_bindings": 117,
+    "mapped_input_pointer_bindings": 117,
     "unmapped_input_pointer_bindings": 0
   },
   "config": {
@@ -3180,7 +3180,9 @@
       {
         "key": "comment-background-color",
         "reference_count": 3,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "UI-TEXT-EDIT-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/gui/ConfigDialog2.java",
@@ -3205,7 +3207,9 @@
       {
         "key": "comment-font-color",
         "reference_count": 3,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "UI-TEXT-EDIT-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/gui/ConfigDialog2.java",
@@ -8416,7 +8420,9 @@
       {
         "key": "pure-background-color",
         "reference_count": 3,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "UI-TEXT-EDIT-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/gui/ConfigDialog2.java",
@@ -13466,7 +13472,9 @@
       {
         "key": "use-pure-background",
         "reference_count": 3,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "UI-TEXT-EDIT-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/gui/ConfigDialog2.java",
@@ -30658,10 +30666,16 @@
         "source": "src/main/java/featurecat/lizzie/gui/DemoScrollBarUI2.java",
         "active_pointer_events": 2,
         "active_pointer_bindings": 4
+      },
+      {
+        "id": "JPaintTextPane",
+        "source": "src/main/java/featurecat/lizzie/gui/JPaintTextPane.java",
+        "active_pointer_events": 5,
+        "active_pointer_bindings": 6
       }
     ],
-    "active_pointer_events": 58,
-    "active_pointer_bindings": 111,
+    "active_pointer_events": 63,
+    "active_pointer_bindings": 117,
     "pointer_events": [
       {
         "event_id": "InputIndependentSubboard:mouseClicked",
@@ -31241,6 +31255,56 @@
         "binding_count": 2,
         "matrix_ids": [
           "UI-BLUNDER-SCROLLBAR-001"
+        ]
+      },
+      {
+        "event_id": "JPaintTextPane:mouseClicked",
+        "source_id": "JPaintTextPane",
+        "event": "mouseClicked",
+        "line": 221,
+        "binding_count": 1,
+        "matrix_ids": [
+          "UI-TEXT-EDIT-001"
+        ]
+      },
+      {
+        "event_id": "JPaintTextPane:mousePressed",
+        "source_id": "JPaintTextPane",
+        "event": "mousePressed",
+        "line": 227,
+        "binding_count": 2,
+        "matrix_ids": [
+          "UI-TEXT-EDIT-001"
+        ]
+      },
+      {
+        "event_id": "JPaintTextPane:mouseReleased",
+        "source_id": "JPaintTextPane",
+        "event": "mouseReleased",
+        "line": 238,
+        "binding_count": 1,
+        "matrix_ids": [
+          "UI-TEXT-EDIT-001"
+        ]
+      },
+      {
+        "event_id": "JPaintTextPane:mouseEntered",
+        "source_id": "JPaintTextPane",
+        "event": "mouseEntered",
+        "line": 244,
+        "binding_count": 1,
+        "matrix_ids": [
+          "UI-TEXT-EDIT-001"
+        ]
+      },
+      {
+        "event_id": "JPaintTextPane:mouseExited",
+        "source_id": "JPaintTextPane",
+        "event": "mouseExited",
+        "line": 250,
+        "binding_count": 1,
+        "matrix_ids": [
+          "UI-TEXT-EDIT-001"
         ]
       }
     ],
@@ -34570,6 +34634,105 @@
         ],
         "matrix_ids": [
           "UI-BLUNDER-SCROLLBAR-001"
+        ]
+      },
+      {
+        "binding": "JPaintTextPane:mouseClicked#1",
+        "event_id": "JPaintTextPane:mouseClicked",
+        "source_id": "JPaintTextPane",
+        "event": "mouseClicked",
+        "line": 221,
+        "conditions": [],
+        "statements": [],
+        "matrix_ids": [
+          "UI-TEXT-EDIT-001"
+        ]
+      },
+      {
+        "binding": "JPaintTextPane:mousePressed#1",
+        "event_id": "JPaintTextPane:mousePressed",
+        "source_id": "JPaintTextPane",
+        "event": "mousePressed",
+        "line": 227,
+        "conditions": [
+          {
+            "expression": "e.getButton() == MouseEvent.BUTTON3",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 230,
+            "statement": "copy.setEnabled(isCanCopy());"
+          },
+          {
+            "line": 231,
+            "statement": "paste.setEnabled(isClipboardString());"
+          },
+          {
+            "line": 232,
+            "statement": "cut.setEnabled(isCanCopy());"
+          },
+          {
+            "line": 233,
+            "statement": "pop.show(this, e.getX(), e.getY());"
+          }
+        ],
+        "matrix_ids": [
+          "UI-TEXT-EDIT-001"
+        ]
+      },
+      {
+        "binding": "JPaintTextPane:mousePressed#2",
+        "event_id": "JPaintTextPane:mousePressed",
+        "source_id": "JPaintTextPane",
+        "event": "mousePressed",
+        "line": 227,
+        "conditions": [
+          {
+            "expression": "e.getButton() == MouseEvent.BUTTON3",
+            "expected": false
+          }
+        ],
+        "statements": [],
+        "matrix_ids": [
+          "UI-TEXT-EDIT-001"
+        ]
+      },
+      {
+        "binding": "JPaintTextPane:mouseReleased#1",
+        "event_id": "JPaintTextPane:mouseReleased",
+        "source_id": "JPaintTextPane",
+        "event": "mouseReleased",
+        "line": 238,
+        "conditions": [],
+        "statements": [],
+        "matrix_ids": [
+          "UI-TEXT-EDIT-001"
+        ]
+      },
+      {
+        "binding": "JPaintTextPane:mouseEntered#1",
+        "event_id": "JPaintTextPane:mouseEntered",
+        "source_id": "JPaintTextPane",
+        "event": "mouseEntered",
+        "line": 244,
+        "conditions": [],
+        "statements": [],
+        "matrix_ids": [
+          "UI-TEXT-EDIT-001"
+        ]
+      },
+      {
+        "binding": "JPaintTextPane:mouseExited#1",
+        "event_id": "JPaintTextPane:mouseExited",
+        "source_id": "JPaintTextPane",
+        "event": "mouseExited",
+        "line": 250,
+        "conditions": [],
+        "statements": [],
+        "matrix_ids": [
+          "UI-TEXT-EDIT-001"
         ]
       }
     ]
