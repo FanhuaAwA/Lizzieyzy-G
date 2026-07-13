@@ -1,5 +1,5 @@
 {
-  "schema_version": 15,
+  "schema_version": 16,
   "allowed_statuses": [
     "未盘点",
     "已盘点",
@@ -1041,37 +1041,61 @@
     {
       "id": "TSUMEGO-001",
       "category": "死活题",
-      "legacy_entry": "Shift+E 打开死活题窗口，Shift+T 启动屏幕取题",
-      "legacy_menu_keys": [],
+      "legacy_entry": "分析菜单/顶部工具栏或 Shift+E 打开死活题窗口；主棋盘 Shift+T、取题说明窗的开始按钮或 Shift+T 启动屏幕取题，设置按钮调整识别阈值",
+      "legacy_menu_keys": ["Menu.tsumeGo", "Menu.tsumeGoBtn", "Menu.showTsumeGoMenu"],
       "legacy_menu_labels": [],
       "legacy_shortcuts": [],
       "legacy_input_cases": [
         "keyPressed:VK_E",
         "keyPressed:VK_T",
         "InputIndependentMainBoard:keyPressed:VK_E",
-        "InputIndependentMainBoard:keyPressed:VK_T"
+        "InputIndependentMainBoard:keyPressed:VK_T",
+        "CaptureTsumeGoFrame:keyPressed:VK_T"
       ],
       "legacy_input_bindings": [
         "keyPressed:VK_E#3",
         "keyPressed:VK_T#3",
         "InputIndependentMainBoard:keyPressed:VK_E#3",
-        "InputIndependentMainBoard:keyPressed:VK_T#3"
+        "InputIndependentMainBoard:keyPressed:VK_T#3",
+        "CaptureTsumeGoFrame:keyPressed:VK_T#1",
+        "CaptureTsumeGoFrame:keyPressed:VK_T#2"
       ],
       "java_evidence": [
         { "path": "src/main/java/featurecat/lizzie/gui/Input.java", "symbol": "openTsumego" },
-        { "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "symbol": "public void openTsumego()" }
+        { "path": "src/main/java/featurecat/lizzie/gui/Menu.java", "symbol": "final JFontMenuItem tsumeGoMenu" },
+        { "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "symbol": "public void startCaptureTsumeGo()" },
+        { "path": "src/main/java/featurecat/lizzie/gui/CaptureTsumeGoFrame.java", "symbol": "public CaptureTsumeGoFrame()" },
+        { "path": "src/main/java/featurecat/lizzie/gui/CaptureTsumeGoSettings.java", "symbol": "private void saveSettings()" },
+        { "path": "src/main/java/featurecat/lizzie/analysis/CaptureTsumeGo.java", "symbol": "private void parseLine(String line)" },
+        { "path": "src/main/java/featurecat/lizzie/gui/TsumeGoFrame.java", "symbol": "public TsumeGoFrame(Window owner)" },
+        { "path": "src/main/java/featurecat/lizzie/util/Utils.java", "symbol": "public static Process startJavaJar" }
       ],
-      "config_keys": [],
-      "inputs_preconditions": "死活题窗口可创建；屏幕取题还要求目标平台支持捕获。",
-      "success_behavior": "打开死活题工作区，或最小化主窗口并启动受控屏幕取题流程。",
-      "failure_cancel_behavior": "重复打开先释放旧窗口；捕获失败恢复主窗口并报告，不得仅打印异常。",
-      "data_io": "读取或生成死活题棋盘；屏幕取题读取用户明确选择的屏幕区域。",
-      "external_dependencies": ["目标平台屏幕捕获"],
+      "config_keys": [
+        "show-tsume-go-menu",
+        "tsume-go-wall-distance",
+        "tsume-go-to-play",
+        "tsume-go-attaker",
+        "tsume-go-ko-threat",
+        "capture-black-offset",
+        "capture-black-percent",
+        "capture-white-offset",
+        "capture-white-percent",
+        "capture-gray-percent"
+      ],
+      "inputs_preconditions": "死活题窗口入口可见或主棋盘拥有焦点；屏幕取题必须由用户明确触发，目标平台支持屏幕捕获且权限已授予，当前棋盘可安全进入事务式替换。取题说明窗只在 Shift+T 时执行，普通 T 是显式无动作路径；旧版按钮均不可聚焦且窗口级 KeyListener 的焦点可达性不可靠，目标必须提供可聚焦控件、菜单和可发现快捷键。",
+      "success_behavior": "菜单、工具栏或 Shift+E 打开可重复使用的死活题设置；开始按钮和说明窗 Shift+T 均经统一启动方法隐藏说明窗并开始捕获。捕获成功时只接受有界、完整且方向合法的识别网格，在后台完成像素识别并在 UI 线程一次性提交可撤销的棋盘替换，再打开死活题设置；确认后按执棋方、攻击方、打劫威胁和正整数边墙距离生成题目并刷新。目标必须用原生平台能力或受审计的非 Java 组件实现，禁止复制、打包或运行旧版 Java/JAR 后端。",
+      "failure_cancel_behavior": "权限拒绝、用户取消、资源缺失、捕获启动/读取/解析失败、子任务崩溃、超时、重复启动或关窗都必须确定性取消并恢复主窗，保持原棋盘和历史不变且给出可操作错误；畸形、超长、超量、负数/超大尺寸、非法方向、行宽不一致或越界坐标必须在分配和改盘前拒绝。若目标仍需子进程，使用受信绝对路径与完整性校验、单实例所有者、长度/时间/内存上限，关闭流并限时终止整个进程树；不得沿用旧版丢失所有者、静默 IOException、阻塞读、无界 stdout/stderr、仅 destroy 或后台线程改 Swing 的行为。设置非整数或越界时保持窗口可见并定位错误，保存应校验后原子持久化；缺失图片必须降级而非崩溃。",
+      "data_io": "旧版把资源 `assets/captureTsumeGo/CaptureTsumeGo1.2.jar` 复制到当前工作目录的相对路径，向外部 Java 进程传入 5 个阈值整数，再消费无长度上限的 `dx/#/end/esc` stdout 文本与 stderr；合法 `end` 会按角落方向把识别结果直接清空/重开并改写当前内存棋盘。设置窗只写内存字段和 uiConfig，依赖以后正常全局保存落盘。目标只读取用户授权的屏幕区域和上述 10 个兼容配置键，保留未知配置，捕获结果先进入有界临时模型，校验成功后原子提交并提供撤销/回滚。",
+      "external_dependencies": [
+        "目标平台屏幕捕获 API 与操作系统权限",
+        "旧版证据限定：Java 运行时及 CaptureTsumeGo1.2.jar（SHA-256 A87B0F3485882E9BAF77C4B7BFC6FB80CF55DAB432DC362DA0185DAEEA949500；不得成为新版运行时依赖）",
+        "当前棋盘/历史、死活题生成器与配置持久化"
+      ],
       "target_modules": ["Lizzie.Core", "Lizzie.Desktop"],
       "automated_evidence": [],
-      "manual_acceptance": "覆盖打开/重复打开、取题成功、取消、权限拒绝和捕获异常后的窗口恢复。",
+      "manual_acceptance": "用受控像素夹具和伪捕获源（不执行旧 JAR）覆盖菜单/工具栏/Shift+E、主棋盘及说明窗 Shift+T、普通 T 无动作、焦点/键盘/读屏、设置有效/无效/边界及重启持久化；覆盖四角方向、矩形棋盘、行宽/坐标/尺寸/消息长度和数量边界、取消/权限拒绝/超时/崩溃/重复启动/关窗，并断言失败前后棋盘与历史完全一致、成功仅提交一次且可撤销。平台实测需在用户明确同意屏幕权限后另行执行。",
       "status": "已盘点",
-      "evidence": "两条精确输入路径与窗口入口已定位；旧版捕获异常只打印堆栈的恢复缺口需在目标实现修正。"
+      "evidence": "静态链路已从菜单和 4 条既有主棋盘输入路径扩展到 CaptureTsumeGoFrame 的 1 个 case/2 条 Shift 真/假路径，并贯通说明/设置窗、LizzieFrame、外部 Java 启动、stdout 协议、棋盘替换和 TsumeGo 确认。旧版无该功能专项测试，本轮仅静态读取并计算内置 JAR 哈希，未运行 JAR、捕获屏幕或改写用户棋盘；已登记旧版快捷键焦点不可靠、阈值无范围、错误后仍隐藏设置、相对 JAR 信任、无界协议、错误矩形重开、非事务改盘、线程/进程泄漏和 UI 线程违规等迁移边界。"
     },
     {
       "id": "BOARD-TRANSFORM-001",

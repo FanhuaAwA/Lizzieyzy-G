@@ -1,5 +1,5 @@
 {
-  "schema_version": 15,
+  "schema_version": 16,
   "source": {
     "root": "../lizzieyzy-next-main",
     "version": "yzy2.5.3",
@@ -17,7 +17,7 @@
     "Menu keys cover active Menu.java resource lookups with Menu. or menu. prefixes.",
     "Menu literal labels cover active string-literal menu constructors; dynamic labels remain represented by their resource or runtime source.",
     "Menu accelerators cover explicit Menu.java setAccelerator calls and direct OS.isWindows guards; other input bindings remain T-003 work.",
-    "Input key bindings symbolically expand Input.java, InputIndependentMainBoard.java, InputIndependentSubboard.java, InputSubboard.java, FloatBoard.java, AnalysisFrame table/window, DrawPainting.java, ChooseMoreEngine.java, LoadEngine.java, OtherPrograms.java, TencentKifuDownload.java, FoxKifuDownload.java, and BrowserFrame.java key dispatch, condition evaluations, executed statements, empty-listener and empty-statement paths, and switch fall-through; controlIsPressed means Control on every platform plus Meta on macOS, and BrowserFrame dispatches Enter through getKeyChar.",
+    "Input key bindings symbolically expand Input.java, InputIndependentMainBoard.java, InputIndependentSubboard.java, InputSubboard.java, FloatBoard.java, AnalysisFrame table/window, DrawPainting.java, ChooseMoreEngine.java, LoadEngine.java, OtherPrograms.java, TencentKifuDownload.java, FoxKifuDownload.java, BrowserFrame.java, and CaptureTsumeGoFrame.java key dispatch, condition evaluations, executed statements, empty-listener and empty-statement paths, and switch fall-through; controlIsPressed means Control on every platform plus Meta on macOS, and BrowserFrame dispatches Enter through getKeyChar.",
     "Pointer bindings symbolically expand the two indexed subboard listeners plus FloatBoard, AnalysisFrame, DrawPainting, ChooseMoreEngine, LoadEngine, OtherPrograms, TencentKifuDownload, FoxKifuDownload, and BrowserFrame load/stop/label listeners across mouse, motion, drag, wheel, and release condition evaluations, early returns, executed statements, and explicit no-action paths; data-dependent loops and click try/catch handlers are preserved as normalized atomic statements.",
     "Other key-listener and pointer-listener classes remain T-003 work."
   ],
@@ -32,22 +32,22 @@
       "用户批准不迁移": 0
     },
     "active_config_leaf_keys": 596,
-    "mapped_config_leaf_keys": 51,
-    "unmapped_config_leaf_keys": 545,
+    "mapped_config_leaf_keys": 61,
+    "unmapped_config_leaf_keys": 535,
     "active_menu_resource_keys": 383,
-    "mapped_menu_resource_keys": 53,
-    "unmapped_menu_resource_keys": 330,
+    "mapped_menu_resource_keys": 56,
+    "unmapped_menu_resource_keys": 327,
     "active_menu_literal_labels": 12,
     "mapped_menu_literal_labels": 12,
     "unmapped_menu_literal_labels": 0,
     "active_menu_accelerators": 2,
     "mapped_menu_accelerators": 2,
     "unmapped_menu_accelerators": 0,
-    "active_input_key_cases": 142,
-    "mapped_input_key_cases": 142,
+    "active_input_key_cases": 143,
+    "mapped_input_key_cases": 143,
     "unmapped_input_key_cases": 0,
-    "active_input_key_bindings": 363,
-    "mapped_input_key_bindings": 363,
+    "active_input_key_bindings": 365,
+    "mapped_input_key_bindings": 365,
     "unmapped_input_key_bindings": 0,
     "active_input_pointer_events": 39,
     "mapped_input_pointer_events": 39,
@@ -2721,7 +2721,9 @@
       {
         "key": "capture-black-offset",
         "reference_count": 2,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "TSUMEGO-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -2740,7 +2742,9 @@
       {
         "key": "capture-black-percent",
         "reference_count": 2,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "TSUMEGO-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -2759,7 +2763,9 @@
       {
         "key": "capture-gray-percent",
         "reference_count": 2,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "TSUMEGO-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -2778,7 +2784,9 @@
       {
         "key": "capture-white-offset",
         "reference_count": 2,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "TSUMEGO-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -2797,7 +2805,9 @@
       {
         "key": "capture-white-percent",
         "reference_count": 2,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "TSUMEGO-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -11807,7 +11817,9 @@
       {
         "key": "show-tsume-go-menu",
         "reference_count": 2,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "TSUMEGO-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -12640,7 +12652,9 @@
       {
         "key": "tsume-go-attaker",
         "reference_count": 2,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "TSUMEGO-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -12659,7 +12673,9 @@
       {
         "key": "tsume-go-ko-threat",
         "reference_count": 2,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "TSUMEGO-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -12678,7 +12694,9 @@
       {
         "key": "tsume-go-to-play",
         "reference_count": 2,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "TSUMEGO-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -12697,7 +12715,9 @@
       {
         "key": "tsume-go-wall-distance",
         "reference_count": 2,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "TSUMEGO-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -16729,7 +16749,9 @@
       },
       {
         "key": "Menu.showTsumeGoMenu",
-        "matrix_ids": [],
+        "matrix_ids": [
+          "TSUMEGO-001"
+        ],
         "lines": [
           4624
         ]
@@ -16951,14 +16973,18 @@
       },
       {
         "key": "Menu.tsumeGo",
-        "matrix_ids": [],
+        "matrix_ids": [
+          "TSUMEGO-001"
+        ],
         "lines": [
           3202
         ]
       },
       {
         "key": "Menu.tsumeGoBtn",
-        "matrix_ids": [],
+        "matrix_ids": [
+          "TSUMEGO-001"
+        ],
         "lines": [
           6023
         ]
@@ -17384,12 +17410,24 @@
         "post_dispatch_actions": {
           "keyPressed": []
         }
+      },
+      {
+        "id": "CaptureTsumeGoFrame",
+        "source": "src/main/java/featurecat/lizzie/gui/CaptureTsumeGoFrame.java",
+        "active_key_cases": 1,
+        "active_key_bindings": 2,
+        "events": {
+          "keyPressed": 1
+        },
+        "post_dispatch_actions": {
+          "keyPressed": []
+        }
       }
     ],
-    "active_key_cases": 142,
-    "active_key_bindings": 363,
+    "active_key_cases": 143,
+    "active_key_bindings": 365,
     "events": {
-      "keyPressed": 138,
+      "keyPressed": 139,
       "keyReleased": 4
     },
     "cases": [
@@ -19435,6 +19473,18 @@
         "binding_count": 1,
         "matrix_ids": [
           "ONLINE-YIKE-001"
+        ]
+      },
+      {
+        "case": "CaptureTsumeGoFrame:keyPressed:VK_T",
+        "source_id": "CaptureTsumeGoFrame",
+        "event": "keyPressed",
+        "key": "VK_T",
+        "line": 96,
+        "modifier_checks": [],
+        "binding_count": 2,
+        "matrix_ids": [
+          "TSUMEGO-001"
         ]
       }
     ],
@@ -30410,6 +30460,53 @@
         ],
         "matrix_ids": [
           "ONLINE-YIKE-001"
+        ]
+      },
+      {
+        "binding": "CaptureTsumeGoFrame:keyPressed:VK_T#1",
+        "case": "CaptureTsumeGoFrame:keyPressed:VK_T",
+        "source_id": "CaptureTsumeGoFrame",
+        "event": "keyPressed",
+        "key": "VK_T",
+        "line": 96,
+        "conditions": [
+          {
+            "expression": "e.isShiftDown()",
+            "expected": true
+          }
+        ],
+        "case_chain": [
+          "CaptureTsumeGoFrame:keyPressed:VK_T"
+        ],
+        "statements": [
+          {
+            "line": 98,
+            "statement": "Lizzie.frame.startCaptureTsumeGo();"
+          }
+        ],
+        "matrix_ids": [
+          "TSUMEGO-001"
+        ]
+      },
+      {
+        "binding": "CaptureTsumeGoFrame:keyPressed:VK_T#2",
+        "case": "CaptureTsumeGoFrame:keyPressed:VK_T",
+        "source_id": "CaptureTsumeGoFrame",
+        "event": "keyPressed",
+        "key": "VK_T",
+        "line": 96,
+        "conditions": [
+          {
+            "expression": "e.isShiftDown()",
+            "expected": false
+          }
+        ],
+        "case_chain": [
+          "CaptureTsumeGoFrame:keyPressed:VK_T"
+        ],
+        "statements": [],
+        "matrix_ids": [
+          "TSUMEGO-001"
         ]
       }
     ],
