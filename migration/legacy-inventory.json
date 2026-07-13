@@ -1,5 +1,5 @@
 {
-  "schema_version": 17,
+  "schema_version": 18,
   "source": {
     "root": "../lizzieyzy-next-main",
     "version": "yzy2.5.3",
@@ -18,7 +18,7 @@
     "Menu literal labels cover active string-literal menu constructors; dynamic labels remain represented by their resource or runtime source.",
     "Menu accelerators cover explicit Menu.java setAccelerator calls and direct OS.isWindows guards; other input bindings remain T-003 work.",
     "Input key bindings symbolically expand Input.java, InputIndependentMainBoard.java, InputIndependentSubboard.java, InputSubboard.java, FloatBoard.java, AnalysisFrame table/window, DrawPainting.java, ChooseMoreEngine.java, LoadEngine.java, OtherPrograms.java, TencentKifuDownload.java, FoxKifuDownload.java, BrowserFrame.java, and CaptureTsumeGoFrame.java key dispatch, condition evaluations, executed statements, empty-listener and empty-statement paths, and switch fall-through; controlIsPressed means Control on every platform plus Meta on macOS, and BrowserFrame dispatches Enter through getKeyChar.",
-    "Pointer bindings symbolically expand the two indexed subboard listeners plus FloatBoard, AnalysisFrame, DrawPainting, ChooseMoreEngine, LoadEngine, OtherPrograms, TencentKifuDownload, FoxKifuDownload, BrowserFrame load/stop/label listeners, and JFontTextArea across mouse, motion, drag, wheel, and release condition evaluations, early returns, executed statements, and explicit no-action paths; data-dependent loops and click try/catch handlers are preserved as normalized atomic statements.",
+    "Pointer bindings symbolically expand the two indexed subboard listeners plus FloatBoard, AnalysisFrame, DrawPainting, ChooseMoreEngine, LoadEngine, OtherPrograms, TencentKifuDownload, FoxKifuDownload, BrowserFrame load/stop/label listeners, JFontTextArea, and JFontTextField across mouse, motion, drag, wheel, and release condition evaluations, early returns, executed statements, and explicit no-action paths; data-dependent loops and click try/catch handlers are preserved as normalized atomic statements.",
     "Other key-listener and pointer-listener classes remain T-003 work."
   ],
   "matrix_summary": {
@@ -32,8 +32,8 @@
       "用户批准不迁移": 0
     },
     "active_config_leaf_keys": 596,
-    "mapped_config_leaf_keys": 65,
-    "unmapped_config_leaf_keys": 531,
+    "mapped_config_leaf_keys": 70,
+    "unmapped_config_leaf_keys": 526,
     "active_menu_resource_keys": 383,
     "mapped_menu_resource_keys": 56,
     "unmapped_menu_resource_keys": 327,
@@ -49,11 +49,11 @@
     "active_input_key_bindings": 365,
     "mapped_input_key_bindings": 365,
     "unmapped_input_key_bindings": 0,
-    "active_input_pointer_events": 44,
-    "mapped_input_pointer_events": 44,
+    "active_input_pointer_events": 49,
+    "mapped_input_pointer_events": 49,
     "unmapped_input_pointer_events": 0,
-    "active_input_pointer_bindings": 91,
-    "mapped_input_pointer_bindings": 91,
+    "active_input_pointer_bindings": 97,
+    "mapped_input_pointer_bindings": 97,
     "unmapped_input_pointer_bindings": 0
   },
   "config": {
@@ -5078,7 +5078,9 @@
       {
         "key": "glass-accent-color",
         "reference_count": 1,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "UI-TEXT-EDIT-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -5104,7 +5106,9 @@
       {
         "key": "glass-corner-radius",
         "reference_count": 1,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "UI-TEXT-EDIT-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -5130,7 +5134,9 @@
       {
         "key": "glass-panel-border-color",
         "reference_count": 1,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "UI-TEXT-EDIT-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -5683,7 +5689,9 @@
       {
         "key": "is-apple-style",
         "reference_count": 4,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "UI-TEXT-EDIT-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -13321,7 +13329,9 @@
       {
         "key": "use-morandi-colors",
         "reference_count": 3,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "UI-TEXT-EDIT-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -30605,10 +30615,16 @@
         "source": "src/main/java/featurecat/lizzie/gui/JFontTextArea.java",
         "active_pointer_events": 5,
         "active_pointer_bindings": 6
+      },
+      {
+        "id": "JFontTextField",
+        "source": "src/main/java/featurecat/lizzie/gui/JFontTextField.java",
+        "active_pointer_events": 5,
+        "active_pointer_bindings": 6
       }
     ],
-    "active_pointer_events": 44,
-    "active_pointer_bindings": 91,
+    "active_pointer_events": 49,
+    "active_pointer_bindings": 97,
     "pointer_events": [
       {
         "event_id": "InputIndependentSubboard:mouseClicked",
@@ -31045,6 +31061,56 @@
         "source_id": "JFontTextArea",
         "event": "mouseExited",
         "line": 162,
+        "binding_count": 1,
+        "matrix_ids": [
+          "UI-TEXT-EDIT-001"
+        ]
+      },
+      {
+        "event_id": "JFontTextField:mouseClicked",
+        "source_id": "JFontTextField",
+        "event": "mouseClicked",
+        "line": 128,
+        "binding_count": 1,
+        "matrix_ids": [
+          "UI-TEXT-EDIT-001"
+        ]
+      },
+      {
+        "event_id": "JFontTextField:mousePressed",
+        "source_id": "JFontTextField",
+        "event": "mousePressed",
+        "line": 134,
+        "binding_count": 2,
+        "matrix_ids": [
+          "UI-TEXT-EDIT-001"
+        ]
+      },
+      {
+        "event_id": "JFontTextField:mouseReleased",
+        "source_id": "JFontTextField",
+        "event": "mouseReleased",
+        "line": 145,
+        "binding_count": 1,
+        "matrix_ids": [
+          "UI-TEXT-EDIT-001"
+        ]
+      },
+      {
+        "event_id": "JFontTextField:mouseEntered",
+        "source_id": "JFontTextField",
+        "event": "mouseEntered",
+        "line": 151,
+        "binding_count": 1,
+        "matrix_ids": [
+          "UI-TEXT-EDIT-001"
+        ]
+      },
+      {
+        "event_id": "JFontTextField:mouseExited",
+        "source_id": "JFontTextField",
+        "event": "mouseExited",
+        "line": 157,
         "binding_count": 1,
         "matrix_ids": [
           "UI-TEXT-EDIT-001"
@@ -33991,6 +34057,105 @@
         "source_id": "JFontTextArea",
         "event": "mouseExited",
         "line": 162,
+        "conditions": [],
+        "statements": [],
+        "matrix_ids": [
+          "UI-TEXT-EDIT-001"
+        ]
+      },
+      {
+        "binding": "JFontTextField:mouseClicked#1",
+        "event_id": "JFontTextField:mouseClicked",
+        "source_id": "JFontTextField",
+        "event": "mouseClicked",
+        "line": 128,
+        "conditions": [],
+        "statements": [],
+        "matrix_ids": [
+          "UI-TEXT-EDIT-001"
+        ]
+      },
+      {
+        "binding": "JFontTextField:mousePressed#1",
+        "event_id": "JFontTextField:mousePressed",
+        "source_id": "JFontTextField",
+        "event": "mousePressed",
+        "line": 134,
+        "conditions": [
+          {
+            "expression": "e.getButton() == MouseEvent.BUTTON3",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 137,
+            "statement": "copy.setEnabled(isCanCopy());"
+          },
+          {
+            "line": 138,
+            "statement": "paste.setEnabled(isClipboardString());"
+          },
+          {
+            "line": 139,
+            "statement": "cut.setEnabled(isCanCopy());"
+          },
+          {
+            "line": 140,
+            "statement": "pop.show(this, e.getX(), e.getY());"
+          }
+        ],
+        "matrix_ids": [
+          "UI-TEXT-EDIT-001"
+        ]
+      },
+      {
+        "binding": "JFontTextField:mousePressed#2",
+        "event_id": "JFontTextField:mousePressed",
+        "source_id": "JFontTextField",
+        "event": "mousePressed",
+        "line": 134,
+        "conditions": [
+          {
+            "expression": "e.getButton() == MouseEvent.BUTTON3",
+            "expected": false
+          }
+        ],
+        "statements": [],
+        "matrix_ids": [
+          "UI-TEXT-EDIT-001"
+        ]
+      },
+      {
+        "binding": "JFontTextField:mouseReleased#1",
+        "event_id": "JFontTextField:mouseReleased",
+        "source_id": "JFontTextField",
+        "event": "mouseReleased",
+        "line": 145,
+        "conditions": [],
+        "statements": [],
+        "matrix_ids": [
+          "UI-TEXT-EDIT-001"
+        ]
+      },
+      {
+        "binding": "JFontTextField:mouseEntered#1",
+        "event_id": "JFontTextField:mouseEntered",
+        "source_id": "JFontTextField",
+        "event": "mouseEntered",
+        "line": 151,
+        "conditions": [],
+        "statements": [],
+        "matrix_ids": [
+          "UI-TEXT-EDIT-001"
+        ]
+      },
+      {
+        "binding": "JFontTextField:mouseExited#1",
+        "event_id": "JFontTextField:mouseExited",
+        "source_id": "JFontTextField",
+        "event": "mouseExited",
+        "line": 157,
         "conditions": [],
         "statements": [],
         "matrix_ids": [

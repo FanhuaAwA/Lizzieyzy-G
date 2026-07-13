@@ -1,5 +1,5 @@
 {
-  "schema_version": 17,
+  "schema_version": 18,
   "allowed_statuses": [
     "未盘点",
     "已盘点",
@@ -2229,7 +2229,7 @@
     {
       "id": "UI-TEXT-EDIT-001",
       "category": "界面显示",
-      "legacy_entry": "JFontTextArea 为分析引擎、引擎管理、外部程序、形势估算和浏览器初始化日志等 5 类窗口的 6 个多行文本框提供本地化复制/粘贴/剪切弹出菜单；鼠标右键按下时刷新菜单状态",
+      "legacy_entry": "JFontTextArea 的 5 个调用类/6 个多行实例与 JFontTextField 的 27 个调用类/122 个非注释单行构造实例共享本地化复制/粘贴/剪切弹出菜单；鼠标右键按下时刷新菜单状态，单行字段另覆盖数值、棋局元数据、在线查询、路径/远端连接和自由 GTP/引擎命令输入",
       "legacy_menu_keys": [],
       "legacy_menu_labels": [],
       "legacy_shortcuts": [],
@@ -2238,7 +2238,12 @@
         "JFontTextArea:mousePressed",
         "JFontTextArea:mouseReleased",
         "JFontTextArea:mouseEntered",
-        "JFontTextArea:mouseExited"
+        "JFontTextArea:mouseExited",
+        "JFontTextField:mouseClicked",
+        "JFontTextField:mousePressed",
+        "JFontTextField:mouseReleased",
+        "JFontTextField:mouseEntered",
+        "JFontTextField:mouseExited"
       ],
       "legacy_input_bindings": [
         "JFontTextArea:mouseClicked#1",
@@ -2246,7 +2251,13 @@
         "JFontTextArea:mousePressed#2",
         "JFontTextArea:mouseReleased#1",
         "JFontTextArea:mouseEntered#1",
-        "JFontTextArea:mouseExited#1"
+        "JFontTextArea:mouseExited#1",
+        "JFontTextField:mouseClicked#1",
+        "JFontTextField:mousePressed#1",
+        "JFontTextField:mousePressed#2",
+        "JFontTextField:mouseReleased#1",
+        "JFontTextField:mouseEntered#1",
+        "JFontTextField:mouseExited#1"
       ],
       "java_evidence": [
         { "path": "src/main/java/featurecat/lizzie/gui/JFontTextArea.java", "symbol": "public void mousePressed(MouseEvent e)" },
@@ -2255,7 +2266,37 @@
         { "path": "src/main/java/featurecat/lizzie/gui/BrowserInitializing.java", "symbol": "public BrowserInitializing(Window owner)" },
         { "path": "src/main/java/featurecat/lizzie/gui/MoreEngines.java", "symbol": "private void saveCurrentEngineConfig()" },
         { "path": "src/main/java/featurecat/lizzie/gui/OtherPrograms.java", "symbol": "private void saveEngineConfig()" },
-        { "path": "src/main/java/featurecat/lizzie/gui/SetEstimateParam.java", "symbol": "public SetEstimateParam()" }
+        { "path": "src/main/java/featurecat/lizzie/gui/SetEstimateParam.java", "symbol": "public SetEstimateParam()" },
+        { "path": "src/main/java/featurecat/lizzie/gui/JFontTextField.java", "symbol": "public void mousePressed(MouseEvent e)" },
+        { "path": "src/main/java/featurecat/lizzie/gui/JFontTextField.java", "symbol": "public void updateUI()" },
+        { "path": "src/main/java/featurecat/lizzie/gui/AppleStyleSupport.java", "symbol": "public static void installTextFieldStyle" },
+        { "path": "src/main/java/featurecat/lizzie/gui/AnalysisPartGame.java", "symbol": "class AnalysisPartGame" },
+        { "path": "src/main/java/featurecat/lizzie/gui/AnalysisSettings.java", "symbol": "class AnalysisSettings" },
+        { "path": "src/main/java/featurecat/lizzie/gui/AutoPlay.java", "symbol": "class AutoPlay" },
+        { "path": "src/main/java/featurecat/lizzie/gui/ContributeSettings.java", "symbol": "class ContributeSettings" },
+        { "path": "src/main/java/featurecat/lizzie/gui/ContributeView.java", "symbol": "class ContributeView" },
+        { "path": "src/main/java/featurecat/lizzie/gui/EnginePkConfig.java", "symbol": "class EnginePkConfig" },
+        { "path": "src/main/java/featurecat/lizzie/gui/FastCommands.java", "symbol": "class FastCommands" },
+        { "path": "src/main/java/featurecat/lizzie/gui/FirstUseSettings.java", "symbol": "class FirstUseSettings" },
+        { "path": "src/main/java/featurecat/lizzie/gui/FoxKifuDownload.java", "symbol": "class FoxKifuDownload" },
+        { "path": "src/main/java/featurecat/lizzie/gui/GameInfoDialog.java", "symbol": "class GameInfoDialog" },
+        { "path": "src/main/java/featurecat/lizzie/gui/GtpConsolePane.java", "symbol": "class GtpConsolePane" },
+        { "path": "src/main/java/featurecat/lizzie/gui/Menu.java", "symbol": "class Menu" },
+        { "path": "src/main/java/featurecat/lizzie/gui/MoreEngines.java", "symbol": "class MoreEngines" },
+        { "path": "src/main/java/featurecat/lizzie/gui/NewAnaGameDialog.java", "symbol": "class NewAnaGameDialog" },
+        { "path": "src/main/java/featurecat/lizzie/gui/NewEngineGameDialog.java", "symbol": "class NewEngineGameDialog" },
+        { "path": "src/main/java/featurecat/lizzie/gui/NewGameDialog.java", "symbol": "class NewGameDialog" },
+        { "path": "src/main/java/featurecat/lizzie/gui/NewHumanSlGameDialog.java", "symbol": "class NewHumanSlGameDialog" },
+        { "path": "src/main/java/featurecat/lizzie/gui/RemoteEngineSettings.java", "symbol": "class RemoteEngineSettings" },
+        { "path": "src/main/java/featurecat/lizzie/gui/SetAiTimes.java", "symbol": "class SetAiTimes" },
+        { "path": "src/main/java/featurecat/lizzie/gui/SetAnaGameRandomStart.java", "symbol": "class SetAnaGameRandomStart" },
+        { "path": "src/main/java/featurecat/lizzie/gui/SetDelayShowCandidates.java", "symbol": "class SetDelayShowCandidates" },
+        { "path": "src/main/java/featurecat/lizzie/gui/SetDiffAnalyze.java", "symbol": "class SetDiffAnalyze" },
+        { "path": "src/main/java/featurecat/lizzie/gui/SetKataEngines.java", "symbol": "class SetKataEngines" },
+        { "path": "src/main/java/featurecat/lizzie/gui/SetKataPDA.java", "symbol": "class SetKataPDA" },
+        { "path": "src/main/java/featurecat/lizzie/gui/SetLeelaEngines.java", "symbol": "class SetLeelaEngines" },
+        { "path": "src/main/java/featurecat/lizzie/gui/StatisticsThreshold.java", "symbol": "class StatisticsThreshold" },
+        { "path": "src/main/java/featurecat/lizzie/gui/TencentKifuDownload.java", "symbol": "class TencentKifuDownload" }
       ],
       "config_keys": [
         "frame-font-size",
@@ -2264,22 +2305,27 @@
         "engine-settings-list",
         "program-command-list",
         "estimate-command",
-        "use-estimate-command"
+        "use-estimate-command",
+        "is-apple-style",
+        "use-morandi-colors",
+        "glass-panel-border-color",
+        "glass-accent-color",
+        "glass-corner-radius"
       ],
-      "inputs_preconditions": "文本区可见且接收 pointer 输入；复制/剪切要求非空选区，粘贴要求系统剪贴板可用且提供字符串。旧版只在 mousePressed 的 BUTTON3 分支弹出，其他按键路径和 clicked/released/entered/exited 都是显式无动作；BrowserInitializing 的实例为只读，其余命令框还受各自 enabled/editable 状态约束。",
-      "success_behavior": "三个构造器统一使用 Config.sysDefaultFontName/Config.frameFontSize 并启用软换行，rows/columns 构造器另设置尺寸。旧版右键按下会按当前选区启用复制/剪切、通过读取系统剪贴板启用粘贴，并在指针坐标显示使用 JTextPane.copy/paste/cut 资源的菜单；三个动作再调用 JTextArea 内建 copy/paste/cut，菜单项标注固定 Ctrl+C/V/X。目标版优先使用 Avalonia TextBox 原生命令和剪贴板服务，只在原生能力有缺口时增加最小 ContextMenu；必须支持平台 popup 手势、键盘菜单、平台 Primary 修饰键、焦点与辅助技术，并按只读/禁用/选区/剪贴板状态准确启用。粘贴只更新文本，绝不自动保存或启动命令。",
-      "failure_cancel_behavior": "剪贴板为空、非文本、正被占用、权限拒绝、转换异常或服务不可用时保持文本与焦点不变，禁用粘贴并提供可诊断但不含剪贴板内容的反馈；读取前必须执行明确的字符数/字节数上限，超限内容不得完整物化，默认拒绝，确有业务需要时才可显式确认。不得空 catch、阻塞 UI 或让异常逃出输入事件。旧版 getSystemClipboard/getContents 位于 try 外、getTransferData 会先完整物化字符串且粘贴时再次读取，可能在 EDT 消耗大量时间与内存；只读/禁用文本区仍可能把剪切和粘贴显示为可用，且 BUTTON3/mousePressed 与固定 Ctrl 漏掉 macOS Ctrl-click、release popup、Shift+F10/Menu 键和触控。目标需修正这些差异；命令消费者在用户显式确认时仍须把粘贴文本当不可信输入，按进程安全边界校验和参数化，不得 shell 拼接。BrowserInitializing 另有下游可靠性边界：旧版全局替换 System.err 后不归属、不恢复，任意线程可直接 append 到 UI，日志无界且 PrintStream 未关闭；目标诊断接收器必须有明确所有者、UI 线程调度、有界缓冲和确定的关闭/恢复。",
-      "data_io": "构造时读取 Config.sysDefaultFontName 与 frame-font-size，设置字体、字号、软换行和可选行列尺寸；编辑时直接读写系统剪贴板文本和控件内存内容，不自行持久化。AnalysisSettings 把内容保存为 analysis-engine-command 并维护 customized 标志；MoreEngines 写入 engine-settings-list；OtherPrograms 写入 program-command-list；SetEstimateParam 写入 estimate-command/use-estimate-command。BrowserInitializing 只读实例显示全局 System.err 重定向内容，旧版该重定向不恢复且可由非 UI 线程无界追加。后续进程启动属于各消费工作流，右键或粘贴本身不得触发。",
+      "inputs_preconditions": "文本控件可见且接收 pointer 输入；复制/剪切要求非空选区，粘贴要求系统剪贴板可用且提供字符串。旧版两个控件都只在 mousePressed 的 BUTTON3 分支弹出，其他按键路径和 clicked/released/entered/exited 都是显式无动作；BrowserInitializing 的多行实例为只读，其余字段还受各调用方的 enabled/editable 状态约束。JFontTextField 的 122 个非注释构造全部使用无参构造器；菜单打开本身无提交动作，但 paste() 会修改 Document，调用方另绑的同步 DocumentListener/KeyListener 可能立即持久化、改棋盘或发送 GTP，其他字段则只在 Enter/确认后提交。",
+      "success_behavior": "JFontTextArea 的三个构造器统一使用 Config.sysDefaultFontName/Config.frameFontSize 并启用软换行，rows/columns 构造器另设置尺寸；JFontTextField 的无参和预填文本构造器设置相同字体并安装 AppleStyleSupport，updateUI 后重新按顶栏位置、Apple/Morandi 模式和主题颜色/圆角应用背景、前景、光标、选区与边框，当前旧代码的非注释构造全部使用无参版本。旧版右键按下会按当前选区启用复制/剪切、通过读取系统剪贴板启用粘贴，并在指针坐标显示使用 JTextPane.copy/paste/cut 资源的菜单；动作调用 Swing 内建 copy/paste/cut，菜单项标注固定 Ctrl+C/V/X。目标版优先使用 Avalonia TextBox 原生命令、主题和剪贴板服务，只在原生能力有缺口时增加最小 ContextMenu；单行/多行、正常/顶栏、只读/禁用、浅色/深色/高对比度都必须支持平台 popup 手势、键盘菜单、平台 Primary 修饰键、焦点与辅助技术。JFontTextArea 和显式确认型字段的粘贴只更新草稿；即时参数字段则在完整新值通过字段校验后原子持久化或发送一次命令，不得把 Document 的删除/插入中间态当成两次提交。",
+      "failure_cancel_behavior": "剪贴板为空、非文本、正被占用、权限拒绝、转换异常或服务不可用时保持文本与焦点不变，禁用粘贴并提供可诊断但不含剪贴板内容的反馈；读取前必须执行明确的字符数/字节数上限，超限内容不得完整物化，默认拒绝，确有业务需要时才可显式确认。不得空 catch、阻塞 UI 或让异常逃出输入事件。旧版两个控件的 getSystemClipboard/getContents 位于 try 外、getTransferData 会先完整物化字符串且粘贴时再次读取，可能在 EDT 消耗大量时间与内存；只读/禁用控件仍可能把剪切和粘贴显示为可用，且 BUTTON3/mousePressed 与固定 Ctrl 漏掉 macOS Ctrl-click、release popup、Shift+F10/Menu 键和触控。JFontTextField 下游含大量直接 parseInt/parseDouble/NumberFormat 和自由 GTP/引擎命令、路径、主机/端口及在线查询；目标调用方必须按字段分别校验长度、编码、有限数值、范围、区域无关格式、路径/端口/协议和命令行长，同步监听器不得把空白、符号前缀或替换过程中的中间编辑态送入业务层。失败时保留原文与焦点、显示字段级错误且不污染配置、不改棋盘、不联网、不启动或写入进程。命令消费者仍须把文本当不可信输入，按进程/GTP 安全边界解析，不得 shell 拼接。BrowserInitializing 另有下游可靠性边界：旧版全局替换 System.err 后不归属、不恢复，任意线程可直接 append 到 UI，日志无界且 PrintStream 未关闭；目标诊断接收器必须有明确所有者、UI 线程调度、有界缓冲和确定的关闭/恢复。",
+      "data_io": "JFontTextArea 构造时读取 Config.sysDefaultFontName 与 frame-font-size，设置字体、字号、软换行和可选行列尺寸；JFontTextField 还通过 AppleStyleSupport 读取 is-apple-style、use-morandi-colors、glass-panel-border-color、glass-accent-color 和 glass-corner-radius。编辑时直接读写系统剪贴板文本和控件内存内容，控件本身不持久化。多行调用方中 AnalysisSettings 保存 analysis-engine-command/customized，MoreEngines 保存 engine-settings-list，OtherPrograms 保存 program-command-list，SetEstimateParam 保存 estimate-command/use-estimate-command；BrowserInitializing 显示全局 System.err。单行调用方共 27 类/122 个非注释构造，分别把文本交给数值分析/对局设置、棋局元数据、固定在线服务查询、引擎/配置路径、远端连接资料、引擎列表、GTP 控制台或内存导航；Menu 的 WRN/PDA/限制/着手排名及 ContributeView 间隔等同步监听字段可在 paste() 修改 Document 时立即持久化、清分析或发 GTP。其余业务字段的逐键持久化归属仍由各自功能矩阵行盘点，不能仅因使用共享控件就宣称已覆盖；菜单打开本身不得触发下游副作用。",
       "external_dependencies": [
         "Windows/macOS/Linux 系统剪贴板、平台 popup 手势和主修饰键",
         "本地化资源 JTextPane.copy/paste/cut",
-        "后续消费文本的引擎、估算与外部程序工作流"
+        "后续消费文本的本地/远端 GTP 引擎、文件系统和固定在线棋谱服务"
       ],
       "target_modules": ["Lizzie.Desktop"],
       "automated_evidence": [],
-      "manual_acceptance": "在 Windows、macOS、Linux 真实窗口覆盖可编辑/只读/禁用文本区，空/非空选区，空/文本/非文本/占用/拒绝剪贴板，右键、macOS Ctrl-click、release popup、Shift+F10/Menu 键、触控、Ctrl 或 Command+C/V/X，以及多行 Unicode 复制/剪切/粘贴；用零长度、恰好位于字符/字节上限和超限的剪贴板内容验证不完整物化、拒绝/确认策略及无内容回显。核对三个构造器的字体、字号、软换行和行列尺寸，并以后台线程写入 BrowserInitializing，验证 UI 调度、有界日志、关闭后恢复 System.err 且不再接收数据；同时断言粘贴及菜单打开不会保存配置或启动任何命令。",
+      "manual_acceptance": "在 Windows、macOS、Linux 真实窗口覆盖单行/多行、可编辑/只读/禁用文本控件，空/非空选区，空/文本/非文本/占用/拒绝剪贴板，右键、macOS Ctrl-click、release popup、Shift+F10/Menu 键、触控、Ctrl 或 Command+C/V/X，以及 Unicode 复制/剪切/粘贴；用零长度、恰好位于字符/字节上限和超限的内容验证不完整物化、拒绝/确认策略及无内容回显。单行字段按类别至少覆盖数值边界/NaN/Infinity/区域格式、棋局姓名与贴目、超长在线查询、路径、主机/端口/用户名、自由 GTP 命令和禁用字段；显式确认字段在粘贴后必须等确认，Menu WRN/PDA/限制/着手排名和 ContributeView 间隔等即时字段只在完整有效值时原子产生一次预期副作用，无效/中间态为零副作用。核对 JFontTextArea 三个构造器和 JFontTextField 两个构造器、updateUI、顶栏/普通位置及 Apple/Morandi/浅深高对比主题的字体、字号、光标、选区、边框与焦点；以后台线程写入 BrowserInitializing 验证 UI 调度、有界日志、关闭后恢复 System.err。",
       "status": "已盘点",
-      "evidence": "JFontTextArea 的 5 个 pointer 事件/6 条路径已静态展开：仅 BUTTON3=true 路径刷新三项启用态并显示菜单，BUTTON3=false 与其余四个事件无动作；已追踪 3 个构造器、5 个调用类、6 个实例和命令/日志下游。独立复核补出剪贴板完整物化/双重读取的资源上限、BrowserInitializing 全局 stderr 所有权/线程/缓冲/关闭，以及字体和尺寸构造语义三项遗漏。旧版没有该控件、剪贴板、popup、选区、只读或平台手势专项测试；本轮未读取真实剪贴板、运行旧 GUI、保存用户配置或启动引擎/外部程序。"
+      "evidence": "JFontTextArea 与 JFontTextField 各自的 5 个 pointer 事件/6 条路径均已静态展开：仅各自 BUTTON3=true 路径刷新三项启用态并显示菜单，BUTTON3=false 与其余四个事件无动作。JFontTextArea 已追踪 3 个构造器、5 个调用类、6 个实例；JFontTextField 已追踪 2 个构造器、AppleStyleSupport/updateUI、27 个调用类和 122 个非注释构造，全部使用无参构造器，getPop/setPop 无外部调用；其中 SetKataEngines.txtRPT 虽构造并绑定监听器，但加入容器及配置读写均被注释，是不可见遗留半成品。只读调用链复核纠正了“单行粘贴无下游副作用”的错误假设：同步 DocumentListener/KeyListener 可立即持久化或发送 GTP。单行下游覆盖数值、元数据、在线查询、路径/远端连接、引擎配置和自由 GTP 命令，但本行只新增共享控件通过 AppleStyleSupport 直接读取的 5 个样式键，不以调用类中出现配置字段冒充其业务语义已盘点。旧版没有两个共享控件、剪贴板、popup、选区、只读、主题或平台手势专项测试；本轮未读取真实剪贴板、运行旧 GUI、保存用户配置、联网或启动引擎/外部程序。"
     }
   ]
 }
