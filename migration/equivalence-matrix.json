@@ -1,5 +1,5 @@
 {
-  "schema_version": 6,
+  "schema_version": 7,
   "allowed_statuses": [
     "未盘点",
     "已盘点",
@@ -1051,23 +1051,26 @@
     {
       "id": "ANALYSIS-PONDER-001",
       "category": "分析",
-      "legacy_entry": "主窗口、独立主棋盘或独立副棋盘的 Space 调用 LizzieFrame.togglePonderMannul 切换前台持续分析",
+      "legacy_entry": "主窗口、独立主棋盘、独立副棋盘或外部读盘浮动棋盘的 Space 调用 LizzieFrame.togglePonderMannul 切换前台持续分析",
       "legacy_menu_keys": [],
       "legacy_menu_labels": [],
       "legacy_shortcuts": [],
       "legacy_input_cases": [
         "keyPressed:VK_SPACE",
         "InputIndependentMainBoard:keyPressed:VK_SPACE",
-        "InputIndependentSubboard:keyPressed:VK_SPACE"
+        "InputIndependentSubboard:keyPressed:VK_SPACE",
+        "FloatBoard:keyPressed:VK_SPACE"
       ],
       "legacy_input_bindings": [
         "keyPressed:VK_SPACE#1",
         "InputIndependentMainBoard:keyPressed:VK_SPACE#1",
-        "InputIndependentSubboard:keyPressed:VK_SPACE#1"
+        "InputIndependentSubboard:keyPressed:VK_SPACE#1",
+        "FloatBoard:keyPressed:VK_SPACE#1"
       ],
       "java_evidence": [
         { "path": "src/main/java/featurecat/lizzie/gui/Input.java", "symbol": "togglePonderMannul" },
         { "path": "src/main/java/featurecat/lizzie/gui/InputIndependentSubboard.java", "symbol": "Lizzie.frame.togglePonderMannul()" },
+        { "path": "src/main/java/featurecat/lizzie/gui/FloatBoard.java", "symbol": "Lizzie.frame.togglePonderMannul()" },
         { "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "symbol": "togglePonderMannul" }
       ],
       "config_keys": [],
@@ -1080,12 +1083,12 @@
       "automated_evidence": [],
       "manual_acceptance": "用确定性与真实引擎分别反复开始/停止，核对请求停止、UI 状态、迟到响应和进程退出。",
       "status": "已盘点",
-      "evidence": "三个已盘点输入源的无修饰 Space 均落到同一动作；目标取消时序和真实引擎实测待建立。"
+      "evidence": "四个已盘点输入源的无修饰 Space 均落到同一动作；目标取消时序和真实引擎实测待建立。"
     },
     {
       "id": "BOARD-VARIATION-001",
       "category": "棋盘与对局",
-      "legacy_entry": "逗号、L、V、R 和无修饰数字键选择、试下、设为主线、重放或预览变化",
+      "legacy_entry": "逗号、L、V、R、无修饰数字键及 FloatBoard 的 Up/Down/G 选择、试下、设为主线、重放、调整或刷新变化",
       "legacy_menu_keys": [],
       "legacy_menu_labels": [],
       "legacy_shortcuts": [],
@@ -1115,7 +1118,10 @@
         "InputIndependentMainBoard:keyPressed:VK_6",
         "InputIndependentMainBoard:keyPressed:VK_7",
         "InputIndependentMainBoard:keyPressed:VK_8",
-        "InputIndependentMainBoard:keyPressed:VK_9"
+        "InputIndependentMainBoard:keyPressed:VK_9",
+        "FloatBoard:keyPressed:VK_UP",
+        "FloatBoard:keyPressed:VK_DOWN",
+        "FloatBoard:keyPressed:VK_G"
       ],
       "legacy_input_bindings": [
         "keyPressed:VK_COMMA#2",
@@ -1149,12 +1155,18 @@
         "InputIndependentMainBoard:keyPressed:VK_6#3",
         "InputIndependentMainBoard:keyPressed:VK_7#3",
         "InputIndependentMainBoard:keyPressed:VK_8#3",
-        "InputIndependentMainBoard:keyPressed:VK_9#3"
+        "InputIndependentMainBoard:keyPressed:VK_9#3",
+        "FloatBoard:keyPressed:VK_UP#1",
+        "FloatBoard:keyPressed:VK_UP#2",
+        "FloatBoard:keyPressed:VK_DOWN#1",
+        "FloatBoard:keyPressed:VK_DOWN#2",
+        "FloatBoard:keyPressed:VK_G#1"
       ],
       "java_evidence": [
         { "path": "src/main/java/featurecat/lizzie/gui/Input.java", "symbol": "playCurrentVariation" },
         { "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "symbol": "public void replayBranch()" },
-        { "path": "src/main/java/featurecat/lizzie/gui/InputIndependentMainBoard.java", "symbol": "replayBranchIndependentMainBoard" }
+        { "path": "src/main/java/featurecat/lizzie/gui/InputIndependentMainBoard.java", "symbol": "replayBranchIndependentMainBoard" },
+        { "path": "src/main/java/featurecat/lizzie/gui/FloatBoard.java", "symbol": "tryToRefreshVariation" }
       ],
       "config_keys": [],
       "inputs_preconditions": "当前节点存在引擎建议或可见分支；数字键对应 1–9 号建议。",
@@ -1164,9 +1176,9 @@
       "external_dependencies": [],
       "target_modules": ["Lizzie.Core", "Lizzie.Desktop"],
       "automated_evidence": [],
-      "manual_acceptance": "用至少九个候选和两个分支覆盖鼠标内外、变化开关、试下、主线、主窗口/独立主棋盘 R 重放及无目标路径。",
+      "manual_acceptance": "用至少九个候选和两个分支覆盖鼠标内外、变化开关、试下、主线、主窗口/独立主棋盘 R 重放、FloatBoard Up/Down/G 及无目标路径。",
       "status": "已盘点",
-      "evidence": "两个输入源的数字 1–8 无 Alt 路径均经连续 case fall-through 到 VK_9；独立源 R 调用 replayBranchIndependentMainBoard，主源调用 replayBranch，差异已保留。"
+      "evidence": "两个 switch 输入源的数字 1–8 无 Alt 路径均经连续 case fall-through 到 VK_9；FloatBoard 的 Up/Down 各保留分支显示与仅刷新路径，G 直接刷新变化。"
     },
     {
       "id": "BOARD-SUBBOARD-INPUT-001",
@@ -1229,9 +1241,64 @@
       "evidence": "12 个 pointer 事件展开为 19 条互斥路径；InputSubboard 滚轮的早退、8 条条件路径和空动作均已生成，两个源的空接口方法也未被遗漏。"
     },
     {
+      "id": "BOARD-FLOAT-INPUT-001",
+      "category": "在线棋盘同步",
+      "legacy_entry": "ReadBoard 创建的 FloatBoard 接收 V、鼠标按下/离开、滚轮和移动事件",
+      "legacy_menu_keys": [],
+      "legacy_menu_labels": [],
+      "legacy_shortcuts": [],
+      "legacy_input_cases": [
+        "FloatBoard:keyPressed:VK_V",
+        "FloatBoard:mousePressed",
+        "FloatBoard:mouseExited",
+        "FloatBoard:mouseWheelMoved",
+        "FloatBoard:mouseMoved"
+      ],
+      "legacy_input_bindings": [
+        "FloatBoard:keyPressed:VK_V#1",
+        "FloatBoard:mousePressed#1",
+        "FloatBoard:mousePressed#2",
+        "FloatBoard:mouseExited#1",
+        "FloatBoard:mouseWheelMoved#1",
+        "FloatBoard:mouseWheelMoved#2",
+        "FloatBoard:mouseWheelMoved#3",
+        "FloatBoard:mouseWheelMoved#4",
+        "FloatBoard:mouseWheelMoved#5",
+        "FloatBoard:mouseWheelMoved#6",
+        "FloatBoard:mouseWheelMoved#7",
+        "FloatBoard:mouseMoved#1",
+        "FloatBoard:mouseMoved#2",
+        "FloatBoard:mouseMoved#3",
+        "FloatBoard:mouseMoved#4",
+        "FloatBoard:mouseMoved#5",
+        "FloatBoard:mouseMoved#6",
+        "FloatBoard:mouseMoved#7",
+        "FloatBoard:mouseMoved#8",
+        "FloatBoard:mouseMoved#9",
+        "FloatBoard:mouseMoved#10"
+      ],
+      "java_evidence": [
+        { "path": "src/main/java/featurecat/lizzie/gui/FloatBoard.java", "symbol": "public FloatBoard(" },
+        { "path": "src/main/java/featurecat/lizzie/gui/FloatBoard.java", "symbol": "public void changeEetEditMode()" },
+        { "path": "src/main/java/featurecat/lizzie/gui/FloatBoard.java", "symbol": "private void onClicked(int x, int y)" },
+        { "path": "src/main/java/featurecat/lizzie/analysis/ReadBoard.java", "symbol": "new FloatBoard(" }
+      ],
+      "config_keys": [],
+      "inputs_preconditions": "外部读盘已创建并显示 FloatBoard；鼠标坐标可转换时才命中棋盘，落子还要求 bothSync 或 editMode。",
+      "success_behavior": "V 切换浮动棋盘编辑态；左键在允许状态落子；滚轮按变化预览或编辑态前后导航；移动在候选点上更新悬停和自动变化长度；离开或移出棋盘清理预览并按需刷新。",
+      "failure_cancel_behavior": "非左键、禁止落子的模式、零方向滚轮、无变化且非编辑态、无坐标或无候选时保持棋盘历史不被误改；清理悬停不得遗留变化预览。",
+      "data_io": "读取外部读盘浮窗状态、棋盘历史和分析候选；更新内存编辑态、落子、变化长度、悬停和 renderer 状态，不直接持久化。",
+      "external_dependencies": ["外部读盘程序或数据流"],
+      "target_modules": ["Lizzie.Core", "Lizzie.Engine", "Lizzie.Desktop"],
+      "automated_evidence": [],
+      "manual_acceptance": "让外部读盘显示 FloatBoard，覆盖 V、左/非左键、同步/编辑态、滚轮正负/零、分支显示、候选内外移动、自动重放两项设置及离开事件，核对落子、历史、悬停、变化长度和刷新。",
+      "status": "已盘点",
+      "evidence": "11 个 FloatBoard 键 case 共 16 条路径另分配到本行及既有分析/变化行；4 个 pointer 事件展开为 20 条可达路径，候选扫描 for 循环保留为数据依赖原子语句，局部布尔赋值用于剪除不可达组合。"
+    },
+    {
       "id": "ANALYSIS-DISPLAY-001",
       "category": "分析",
-      "legacy_entry": "U/M/J/F/H/V/T/Y/K 快捷分支控制候选、变化、手数、热力图、策略和问题手显示",
+      "legacy_entry": "主窗口与独立主棋盘的 U/M/J/F/H/V/T/Y/K，以及 FloatBoard 的 F/H/T 快捷分支控制候选、变化、手数、热力图、策略和问题手显示",
       "legacy_menu_keys": [],
       "legacy_menu_labels": [],
       "legacy_shortcuts": [],
@@ -1253,7 +1320,10 @@
         "InputIndependentMainBoard:keyPressed:VK_V",
         "InputIndependentMainBoard:keyPressed:VK_T",
         "InputIndependentMainBoard:keyPressed:VK_Y",
-        "InputIndependentMainBoard:keyPressed:VK_K"
+        "InputIndependentMainBoard:keyPressed:VK_K",
+        "FloatBoard:keyPressed:VK_F",
+        "FloatBoard:keyPressed:VK_H",
+        "FloatBoard:keyPressed:VK_T"
       ],
       "legacy_input_bindings": [
         "keyPressed:VK_U#1",
@@ -1283,11 +1353,15 @@
         "InputIndependentMainBoard:keyPressed:VK_T#4",
         "InputIndependentMainBoard:keyPressed:VK_Y#1",
         "InputIndependentMainBoard:keyPressed:VK_K#1",
-        "InputIndependentMainBoard:keyPressed:VK_K#2"
+        "InputIndependentMainBoard:keyPressed:VK_K#2",
+        "FloatBoard:keyPressed:VK_F#1",
+        "FloatBoard:keyPressed:VK_H#1",
+        "FloatBoard:keyPressed:VK_T#1"
       ],
       "java_evidence": [
         { "path": "src/main/java/featurecat/lizzie/gui/Input.java", "symbol": "toggleBestMoves" },
-        { "path": "src/main/java/featurecat/lizzie/Config.java", "symbol": "toggleShowMoveNumber" }
+        { "path": "src/main/java/featurecat/lizzie/Config.java", "symbol": "toggleShowMoveNumber" },
+        { "path": "src/main/java/featurecat/lizzie/gui/FloatBoard.java", "symbol": "toggleHide" }
       ],
       "config_keys": ["show-suggestion-variations"],
       "inputs_preconditions": "主棋盘已显示；需要引擎数据的覆盖层只在相应数据存在时可见。",
@@ -1297,14 +1371,14 @@
       "external_dependencies": ["显示热力图或策略时的引擎分析结果"],
       "target_modules": ["Lizzie.Core", "Lizzie.Desktop"],
       "automated_evidence": [],
-      "manual_acceptance": "逐一执行 14 条路径，核对覆盖层、组合优先级、无数据/无修饰 K 的无动作和重启持久化。",
+      "manual_acceptance": "逐一执行主窗口 14 条路径及 FloatBoard 的 F/H/T，核对覆盖层、组合优先级、无数据/无修饰 K 的无动作和重启持久化。",
       "status": "已盘点",
-      "evidence": "14 条动作/无动作条件路径已静态展开；各 toggle 的完整配置键与视觉基线仍待后续关联。"
+      "evidence": "主窗口 14 条动作/无动作条件路径与 FloatBoard 的隐藏候选、热力图、策略入口已静态展开；各 toggle 的完整配置键与视觉基线仍待后续关联。"
     },
     {
       "id": "ANALYSIS-COUNTING-001",
       "category": "分析",
-      "legacy_entry": "Primary+Q、Decimal/Slash 与 Period 切换终局数目、形势判断和 Kata 估算",
+      "legacy_entry": "主窗口和独立主棋盘的 Primary+Q，以及三种棋盘入口的 Decimal/Slash 或 Period 切换终局数目、形势判断和 Kata 估算",
       "legacy_menu_keys": [],
       "legacy_menu_labels": [],
       "legacy_shortcuts": [],
@@ -1316,7 +1390,10 @@
         "InputIndependentMainBoard:keyPressed:VK_Q",
         "InputIndependentMainBoard:keyPressed:VK_DECIMAL",
         "InputIndependentMainBoard:keyPressed:VK_SLASH",
-        "InputIndependentMainBoard:keyPressed:VK_PERIOD"
+        "InputIndependentMainBoard:keyPressed:VK_PERIOD",
+        "FloatBoard:keyPressed:VK_DECIMAL",
+        "FloatBoard:keyPressed:VK_SLASH",
+        "FloatBoard:keyPressed:VK_PERIOD"
       ],
       "legacy_input_bindings": [
         "keyPressed:VK_Q#1",
@@ -1332,12 +1409,19 @@
         "InputIndependentMainBoard:keyPressed:VK_SLASH#1",
         "InputIndependentMainBoard:keyPressed:VK_SLASH#2",
         "InputIndependentMainBoard:keyPressed:VK_PERIOD#1",
-        "InputIndependentMainBoard:keyPressed:VK_PERIOD#2"
+        "InputIndependentMainBoard:keyPressed:VK_PERIOD#2",
+        "FloatBoard:keyPressed:VK_DECIMAL#1",
+        "FloatBoard:keyPressed:VK_DECIMAL#2",
+        "FloatBoard:keyPressed:VK_SLASH#1",
+        "FloatBoard:keyPressed:VK_SLASH#2",
+        "FloatBoard:keyPressed:VK_PERIOD#1",
+        "FloatBoard:keyPressed:VK_PERIOD#2"
       ],
       "java_evidence": [
         { "path": "src/main/java/featurecat/lizzie/gui/Input.java", "symbol": "countstones(true)" },
         { "path": "src/main/java/featurecat/lizzie/gui/InputIndependentMainBoard.java", "symbol": "removeKataEstimateImage" },
-        { "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "symbol": "public void toggleScoreMode()" }
+        { "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "symbol": "public void toggleScoreMode()" },
+        { "path": "src/main/java/featurecat/lizzie/gui/FloatBoard.java", "symbol": "Lizzie.frame.countstones(true)" }
       ],
       "config_keys": [],
       "inputs_preconditions": "棋盘可计分；Kata 估算需要兼容引擎与启用快捷键设置。",
@@ -1347,9 +1431,9 @@
       "external_dependencies": ["KataGo 形势判断能力"],
       "target_modules": ["Lizzie.Core", "Lizzie.Engine", "Lizzie.Desktop"],
       "automated_evidence": [],
-      "manual_acceptance": "在主窗口和独立主棋盘覆盖两种计分状态、Decimal/Slash、Period 启用/禁用、引擎不可用及退出后状态恢复。",
+      "manual_acceptance": "在主窗口、独立主棋盘和 FloatBoard 覆盖两种计分状态、Decimal/Slash、Period 启用/禁用、引擎不可用及退出后状态恢复。",
       "status": "已盘点",
-      "evidence": "两个输入源均保留 Decimal→Slash fall-through 和 Period 禁用无动作路径；计数清除时主源调用 clearKataEstimate，独立源仅调用主 renderer.removeKataEstimateImage，状态差异待动态验证。"
+      "evidence": "两个 switch 输入源保留 Decimal→Slash fall-through，FloatBoard 将 Decimal/Slash 合并为同一条件；三个入口均保留 Period 禁用无动作路径，计数清除的 renderer 差异待动态验证。"
     },
     {
       "id": "UI-ANALYSIS-PANELS-001",

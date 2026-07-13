@@ -1,5 +1,5 @@
 {
-  "schema_version": 6,
+  "schema_version": 7,
   "source": {
     "root": "../lizzieyzy-next-main",
     "version": "yzy2.5.3",
@@ -17,15 +17,15 @@
     "Menu keys cover active Menu.java resource lookups with Menu. or menu. prefixes.",
     "Menu literal labels cover active string-literal menu constructors; dynamic labels remain represented by their resource or runtime source.",
     "Menu accelerators cover explicit Menu.java setAccelerator calls and direct OS.isWindows guards; other input bindings remain T-003 work.",
-    "Input key bindings symbolically expand Input.java, InputIndependentMainBoard.java, InputIndependentSubboard.java, and InputSubboard.java keyPressed/keyReleased condition evaluations, executed statements, empty-statement paths, and switch fall-through; controlIsPressed means Control on every platform plus Meta on macOS.",
-    "Pointer bindings symbolically expand the two indexed subboard listeners' mouse and wheel condition evaluations, early returns, executed statements, and explicit no-action paths.",
+    "Input key bindings symbolically expand Input.java, InputIndependentMainBoard.java, InputIndependentSubboard.java, InputSubboard.java, and FloatBoard.java key dispatch, condition evaluations, executed statements, empty-statement paths, and switch fall-through; controlIsPressed means Control on every platform plus Meta on macOS.",
+    "Pointer bindings symbolically expand the two indexed subboard listeners plus FloatBoard mouse, motion, and wheel condition evaluations, early returns, executed statements, and explicit no-action paths; FloatBoard's candidate scan loop is preserved as one normalized statement because its runtime iteration count is data-dependent.",
     "Other key-listener and pointer-listener classes remain T-003 work."
   ],
   "matrix_summary": {
-    "rows": 42,
+    "rows": 43,
     "statuses": {
       "未盘点": 0,
-      "已盘点": 42,
+      "已盘点": 43,
       "实施中": 0,
       "已实现待验证": 0,
       "已验证": 0,
@@ -43,17 +43,17 @@
     "active_menu_accelerators": 2,
     "mapped_menu_accelerators": 2,
     "unmapped_menu_accelerators": 0,
-    "active_input_key_cases": 117,
-    "mapped_input_key_cases": 117,
+    "active_input_key_cases": 128,
+    "mapped_input_key_cases": 128,
     "unmapped_input_key_cases": 0,
-    "active_input_key_bindings": 333,
-    "mapped_input_key_bindings": 333,
+    "active_input_key_bindings": 349,
+    "mapped_input_key_bindings": 349,
     "unmapped_input_key_bindings": 0,
-    "active_input_pointer_events": 12,
-    "mapped_input_pointer_events": 12,
+    "active_input_pointer_events": 16,
+    "mapped_input_pointer_events": 16,
     "unmapped_input_pointer_events": 0,
-    "active_input_pointer_bindings": 19,
-    "mapped_input_pointer_bindings": 19,
+    "active_input_pointer_bindings": 39,
+    "mapped_input_pointer_bindings": 39,
     "unmapped_input_pointer_bindings": 0
   },
   "config": {
@@ -17218,12 +17218,24 @@
           "keyPressed": [],
           "keyReleased": []
         }
+      },
+      {
+        "id": "FloatBoard",
+        "source": "src/main/java/featurecat/lizzie/gui/FloatBoard.java",
+        "active_key_cases": 11,
+        "active_key_bindings": 16,
+        "events": {
+          "keyPressed": 11
+        },
+        "post_dispatch_actions": {
+          "keyPressed": []
+        }
       }
     ],
-    "active_key_cases": 117,
-    "active_key_bindings": 333,
+    "active_key_cases": 128,
+    "active_key_bindings": 349,
     "events": {
-      "keyPressed": 113,
+      "keyPressed": 124,
       "keyReleased": 4
     },
     "cases": [
@@ -18969,6 +18981,138 @@
         "binding_count": 2,
         "matrix_ids": [
           "ENGINE-GAME-CONTROL-001"
+        ]
+      },
+      {
+        "case": "FloatBoard:keyPressed:VK_SLASH",
+        "source_id": "FloatBoard",
+        "event": "keyPressed",
+        "key": "VK_SLASH",
+        "line": 283,
+        "modifier_checks": [],
+        "binding_count": 2,
+        "matrix_ids": [
+          "ANALYSIS-COUNTING-001"
+        ]
+      },
+      {
+        "case": "FloatBoard:keyPressed:VK_DECIMAL",
+        "source_id": "FloatBoard",
+        "event": "keyPressed",
+        "key": "VK_DECIMAL",
+        "line": 283,
+        "modifier_checks": [],
+        "binding_count": 2,
+        "matrix_ids": [
+          "ANALYSIS-COUNTING-001"
+        ]
+      },
+      {
+        "case": "FloatBoard:keyPressed:VK_V",
+        "source_id": "FloatBoard",
+        "event": "keyPressed",
+        "key": "VK_V",
+        "line": 292,
+        "modifier_checks": [],
+        "binding_count": 1,
+        "matrix_ids": [
+          "BOARD-FLOAT-INPUT-001"
+        ]
+      },
+      {
+        "case": "FloatBoard:keyPressed:VK_PERIOD",
+        "source_id": "FloatBoard",
+        "event": "keyPressed",
+        "key": "VK_PERIOD",
+        "line": 293,
+        "modifier_checks": [],
+        "binding_count": 2,
+        "matrix_ids": [
+          "ANALYSIS-COUNTING-001"
+        ]
+      },
+      {
+        "case": "FloatBoard:keyPressed:VK_H",
+        "source_id": "FloatBoard",
+        "event": "keyPressed",
+        "key": "VK_H",
+        "line": 295,
+        "modifier_checks": [],
+        "binding_count": 1,
+        "matrix_ids": [
+          "ANALYSIS-DISPLAY-001"
+        ]
+      },
+      {
+        "case": "FloatBoard:keyPressed:VK_T",
+        "source_id": "FloatBoard",
+        "event": "keyPressed",
+        "key": "VK_T",
+        "line": 296,
+        "modifier_checks": [],
+        "binding_count": 1,
+        "matrix_ids": [
+          "ANALYSIS-DISPLAY-001"
+        ]
+      },
+      {
+        "case": "FloatBoard:keyPressed:VK_UP",
+        "source_id": "FloatBoard",
+        "event": "keyPressed",
+        "key": "VK_UP",
+        "line": 297,
+        "modifier_checks": [],
+        "binding_count": 2,
+        "matrix_ids": [
+          "BOARD-VARIATION-001"
+        ]
+      },
+      {
+        "case": "FloatBoard:keyPressed:VK_DOWN",
+        "source_id": "FloatBoard",
+        "event": "keyPressed",
+        "key": "VK_DOWN",
+        "line": 303,
+        "modifier_checks": [],
+        "binding_count": 2,
+        "matrix_ids": [
+          "BOARD-VARIATION-001"
+        ]
+      },
+      {
+        "case": "FloatBoard:keyPressed:VK_G",
+        "source_id": "FloatBoard",
+        "event": "keyPressed",
+        "key": "VK_G",
+        "line": 309,
+        "modifier_checks": [],
+        "binding_count": 1,
+        "matrix_ids": [
+          "BOARD-VARIATION-001"
+        ]
+      },
+      {
+        "case": "FloatBoard:keyPressed:VK_F",
+        "source_id": "FloatBoard",
+        "event": "keyPressed",
+        "key": "VK_F",
+        "line": 312,
+        "modifier_checks": [],
+        "binding_count": 1,
+        "matrix_ids": [
+          "ANALYSIS-DISPLAY-001"
+        ]
+      },
+      {
+        "case": "FloatBoard:keyPressed:VK_SPACE",
+        "source_id": "FloatBoard",
+        "event": "keyPressed",
+        "key": "VK_SPACE",
+        "line": 315,
+        "modifier_checks": [],
+        "binding_count": 1,
+        "matrix_ids": [
+          "ANALYSIS-PONDER-001"
         ]
       }
     ],
@@ -29234,6 +29378,411 @@
         "matrix_ids": [
           "ENGINE-GAME-CONTROL-001"
         ]
+      },
+      {
+        "binding": "FloatBoard:keyPressed:VK_SLASH#1",
+        "case": "FloatBoard:keyPressed:VK_SLASH",
+        "source_id": "FloatBoard",
+        "event": "keyPressed",
+        "key": "VK_SLASH",
+        "line": 283,
+        "conditions": [
+          {
+            "expression": "Lizzie.frame.isCounting",
+            "expected": true
+          }
+        ],
+        "case_chain": [
+          "FloatBoard:keyPressed:VK_SLASH"
+        ],
+        "statements": [
+          {
+            "line": 285,
+            "statement": "Lizzie.frame.clearKataEstimate();"
+          },
+          {
+            "line": 286,
+            "statement": "Lizzie.frame.isCounting = false;"
+          },
+          {
+            "line": 287,
+            "statement": "Lizzie.frame.estimateResults.setVisible(false);"
+          }
+        ],
+        "matrix_ids": [
+          "ANALYSIS-COUNTING-001"
+        ]
+      },
+      {
+        "binding": "FloatBoard:keyPressed:VK_SLASH#2",
+        "case": "FloatBoard:keyPressed:VK_SLASH",
+        "source_id": "FloatBoard",
+        "event": "keyPressed",
+        "key": "VK_SLASH",
+        "line": 283,
+        "conditions": [
+          {
+            "expression": "Lizzie.frame.isCounting",
+            "expected": false
+          }
+        ],
+        "case_chain": [
+          "FloatBoard:keyPressed:VK_SLASH"
+        ],
+        "statements": [
+          {
+            "line": 289,
+            "statement": "Lizzie.frame.countstones(true);"
+          }
+        ],
+        "matrix_ids": [
+          "ANALYSIS-COUNTING-001"
+        ]
+      },
+      {
+        "binding": "FloatBoard:keyPressed:VK_DECIMAL#1",
+        "case": "FloatBoard:keyPressed:VK_DECIMAL",
+        "source_id": "FloatBoard",
+        "event": "keyPressed",
+        "key": "VK_DECIMAL",
+        "line": 283,
+        "conditions": [
+          {
+            "expression": "Lizzie.frame.isCounting",
+            "expected": true
+          }
+        ],
+        "case_chain": [
+          "FloatBoard:keyPressed:VK_DECIMAL"
+        ],
+        "statements": [
+          {
+            "line": 285,
+            "statement": "Lizzie.frame.clearKataEstimate();"
+          },
+          {
+            "line": 286,
+            "statement": "Lizzie.frame.isCounting = false;"
+          },
+          {
+            "line": 287,
+            "statement": "Lizzie.frame.estimateResults.setVisible(false);"
+          }
+        ],
+        "matrix_ids": [
+          "ANALYSIS-COUNTING-001"
+        ]
+      },
+      {
+        "binding": "FloatBoard:keyPressed:VK_DECIMAL#2",
+        "case": "FloatBoard:keyPressed:VK_DECIMAL",
+        "source_id": "FloatBoard",
+        "event": "keyPressed",
+        "key": "VK_DECIMAL",
+        "line": 283,
+        "conditions": [
+          {
+            "expression": "Lizzie.frame.isCounting",
+            "expected": false
+          }
+        ],
+        "case_chain": [
+          "FloatBoard:keyPressed:VK_DECIMAL"
+        ],
+        "statements": [
+          {
+            "line": 289,
+            "statement": "Lizzie.frame.countstones(true);"
+          }
+        ],
+        "matrix_ids": [
+          "ANALYSIS-COUNTING-001"
+        ]
+      },
+      {
+        "binding": "FloatBoard:keyPressed:VK_V#1",
+        "case": "FloatBoard:keyPressed:VK_V",
+        "source_id": "FloatBoard",
+        "event": "keyPressed",
+        "key": "VK_V",
+        "line": 292,
+        "conditions": [],
+        "case_chain": [
+          "FloatBoard:keyPressed:VK_V"
+        ],
+        "statements": [
+          {
+            "line": 292,
+            "statement": "changeEetEditMode();"
+          }
+        ],
+        "matrix_ids": [
+          "BOARD-FLOAT-INPUT-001"
+        ]
+      },
+      {
+        "binding": "FloatBoard:keyPressed:VK_PERIOD#1",
+        "case": "FloatBoard:keyPressed:VK_PERIOD",
+        "source_id": "FloatBoard",
+        "event": "keyPressed",
+        "key": "VK_PERIOD",
+        "line": 293,
+        "conditions": [
+          {
+            "expression": "Lizzie.config.useShortcutKataEstimate",
+            "expected": true
+          }
+        ],
+        "case_chain": [
+          "FloatBoard:keyPressed:VK_PERIOD"
+        ],
+        "statements": [
+          {
+            "line": 294,
+            "statement": "Lizzie.frame.toggleShowKataEstimate();"
+          }
+        ],
+        "matrix_ids": [
+          "ANALYSIS-COUNTING-001"
+        ]
+      },
+      {
+        "binding": "FloatBoard:keyPressed:VK_PERIOD#2",
+        "case": "FloatBoard:keyPressed:VK_PERIOD",
+        "source_id": "FloatBoard",
+        "event": "keyPressed",
+        "key": "VK_PERIOD",
+        "line": 293,
+        "conditions": [
+          {
+            "expression": "Lizzie.config.useShortcutKataEstimate",
+            "expected": false
+          }
+        ],
+        "case_chain": [
+          "FloatBoard:keyPressed:VK_PERIOD"
+        ],
+        "statements": [],
+        "matrix_ids": [
+          "ANALYSIS-COUNTING-001"
+        ]
+      },
+      {
+        "binding": "FloatBoard:keyPressed:VK_H#1",
+        "case": "FloatBoard:keyPressed:VK_H",
+        "source_id": "FloatBoard",
+        "event": "keyPressed",
+        "key": "VK_H",
+        "line": 295,
+        "conditions": [],
+        "case_chain": [
+          "FloatBoard:keyPressed:VK_H"
+        ],
+        "statements": [
+          {
+            "line": 295,
+            "statement": "Lizzie.leelaz.toggleHeatmap(false);"
+          }
+        ],
+        "matrix_ids": [
+          "ANALYSIS-DISPLAY-001"
+        ]
+      },
+      {
+        "binding": "FloatBoard:keyPressed:VK_T#1",
+        "case": "FloatBoard:keyPressed:VK_T",
+        "source_id": "FloatBoard",
+        "event": "keyPressed",
+        "key": "VK_T",
+        "line": 296,
+        "conditions": [],
+        "case_chain": [
+          "FloatBoard:keyPressed:VK_T"
+        ],
+        "statements": [
+          {
+            "line": 296,
+            "statement": "Lizzie.frame.togglePolicy();"
+          }
+        ],
+        "matrix_ids": [
+          "ANALYSIS-DISPLAY-001"
+        ]
+      },
+      {
+        "binding": "FloatBoard:keyPressed:VK_UP#1",
+        "case": "FloatBoard:keyPressed:VK_UP",
+        "source_id": "FloatBoard",
+        "event": "keyPressed",
+        "key": "VK_UP",
+        "line": 297,
+        "conditions": [
+          {
+            "expression": "boardRenderer.isShowingBranch()",
+            "expected": true
+          }
+        ],
+        "case_chain": [
+          "FloatBoard:keyPressed:VK_UP"
+        ],
+        "statements": [
+          {
+            "line": 299,
+            "statement": "doBranch(-1);"
+          },
+          {
+            "line": 301,
+            "statement": "refreshByLis();"
+          }
+        ],
+        "matrix_ids": [
+          "BOARD-VARIATION-001"
+        ]
+      },
+      {
+        "binding": "FloatBoard:keyPressed:VK_UP#2",
+        "case": "FloatBoard:keyPressed:VK_UP",
+        "source_id": "FloatBoard",
+        "event": "keyPressed",
+        "key": "VK_UP",
+        "line": 297,
+        "conditions": [
+          {
+            "expression": "boardRenderer.isShowingBranch()",
+            "expected": false
+          }
+        ],
+        "case_chain": [
+          "FloatBoard:keyPressed:VK_UP"
+        ],
+        "statements": [
+          {
+            "line": 301,
+            "statement": "refreshByLis();"
+          }
+        ],
+        "matrix_ids": [
+          "BOARD-VARIATION-001"
+        ]
+      },
+      {
+        "binding": "FloatBoard:keyPressed:VK_DOWN#1",
+        "case": "FloatBoard:keyPressed:VK_DOWN",
+        "source_id": "FloatBoard",
+        "event": "keyPressed",
+        "key": "VK_DOWN",
+        "line": 303,
+        "conditions": [
+          {
+            "expression": "boardRenderer.isShowingBranch()",
+            "expected": true
+          }
+        ],
+        "case_chain": [
+          "FloatBoard:keyPressed:VK_DOWN"
+        ],
+        "statements": [
+          {
+            "line": 305,
+            "statement": "doBranch(1);"
+          },
+          {
+            "line": 307,
+            "statement": "refreshByLis();"
+          }
+        ],
+        "matrix_ids": [
+          "BOARD-VARIATION-001"
+        ]
+      },
+      {
+        "binding": "FloatBoard:keyPressed:VK_DOWN#2",
+        "case": "FloatBoard:keyPressed:VK_DOWN",
+        "source_id": "FloatBoard",
+        "event": "keyPressed",
+        "key": "VK_DOWN",
+        "line": 303,
+        "conditions": [
+          {
+            "expression": "boardRenderer.isShowingBranch()",
+            "expected": false
+          }
+        ],
+        "case_chain": [
+          "FloatBoard:keyPressed:VK_DOWN"
+        ],
+        "statements": [
+          {
+            "line": 307,
+            "statement": "refreshByLis();"
+          }
+        ],
+        "matrix_ids": [
+          "BOARD-VARIATION-001"
+        ]
+      },
+      {
+        "binding": "FloatBoard:keyPressed:VK_G#1",
+        "case": "FloatBoard:keyPressed:VK_G",
+        "source_id": "FloatBoard",
+        "event": "keyPressed",
+        "key": "VK_G",
+        "line": 309,
+        "conditions": [],
+        "case_chain": [
+          "FloatBoard:keyPressed:VK_G"
+        ],
+        "statements": [
+          {
+            "line": 310,
+            "statement": "tryToRefreshVariation();"
+          }
+        ],
+        "matrix_ids": [
+          "BOARD-VARIATION-001"
+        ]
+      },
+      {
+        "binding": "FloatBoard:keyPressed:VK_F#1",
+        "case": "FloatBoard:keyPressed:VK_F",
+        "source_id": "FloatBoard",
+        "event": "keyPressed",
+        "key": "VK_F",
+        "line": 312,
+        "conditions": [],
+        "case_chain": [
+          "FloatBoard:keyPressed:VK_F"
+        ],
+        "statements": [
+          {
+            "line": 313,
+            "statement": "toggleHide();"
+          }
+        ],
+        "matrix_ids": [
+          "ANALYSIS-DISPLAY-001"
+        ]
+      },
+      {
+        "binding": "FloatBoard:keyPressed:VK_SPACE#1",
+        "case": "FloatBoard:keyPressed:VK_SPACE",
+        "source_id": "FloatBoard",
+        "event": "keyPressed",
+        "key": "VK_SPACE",
+        "line": 315,
+        "conditions": [],
+        "case_chain": [
+          "FloatBoard:keyPressed:VK_SPACE"
+        ],
+        "statements": [
+          {
+            "line": 316,
+            "statement": "Lizzie.frame.togglePonderMannul();"
+          }
+        ],
+        "matrix_ids": [
+          "ANALYSIS-PONDER-001"
+        ]
       }
     ],
     "pointer_sources": [
@@ -29248,10 +29797,16 @@
         "source": "src/main/java/featurecat/lizzie/gui/InputSubboard.java",
         "active_pointer_events": 6,
         "active_pointer_bindings": 13
+      },
+      {
+        "id": "FloatBoard",
+        "source": "src/main/java/featurecat/lizzie/gui/FloatBoard.java",
+        "active_pointer_events": 4,
+        "active_pointer_bindings": 20
       }
     ],
-    "active_pointer_events": 12,
-    "active_pointer_bindings": 19,
+    "active_pointer_events": 16,
+    "active_pointer_bindings": 39,
     "pointer_events": [
       {
         "event_id": "InputIndependentSubboard:mouseClicked",
@@ -29371,6 +29926,46 @@
         "binding_count": 1,
         "matrix_ids": [
           "BOARD-SUBBOARD-INPUT-001"
+        ]
+      },
+      {
+        "event_id": "FloatBoard:mousePressed",
+        "source_id": "FloatBoard",
+        "event": "mousePressed",
+        "line": 322,
+        "binding_count": 2,
+        "matrix_ids": [
+          "BOARD-FLOAT-INPUT-001"
+        ]
+      },
+      {
+        "event_id": "FloatBoard:mouseExited",
+        "source_id": "FloatBoard",
+        "event": "mouseExited",
+        "line": 332,
+        "binding_count": 1,
+        "matrix_ids": [
+          "BOARD-FLOAT-INPUT-001"
+        ]
+      },
+      {
+        "event_id": "FloatBoard:mouseWheelMoved",
+        "source_id": "FloatBoard",
+        "event": "mouseWheelMoved",
+        "line": 346,
+        "binding_count": 7,
+        "matrix_ids": [
+          "BOARD-FLOAT-INPUT-001"
+        ]
+      },
+      {
+        "event_id": "FloatBoard:mouseMoved",
+        "source_id": "FloatBoard",
+        "event": "mouseMoved",
+        "line": 368,
+        "binding_count": 10,
+        "matrix_ids": [
+          "BOARD-FLOAT-INPUT-001"
         ]
       }
     ],
@@ -29818,6 +30413,1096 @@
         ],
         "matrix_ids": [
           "BOARD-SUBBOARD-INPUT-001"
+        ]
+      },
+      {
+        "binding": "FloatBoard:mousePressed#1",
+        "event_id": "FloatBoard:mousePressed",
+        "source_id": "FloatBoard",
+        "event": "mousePressed",
+        "line": 322,
+        "conditions": [
+          {
+            "expression": "e.getButton() == MouseEvent.BUTTON1",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 325,
+            "statement": "onClicked(Utils.zoomOut(e.getX()), Utils.zoomOut(e.getY()));"
+          }
+        ],
+        "matrix_ids": [
+          "BOARD-FLOAT-INPUT-001"
+        ]
+      },
+      {
+        "binding": "FloatBoard:mousePressed#2",
+        "event_id": "FloatBoard:mousePressed",
+        "source_id": "FloatBoard",
+        "event": "mousePressed",
+        "line": 322,
+        "conditions": [
+          {
+            "expression": "e.getButton() == MouseEvent.BUTTON1",
+            "expected": false
+          }
+        ],
+        "statements": [],
+        "matrix_ids": [
+          "BOARD-FLOAT-INPUT-001"
+        ]
+      },
+      {
+        "binding": "FloatBoard:mouseExited#1",
+        "event_id": "FloatBoard:mouseExited",
+        "source_id": "FloatBoard",
+        "event": "mouseExited",
+        "line": 332,
+        "conditions": [],
+        "statements": [
+          {
+            "line": 336,
+            "statement": "mouseOverCoordinate = LizzieFrame.outOfBoundCoordinate;"
+          },
+          {
+            "line": 337,
+            "statement": "isMouseOver = false;"
+          },
+          {
+            "line": 338,
+            "statement": "clearMoved();"
+          },
+          {
+            "line": 339,
+            "statement": "refreshByLis();"
+          }
+        ],
+        "matrix_ids": [
+          "BOARD-FLOAT-INPUT-001"
+        ]
+      },
+      {
+        "binding": "FloatBoard:mouseWheelMoved#1",
+        "event_id": "FloatBoard:mouseWheelMoved",
+        "source_id": "FloatBoard",
+        "event": "mouseWheelMoved",
+        "line": 346,
+        "conditions": [
+          {
+            "expression": "e.getWheelRotation() > 0",
+            "expected": true
+          },
+          {
+            "expression": "boardRenderer.isShowingBranch()",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 350,
+            "statement": "doBranch(1);"
+          },
+          {
+            "line": 361,
+            "statement": "refreshByLis();"
+          }
+        ],
+        "matrix_ids": [
+          "BOARD-FLOAT-INPUT-001"
+        ]
+      },
+      {
+        "binding": "FloatBoard:mouseWheelMoved#2",
+        "event_id": "FloatBoard:mouseWheelMoved",
+        "source_id": "FloatBoard",
+        "event": "mouseWheelMoved",
+        "line": 346,
+        "conditions": [
+          {
+            "expression": "e.getWheelRotation() > 0",
+            "expected": true
+          },
+          {
+            "expression": "boardRenderer.isShowingBranch()",
+            "expected": false
+          },
+          {
+            "expression": "editMode",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 352,
+            "statement": "Lizzie.board.nextMove(true);"
+          },
+          {
+            "line": 361,
+            "statement": "refreshByLis();"
+          }
+        ],
+        "matrix_ids": [
+          "BOARD-FLOAT-INPUT-001"
+        ]
+      },
+      {
+        "binding": "FloatBoard:mouseWheelMoved#3",
+        "event_id": "FloatBoard:mouseWheelMoved",
+        "source_id": "FloatBoard",
+        "event": "mouseWheelMoved",
+        "line": 346,
+        "conditions": [
+          {
+            "expression": "e.getWheelRotation() > 0",
+            "expected": true
+          },
+          {
+            "expression": "boardRenderer.isShowingBranch()",
+            "expected": false
+          },
+          {
+            "expression": "editMode",
+            "expected": false
+          }
+        ],
+        "statements": [
+          {
+            "line": 361,
+            "statement": "refreshByLis();"
+          }
+        ],
+        "matrix_ids": [
+          "BOARD-FLOAT-INPUT-001"
+        ]
+      },
+      {
+        "binding": "FloatBoard:mouseWheelMoved#4",
+        "event_id": "FloatBoard:mouseWheelMoved",
+        "source_id": "FloatBoard",
+        "event": "mouseWheelMoved",
+        "line": 346,
+        "conditions": [
+          {
+            "expression": "e.getWheelRotation() > 0",
+            "expected": false
+          },
+          {
+            "expression": "e.getWheelRotation() < 0",
+            "expected": true
+          },
+          {
+            "expression": "boardRenderer.isShowingBranch()",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 356,
+            "statement": "doBranch(-1);"
+          },
+          {
+            "line": 361,
+            "statement": "refreshByLis();"
+          }
+        ],
+        "matrix_ids": [
+          "BOARD-FLOAT-INPUT-001"
+        ]
+      },
+      {
+        "binding": "FloatBoard:mouseWheelMoved#5",
+        "event_id": "FloatBoard:mouseWheelMoved",
+        "source_id": "FloatBoard",
+        "event": "mouseWheelMoved",
+        "line": 346,
+        "conditions": [
+          {
+            "expression": "e.getWheelRotation() > 0",
+            "expected": false
+          },
+          {
+            "expression": "e.getWheelRotation() < 0",
+            "expected": true
+          },
+          {
+            "expression": "boardRenderer.isShowingBranch()",
+            "expected": false
+          },
+          {
+            "expression": "editMode",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 358,
+            "statement": "Lizzie.board.previousMove(true);"
+          },
+          {
+            "line": 361,
+            "statement": "refreshByLis();"
+          }
+        ],
+        "matrix_ids": [
+          "BOARD-FLOAT-INPUT-001"
+        ]
+      },
+      {
+        "binding": "FloatBoard:mouseWheelMoved#6",
+        "event_id": "FloatBoard:mouseWheelMoved",
+        "source_id": "FloatBoard",
+        "event": "mouseWheelMoved",
+        "line": 346,
+        "conditions": [
+          {
+            "expression": "e.getWheelRotation() > 0",
+            "expected": false
+          },
+          {
+            "expression": "e.getWheelRotation() < 0",
+            "expected": true
+          },
+          {
+            "expression": "boardRenderer.isShowingBranch()",
+            "expected": false
+          },
+          {
+            "expression": "editMode",
+            "expected": false
+          }
+        ],
+        "statements": [
+          {
+            "line": 361,
+            "statement": "refreshByLis();"
+          }
+        ],
+        "matrix_ids": [
+          "BOARD-FLOAT-INPUT-001"
+        ]
+      },
+      {
+        "binding": "FloatBoard:mouseWheelMoved#7",
+        "event_id": "FloatBoard:mouseWheelMoved",
+        "source_id": "FloatBoard",
+        "event": "mouseWheelMoved",
+        "line": 346,
+        "conditions": [
+          {
+            "expression": "e.getWheelRotation() > 0",
+            "expected": false
+          },
+          {
+            "expression": "e.getWheelRotation() < 0",
+            "expected": false
+          }
+        ],
+        "statements": [
+          {
+            "line": 361,
+            "statement": "refreshByLis();"
+          }
+        ],
+        "matrix_ids": [
+          "BOARD-FLOAT-INPUT-001"
+        ]
+      },
+      {
+        "binding": "FloatBoard:mouseMoved#1",
+        "event_id": "FloatBoard:mouseMoved",
+        "source_id": "FloatBoard",
+        "event": "mouseMoved",
+        "line": 368,
+        "conditions": [
+          {
+            "expression": "coords.isPresent()",
+            "expected": true
+          },
+          {
+            "expression": "mouseOverCoordinate[0] != curCoords[0] || mouseOverCoordinate[1] != curCoords[1]",
+            "expected": true
+          },
+          {
+            "expression": "!bestMoves.isEmpty()",
+            "expected": true
+          },
+          {
+            "expression": "isCurMouseOver",
+            "expected": true
+          },
+          {
+            "expression": "Lizzie.config.autoReplayBranch",
+            "expected": true
+          },
+          {
+            "expression": "!Lizzie.config.autoReplayDisplayEntireVariationsFirst",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 369,
+            "statement": "int x = Utils.zoomOut(e.getX());"
+          },
+          {
+            "line": 370,
+            "statement": "int y = Utils.zoomOut(e.getY());"
+          },
+          {
+            "line": 371,
+            "statement": "boolean needRepaint = false;"
+          },
+          {
+            "line": 372,
+            "statement": "Optional<int[]> coords = boardRenderer.convertScreenToCoordinates(x, y);"
+          },
+          {
+            "line": 374,
+            "statement": "int[] curCoords = coords.get();"
+          },
+          {
+            "line": 375,
+            "statement": "boolean isCoordsChanged = false;"
+          },
+          {
+            "line": 378,
+            "statement": "isCoordsChanged = true;"
+          },
+          {
+            "line": 379,
+            "statement": "mouseOverCoordinate = curCoords;"
+          },
+          {
+            "line": 382,
+            "statement": "boolean isCurMouseOver = false;"
+          },
+          {
+            "line": 383,
+            "statement": "List<MoveData> bestMoves = editMode ? Lizzie.board.getHistory().getCurrentHistoryNode().getData().bestMoves : Lizzie.board.getHistory().getMainEnd().getData().bestMoves;"
+          },
+          {
+            "line": 388,
+            "statement": "for (int i = 0; i < bestMoves.size(); i++) { Optional<int[]> bestCoords = Board.asCoordinates(bestMoves.get(i).coordinate); if (bestCoords.isPresent()) { if (bestCoords.get()[0] == curCoords[0] && bestCoords.get()[1] == curCoords[1]) { isCurMouseOver = true; } } }"
+          },
+          {
+            "line": 398,
+            "statement": "clearMoved();"
+          },
+          {
+            "line": 399,
+            "statement": "needRepaint = true;"
+          },
+          {
+            "line": 400,
+            "statement": "isMouseOver = true;"
+          },
+          {
+            "line": 402,
+            "statement": "Lizzie.frame.mouseOverChanged = true;"
+          },
+          {
+            "line": 404,
+            "statement": "boardRenderer.setDisplayedBranchLength(1);"
+          },
+          {
+            "line": 423,
+            "statement": "refreshByLis();"
+          }
+        ],
+        "matrix_ids": [
+          "BOARD-FLOAT-INPUT-001"
+        ]
+      },
+      {
+        "binding": "FloatBoard:mouseMoved#2",
+        "event_id": "FloatBoard:mouseMoved",
+        "source_id": "FloatBoard",
+        "event": "mouseMoved",
+        "line": 368,
+        "conditions": [
+          {
+            "expression": "coords.isPresent()",
+            "expected": true
+          },
+          {
+            "expression": "mouseOverCoordinate[0] != curCoords[0] || mouseOverCoordinate[1] != curCoords[1]",
+            "expected": true
+          },
+          {
+            "expression": "!bestMoves.isEmpty()",
+            "expected": true
+          },
+          {
+            "expression": "isCurMouseOver",
+            "expected": true
+          },
+          {
+            "expression": "Lizzie.config.autoReplayBranch",
+            "expected": true
+          },
+          {
+            "expression": "!Lizzie.config.autoReplayDisplayEntireVariationsFirst",
+            "expected": false
+          }
+        ],
+        "statements": [
+          {
+            "line": 369,
+            "statement": "int x = Utils.zoomOut(e.getX());"
+          },
+          {
+            "line": 370,
+            "statement": "int y = Utils.zoomOut(e.getY());"
+          },
+          {
+            "line": 371,
+            "statement": "boolean needRepaint = false;"
+          },
+          {
+            "line": 372,
+            "statement": "Optional<int[]> coords = boardRenderer.convertScreenToCoordinates(x, y);"
+          },
+          {
+            "line": 374,
+            "statement": "int[] curCoords = coords.get();"
+          },
+          {
+            "line": 375,
+            "statement": "boolean isCoordsChanged = false;"
+          },
+          {
+            "line": 378,
+            "statement": "isCoordsChanged = true;"
+          },
+          {
+            "line": 379,
+            "statement": "mouseOverCoordinate = curCoords;"
+          },
+          {
+            "line": 382,
+            "statement": "boolean isCurMouseOver = false;"
+          },
+          {
+            "line": 383,
+            "statement": "List<MoveData> bestMoves = editMode ? Lizzie.board.getHistory().getCurrentHistoryNode().getData().bestMoves : Lizzie.board.getHistory().getMainEnd().getData().bestMoves;"
+          },
+          {
+            "line": 388,
+            "statement": "for (int i = 0; i < bestMoves.size(); i++) { Optional<int[]> bestCoords = Board.asCoordinates(bestMoves.get(i).coordinate); if (bestCoords.isPresent()) { if (bestCoords.get()[0] == curCoords[0] && bestCoords.get()[1] == curCoords[1]) { isCurMouseOver = true; } } }"
+          },
+          {
+            "line": 398,
+            "statement": "clearMoved();"
+          },
+          {
+            "line": 399,
+            "statement": "needRepaint = true;"
+          },
+          {
+            "line": 400,
+            "statement": "isMouseOver = true;"
+          },
+          {
+            "line": 402,
+            "statement": "Lizzie.frame.mouseOverChanged = true;"
+          },
+          {
+            "line": 423,
+            "statement": "refreshByLis();"
+          }
+        ],
+        "matrix_ids": [
+          "BOARD-FLOAT-INPUT-001"
+        ]
+      },
+      {
+        "binding": "FloatBoard:mouseMoved#3",
+        "event_id": "FloatBoard:mouseMoved",
+        "source_id": "FloatBoard",
+        "event": "mouseMoved",
+        "line": 368,
+        "conditions": [
+          {
+            "expression": "coords.isPresent()",
+            "expected": true
+          },
+          {
+            "expression": "mouseOverCoordinate[0] != curCoords[0] || mouseOverCoordinate[1] != curCoords[1]",
+            "expected": true
+          },
+          {
+            "expression": "!bestMoves.isEmpty()",
+            "expected": true
+          },
+          {
+            "expression": "isCurMouseOver",
+            "expected": true
+          },
+          {
+            "expression": "Lizzie.config.autoReplayBranch",
+            "expected": false
+          }
+        ],
+        "statements": [
+          {
+            "line": 369,
+            "statement": "int x = Utils.zoomOut(e.getX());"
+          },
+          {
+            "line": 370,
+            "statement": "int y = Utils.zoomOut(e.getY());"
+          },
+          {
+            "line": 371,
+            "statement": "boolean needRepaint = false;"
+          },
+          {
+            "line": 372,
+            "statement": "Optional<int[]> coords = boardRenderer.convertScreenToCoordinates(x, y);"
+          },
+          {
+            "line": 374,
+            "statement": "int[] curCoords = coords.get();"
+          },
+          {
+            "line": 375,
+            "statement": "boolean isCoordsChanged = false;"
+          },
+          {
+            "line": 378,
+            "statement": "isCoordsChanged = true;"
+          },
+          {
+            "line": 379,
+            "statement": "mouseOverCoordinate = curCoords;"
+          },
+          {
+            "line": 382,
+            "statement": "boolean isCurMouseOver = false;"
+          },
+          {
+            "line": 383,
+            "statement": "List<MoveData> bestMoves = editMode ? Lizzie.board.getHistory().getCurrentHistoryNode().getData().bestMoves : Lizzie.board.getHistory().getMainEnd().getData().bestMoves;"
+          },
+          {
+            "line": 388,
+            "statement": "for (int i = 0; i < bestMoves.size(); i++) { Optional<int[]> bestCoords = Board.asCoordinates(bestMoves.get(i).coordinate); if (bestCoords.isPresent()) { if (bestCoords.get()[0] == curCoords[0] && bestCoords.get()[1] == curCoords[1]) { isCurMouseOver = true; } } }"
+          },
+          {
+            "line": 398,
+            "statement": "clearMoved();"
+          },
+          {
+            "line": 399,
+            "statement": "needRepaint = true;"
+          },
+          {
+            "line": 400,
+            "statement": "isMouseOver = true;"
+          },
+          {
+            "line": 423,
+            "statement": "refreshByLis();"
+          }
+        ],
+        "matrix_ids": [
+          "BOARD-FLOAT-INPUT-001"
+        ]
+      },
+      {
+        "binding": "FloatBoard:mouseMoved#4",
+        "event_id": "FloatBoard:mouseMoved",
+        "source_id": "FloatBoard",
+        "event": "mouseMoved",
+        "line": 368,
+        "conditions": [
+          {
+            "expression": "coords.isPresent()",
+            "expected": true
+          },
+          {
+            "expression": "mouseOverCoordinate[0] != curCoords[0] || mouseOverCoordinate[1] != curCoords[1]",
+            "expected": true
+          },
+          {
+            "expression": "!bestMoves.isEmpty()",
+            "expected": true
+          },
+          {
+            "expression": "isCurMouseOver",
+            "expected": false
+          },
+          {
+            "expression": "isMouseOver",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 369,
+            "statement": "int x = Utils.zoomOut(e.getX());"
+          },
+          {
+            "line": 370,
+            "statement": "int y = Utils.zoomOut(e.getY());"
+          },
+          {
+            "line": 371,
+            "statement": "boolean needRepaint = false;"
+          },
+          {
+            "line": 372,
+            "statement": "Optional<int[]> coords = boardRenderer.convertScreenToCoordinates(x, y);"
+          },
+          {
+            "line": 374,
+            "statement": "int[] curCoords = coords.get();"
+          },
+          {
+            "line": 375,
+            "statement": "boolean isCoordsChanged = false;"
+          },
+          {
+            "line": 378,
+            "statement": "isCoordsChanged = true;"
+          },
+          {
+            "line": 379,
+            "statement": "mouseOverCoordinate = curCoords;"
+          },
+          {
+            "line": 382,
+            "statement": "boolean isCurMouseOver = false;"
+          },
+          {
+            "line": 383,
+            "statement": "List<MoveData> bestMoves = editMode ? Lizzie.board.getHistory().getCurrentHistoryNode().getData().bestMoves : Lizzie.board.getHistory().getMainEnd().getData().bestMoves;"
+          },
+          {
+            "line": 388,
+            "statement": "for (int i = 0; i < bestMoves.size(); i++) { Optional<int[]> bestCoords = Board.asCoordinates(bestMoves.get(i).coordinate); if (bestCoords.isPresent()) { if (bestCoords.get()[0] == curCoords[0] && bestCoords.get()[1] == curCoords[1]) { isCurMouseOver = true; } } }"
+          },
+          {
+            "line": 408,
+            "statement": "needRepaint = true;"
+          },
+          {
+            "line": 410,
+            "statement": "clearMoved();"
+          },
+          {
+            "line": 411,
+            "statement": "isMouseOver = false;"
+          },
+          {
+            "line": 423,
+            "statement": "refreshByLis();"
+          }
+        ],
+        "matrix_ids": [
+          "BOARD-FLOAT-INPUT-001"
+        ]
+      },
+      {
+        "binding": "FloatBoard:mouseMoved#5",
+        "event_id": "FloatBoard:mouseMoved",
+        "source_id": "FloatBoard",
+        "event": "mouseMoved",
+        "line": 368,
+        "conditions": [
+          {
+            "expression": "coords.isPresent()",
+            "expected": true
+          },
+          {
+            "expression": "mouseOverCoordinate[0] != curCoords[0] || mouseOverCoordinate[1] != curCoords[1]",
+            "expected": true
+          },
+          {
+            "expression": "!bestMoves.isEmpty()",
+            "expected": true
+          },
+          {
+            "expression": "isCurMouseOver",
+            "expected": false
+          },
+          {
+            "expression": "isMouseOver",
+            "expected": false
+          }
+        ],
+        "statements": [
+          {
+            "line": 369,
+            "statement": "int x = Utils.zoomOut(e.getX());"
+          },
+          {
+            "line": 370,
+            "statement": "int y = Utils.zoomOut(e.getY());"
+          },
+          {
+            "line": 371,
+            "statement": "boolean needRepaint = false;"
+          },
+          {
+            "line": 372,
+            "statement": "Optional<int[]> coords = boardRenderer.convertScreenToCoordinates(x, y);"
+          },
+          {
+            "line": 374,
+            "statement": "int[] curCoords = coords.get();"
+          },
+          {
+            "line": 375,
+            "statement": "boolean isCoordsChanged = false;"
+          },
+          {
+            "line": 378,
+            "statement": "isCoordsChanged = true;"
+          },
+          {
+            "line": 379,
+            "statement": "mouseOverCoordinate = curCoords;"
+          },
+          {
+            "line": 382,
+            "statement": "boolean isCurMouseOver = false;"
+          },
+          {
+            "line": 383,
+            "statement": "List<MoveData> bestMoves = editMode ? Lizzie.board.getHistory().getCurrentHistoryNode().getData().bestMoves : Lizzie.board.getHistory().getMainEnd().getData().bestMoves;"
+          },
+          {
+            "line": 388,
+            "statement": "for (int i = 0; i < bestMoves.size(); i++) { Optional<int[]> bestCoords = Board.asCoordinates(bestMoves.get(i).coordinate); if (bestCoords.isPresent()) { if (bestCoords.get()[0] == curCoords[0] && bestCoords.get()[1] == curCoords[1]) { isCurMouseOver = true; } } }"
+          },
+          {
+            "line": 410,
+            "statement": "clearMoved();"
+          },
+          {
+            "line": 411,
+            "statement": "isMouseOver = false;"
+          }
+        ],
+        "matrix_ids": [
+          "BOARD-FLOAT-INPUT-001"
+        ]
+      },
+      {
+        "binding": "FloatBoard:mouseMoved#6",
+        "event_id": "FloatBoard:mouseMoved",
+        "source_id": "FloatBoard",
+        "event": "mouseMoved",
+        "line": 368,
+        "conditions": [
+          {
+            "expression": "coords.isPresent()",
+            "expected": true
+          },
+          {
+            "expression": "mouseOverCoordinate[0] != curCoords[0] || mouseOverCoordinate[1] != curCoords[1]",
+            "expected": true
+          },
+          {
+            "expression": "!bestMoves.isEmpty()",
+            "expected": false
+          },
+          {
+            "expression": "isMouseOver",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 369,
+            "statement": "int x = Utils.zoomOut(e.getX());"
+          },
+          {
+            "line": 370,
+            "statement": "int y = Utils.zoomOut(e.getY());"
+          },
+          {
+            "line": 371,
+            "statement": "boolean needRepaint = false;"
+          },
+          {
+            "line": 372,
+            "statement": "Optional<int[]> coords = boardRenderer.convertScreenToCoordinates(x, y);"
+          },
+          {
+            "line": 374,
+            "statement": "int[] curCoords = coords.get();"
+          },
+          {
+            "line": 375,
+            "statement": "boolean isCoordsChanged = false;"
+          },
+          {
+            "line": 378,
+            "statement": "isCoordsChanged = true;"
+          },
+          {
+            "line": 379,
+            "statement": "mouseOverCoordinate = curCoords;"
+          },
+          {
+            "line": 382,
+            "statement": "boolean isCurMouseOver = false;"
+          },
+          {
+            "line": 383,
+            "statement": "List<MoveData> bestMoves = editMode ? Lizzie.board.getHistory().getCurrentHistoryNode().getData().bestMoves : Lizzie.board.getHistory().getMainEnd().getData().bestMoves;"
+          },
+          {
+            "line": 408,
+            "statement": "needRepaint = true;"
+          },
+          {
+            "line": 410,
+            "statement": "clearMoved();"
+          },
+          {
+            "line": 411,
+            "statement": "isMouseOver = false;"
+          },
+          {
+            "line": 423,
+            "statement": "refreshByLis();"
+          }
+        ],
+        "matrix_ids": [
+          "BOARD-FLOAT-INPUT-001"
+        ]
+      },
+      {
+        "binding": "FloatBoard:mouseMoved#7",
+        "event_id": "FloatBoard:mouseMoved",
+        "source_id": "FloatBoard",
+        "event": "mouseMoved",
+        "line": 368,
+        "conditions": [
+          {
+            "expression": "coords.isPresent()",
+            "expected": true
+          },
+          {
+            "expression": "mouseOverCoordinate[0] != curCoords[0] || mouseOverCoordinate[1] != curCoords[1]",
+            "expected": true
+          },
+          {
+            "expression": "!bestMoves.isEmpty()",
+            "expected": false
+          },
+          {
+            "expression": "isMouseOver",
+            "expected": false
+          }
+        ],
+        "statements": [
+          {
+            "line": 369,
+            "statement": "int x = Utils.zoomOut(e.getX());"
+          },
+          {
+            "line": 370,
+            "statement": "int y = Utils.zoomOut(e.getY());"
+          },
+          {
+            "line": 371,
+            "statement": "boolean needRepaint = false;"
+          },
+          {
+            "line": 372,
+            "statement": "Optional<int[]> coords = boardRenderer.convertScreenToCoordinates(x, y);"
+          },
+          {
+            "line": 374,
+            "statement": "int[] curCoords = coords.get();"
+          },
+          {
+            "line": 375,
+            "statement": "boolean isCoordsChanged = false;"
+          },
+          {
+            "line": 378,
+            "statement": "isCoordsChanged = true;"
+          },
+          {
+            "line": 379,
+            "statement": "mouseOverCoordinate = curCoords;"
+          },
+          {
+            "line": 382,
+            "statement": "boolean isCurMouseOver = false;"
+          },
+          {
+            "line": 383,
+            "statement": "List<MoveData> bestMoves = editMode ? Lizzie.board.getHistory().getCurrentHistoryNode().getData().bestMoves : Lizzie.board.getHistory().getMainEnd().getData().bestMoves;"
+          },
+          {
+            "line": 410,
+            "statement": "clearMoved();"
+          },
+          {
+            "line": 411,
+            "statement": "isMouseOver = false;"
+          }
+        ],
+        "matrix_ids": [
+          "BOARD-FLOAT-INPUT-001"
+        ]
+      },
+      {
+        "binding": "FloatBoard:mouseMoved#8",
+        "event_id": "FloatBoard:mouseMoved",
+        "source_id": "FloatBoard",
+        "event": "mouseMoved",
+        "line": 368,
+        "conditions": [
+          {
+            "expression": "coords.isPresent()",
+            "expected": true
+          },
+          {
+            "expression": "mouseOverCoordinate[0] != curCoords[0] || mouseOverCoordinate[1] != curCoords[1]",
+            "expected": false
+          }
+        ],
+        "statements": [
+          {
+            "line": 369,
+            "statement": "int x = Utils.zoomOut(e.getX());"
+          },
+          {
+            "line": 370,
+            "statement": "int y = Utils.zoomOut(e.getY());"
+          },
+          {
+            "line": 371,
+            "statement": "boolean needRepaint = false;"
+          },
+          {
+            "line": 372,
+            "statement": "Optional<int[]> coords = boardRenderer.convertScreenToCoordinates(x, y);"
+          },
+          {
+            "line": 374,
+            "statement": "int[] curCoords = coords.get();"
+          },
+          {
+            "line": 375,
+            "statement": "boolean isCoordsChanged = false;"
+          }
+        ],
+        "matrix_ids": [
+          "BOARD-FLOAT-INPUT-001"
+        ]
+      },
+      {
+        "binding": "FloatBoard:mouseMoved#9",
+        "event_id": "FloatBoard:mouseMoved",
+        "source_id": "FloatBoard",
+        "event": "mouseMoved",
+        "line": 368,
+        "conditions": [
+          {
+            "expression": "coords.isPresent()",
+            "expected": false
+          },
+          {
+            "expression": "isMouseOver",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 369,
+            "statement": "int x = Utils.zoomOut(e.getX());"
+          },
+          {
+            "line": 370,
+            "statement": "int y = Utils.zoomOut(e.getY());"
+          },
+          {
+            "line": 371,
+            "statement": "boolean needRepaint = false;"
+          },
+          {
+            "line": 372,
+            "statement": "Optional<int[]> coords = boardRenderer.convertScreenToCoordinates(x, y);"
+          },
+          {
+            "line": 415,
+            "statement": "mouseOverCoordinate = LizzieFrame.outOfBoundCoordinate;"
+          },
+          {
+            "line": 417,
+            "statement": "isMouseOver = false;"
+          },
+          {
+            "line": 418,
+            "statement": "needRepaint = true;"
+          },
+          {
+            "line": 419,
+            "statement": "clearMoved();"
+          },
+          {
+            "line": 420,
+            "statement": "isMouseOver = false;"
+          },
+          {
+            "line": 423,
+            "statement": "refreshByLis();"
+          }
+        ],
+        "matrix_ids": [
+          "BOARD-FLOAT-INPUT-001"
+        ]
+      },
+      {
+        "binding": "FloatBoard:mouseMoved#10",
+        "event_id": "FloatBoard:mouseMoved",
+        "source_id": "FloatBoard",
+        "event": "mouseMoved",
+        "line": 368,
+        "conditions": [
+          {
+            "expression": "coords.isPresent()",
+            "expected": false
+          },
+          {
+            "expression": "isMouseOver",
+            "expected": false
+          }
+        ],
+        "statements": [
+          {
+            "line": 369,
+            "statement": "int x = Utils.zoomOut(e.getX());"
+          },
+          {
+            "line": 370,
+            "statement": "int y = Utils.zoomOut(e.getY());"
+          },
+          {
+            "line": 371,
+            "statement": "boolean needRepaint = false;"
+          },
+          {
+            "line": 372,
+            "statement": "Optional<int[]> coords = boardRenderer.convertScreenToCoordinates(x, y);"
+          },
+          {
+            "line": 415,
+            "statement": "mouseOverCoordinate = LizzieFrame.outOfBoundCoordinate;"
+          }
+        ],
+        "matrix_ids": [
+          "BOARD-FLOAT-INPUT-001"
         ]
       }
     ]

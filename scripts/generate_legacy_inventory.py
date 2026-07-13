@@ -77,17 +77,44 @@ INPUT_KEY_SOURCES = (
     ),
     ("InputSubboard", "src/main/java/featurecat/lizzie/gui/InputSubboard.java"),
 )
+INPUT_CONDITIONAL_KEY_SOURCES = (
+    ("FloatBoard", "src/main/java/featurecat/lizzie/gui/FloatBoard.java", {"keyPressed"}),
+)
 INPUT_POINTER_METHOD = re.compile(
     r"public\s+void\s+(?P<event>mouseClicked|mousePressed|mouseWheelMoved|mouseReleased|"
-    r"mouseEntered|mouseExited)\s*\(\s*(?:MouseEvent|MouseWheelEvent)\s+"
+    r"mouseEntered|mouseExited|mouseMoved)\s*\(\s*(?:MouseEvent|MouseWheelEvent)\s+"
     r"[A-Za-z_$][\w$]*\s*\)\s*\{"
 )
 INPUT_POINTER_SOURCES = (
     (
         "InputIndependentSubboard",
         "src/main/java/featurecat/lizzie/gui/InputIndependentSubboard.java",
+        {
+            "mouseClicked",
+            "mousePressed",
+            "mouseWheelMoved",
+            "mouseReleased",
+            "mouseEntered",
+            "mouseExited",
+        },
     ),
-    ("InputSubboard", "src/main/java/featurecat/lizzie/gui/InputSubboard.java"),
+    (
+        "InputSubboard",
+        "src/main/java/featurecat/lizzie/gui/InputSubboard.java",
+        {
+            "mouseClicked",
+            "mousePressed",
+            "mouseWheelMoved",
+            "mouseReleased",
+            "mouseEntered",
+            "mouseExited",
+        },
+    ),
+    (
+        "FloatBoard",
+        "src/main/java/featurecat/lizzie/gui/FloatBoard.java",
+        {"mousePressed", "mouseExited", "mouseWheelMoved", "mouseMoved"},
+    ),
 )
 INPUT_MODIFIER_CHECKS = (
     ("Alt", re.compile(r"\be\.isAltDown\s*\(\s*\)")),
@@ -285,6 +312,25 @@ def parse_java_body(source: str, index: int, end: int) -> tuple[list[dict[str, A
 
 def parse_java_statement(source: str, index: int, end: int) -> tuple[dict[str, Any], int]:
     index = skip_space(source, index, end)
+    if word_at(source, index, "for"):
+        condition_open = skip_space(source, index + 3, end)
+        if condition_open >= end or source[condition_open] != "(":
+            raise ValueError(f"Unsupported legacy input for statement at line {line_number(source, index)}")
+        condition_close = closing_delimiter(source, condition_open, "(", ")")
+        body_open = skip_space(source, condition_close + 1, end)
+        if body_open >= end or source[body_open] != "{":
+            raise ValueError(f"Legacy input for loop must use a block at line {line_number(source, index)}")
+        body_close = closing_brace(source, body_open)
+        if body_close >= end:
+            raise ValueError(f"Legacy input for loop crosses its branch at line {line_number(source, index)}")
+        return (
+            {
+                "kind": "action",
+                "statement": normalize_java(source[index : body_close + 1]),
+                "line": line_number(source, index),
+            },
+            body_close + 1,
+        )
     if word_at(source, index, "if"):
         condition_open = skip_space(source, index + 2, end)
         if condition_open >= end or source[condition_open] != "(":
@@ -303,6 +349,7 @@ def parse_java_statement(source: str, index: int, end: int) -> tuple[dict[str, A
             {
                 "kind": "if",
                 "condition": normalize_java(source[condition_open + 1 : condition_close]),
+                "line": line_number(source, index),
                 "then": then_nodes,
                 "else": else_nodes,
             },
@@ -379,16 +426,40 @@ def branch_path(path: dict[str, Any], expression: str, expected: bool) -> dict[s
 
 
 def execute_java_nodes(
-    nodes: list[dict[str, Any]], paths: list[dict[str, Any]]
+    nodes: list[dict[str, Any]],
+    paths: list[dict[str, Any]],
+    track_boolean_assignments: bool = False,
 ) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
     continuing = paths
     broken: list[dict[str, Any]] = []
     for node in nodes:
         if node["kind"] == "action":
-            continuing = [
-                {**path, "actions": [*path["actions"], {"line": node["line"], "statement": node["statement"]}]}
-                for path in continuing
-            ]
+            updated: list[dict[str, Any]] = []
+            for path in continuing:
+                candidate = {
+                    **path,
+                    "actions": [
+                        *path["actions"],
+                        {"line": node["line"], "statement": node["statement"]},
+                    ],
+                }
+                if track_boolean_assignments:
+                    values = dict(candidate["condition_values"])
+                    assignment = re.fullmatch(
+                        r"(?:boolean\s+)?([A-Za-z_$][\w$]*)\s*=\s*(true|false);",
+                        node["statement"],
+                    )
+                    if assignment:
+                        values[assignment.group(1)] = assignment.group(2) == "true"
+                    elif node["statement"].startswith("for "):
+                        for name in re.findall(
+                            r"\b([A-Za-z_$][\w$]*)\s*=\s*(?:true|false)\s*;",
+                            node["statement"],
+                        ):
+                            values.pop(name, None)
+                    candidate["condition_values"] = values
+                updated.append(candidate)
+            continuing = updated
         elif node["kind"] in {"break", "return"}:
             if node["kind"] == "return":
                 continuing = [
@@ -410,7 +481,9 @@ def execute_java_nodes(
                     candidate = branch_path(path, node["condition"], expected)
                     if candidate is None:
                         continue
-                    branch_continuing, branch_broken = execute_java_nodes(branch_nodes, [candidate])
+                    branch_continuing, branch_broken = execute_java_nodes(
+                        branch_nodes, [candidate], track_boolean_assignments
+                    )
                     branches.extend(branch_continuing)
                     broken.extend(branch_broken)
             continuing = branches
@@ -439,6 +512,28 @@ def validate_input_parser() -> None:
     statements = [[action["statement"] for action in path["actions"]] for path in completed]
     if statements != [["return;"], ["after();"]]:
         raise ValueError("Input binding parser return self-check failed")
+    looping = "if (hasMoves()) for (int i = 0; i < moves.size(); i++) { use(moves.get(i)); } done();"
+    continuing, completed = execute_java_nodes(
+        parse_java_sequence(looping, 0, len(looping)), initial
+    )
+    completed.extend(continuing)
+    statements = [[action["statement"] for action in path["actions"]] for path in completed]
+    if statements != [
+        ["for (int i = 0; i < moves.size(); i++) { use(moves.get(i)); }", "done();"],
+        ["done();"],
+    ]:
+        raise ValueError("Input binding parser for-loop self-check failed")
+    tracked = "boolean changed = false; if (ready()) changed = true; if (changed) apply();"
+    continuing, completed = execute_java_nodes(
+        parse_java_sequence(tracked, 0, len(tracked)), initial, True
+    )
+    completed.extend(continuing)
+    statements = [[action["statement"] for action in path["actions"]] for path in completed]
+    if statements != [
+        ["boolean changed = false;", "changed = true;", "apply();"],
+        ["boolean changed = false;"],
+    ]:
+        raise ValueError("Input binding parser boolean-tracking self-check failed")
 
 
 def relative_path(path: Path, root: Path) -> str:
@@ -701,8 +796,95 @@ def collect_switch_key_source(
     }
 
 
+def collect_conditional_key_source(
+    legacy_root: Path, source_id: str, source_path: str, expected_events: set[str]
+) -> dict[str, Any]:
+    input_path = legacy_root / source_path
+    source = strip_java_comments(input_path.read_text(encoding="utf-8", errors="replace"))
+    cases: list[dict[str, Any]] = []
+    bindings: list[dict[str, Any]] = []
+    seen_events: set[str] = set()
+    indexed_keys: list[str] = []
+    for method_match in INPUT_KEY_METHOD.finditer(source):
+        event = method_match.group("event")
+        if event in seen_events:
+            raise ValueError(f"{input_path.name} contains duplicate {event} methods")
+        seen_events.add(event)
+        open_brace = method_match.end() - 1
+        method_end = closing_brace(source, open_brace)
+        nodes = parse_java_sequence(source, open_brace + 1, method_end)
+        parameter = re.escape(method_match.group("parameter"))
+        key_check = re.compile(
+            rf"{parameter}\.getKeyCode\s*\(\s*\)\s*==\s*KeyEvent\.(VK_[A-Z0-9_]+)"
+        )
+        for node in nodes:
+            if node["kind"] != "if" or node["else"]:
+                raise ValueError(f"{input_path.name} {event} has unsupported key dispatch")
+            keys = key_check.findall(node["condition"])
+            reduced = key_check.sub("KEY", node["condition"])
+            if not keys or not re.fullmatch(r"KEY(?:\s*\|\|\s*KEY)*", reduced):
+                raise ValueError(f"{input_path.name} {event} has unsupported key condition")
+            for key in keys:
+                case_id = f"{source_id}:{event}:{key}"
+                continuing, completed = execute_java_nodes(
+                    node["then"],
+                    [{"conditions": [], "condition_values": {}, "actions": [], "case_chain": [case_id]}],
+                )
+                completed.extend(continuing)
+                if not completed:
+                    raise ValueError(f"{input_path.name} {case_id} produced no binding paths")
+                for ordinal, path in enumerate(completed, start=1):
+                    bindings.append(
+                        {
+                            "binding": f"{case_id}#{ordinal}",
+                            "case": case_id,
+                            "source_id": source_id,
+                            "event": event,
+                            "key": key,
+                            "line": node["line"],
+                            "conditions": path["conditions"],
+                            "case_chain": path["case_chain"],
+                            "statements": path["actions"],
+                        }
+                    )
+                cases.append(
+                    {
+                        "case": case_id,
+                        "source_id": source_id,
+                        "event": event,
+                        "key": key,
+                        "line": node["line"],
+                        "modifier_checks": [],
+                        "binding_count": len(completed),
+                    }
+                )
+                indexed_keys.append(key)
+
+    if seen_events != expected_events:
+        raise ValueError(f"{input_path.name} key methods differ from expected: {sorted(seen_events)}")
+    if indexed_keys != re.findall(r"\bKeyEvent\.(VK_[A-Z0-9_]+)", source):
+        raise ValueError(f"{input_path.name} contains a key constant outside the indexed dispatch")
+    case_ids = [entry["case"] for entry in cases]
+    binding_ids = [entry["binding"] for entry in bindings]
+    if len(case_ids) != len(set(case_ids)) or len(binding_ids) != len(set(binding_ids)):
+        raise ValueError(f"{input_path.name} produced duplicate normalized key input")
+    return {
+        "id": source_id,
+        "source": relative_path(input_path, legacy_root),
+        "active_key_cases": len(cases),
+        "active_key_bindings": len(bindings),
+        "events": {
+            event: sum(entry["event"] == event for entry in cases)
+            for event in sorted(expected_events)
+        },
+        "post_dispatch_actions": {event: [] for event in sorted(expected_events)},
+        "cases": cases,
+        "bindings": bindings,
+    }
+
+
 def collect_pointer_source(
-    legacy_root: Path, source_id: str, source_path: str
+    legacy_root: Path, source_id: str, source_path: str, expected_events: set[str]
 ) -> dict[str, Any]:
     input_path = legacy_root / source_path
     source = strip_java_comments(input_path.read_text(encoding="utf-8", errors="replace"))
@@ -720,6 +902,7 @@ def collect_pointer_source(
         continuing, completed = execute_java_nodes(
             nodes,
             [{"conditions": [], "condition_values": {}, "actions": [], "case_chain": []}],
+            source_id == "FloatBoard",
         )
         completed.extend(continuing)
         event_id = f"{source_id}:{event}"
@@ -745,14 +928,6 @@ def collect_pointer_source(
             }
         )
 
-    expected_events = {
-        "mouseClicked",
-        "mousePressed",
-        "mouseWheelMoved",
-        "mouseReleased",
-        "mouseEntered",
-        "mouseExited",
-    }
     if seen_events != expected_events:
         raise ValueError(f"{input_path.name} pointer methods differ from expected: {sorted(seen_events)}")
     event_ids = [entry["event_id"] for entry in events]
@@ -774,6 +949,10 @@ def collect_input_cases(legacy_root: Path) -> dict[str, Any]:
         collect_switch_key_source(legacy_root, source_id, source_path)
         for source_id, source_path in INPUT_KEY_SOURCES
     ]
+    sources.extend(
+        collect_conditional_key_source(legacy_root, source_id, source_path, expected_events)
+        for source_id, source_path, expected_events in INPUT_CONDITIONAL_KEY_SOURCES
+    )
     cases = [entry for source in sources for entry in source["cases"]]
     bindings = [entry for source in sources for entry in source["bindings"]]
     source_summaries = [
@@ -781,8 +960,8 @@ def collect_input_cases(legacy_root: Path) -> dict[str, Any]:
         for source in sources
     ]
     pointer_sources = [
-        collect_pointer_source(legacy_root, source_id, source_path)
-        for source_id, source_path in INPUT_POINTER_SOURCES
+        collect_pointer_source(legacy_root, source_id, source_path, expected_events)
+        for source_id, source_path, expected_events in INPUT_POINTER_SOURCES
     ]
     pointer_events = [entry for source in pointer_sources for entry in source["events"]]
     pointer_bindings = [entry for source in pointer_sources for entry in source["bindings"]]
@@ -854,8 +1033,8 @@ def validate_matrix(
     dict[str, list[str]],
     dict[str, list[str]],
 ]:
-    if matrix.get("schema_version") != 6:
-        raise ValueError("Matrix schema_version must be 6")
+    if matrix.get("schema_version") != 7:
+        raise ValueError("Matrix schema_version must be 7")
     allowed_statuses = matrix.get("allowed_statuses")
     if allowed_statuses != list(ALLOWED_STATUSES):
         raise ValueError("Matrix allowed_statuses differ from the repository contract")
@@ -1106,7 +1285,7 @@ def build_inventory(legacy_root: Path, matrix_path: Path) -> dict[str, Any]:
         raise ValueError("Every normalized legacy input path must map to the matrix")
 
     return {
-        "schema_version": 6,
+        "schema_version": 7,
         "source": {
             "root": "../lizzieyzy-next-main",
             "version": read_legacy_version(legacy_root),
@@ -1124,8 +1303,8 @@ def build_inventory(legacy_root: Path, matrix_path: Path) -> dict[str, Any]:
             "Menu keys cover active Menu.java resource lookups with Menu. or menu. prefixes.",
             "Menu literal labels cover active string-literal menu constructors; dynamic labels remain represented by their resource or runtime source.",
             "Menu accelerators cover explicit Menu.java setAccelerator calls and direct OS.isWindows guards; other input bindings remain T-003 work.",
-            "Input key bindings symbolically expand Input.java, InputIndependentMainBoard.java, InputIndependentSubboard.java, and InputSubboard.java keyPressed/keyReleased condition evaluations, executed statements, empty-statement paths, and switch fall-through; controlIsPressed means Control on every platform plus Meta on macOS.",
-            "Pointer bindings symbolically expand the two indexed subboard listeners' mouse and wheel condition evaluations, early returns, executed statements, and explicit no-action paths.",
+            "Input key bindings symbolically expand Input.java, InputIndependentMainBoard.java, InputIndependentSubboard.java, InputSubboard.java, and FloatBoard.java key dispatch, condition evaluations, executed statements, empty-statement paths, and switch fall-through; controlIsPressed means Control on every platform plus Meta on macOS.",
+            "Pointer bindings symbolically expand the two indexed subboard listeners plus FloatBoard mouse, motion, and wheel condition evaluations, early returns, executed statements, and explicit no-action paths; FloatBoard's candidate scan loop is preserved as one normalized statement because its runtime iteration count is data-dependent.",
             "Other key-listener and pointer-listener classes remain T-003 work.",
         ],
         "matrix_summary": {
