@@ -43,7 +43,13 @@ CONFIG_CALL = re.compile(
     rf"(?P<api>{'|'.join(JSON_APIS)})\s*\(\s*\"(?P<key>(?:\\.|[^\"\\])*)\""
 )
 MENU_RESOURCE_CALL = re.compile(
-    r"(?:Lizzie\.)?resourceBundle\.getString\s*\(\s*\"(?P<key>Menu\.[^\"]+)\""
+    r"(?:Lizzie\.)?resourceBundle\.getString\s*\(\s*\"(?P<key>(?:Menu|menu)\.[^\"]+)\""
+)
+MENU_ACCELERATOR_CALL = re.compile(
+    r"(?:(?P<windows_guard>if\s*\(\s*OS\.isWindows\(\)\s*\)\s*\{\s*))?"
+    r"(?P<item>[A-Za-z_$][\w$]*)\.setAccelerator\s*\(\s*KeyStroke\.getKeyStroke\s*\(\s*"
+    r"KeyEvent\.VK_(?P<key>[A-Z0-9_]+)\s*,\s*InputEvent\.(?P<modifier>[A-Z_]+)_DOWN_MASK"
+    r"\s*\)\s*\)"
 )
 PERSISTENT_RECEIVER_SUFFIXES = (
     ".uiConfig",
@@ -67,6 +73,7 @@ REQUIRED_ROW_FIELDS = {
     "id",
     "category",
     "legacy_entry",
+    "legacy_menu_keys",
     "legacy_shortcuts",
     "java_evidence",
     "config_keys",
@@ -233,11 +240,24 @@ def collect_menu_resources(legacy_root: Path) -> dict[str, Any]:
     references: dict[str, list[int]] = defaultdict(list)
     for match in MENU_RESOURCE_CALL.finditer(source):
         references[match.group("key")].append(line_number(source, match.start()))
+    accelerators = [
+        {
+            "item": match.group("item"),
+            "shortcut": f'{match.group("modifier").title()}+{match.group("key")}',
+            "platform": "Windows" if match.group("windows_guard") else "All",
+            "line": line_number(source, match.start("item")),
+        }
+        for match in MENU_ACCELERATOR_CALL.finditer(source)
+    ]
+    accelerator_calls = len(re.findall(r"\.setAccelerator\s*\(", source))
+    if len(accelerators) != accelerator_calls:
+        raise ValueError("Menu.java contains an unsupported setAccelerator form")
     return {
         "source": relative_path(menu_path, legacy_root),
         "unique_resource_keys": len(references),
         "resource_references": sum(len(lines) for lines in references.values()),
-        "set_accelerator_calls": len(re.findall(r"\.setAccelerator\s*\(", source)),
+        "set_accelerator_calls": accelerator_calls,
+        "accelerators": accelerators,
         "keys": [
             {"key": key, "lines": lines} for key, lines in sorted(references.items())
         ],
@@ -265,10 +285,15 @@ def validate_evidence_entry(entry: Any, legacy_root: Path, row_id: str) -> None:
 
 
 def validate_matrix(
-    matrix: dict[str, Any], legacy_root: Path, config_keys: set[str], fingerprint: str
-) -> dict[str, list[str]]:
-    if matrix.get("schema_version") != 1:
-        raise ValueError("Matrix schema_version must be 1")
+    matrix: dict[str, Any],
+    legacy_root: Path,
+    config_keys: set[str],
+    menu_keys: set[str],
+    menu_shortcuts: set[str],
+    fingerprint: str,
+) -> tuple[dict[str, list[str]], dict[str, list[str]], dict[str, list[str]]]:
+    if matrix.get("schema_version") != 2:
+        raise ValueError("Matrix schema_version must be 2")
     allowed_statuses = matrix.get("allowed_statuses")
     if allowed_statuses != list(ALLOWED_STATUSES):
         raise ValueError("Matrix allowed_statuses differ from the repository contract")
@@ -278,7 +303,9 @@ def validate_matrix(
     if baseline.get("version") != read_legacy_version(legacy_root):
         raise ValueError("Matrix baseline version does not match pom.xml")
 
-    matrix_ids_by_key: dict[str, list[str]] = defaultdict(list)
+    matrix_ids_by_config_key: dict[str, list[str]] = defaultdict(list)
+    matrix_ids_by_menu_key: dict[str, list[str]] = defaultdict(list)
+    matrix_ids_by_shortcut: dict[str, list[str]] = defaultdict(list)
     seen_ids: set[str] = set()
     rows = matrix.get("rows")
     if not isinstance(rows, list) or not rows:
@@ -300,6 +327,7 @@ def validate_matrix(
         if row["status"] not in allowed_statuses:
             raise ValueError(f"{row_id}: unsupported status {row['status']!r}")
         for field in (
+            "legacy_menu_keys",
             "legacy_shortcuts",
             "java_evidence",
             "config_keys",
@@ -310,6 +338,7 @@ def validate_matrix(
             if not isinstance(row[field], list):
                 raise ValueError(f"{row_id}: {field} must be a list")
         for field in REQUIRED_ROW_FIELDS - {
+            "legacy_menu_keys",
             "legacy_shortcuts",
             "java_evidence",
             "config_keys",
@@ -325,7 +354,13 @@ def validate_matrix(
             raise ValueError(f"{row_id}: java_evidence must not be empty")
         if not row["target_modules"] or not set(row["target_modules"]) <= ALLOWED_TARGET_MODULES:
             raise ValueError(f"{row_id}: target_modules contain an unsupported module")
-        for field in ("legacy_shortcuts", "config_keys", "external_dependencies", "target_modules"):
+        for field in (
+            "legacy_menu_keys",
+            "legacy_shortcuts",
+            "config_keys",
+            "external_dependencies",
+            "target_modules",
+        ):
             if len(row[field]) != len(set(row[field])):
                 raise ValueError(f"{row_id}: {field} contains duplicate values")
         for entry in row["java_evidence"] + row["automated_evidence"]:
@@ -333,8 +368,20 @@ def validate_matrix(
         for key in row["config_keys"]:
             if key not in config_keys:
                 raise ValueError(f"{row_id}: config key is outside the active literal inventory: {key}")
-            matrix_ids_by_key[key].append(row_id)
-    return {key: sorted(ids) for key, ids in matrix_ids_by_key.items()}
+            matrix_ids_by_config_key[key].append(row_id)
+        for key in row["legacy_menu_keys"]:
+            if key not in menu_keys:
+                raise ValueError(f"{row_id}: menu key is outside the active Menu.java inventory: {key}")
+            matrix_ids_by_menu_key[key].append(row_id)
+        for shortcut in row["legacy_shortcuts"]:
+            if shortcut not in menu_shortcuts:
+                raise ValueError(f"{row_id}: shortcut is outside the active Menu.java accelerator inventory: {shortcut}")
+            matrix_ids_by_shortcut[shortcut].append(row_id)
+    return (
+        {key: sorted(ids) for key, ids in matrix_ids_by_config_key.items()},
+        {key: sorted(ids) for key, ids in matrix_ids_by_menu_key.items()},
+        {key: sorted(ids) for key, ids in matrix_ids_by_shortcut.items()},
+    )
 
 
 def build_inventory(legacy_root: Path, matrix_path: Path) -> dict[str, Any]:
@@ -346,22 +393,48 @@ def build_inventory(legacy_root: Path, matrix_path: Path) -> dict[str, Any]:
     main_java_files = sorted((legacy_root / "src/main/java").rglob("*.java"))
     test_java_files = sorted((legacy_root / "src/test/java").rglob("*.java"))
     config_references, commented_only = collect_config_references(legacy_root, main_java_files)
-    matrix_ids_by_key = validate_matrix(
-        matrix, legacy_root, set(config_references), fingerprint
+    menu = collect_menu_resources(legacy_root)
+    matrix_ids_by_config_key, matrix_ids_by_menu_key, matrix_ids_by_shortcut = validate_matrix(
+        matrix,
+        legacy_root,
+        set(config_references),
+        {entry["key"] for entry in menu["keys"]},
+        {entry["shortcut"] for entry in menu["accelerators"]},
+        fingerprint,
     )
     config_entries = [
         {
             "key": key,
             "reference_count": len(references),
-            "matrix_ids": matrix_ids_by_key.get(key, []),
+            "matrix_ids": matrix_ids_by_config_key.get(key, []),
             "references": references,
         }
         for key, references in config_references.items()
     ]
     mapped_keys = sum(bool(entry["matrix_ids"]) for entry in config_entries)
+    menu["keys"] = [
+        {
+            "key": entry["key"],
+            "matrix_ids": matrix_ids_by_menu_key.get(entry["key"], []),
+            "lines": entry["lines"],
+        }
+        for entry in menu["keys"]
+    ]
+    menu["accelerators"] = [
+        {
+            "item": entry["item"],
+            "shortcut": entry["shortcut"],
+            "platform": entry["platform"],
+            "matrix_ids": matrix_ids_by_shortcut.get(entry["shortcut"], []),
+            "line": entry["line"],
+        }
+        for entry in menu["accelerators"]
+    ]
+    mapped_menu_keys = sum(bool(entry["matrix_ids"]) for entry in menu["keys"])
+    mapped_shortcuts = sum(bool(entry["matrix_ids"]) for entry in menu["accelerators"])
 
     return {
-        "schema_version": 1,
+        "schema_version": 2,
         "source": {
             "root": "../lizzieyzy-next-main",
             "version": read_legacy_version(legacy_root),
@@ -376,6 +449,8 @@ def build_inventory(legacy_root: Path, matrix_path: Path) -> dict[str, Any]:
             "Config keys are active string-literal leaf keys on explicit persistent JSON receivers.",
             "Nested canonical JSON paths, computed keys, and semantic use-case mapping remain T-003 work.",
             "Commented-only Config.java keys are evidence, not active migration requirements.",
+            "Menu keys cover active Menu.java resource lookups with Menu. or menu. prefixes.",
+            "Menu accelerators cover explicit Menu.java setAccelerator calls and direct OS.isWindows guards; other input bindings remain T-003 work.",
         ],
         "matrix_summary": {
             "rows": len(matrix["rows"]),
@@ -386,6 +461,12 @@ def build_inventory(legacy_root: Path, matrix_path: Path) -> dict[str, Any]:
             "active_config_leaf_keys": len(config_entries),
             "mapped_config_leaf_keys": mapped_keys,
             "unmapped_config_leaf_keys": len(config_entries) - mapped_keys,
+            "active_menu_resource_keys": len(menu["keys"]),
+            "mapped_menu_resource_keys": mapped_menu_keys,
+            "unmapped_menu_resource_keys": len(menu["keys"]) - mapped_menu_keys,
+            "active_menu_accelerators": len(menu["accelerators"]),
+            "mapped_menu_accelerators": mapped_shortcuts,
+            "unmapped_menu_accelerators": len(menu["accelerators"]) - mapped_shortcuts,
         },
         "config": {
             "active_literal_leaf_keys": len(config_entries),
@@ -393,7 +474,7 @@ def build_inventory(legacy_root: Path, matrix_path: Path) -> dict[str, Any]:
             "commented_only_config_java_keys": commented_only,
             "keys": config_entries,
         },
-        "menu": collect_menu_resources(legacy_root),
+        "menu": menu,
         "tests": {
             "java_files": [relative_path(path, legacy_root) for path in test_java_files]
         },

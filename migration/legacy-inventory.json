@@ -1,5 +1,5 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "source": {
     "root": "../lizzieyzy-next-main",
     "version": "yzy2.5.3",
@@ -13,7 +13,9 @@
     "The legacy tree is read-only; this file is generated in the new repository.",
     "Config keys are active string-literal leaf keys on explicit persistent JSON receivers.",
     "Nested canonical JSON paths, computed keys, and semantic use-case mapping remain T-003 work.",
-    "Commented-only Config.java keys are evidence, not active migration requirements."
+    "Commented-only Config.java keys are evidence, not active migration requirements.",
+    "Menu keys cover active Menu.java resource lookups with Menu. or menu. prefixes.",
+    "Menu accelerators cover explicit Menu.java setAccelerator calls and direct OS.isWindows guards; other input bindings remain T-003 work."
   ],
   "matrix_summary": {
     "rows": 17,
@@ -27,7 +29,13 @@
     },
     "active_config_leaf_keys": 596,
     "mapped_config_leaf_keys": 28,
-    "unmapped_config_leaf_keys": 568
+    "unmapped_config_leaf_keys": 568,
+    "active_menu_resource_keys": 383,
+    "mapped_menu_resource_keys": 47,
+    "unmapped_menu_resource_keys": 336,
+    "active_menu_accelerators": 2,
+    "mapped_menu_accelerators": 2,
+    "unmapped_menu_accelerators": 0
   },
   "config": {
     "active_literal_leaf_keys": 596,
@@ -14066,12 +14074,33 @@
   },
   "menu": {
     "source": "src/main/java/featurecat/lizzie/gui/Menu.java",
-    "unique_resource_keys": 373,
-    "resource_references": 463,
+    "unique_resource_keys": 383,
+    "resource_references": 473,
     "set_accelerator_calls": 2,
+    "accelerators": [
+      {
+        "item": "yikeLive",
+        "shortcut": "Shift+O",
+        "platform": "All",
+        "matrix_ids": [
+          "ONLINE-YIKE-001"
+        ],
+        "line": 4023
+      },
+      {
+        "item": "readBoard",
+        "shortcut": "Alt+O",
+        "platform": "Windows",
+        "matrix_ids": [
+          "ONLINE-SYNC-001"
+        ],
+        "line": 4083
+      }
+    ],
     "keys": [
       {
         "key": "Menu.Black",
+        "matrix_ids": [],
         "lines": [
           9265,
           9301,
@@ -14081,24 +14110,28 @@
       },
       {
         "key": "Menu.EnableEnterYikeGame",
+        "matrix_ids": [],
         "lines": [
           4162
         ]
       },
       {
         "key": "Menu.SuggestionList",
+        "matrix_ids": [],
         "lines": [
           1354
         ]
       },
       {
         "key": "Menu.Suggestions",
+        "matrix_ids": [],
         "lines": [
           564
         ]
       },
       {
         "key": "Menu.White",
+        "matrix_ids": [],
         "lines": [
           9283,
           9324,
@@ -14108,114 +14141,137 @@
       },
       {
         "key": "Menu.about",
+        "matrix_ids": [],
         "lines": [
           5080
         ]
       },
       {
         "key": "Menu.addBlack",
+        "matrix_ids": [],
         "lines": [
           3593
         ]
       },
       {
         "key": "Menu.addWhite",
+        "matrix_ids": [],
         "lines": [
           3608
         ]
       },
       {
         "key": "Menu.allMoveNum",
+        "matrix_ids": [],
         "lines": [
           776
         ]
       },
       {
         "key": "Menu.allowAvoidTools",
+        "matrix_ids": [],
         "lines": [
           4511
         ]
       },
       {
         "key": "Menu.allowClickReview",
+        "matrix_ids": [],
         "lines": [
           3660
         ]
       },
       {
         "key": "Menu.allowDoubleClick",
+        "matrix_ids": [],
         "lines": [
           3638
         ]
       },
       {
         "key": "Menu.allowDrag",
+        "matrix_ids": [],
         "lines": [
           3649
         ]
       },
       {
         "key": "Menu.alternatelyMoves",
+        "matrix_ids": [],
         "lines": [
           3623
         ]
       },
       {
         "key": "Menu.alwaysGoToLastMove",
+        "matrix_ids": [],
         "lines": [
           4174
         ]
       },
       {
         "key": "Menu.alwaysKeepBoardStatSync",
+        "matrix_ids": [
+          "ONLINE-SYNC-001"
+        ],
         "lines": [
           4191
         ]
       },
       {
         "key": "Menu.alwaysOnTop",
+        "matrix_ids": [],
         "lines": [
           956
         ]
       },
       {
         "key": "Menu.alwaysShowBlackWinrate",
+        "matrix_ids": [],
         "lines": [
           1437
         ]
       },
       {
         "key": "Menu.analyze",
+        "matrix_ids": [],
         "lines": [
           3173
         ]
       },
       {
         "key": "Menu.anyMoveNum",
+        "matrix_ids": [],
         "lines": [
           788
         ]
       },
       {
         "key": "Menu.appearanceTheme",
+        "matrix_ids": [
+          "SETTINGS-THEME-001"
+        ],
         "lines": [
           524
         ]
       },
       {
         "key": "Menu.appendWinrateToComment",
+        "matrix_ids": [],
         "lines": [
           918
         ]
       },
       {
         "key": "Menu.appleStyleUi",
+        "matrix_ids": [],
         "lines": [
           667
         ]
       },
       {
         "key": "Menu.autoAnalyze",
+        "matrix_ids": [],
         "lines": [
           3225,
           7924
@@ -14223,6 +14279,7 @@
       },
       {
         "key": "Menu.autoSetup",
+        "matrix_ids": [],
         "lines": [
           5192,
           7785
@@ -14230,24 +14287,32 @@
       },
       {
         "key": "Menu.autoSetupButton",
+        "matrix_ids": [],
         "lines": [
           7777
         ]
       },
       {
         "key": "Menu.autoWrap",
+        "matrix_ids": [],
         "lines": [
           4290
         ]
       },
       {
         "key": "Menu.backToMainBranch",
+        "matrix_ids": [
+          "BOARD-HISTORY-001"
+        ],
         "lines": [
           3708
         ]
       },
       {
         "key": "Menu.batchAnalysisMode",
+        "matrix_ids": [
+          "ANALYSIS-FULL-001"
+        ],
         "lines": [
           3253,
           7952
@@ -14255,6 +14320,9 @@
       },
       {
         "key": "Menu.batchAnalyze",
+        "matrix_ids": [
+          "ANALYSIS-FULL-001"
+        ],
         "lines": [
           3242,
           7940
@@ -14262,6 +14330,7 @@
       },
       {
         "key": "Menu.batchAnalyzeTable",
+        "matrix_ids": [],
         "lines": [
           3275,
           7974
@@ -14269,144 +14338,174 @@
       },
       {
         "key": "Menu.boardStyle",
+        "matrix_ids": [
+          "SETTINGS-THEME-001"
+        ],
         "lines": [
           527
         ]
       },
       {
         "key": "Menu.boardStyleChineseClassic",
+        "matrix_ids": [
+          "SETTINGS-THEME-001"
+        ],
         "lines": [
           531
         ]
       },
       {
         "key": "Menu.boardStyleJapanese",
+        "matrix_ids": [
+          "SETTINGS-THEME-001"
+        ],
         "lines": [
           529
         ]
       },
       {
         "key": "Menu.bottomToolBar",
+        "matrix_ids": [],
         "lines": [
           4341
         ]
       },
       {
         "key": "Menu.breakEngineGame",
+        "matrix_ids": [],
         "lines": [
           3037
         ]
       },
       {
         "key": "Menu.breakGame",
+        "matrix_ids": [],
         "lines": [
           3026
         ]
       },
       {
         "key": "Menu.btnAnalyze.btnFlashAnalyze",
+        "matrix_ids": [],
         "lines": [
           7892
         ]
       },
       {
         "key": "Menu.btnAnalyze.toolTipText",
+        "matrix_ids": [],
         "lines": [
           7908
         ]
       },
       {
         "key": "Menu.btnBackMain.toolTipText",
+        "matrix_ids": [],
         "lines": [
           8042
         ]
       },
       {
         "key": "Menu.btnChangeTurn.toolTipText",
+        "matrix_ids": [],
         "lines": [
           8054
         ]
       },
       {
         "key": "Menu.btnContrlPanel.toolTipText",
+        "matrix_ids": [],
         "lines": [
           8065
         ]
       },
       {
         "key": "Menu.btnHawkeye.toolTipText",
+        "matrix_ids": [],
         "lines": [
           7998
         ]
       },
       {
         "key": "Menu.btnMarkup.toolTipText",
+        "matrix_ids": [],
         "lines": [
           8078
         ]
       },
       {
         "key": "Menu.btnMarkupClear.toolTipText",
+        "matrix_ids": [],
         "lines": [
           8198
         ]
       },
       {
         "key": "Menu.btnNewFile.toolTipText",
+        "matrix_ids": [],
         "lines": [
           7747
         ]
       },
       {
         "key": "Menu.btnOpen.toolTipText",
+        "matrix_ids": [],
         "lines": [
           7758
         ]
       },
       {
         "key": "Menu.btnRankMark.toolTipText",
+        "matrix_ids": [],
         "lines": [
           8013
         ]
       },
       {
         "key": "Menu.btnSave.toolTipText",
+        "matrix_ids": [],
         "lines": [
           7769
         ]
       },
       {
         "key": "Menu.btnSetMain.toolTipText",
+        "matrix_ids": [],
         "lines": [
           8030
         ]
       },
       {
         "key": "Menu.captureTsumeGo",
+        "matrix_ids": [],
         "lines": [
           3213
         ]
       },
       {
         "key": "Menu.changeEngineGameNumbers",
+        "matrix_ids": [],
         "lines": [
           3061
         ]
       },
       {
         "key": "Menu.changeEngineGameNumbersMessage",
+        "matrix_ids": [],
         "lines": [
           3072
         ]
       },
       {
         "key": "Menu.changeEngineGameNumbersTitle",
+        "matrix_ids": [],
         "lines": [
           3073
         ]
       },
       {
         "key": "Menu.chkPDA.toolTopText",
+        "matrix_ids": [],
         "lines": [
           5731,
           6218,
@@ -14415,18 +14514,21 @@
       },
       {
         "key": "Menu.chkPlayOut",
+        "matrix_ids": [],
         "lines": [
           6463
         ]
       },
       {
         "key": "Menu.chkTime",
+        "matrix_ids": [],
         "lines": [
           6419
         ]
       },
       {
         "key": "Menu.chkWRN.toolTopText",
+        "matrix_ids": [],
         "lines": [
           6071,
           6120
@@ -14434,96 +14536,112 @@
       },
       {
         "key": "Menu.classicColorTheme",
+        "matrix_ids": [],
         "lines": [
           669
         ]
       },
       {
         "key": "Menu.classicView",
+        "matrix_ids": [],
         "lines": [
           1786
         ]
       },
       {
         "key": "Menu.clearAllLizzieBestmoves",
+        "matrix_ids": [],
         "lines": [
           3392
         ]
       },
       {
         "key": "Menu.clearAllLizzieCache",
+        "matrix_ids": [],
         "lines": [
           3371
         ]
       },
       {
         "key": "Menu.clearBoard",
+        "matrix_ids": [],
         "lines": [
           3697
         ]
       },
       {
         "key": "Menu.clearCustomBoardBackground",
+        "matrix_ids": [],
         "lines": [
           720
         ]
       },
       {
         "key": "Menu.clearSelectToolTipText",
+        "matrix_ids": [],
         "lines": [
           7581
         ]
       },
       {
         "key": "Menu.clearThisLizzieBestmoves",
+        "matrix_ids": [],
         "lines": [
           3406
         ]
       },
       {
         "key": "Menu.clearThisLizzieCache",
+        "matrix_ids": [],
         "lines": [
           3381
         ]
       },
       {
         "key": "Menu.commitPane",
+        "matrix_ids": [],
         "lines": [
           1112
         ]
       },
       {
         "key": "Menu.commitPane.tooltip",
+        "matrix_ids": [],
         "lines": [
           1113
         ]
       },
       {
         "key": "Menu.comprehensiveSettings",
+        "matrix_ids": [],
         "lines": [
           5204
         ]
       },
       {
         "key": "Menu.continueAnalyzeGameAsBlack",
+        "matrix_ids": [],
         "lines": [
           2986
         ]
       },
       {
         "key": "Menu.continueAnalyzeGameAsWhite",
+        "matrix_ids": [],
         "lines": [
           2971
         ]
       },
       {
         "key": "Menu.continueGameAgainstAi",
+        "matrix_ids": [],
         "lines": [
           2900
         ]
       },
       {
         "key": "Menu.continueGameBtn",
+        "matrix_ids": [],
         "lines": [
           8643,
           9166,
@@ -14533,60 +14651,74 @@
       },
       {
         "key": "Menu.continueGenmoveGameAsBlack",
+        "matrix_ids": [],
         "lines": [
           2958
         ]
       },
       {
         "key": "Menu.continueGenmoveGameAsWhite",
+        "matrix_ids": [],
         "lines": [
           2945
         ]
       },
       {
         "key": "Menu.contributeMenu",
+        "matrix_ids": [],
         "lines": [
           5443
         ]
       },
       {
         "key": "Menu.coordsMenu",
+        "matrix_ids": [
+          "UI-COORDS-001"
+        ],
         "lines": [
           512
         ]
       },
       {
         "key": "Menu.copyBoardScreen",
+        "matrix_ids": [],
         "lines": [
           336
         ]
       },
       {
         "key": "Menu.copySgf",
+        "matrix_ids": [
+          "KIFU-CLIPBOARD-001"
+        ],
         "lines": [
           363
         ]
       },
       {
         "key": "Menu.copySubBoardScreen",
+        "matrix_ids": [],
         "lines": [
           350
         ]
       },
       {
         "key": "Menu.ctrlPanel",
+        "matrix_ids": [],
         "lines": [
           1280
         ]
       },
       {
         "key": "Menu.customInfoOrdr",
+        "matrix_ids": [],
         "lines": [
           1063
         ]
       },
       {
         "key": "Menu.customLayout",
+        "matrix_ids": [],
         "lines": [
           1914,
           1991
@@ -14594,6 +14726,7 @@
       },
       {
         "key": "Menu.customLayoutSet",
+        "matrix_ids": [],
         "lines": [
           1920,
           1997
@@ -14601,6 +14734,7 @@
       },
       {
         "key": "Menu.customToolbar",
+        "matrix_ids": [],
         "lines": [
           4466,
           4724
@@ -14608,48 +14742,58 @@
       },
       {
         "key": "Menu.defaultView",
+        "matrix_ids": [],
         "lines": [
           1775
         ]
       },
       {
         "key": "Menu.delete",
+        "matrix_ids": [],
         "lines": [
           3772
         ]
       },
       {
         "key": "Menu.deleteBranch",
+        "matrix_ids": [
+          "BOARD-HISTORY-001"
+        ],
         "lines": [
           3782
         ]
       },
       {
         "key": "Menu.deletePersistFile",
+        "matrix_ids": [],
         "lines": [
           654
         ]
       },
       {
         "key": "Menu.drawPainting.toolTipText",
+        "matrix_ids": [],
         "lines": [
           8210
         ]
       },
       {
         "key": "Menu.edit",
+        "matrix_ids": [],
         "lines": [
           3440
         ]
       },
       {
         "key": "Menu.editProgram",
+        "matrix_ids": [],
         "lines": [
           10181
         ]
       },
       {
         "key": "Menu.endGameBtn",
+        "matrix_ids": [],
         "lines": [
           8639,
           8733,
@@ -14658,66 +14802,81 @@
       },
       {
         "key": "Menu.engineConfig",
+        "matrix_ids": [],
         "lines": [
           5137
         ]
       },
       {
         "key": "Menu.engineParameters",
+        "matrix_ids": [
+          "ENGINE-GTP-001"
+        ],
         "lines": [
           5169
         ]
       },
       {
         "key": "Menu.engineRules",
+        "matrix_ids": [
+          "ENGINE-GTP-001"
+        ],
         "lines": [
           5157
         ]
       },
       {
         "key": "Menu.estimateStones",
+        "matrix_ids": [],
         "lines": [
           3358
         ]
       },
       {
         "key": "Menu.exchange",
+        "matrix_ids": [],
         "lines": [
           3841
         ]
       },
       {
         "key": "Menu.exit",
+        "matrix_ids": [],
         "lines": [
           434
         ]
       },
       {
         "key": "Menu.extraMode1",
+        "matrix_ids": [],
         "lines": [
           1821
         ]
       },
       {
         "key": "Menu.extraMode2",
+        "matrix_ids": [],
         "lines": [
           1834
         ]
       },
       {
         "key": "Menu.extraMode3",
+        "matrix_ids": [],
         "lines": [
           1808
         ]
       },
       {
         "key": "Menu.fileMenu",
+        "matrix_ids": [],
         "lines": [
           172
         ]
       },
       {
         "key": "Menu.flashAnalyzeAllBranches",
+        "matrix_ids": [],
         "lines": [
           3307,
           7867
@@ -14725,6 +14884,9 @@
       },
       {
         "key": "Menu.flashAnalyzeAllGame",
+        "matrix_ids": [
+          "ANALYSIS-FULL-001"
+        ],
         "lines": [
           3287,
           7848
@@ -14732,6 +14894,7 @@
       },
       {
         "key": "Menu.flashAnalyzePartGame",
+        "matrix_ids": [],
         "lines": [
           3297,
           7857
@@ -14739,6 +14902,9 @@
       },
       {
         "key": "Menu.flashAnalyzeSettings",
+        "matrix_ids": [
+          "ANALYSIS-FULL-001"
+        ],
         "lines": [
           3317,
           7876
@@ -14746,18 +14912,23 @@
       },
       {
         "key": "Menu.flattenBoard",
+        "matrix_ids": [],
         "lines": [
           3147
         ]
       },
       {
         "key": "Menu.forceExit",
+        "matrix_ids": [],
         "lines": [
           421
         ]
       },
       {
         "key": "Menu.foxKifu",
+        "matrix_ids": [
+          "ONLINE-FOX-001"
+        ],
         "lines": [
           4059,
           7801
@@ -14765,42 +14936,49 @@
       },
       {
         "key": "Menu.foxKifuButton",
+        "matrix_ids": [],
         "lines": [
           7793
         ]
       },
       {
         "key": "Menu.game",
+        "matrix_ids": [],
         "lines": [
           2891
         ]
       },
       {
         "key": "Menu.game.continueLadder",
+        "matrix_ids": [],
         "lines": [
           3158
         ]
       },
       {
         "key": "Menu.game.continueLadderFail",
+        "matrix_ids": [],
         "lines": [
           3167
         ]
       },
       {
         "key": "Menu.gobanBtn",
+        "matrix_ids": [],
         "lines": [
           6041
         ]
       },
       {
         "key": "Menu.gtpPanel",
+        "matrix_ids": [],
         "lines": [
           1258
         ]
       },
       {
         "key": "Menu.hawkEye",
+        "matrix_ids": [],
         "lines": [
           1342,
           3192
@@ -14808,24 +14986,28 @@
       },
       {
         "key": "Menu.heatMapSettings",
+        "matrix_ids": [],
         "lines": [
           1615
         ]
       },
       {
         "key": "Menu.help",
+        "matrix_ids": [],
         "lines": [
           5073
         ]
       },
       {
         "key": "Menu.ignoreOutOfWidth",
+        "matrix_ids": [],
         "lines": [
           1207
         ]
       },
       {
         "key": "Menu.inVisible",
+        "matrix_ids": [],
         "lines": [
           4269,
           4359
@@ -14833,90 +15015,105 @@
       },
       {
         "key": "Menu.indepBothBoard",
+        "matrix_ids": [],
         "lines": [
           1851
         ]
       },
       {
         "key": "Menu.indepExtraBoard",
+        "matrix_ids": [],
         "lines": [
           1894
         ]
       },
       {
         "key": "Menu.indepMainBoard",
+        "matrix_ids": [],
         "lines": [
           1864
         ]
       },
       {
         "key": "Menu.indepSubBoard",
+        "matrix_ids": [],
         "lines": [
           1878
         ]
       },
       {
         "key": "Menu.independentBoardMode",
+        "matrix_ids": [],
         "lines": [
           1847
         ]
       },
       {
         "key": "Menu.independentMainBoard",
+        "matrix_ids": [],
         "lines": [
           1307
         ]
       },
       {
         "key": "Menu.independentMainBoard2",
+        "matrix_ids": [],
         "lines": [
           1319
         ]
       },
       {
         "key": "Menu.independentSubBoard",
+        "matrix_ids": [],
         "lines": [
           1331
         ]
       },
       {
         "key": "Menu.informationPane",
+        "matrix_ids": [],
         "lines": [
           1236
         ]
       },
       {
         "key": "Menu.initSettings",
+        "matrix_ids": [],
         "lines": [
           5182
         ]
       },
       {
         "key": "Menu.initialMaxScoreLead",
+        "matrix_ids": [],
         "lines": [
           1561
         ]
       },
       {
         "key": "Menu.initialMaxScoreLead.message",
+        "matrix_ids": [],
         "lines": [
           1572
         ]
       },
       {
         "key": "Menu.initialMaxScoreLead.title",
+        "matrix_ids": [],
         "lines": [
           1575
         ]
       },
       {
         "key": "Menu.inputDoubleTip",
+        "matrix_ids": [],
         "lines": [
           1586
         ]
       },
       {
         "key": "Menu.inputIntegerHint",
+        "matrix_ids": [],
         "lines": [
           644,
           3080,
@@ -14925,54 +15122,63 @@
       },
       {
         "key": "Menu.insertBlack",
+        "matrix_ids": [],
         "lines": [
           3673
         ]
       },
       {
         "key": "Menu.insertWhite",
+        "matrix_ids": [],
         "lines": [
           3684
         ]
       },
       {
         "key": "Menu.intervention",
+        "matrix_ids": [],
         "lines": [
           3092
         ]
       },
       {
         "key": "Menu.jumpToFirst",
+        "matrix_ids": [],
         "lines": [
           3730
         ]
       },
       {
         "key": "Menu.jumpToLast",
+        "matrix_ids": [],
         "lines": [
           3740
         ]
       },
       {
         "key": "Menu.jumpToLeft",
+        "matrix_ids": [],
         "lines": [
           3750
         ]
       },
       {
         "key": "Menu.jumpToRight",
+        "matrix_ids": [],
         "lines": [
           3760
         ]
       },
       {
         "key": "Menu.kataEstimate",
+        "matrix_ids": [],
         "lines": [
           2162
         ]
       },
       {
         "key": "Menu.kataEstimateByBigSquare",
+        "matrix_ids": [],
         "lines": [
           2370,
           2469
@@ -14980,6 +15186,7 @@
       },
       {
         "key": "Menu.kataEstimateBySize",
+        "matrix_ids": [],
         "lines": [
           2391,
           2489
@@ -14987,6 +15194,7 @@
       },
       {
         "key": "Menu.kataEstimateByTransparent",
+        "matrix_ids": [],
         "lines": [
           2330,
           2431
@@ -14994,6 +15202,7 @@
       },
       {
         "key": "Menu.kataEstimateByTransparentNotOnLive",
+        "matrix_ids": [],
         "lines": [
           2351,
           2451
@@ -15001,6 +15210,7 @@
       },
       {
         "key": "Menu.kataEstimateByTransparentSmall",
+        "matrix_ids": [],
         "lines": [
           2311,
           2413
@@ -15008,78 +15218,91 @@
       },
       {
         "key": "Menu.kataEstimateClose",
+        "matrix_ids": [],
         "lines": [
           2166
         ]
       },
       {
         "key": "Menu.kataEstimateCloseView",
+        "matrix_ids": [],
         "lines": [
           2184
         ]
       },
       {
         "key": "Menu.kataEstimateInPureNet",
+        "matrix_ids": [],
         "lines": [
           2409
         ]
       },
       {
         "key": "Menu.kataEstimateOnBothBoard",
+        "matrix_ids": [],
         "lines": [
           2262
         ]
       },
       {
         "key": "Menu.kataEstimateOnMainBoard",
+        "matrix_ids": [],
         "lines": [
           2210
         ]
       },
       {
         "key": "Menu.kataEstimateOnSubBoard",
+        "matrix_ids": [],
         "lines": [
           2235
         ]
       },
       {
         "key": "Menu.kataEstimateSaveState",
+        "matrix_ids": [],
         "lines": [
           2286
         ]
       },
       {
         "key": "Menu.kataGoDistributedTraining",
+        "matrix_ids": [],
         "lines": [
           5450
         ]
       },
       {
         "key": "Menu.kataGoOfficialWebsite",
+        "matrix_ids": [],
         "lines": [
           5472
         ]
       },
       {
         "key": "Menu.kataGoTrainingSettings",
+        "matrix_ids": [],
         "lines": [
           5461
         ]
       },
       {
         "key": "Menu.kataScolreLead",
+        "matrix_ids": [],
         "lines": [
           2065
         ]
       },
       {
         "key": "Menu.kataSettings",
+        "matrix_ids": [],
         "lines": [
           1765
         ]
       },
       {
         "key": "Menu.komi",
+        "matrix_ids": [],
         "lines": [
           5640,
           5729
@@ -15087,42 +15310,49 @@
       },
       {
         "key": "Menu.largeSubBoard",
+        "matrix_ids": [],
         "lines": [
           896
         ]
       },
       {
         "key": "Menu.largeWinrateGraph",
+        "matrix_ids": [],
         "lines": [
           907
         ]
       },
       {
         "key": "Menu.lastFiveMoveNum",
+        "matrix_ids": [],
         "lines": [
           752
         ]
       },
       {
         "key": "Menu.lastOneMoveNum",
+        "matrix_ids": [],
         "lines": [
           740
         ]
       },
       {
         "key": "Menu.lastTenMoveNum",
+        "matrix_ids": [],
         "lines": [
           764
         ]
       },
       {
         "key": "Menu.layoutMode",
+        "matrix_ids": [],
         "lines": [
           1770
         ]
       },
       {
         "key": "Menu.lblLimit",
+        "matrix_ids": [],
         "lines": [
           9251,
           9586
@@ -15130,12 +15360,14 @@
       },
       {
         "key": "Menu.lblMaxTreeWidth",
+        "matrix_ids": [],
         "lines": [
           1167
         ]
       },
       {
         "key": "Menu.lblPDA",
+        "matrix_ids": [],
         "lines": [
           5723,
           6267
@@ -15143,6 +15375,7 @@
       },
       {
         "key": "Menu.lblShowAnalyze",
+        "matrix_ids": [],
         "lines": [
           9407,
           9710
@@ -15150,6 +15383,7 @@
       },
       {
         "key": "Menu.lblShowCandidate",
+        "matrix_ids": [],
         "lines": [
           9418,
           9721
@@ -15157,72 +15391,84 @@
       },
       {
         "key": "Menu.lblWRN",
+        "matrix_ids": [],
         "lines": [
           6118
         ]
       },
       {
         "key": "Menu.leadJustScore",
+        "matrix_ids": [],
         "lines": [
           2082
         ]
       },
       {
         "key": "Menu.leadWithKomi",
+        "matrix_ids": [],
         "lines": [
           2069
         ]
       },
       {
         "key": "Menu.leftMove",
+        "matrix_ids": [],
         "lines": [
           486
         ]
       },
       {
         "key": "Menu.listPane",
+        "matrix_ids": [],
         "lines": [
           1225
         ]
       },
       {
         "key": "Menu.loadKomi",
+        "matrix_ids": [],
         "lines": [
           390
         ]
       },
       {
         "key": "Menu.mainBoardPos",
+        "matrix_ids": [],
         "lines": [
           482
         ]
       },
       {
         "key": "Menu.mainPanelSettings",
+        "matrix_ids": [],
         "lines": [
           988
         ]
       },
       {
         "key": "Menu.makeAutoPlay",
+        "matrix_ids": [],
         "lines": [
           572
         ]
       },
       {
         "key": "Menu.maxTreeWidth",
+        "matrix_ids": [],
         "lines": [
           1151
         ]
       },
       {
         "key": "Menu.maxTreeWidthHint",
+        "matrix_ids": [],
         "lines": [
           1161
         ]
       },
       {
         "key": "Menu.minPlayoutsForNextMove",
+        "matrix_ids": [],
         "lines": [
           620,
           6711
@@ -15230,30 +15476,37 @@
       },
       {
         "key": "Menu.minPlayoutsForNextMoveMessage",
+        "matrix_ids": [],
         "lines": [
           633
         ]
       },
       {
         "key": "Menu.minView",
+        "matrix_ids": [],
         "lines": [
           1796
         ]
       },
       {
         "key": "Menu.mirrorHorizon",
+        "matrix_ids": [],
         "lines": [
           3878
         ]
       },
       {
         "key": "Menu.mirrorVertical",
+        "matrix_ids": [],
         "lines": [
           3869
         ]
       },
       {
         "key": "Menu.moreEngines",
+        "matrix_ids": [
+          "ENGINE-LIFECYCLE-001"
+        ],
         "lines": [
           6907,
           6958,
@@ -15263,54 +15516,65 @@
       },
       {
         "key": "Menu.moveMenu",
+        "matrix_ids": [],
         "lines": [
           555
         ]
       },
       {
         "key": "Menu.moveNumberAlwaysFromOne",
+        "matrix_ids": [],
         "lines": [
           802
         ]
       },
       {
         "key": "Menu.moveNumberInBracnhFromOne",
+        "matrix_ids": [],
         "lines": [
           824
         ]
       },
       {
         "key": "Menu.moveNumberInBracnhFromOneContinue",
+        "matrix_ids": [],
         "lines": [
           842
         ]
       },
       {
         "key": "Menu.moveNumberInBranchTips",
+        "matrix_ids": [],
         "lines": [
           820
         ]
       },
       {
         "key": "Menu.moveRankMenu",
+        "matrix_ids": [],
         "lines": [
           559
         ]
       },
       {
         "key": "Menu.newAnalyzeModeGame",
+        "matrix_ids": [],
         "lines": [
           6639
         ]
       },
       {
         "key": "Menu.newBoard",
+        "matrix_ids": [
+          "BOARD-NEW-001"
+        ],
         "lines": [
           177
         ]
       },
       {
         "key": "Menu.newEngineGame",
+        "matrix_ids": [],
         "lines": [
           2919,
           7594,
@@ -15319,12 +15583,14 @@
       },
       {
         "key": "Menu.newGame",
+        "matrix_ids": [],
         "lines": [
           2896
         ]
       },
       {
         "key": "Menu.newGameBtn",
+        "matrix_ids": [],
         "lines": [
           7586,
           8640,
@@ -15333,6 +15599,7 @@
       },
       {
         "key": "Menu.newGenmoveGame",
+        "matrix_ids": [],
         "lines": [
           2905,
           7606,
@@ -15341,6 +15608,7 @@
       },
       {
         "key": "Menu.newHumanSlGame",
+        "matrix_ids": [],
         "lines": [
           2932,
           7616,
@@ -15349,30 +15617,35 @@
       },
       {
         "key": "Menu.nextMoveHint",
+        "matrix_ids": [],
         "lines": [
           568
         ]
       },
       {
         "key": "Menu.nextMoveHintInformation",
+        "matrix_ids": [],
         "lines": [
           607
         ]
       },
       {
         "key": "Menu.nextMoveHintNone",
+        "matrix_ids": [],
         "lines": [
           583
         ]
       },
       {
         "key": "Menu.nextMoveHintSimple",
+        "matrix_ids": [],
         "lines": [
           595
         ]
       },
       {
         "key": "Menu.noEngine",
+        "matrix_ids": [],
         "lines": [
           5488,
           5496,
@@ -15386,72 +15659,90 @@
       },
       {
         "key": "Menu.noMoveNum",
+        "matrix_ids": [],
         "lines": [
           728
         ]
       },
       {
         "key": "Menu.noRefreshOnMouse",
+        "matrix_ids": [],
         "lines": [
           1467
         ]
       },
       {
         "key": "Menu.notPlaySoundInSync",
+        "matrix_ids": [],
         "lines": [
           5355
         ]
       },
       {
         "key": "Menu.notShowHeat",
+        "matrix_ids": [],
         "lines": [
           1738
         ]
       },
       {
         "key": "Menu.open",
+        "matrix_ids": [
+          "KIFU-OPEN-001"
+        ],
         "lines": [
           188
         ]
       },
       {
         "key": "Menu.openRecent",
+        "matrix_ids": [
+          "KIFU-OPEN-001"
+        ],
         "lines": [
           198
         ]
       },
       {
         "key": "Menu.openUrl",
+        "matrix_ids": [],
         "lines": [
           204
         ]
       },
       {
         "key": "Menu.panel",
+        "matrix_ids": [],
         "lines": [
           475
         ]
       },
       {
         "key": "Menu.paramsBtn",
+        "matrix_ids": [],
         "lines": [
           6032
         ]
       },
       {
         "key": "Menu.pasteSgf",
+        "matrix_ids": [
+          "KIFU-CLIPBOARD-001"
+        ],
         "lines": [
           376
         ]
       },
       {
         "key": "Menu.pauseEngineGame",
+        "matrix_ids": [],
         "lines": [
           3050
         ]
       },
       {
         "key": "Menu.pauseGameBtn",
+        "matrix_ids": [],
         "lines": [
           7587,
           8641,
@@ -15463,54 +15754,63 @@
       },
       {
         "key": "Menu.playAlternatelyToolTipText",
+        "matrix_ids": [],
         "lines": [
           7123
         ]
       },
       {
         "key": "Menu.playBestMove",
+        "matrix_ids": [],
         "lines": [
           3105
         ]
       },
       {
         "key": "Menu.playBlackToolTipText",
+        "matrix_ids": [],
         "lines": [
           7070
         ]
       },
       {
         "key": "Menu.playMoveTools",
+        "matrix_ids": [],
         "lines": [
           4498
         ]
       },
       {
         "key": "Menu.playPassMove",
+        "matrix_ids": [],
         "lines": [
           3136
         ]
       },
       {
         "key": "Menu.playPassToolTipText",
+        "matrix_ids": [],
         "lines": [
           7131
         ]
       },
       {
         "key": "Menu.playSound",
+        "matrix_ids": [],
         "lines": [
           5343
         ]
       },
       {
         "key": "Menu.playWhiteToolTipText",
+        "matrix_ids": [],
         "lines": [
           7094
         ]
       },
       {
         "key": "Menu.playerStrengthEstimate",
+        "matrix_ids": [],
         "lines": [
           3327,
           7838
@@ -15518,24 +15818,28 @@
       },
       {
         "key": "Menu.playerStrengthEstimateButton",
+        "matrix_ids": [],
         "lines": [
           7827
         ]
       },
       {
         "key": "Menu.quickLinks",
+        "matrix_ids": [],
         "lines": [
           5123
         ]
       },
       {
         "key": "Menu.rankMenu.base",
+        "matrix_ids": [],
         "lines": [
           8884
         ]
       },
       {
         "key": "Menu.rankMenu.base.tooltips",
+        "matrix_ids": [],
         "lines": [
           8889,
           8890,
@@ -15544,84 +15848,106 @@
       },
       {
         "key": "Menu.rankMenu.lblCustomMove",
+        "matrix_ids": [],
         "lines": [
           8816
         ]
       },
       {
         "key": "Menu.rankMenu.rankAllMove",
+        "matrix_ids": [],
         "lines": [
           8870
         ]
       },
       {
         "key": "Menu.rankMenu.rankLastMove",
+        "matrix_ids": [],
         "lines": [
           8867
         ]
       },
       {
         "key": "Menu.rankMenu.rankNoneMove",
+        "matrix_ids": [],
         "lines": [
           8873
         ]
       },
       {
         "key": "Menu.rankMenu.score",
+        "matrix_ids": [],
         "lines": [
           8887
         ]
       },
       {
         "key": "Menu.rankMenu.setCustomMoves",
+        "matrix_ids": [],
         "lines": [
           8877
         ]
       },
       {
         "key": "Menu.rankMenu.setCustomMoves.message",
+        "matrix_ids": [],
         "lines": [
           8947
         ]
       },
       {
         "key": "Menu.rankMenu.win",
+        "matrix_ids": [],
         "lines": [
           8885
         ]
       },
       {
         "key": "Menu.readBoard",
+        "matrix_ids": [
+          "ONLINE-SYNC-001"
+        ],
         "lines": [
           4081
         ]
       },
       {
         "key": "Menu.readBoardGetFocus",
+        "matrix_ids": [
+          "ONLINE-SYNC-001"
+        ],
         "lines": [
           4203
         ]
       },
       {
         "key": "Menu.readBoardSettings",
+        "matrix_ids": [
+          "ONLINE-SYNC-001"
+        ],
         "lines": [
           4186
         ]
       },
       {
         "key": "Menu.redoDelete",
+        "matrix_ids": [],
         "lines": [
           3803
         ]
       },
       {
         "key": "Menu.remoteCompute",
+        "matrix_ids": [
+          "REMOTE-COMPUTE-001"
+        ],
         "lines": [
           5147
         ]
       },
       {
         "key": "Menu.resignBtn",
+        "matrix_ids": [],
         "lines": [
           7657,
           8712
@@ -15629,6 +15955,9 @@
       },
       {
         "key": "Menu.restartCurrentEngine",
+        "matrix_ids": [
+          "ENGINE-LIFECYCLE-001"
+        ],
         "lines": [
           5557,
           5618
@@ -15636,6 +15965,7 @@
       },
       {
         "key": "Menu.restartRequiredForIcons",
+        "matrix_ids": [],
         "lines": [
           684,
           707
@@ -15643,84 +15973,114 @@
       },
       {
         "key": "Menu.rightMove",
+        "matrix_ids": [],
         "lines": [
           499
         ]
       },
       {
         "key": "Menu.rulesBtn",
+        "matrix_ids": [],
         "lines": [
           6014
         ]
       },
       {
         "key": "Menu.save",
+        "matrix_ids": [
+          "KIFU-SAVE-001"
+        ],
         "lines": [
           217
         ]
       },
       {
         "key": "Menu.saveAndLoad",
+        "matrix_ids": [],
         "lines": [
           319
         ]
       },
       {
         "key": "Menu.saveAs",
+        "matrix_ids": [
+          "KIFU-SAVE-001"
+        ],
         "lines": [
           228
         ]
       },
       {
         "key": "Menu.saveBranchRaw",
+        "matrix_ids": [
+          "KIFU-SAVE-001"
+        ],
         "lines": [
           268
         ]
       },
       {
         "key": "Menu.saveBtn",
+        "matrix_ids": [],
         "lines": [
           6051
         ]
       },
       {
         "key": "Menu.saveCommentRaw",
+        "matrix_ids": [
+          "KIFU-SAVE-001"
+        ],
         "lines": [
           256
         ]
       },
       {
         "key": "Menu.saveMainBoardScreen",
+        "matrix_ids": [
+          "KIFU-SCREENSHOT-001"
+        ],
         "lines": [
           280
         ]
       },
       {
         "key": "Menu.saveMore",
+        "matrix_ids": [
+          "KIFU-SAVE-001"
+        ],
         "lines": [
           239
         ]
       },
       {
         "key": "Menu.saveRaw",
+        "matrix_ids": [
+          "KIFU-SAVE-001"
+        ],
         "lines": [
           244
         ]
       },
       {
         "key": "Menu.saveSubBoardScreen",
+        "matrix_ids": [
+          "KIFU-SCREENSHOT-001"
+        ],
         "lines": [
           291
         ]
       },
       {
         "key": "Menu.saveWinrate",
+        "matrix_ids": [],
         "lines": [
           302
         ]
       },
       {
         "key": "Menu.score",
+        "matrix_ids": [],
         "lines": [
           9387,
           9693
@@ -15728,30 +16088,35 @@
       },
       {
         "key": "Menu.scoreGame",
+        "matrix_ids": [],
         "lines": [
           3001
         ]
       },
       {
         "key": "Menu.scoreLead",
+        "matrix_ids": [],
         "lines": [
           1034
         ]
       },
       {
         "key": "Menu.selectAllowToolTipText",
+        "matrix_ids": [],
         "lines": [
           7173
         ]
       },
       {
         "key": "Menu.selectAvoidToolTipText",
+        "matrix_ids": [],
         "lines": [
           7206
         ]
       },
       {
         "key": "Menu.selectLimitAllMoves",
+        "matrix_ids": [],
         "lines": [
           7277,
           7445,
@@ -15761,6 +16126,7 @@
       },
       {
         "key": "Menu.selectLimitCustomMoves",
+        "matrix_ids": [],
         "lines": [
           7236,
           7404,
@@ -15770,6 +16136,7 @@
       },
       {
         "key": "Menu.selectLimitOneMove",
+        "matrix_ids": [],
         "lines": [
           7280,
           7448,
@@ -15779,6 +16146,7 @@
       },
       {
         "key": "Menu.separateLblPda",
+        "matrix_ids": [],
         "lines": [
           9199,
           9223
@@ -15786,348 +16154,412 @@
       },
       {
         "key": "Menu.separateLblWrn",
+        "matrix_ids": [],
         "lines": [
           9235
         ]
       },
       {
         "key": "Menu.setAiTime",
+        "matrix_ids": [],
         "lines": [
           3013
         ]
       },
       {
         "key": "Menu.setAsMain",
+        "matrix_ids": [
+          "BOARD-HISTORY-001"
+        ],
         "lines": [
           3718
         ]
       },
       {
         "key": "Menu.setBoard",
+        "matrix_ids": [],
         "lines": [
           3828
         ]
       },
       {
         "key": "Menu.setCandidatesDelay",
+        "matrix_ids": [],
         "lines": [
           1074
         ]
       },
       {
         "key": "Menu.setCustomBoardBackground",
+        "matrix_ids": [],
         "lines": [
           714
         ]
       },
       {
         "key": "Menu.setInfo",
+        "matrix_ids": [],
         "lines": [
           3818
         ]
       },
       {
         "key": "Menu.setMaxTreeWidthTitle",
+        "matrix_ids": [],
         "lines": [
           1189
         ]
       },
       {
         "key": "Menu.setReplayInterval",
+        "matrix_ids": [],
         "lines": [
           1597
         ]
       },
       {
         "key": "Menu.settings",
+        "matrix_ids": [],
         "lines": [
           5130
         ]
       },
       {
         "key": "Menu.share",
+        "matrix_ids": [],
         "lines": [
           3930
         ]
       },
       {
         "key": "Menu.shareBatchSgf",
+        "matrix_ids": [],
         "lines": [
           3948
         ]
       },
       {
         "key": "Menu.shareCurrentSgf",
+        "matrix_ids": [],
         "lines": [
           3937
         ]
       },
       {
         "key": "Menu.shareEdit",
+        "matrix_ids": [],
         "lines": [
           3959
         ]
       },
       {
         "key": "Menu.shareHistoryLoacl",
+        "matrix_ids": [],
         "lines": [
           3970
         ]
       },
       {
         "key": "Menu.shareHistoryLoaclHintEmpty",
+        "matrix_ids": [],
         "lines": [
           3988
         ]
       },
       {
         "key": "Menu.shareHistoryLoaclHintOpenFailed",
+        "matrix_ids": [],
         "lines": [
           3998
         ]
       },
       {
         "key": "Menu.shareSearch",
+        "matrix_ids": [],
         "lines": [
           4005
         ]
       },
       {
         "key": "Menu.showAllMoveNumberInBranch",
+        "matrix_ids": [],
         "lines": [
           863
         ]
       },
       {
         "key": "Menu.showAnalyzeController",
+        "matrix_ids": [],
         "lines": [
           4568
         ]
       },
       {
         "key": "Menu.showBasicBtn",
+        "matrix_ids": [],
         "lines": [
           4485
         ]
       },
       {
         "key": "Menu.showBlunderBar",
+        "matrix_ids": [],
         "lines": [
           1532
         ]
       },
       {
         "key": "Menu.showCandidateController",
+        "matrix_ids": [],
         "lines": [
           4583
         ]
       },
       {
         "key": "Menu.showCandidateInfoController",
+        "matrix_ids": [],
         "lines": [
           4597
         ]
       },
       {
         "key": "Menu.showCommentConrolPane",
+        "matrix_ids": [],
         "lines": [
           942
         ]
       },
       {
         "key": "Menu.showCommentConrolPane.tooltip",
+        "matrix_ids": [],
         "lines": [
           943
         ]
       },
       {
         "key": "Menu.showContribute",
+        "matrix_ids": [],
         "lines": [
           5366
         ]
       },
       {
         "key": "Menu.showDoubleMenuBtn",
+        "matrix_ids": [],
         "lines": [
           4471
         ]
       },
       {
         "key": "Menu.showGameController",
+        "matrix_ids": [],
         "lines": [
           4524
         ]
       },
       {
         "key": "Menu.showGobanMenu",
+        "matrix_ids": [],
         "lines": [
           4650
         ]
       },
       {
         "key": "Menu.showHeat",
+        "matrix_ids": [],
         "lines": [
           1678
         ]
       },
       {
         "key": "Menu.showHeatAfterCalc",
+        "matrix_ids": [],
         "lines": [
           1708
         ]
       },
       {
         "key": "Menu.showHeatmap",
+        "matrix_ids": [],
         "lines": [
           3338
         ]
       },
       {
         "key": "Menu.showMaxValueReverse",
+        "matrix_ids": [],
         "lines": [
           1405
         ]
       },
       {
         "key": "Menu.showMouseOverWinrateGraph",
+        "matrix_ids": [],
         "lines": [
           1545
         ]
       },
       {
         "key": "Menu.showMoveNumberOnVariationPane",
+        "matrix_ids": [],
         "lines": [
           880
         ]
       },
       {
         "key": "Menu.showMoveRankInOrigin",
+        "matrix_ids": [],
         "lines": [
           8881
         ]
       },
       {
         "key": "Menu.showNameInBoard",
+        "matrix_ids": [],
         "lines": [
           929
         ]
       },
       {
         "key": "Menu.showNewBoardConfirmDialog",
+        "matrix_ids": [],
         "lines": [
           966
         ]
       },
       {
         "key": "Menu.showParamMenu",
+        "matrix_ids": [],
         "lines": [
           4637
         ]
       },
       {
         "key": "Menu.showPlayoutLimitController",
+        "matrix_ids": [],
         "lines": [
           4554
         ]
       },
       {
         "key": "Menu.showPolicy",
+        "matrix_ids": [],
         "lines": [
           3348
         ]
       },
       {
         "key": "Menu.showReplaceFileConfirmDialog",
+        "matrix_ids": [],
         "lines": [
           977
         ]
       },
       {
         "key": "Menu.showRuleMenu",
+        "matrix_ids": [],
         "lines": [
           4611
         ]
       },
       {
         "key": "Menu.showSaveLoadMenu",
+        "matrix_ids": [],
         "lines": [
           4663
         ]
       },
       {
         "key": "Menu.showScoreAsDiff",
+        "matrix_ids": [],
         "lines": [
           1050
         ]
       },
       {
         "key": "Menu.showScrollVariation",
+        "matrix_ids": [],
         "lines": [
           1139
         ]
       },
       {
         "key": "Menu.showSuggestionOrder",
+        "matrix_ids": [],
         "lines": [
           1391
         ]
       },
       {
         "key": "Menu.showTimeLimitController",
+        "matrix_ids": [],
         "lines": [
           4540
         ]
       },
       {
         "key": "Menu.showTsumeGoMenu",
+        "matrix_ids": [],
         "lines": [
           4624
         ]
       },
       {
         "key": "Menu.showVariationOnMouse",
+        "matrix_ids": [],
         "lines": [
           1452
         ]
       },
       {
         "key": "Menu.showWhiteSuggestWhite",
+        "matrix_ids": [],
         "lines": [
           1421
         ]
       },
       {
         "key": "Menu.showWinRateOrScoreLeadLine",
+        "matrix_ids": [],
         "lines": [
           1481
         ]
       },
       {
         "key": "Menu.showWinRateOrScoreLeadLine.both",
+        "matrix_ids": [],
         "lines": [
           1517
         ]
       },
       {
         "key": "Menu.showWinRateOrScoreLeadLine.scoreLead",
+        "matrix_ids": [],
         "lines": [
           1502
         ]
       },
       {
         "key": "Menu.showWinRateOrScoreLeadLine.winrate",
+        "matrix_ids": [],
         "lines": [
           1486
         ]
       },
       {
         "key": "Menu.shutdownAllEngine",
+        "matrix_ids": [
+          "ENGINE-LIFECYCLE-001"
+        ],
         "lines": [
           5599
         ]
       },
       {
         "key": "Menu.shutdownCurrentEngine",
+        "matrix_ids": [
+          "ENGINE-LIFECYCLE-001"
+        ],
         "lines": [
           5570,
           5628
@@ -16135,36 +16567,46 @@
       },
       {
         "key": "Menu.shutdownEngine",
+        "matrix_ids": [
+          "ENGINE-LIFECYCLE-001"
+        ],
         "lines": [
           5566
         ]
       },
       {
         "key": "Menu.shutdownOtherEngine",
+        "matrix_ids": [
+          "ENGINE-LIFECYCLE-001"
+        ],
         "lines": [
           5581
         ]
       },
       {
         "key": "Menu.spinLeft",
+        "matrix_ids": [],
         "lines": [
           3860
         ]
       },
       {
         "key": "Menu.spinRight",
+        "matrix_ids": [],
         "lines": [
           3851
         ]
       },
       {
         "key": "Menu.statusPanel",
+        "matrix_ids": [],
         "lines": [
           1247
         ]
       },
       {
         "key": "Menu.stopAutoAnalyze",
+        "matrix_ids": [],
         "lines": [
           3264,
           7963
@@ -16172,36 +16614,46 @@
       },
       {
         "key": "Menu.subBoard",
+        "matrix_ids": [],
         "lines": [
           1090
         ]
       },
       {
         "key": "Menu.subBoardSettings",
+        "matrix_ids": [],
         "lines": [
           1611
         ]
       },
       {
         "key": "Menu.subBoardShowRaw",
+        "matrix_ids": [],
         "lines": [
           1649
         ]
       },
       {
         "key": "Menu.subBoardShowVar",
+        "matrix_ids": [],
         "lines": [
           1620
         ]
       },
       {
         "key": "Menu.sync",
+        "matrix_ids": [
+          "ONLINE-SYNC-001"
+        ],
         "lines": [
           4015
         ]
       },
       {
         "key": "Menu.tencentKifu",
+        "matrix_ids": [
+          "ONLINE-TENCENT-001"
+        ],
         "lines": [
           4070,
           7818
@@ -16209,108 +16661,128 @@
       },
       {
         "key": "Menu.tencentKifuButton",
+        "matrix_ids": [],
         "lines": [
           7810
         ]
       },
       {
         "key": "Menu.theme",
+        "matrix_ids": [
+          "SETTINGS-THEME-001"
+        ],
         "lines": [
           5215
         ]
       },
       {
         "key": "Menu.togglePonder",
+        "matrix_ids": [],
         "lines": [
           3180
         ]
       },
       {
         "key": "Menu.toolbar",
+        "matrix_ids": [],
         "lines": [
           478
         ]
       },
       {
         "key": "Menu.topToolBar",
+        "matrix_ids": [],
         "lines": [
           4239
         ]
       },
       {
         "key": "Menu.topToolBarCombined",
+        "matrix_ids": [],
         "lines": [
           4255
         ]
       },
       {
         "key": "Menu.topToolBarSeparated",
+        "matrix_ids": [],
         "lines": [
           4242
         ]
       },
       {
         "key": "Menu.trackingConsole",
+        "matrix_ids": [],
         "lines": [
           1269
         ]
       },
       {
         "key": "Menu.tsumeGo",
+        "matrix_ids": [],
         "lines": [
           3202
         ]
       },
       {
         "key": "Menu.tsumeGoBtn",
+        "matrix_ids": [],
         "lines": [
           6023
         ]
       },
       {
         "key": "Menu.undoDelete",
+        "matrix_ids": [],
         "lines": [
           3791
         ]
       },
       {
         "key": "Menu.useKataEstimateShortcut",
+        "matrix_ids": [],
         "lines": [
           2521
         ]
       },
       {
         "key": "Menu.useMovesOwnership",
+        "matrix_ids": [],
         "lines": [
           2508
         ]
       },
       {
         "key": "Menu.variationPane",
+        "matrix_ids": [],
         "lines": [
           1125
         ]
       },
       {
         "key": "Menu.variationPaneSettings",
+        "matrix_ids": [],
         "lines": [
           1136
         ]
       },
       {
         "key": "Menu.viewMenu",
+        "matrix_ids": [],
         "lines": [
           470
         ]
       },
       {
         "key": "Menu.visible",
+        "matrix_ids": [],
         "lines": [
           4345
         ]
       },
       {
         "key": "Menu.visits",
+        "matrix_ids": [],
         "lines": [
           1019,
           9367,
@@ -16319,24 +16791,28 @@
       },
       {
         "key": "Menu.visualizedPanelSettings",
+        "matrix_ids": [],
         "lines": [
           1293
         ]
       },
       {
         "key": "Menu.webBoard",
+        "matrix_ids": [],
         "lines": [
           4095
         ]
       },
       {
         "key": "Menu.webBoardCopyUrl",
+        "matrix_ids": [],
         "lines": [
           4130
         ]
       },
       {
         "key": "Menu.webBoardStart",
+        "matrix_ids": [],
         "lines": [
           4099,
           4105
@@ -16344,12 +16820,14 @@
       },
       {
         "key": "Menu.webBoardStop",
+        "matrix_ids": [],
         "lines": [
           4117
         ]
       },
       {
         "key": "Menu.winrate",
+        "matrix_ids": [],
         "lines": [
           1004,
           9347,
@@ -16358,44 +16836,131 @@
       },
       {
         "key": "Menu.winrateGraph",
+        "matrix_ids": [],
         "lines": [
           1101
         ]
       },
       {
         "key": "Menu.winrateGraphSettings",
+        "matrix_ids": [],
         "lines": [
           1086
         ]
       },
       {
         "key": "Menu.winrateMode0",
+        "matrix_ids": [],
         "lines": [
           1365
         ]
       },
       {
         "key": "Menu.winrateMode1",
+        "matrix_ids": [],
         "lines": [
           1377
         ]
       },
       {
         "key": "Menu.yikeLive",
+        "matrix_ids": [
+          "ONLINE-YIKE-001"
+        ],
         "lines": [
           4022
         ]
       },
       {
         "key": "Menu.yikeLiveWeb",
+        "matrix_ids": [
+          "ONLINE-YIKE-001"
+        ],
         "lines": [
           4034
         ]
       },
       {
         "key": "Menu.yikeRoom",
+        "matrix_ids": [
+          "ONLINE-YIKE-001"
+        ],
         "lines": [
           4045
+        ]
+      },
+      {
+        "key": "menu.frameFontSize",
+        "matrix_ids": [],
+        "lines": [
+          5263
+        ]
+      },
+      {
+        "key": "menu.frameFontSizeBig",
+        "matrix_ids": [],
+        "lines": [
+          5289
+        ]
+      },
+      {
+        "key": "menu.frameFontSizeMiddle",
+        "matrix_ids": [],
+        "lines": [
+          5278
+        ]
+      },
+      {
+        "key": "menu.frameFontSizeOther",
+        "matrix_ids": [],
+        "lines": [
+          5300
+        ]
+      },
+      {
+        "key": "menu.frameFontSizeSmall",
+        "matrix_ids": [],
+        "lines": [
+          5267
+        ]
+      },
+      {
+        "key": "menu.frameLooks",
+        "matrix_ids": [],
+        "lines": [
+          5311
+        ]
+      },
+      {
+        "key": "menu.frameLooksJava",
+        "matrix_ids": [],
+        "lines": [
+          5328
+        ]
+      },
+      {
+        "key": "menu.frameLooksSystem",
+        "matrix_ids": [],
+        "lines": [
+          5315
+        ]
+      },
+      {
+        "key": "menu.language",
+        "matrix_ids": [
+          "SETTINGS-LANGUAGE-001"
+        ],
+        "lines": [
+          5227
+        ]
+      },
+      {
+        "key": "menu.language.default",
+        "matrix_ids": [
+          "SETTINGS-LANGUAGE-001"
+        ],
+        "lines": [
+          5231
         ]
       }
     ]
