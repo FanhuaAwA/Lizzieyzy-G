@@ -1,0 +1,12 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/Lizzie.Core/Lizzie.Core.csproj" />
+    <Project Path="src/Lizzie.Desktop/Lizzie.Desktop.csproj" />
+    <Project Path="src/Lizzie.Engine/Lizzie.Engine.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/Lizzie.Core.Tests/Lizzie.Core.Tests.csproj" />
+    <Project Path="tests/Lizzie.Desktop.Tests/Lizzie.Desktop.Tests.csproj" />
+    <Project Path="tests/Lizzie.Engine.Tests/Lizzie.Engine.Tests.csproj" />
+  </Folder>
+</Solution>
