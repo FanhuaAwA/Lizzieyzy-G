@@ -340,6 +340,48 @@ INPUT_POINTER_SOURCES = (
         {"mouseClicked"},
         {"mouseClicked": 2},
     ),
+    (
+        "IndependentMainBoardLockButton",
+        "src/main/java/featurecat/lizzie/gui/IndependentMainBoard.java",
+        {"mouseEntered", "mouseExited"},
+        {"mouseEntered": 1, "mouseExited": 1},
+    ),
+    (
+        "IndependentMainBoardCloseButton",
+        "src/main/java/featurecat/lizzie/gui/IndependentMainBoard.java",
+        {"mouseEntered", "mouseExited"},
+        {"mouseEntered": 2, "mouseExited": 2},
+    ),
+    (
+        "IndependentMainBoardTopButton",
+        "src/main/java/featurecat/lizzie/gui/IndependentMainBoard.java",
+        {"mouseEntered", "mouseExited"},
+        {"mouseEntered": 3, "mouseExited": 3},
+    ),
+    (
+        "IndependentMainBoardWindow",
+        "src/main/java/featurecat/lizzie/gui/IndependentMainBoard.java",
+        {
+            "mouseClicked",
+            "mousePressed",
+            "mouseDragged",
+            "mouseExited",
+            "mouseEntered",
+            "mouseWheelMoved",
+            "mouseReleased",
+            "mouseMoved",
+        },
+        {
+            "mouseClicked": 1,
+            "mousePressed": 1,
+            "mouseDragged": 1,
+            "mouseExited": 4,
+            "mouseEntered": 4,
+            "mouseWheelMoved": 1,
+            "mouseReleased": 1,
+            "mouseMoved": 1,
+        },
+    ),
 )
 INPUT_MODIFIER_CHECKS = (
     ("Alt", re.compile(r"\be\.isAltDown\s*\(\s*\)")),
@@ -724,11 +766,35 @@ def execute_java_nodes(
                     if assignment:
                         values[assignment.group(1)] = assignment.group(2) == "true"
                     elif node["statement"].startswith("for "):
-                        for name in re.findall(
-                            r"\b([A-Za-z_$][\w$]*)\s*=\s*(?:true|false)\s*;",
-                            node["statement"],
-                        ):
-                            values.pop(name, None)
+                        loop_statement = node["statement"]
+                        literal_assignments = re.findall(
+                            r"(?<![\w$.])([A-Za-z_$][\w$]*)\s*=\s*(true|false)\s*;",
+                            loop_statement,
+                        )
+                        for name in {name for name, _ in literal_assignments}:
+                            literals = [
+                                literal
+                                for assigned_name, literal in literal_assignments
+                                if assigned_name == name
+                            ]
+                            simple_writes = re.findall(
+                                rf"(?<![\w$.]){re.escape(name)}\s*=(?!=)",
+                                loop_statement,
+                            )
+                            other_write = re.search(
+                                rf"(?:\b{re.escape(name)}\s*(?:[+\-*/%&|^]=|\+\+|--)|"
+                                rf"(?:\+\+|--)\s*\b{re.escape(name)}\b|"
+                                rf"\b(?:boolean|Boolean)\s+{re.escape(name)}\b)",
+                                loop_statement,
+                            )
+                            assigned_values = {literal == "true" for literal in literals}
+                            if (
+                                len(simple_writes) != len(literals)
+                                or other_write
+                                or len(assigned_values) != 1
+                                or values.get(name) not in assigned_values
+                            ):
+                                values.pop(name, None)
                     candidate["condition_values"] = values
                 updated.append(candidate)
             continuing = updated
@@ -814,6 +880,58 @@ def validate_input_parser() -> None:
         ["boolean changed = false;"],
     ]:
         raise ValueError("Input binding parser boolean-tracking self-check failed")
+    monotonic_loop = (
+        "boolean matched = true; "
+        "for (int i = 0; i < moves.size(); i++) { if (ready()) matched = true; } "
+        "if (matched) apply();"
+    )
+    continuing, completed = execute_java_nodes(
+        parse_java_sequence(monotonic_loop, 0, len(monotonic_loop)), initial, True
+    )
+    completed.extend(continuing)
+    statements = [[action["statement"] for action in path["actions"]] for path in completed]
+    if statements != [
+        [
+            "boolean matched = true;",
+            "for (int i = 0; i < moves.size(); i++) { if (ready()) matched = true; }",
+            "apply();",
+        ]
+    ]:
+        raise ValueError("Input binding parser monotonic-loop self-check failed")
+    changing_loop = (
+        "boolean matched = false; "
+        "for (int i = 0; i < moves.size(); i++) { if (ready()) matched = true; } "
+        "if (matched) apply();"
+    )
+    continuing, completed = execute_java_nodes(
+        parse_java_sequence(changing_loop, 0, len(changing_loop)), initial, True
+    )
+    completed.extend(continuing)
+    statements = [[action["statement"] for action in path["actions"]] for path in completed]
+    loop_statement = "for (int i = 0; i < moves.size(); i++) { if (ready()) matched = true; }"
+    if statements != [
+        ["boolean matched = false;", loop_statement, "apply();"],
+        ["boolean matched = false;", loop_statement],
+    ]:
+        raise ValueError("Input binding parser changing-loop self-check failed")
+    mixed_loop = (
+        "boolean matched = true; "
+        "for (int i = 0; i < moves.size(); i++) { matched = maybe(); matched = true; } "
+        "if (matched) apply();"
+    )
+    continuing, completed = execute_java_nodes(
+        parse_java_sequence(mixed_loop, 0, len(mixed_loop)), initial, True
+    )
+    completed.extend(continuing)
+    statements = [[action["statement"] for action in path["actions"]] for path in completed]
+    loop_statement = (
+        "for (int i = 0; i < moves.size(); i++) { matched = maybe(); matched = true; }"
+    )
+    if statements != [
+        ["boolean matched = true;", loop_statement, "apply();"],
+        ["boolean matched = true;", loop_statement],
+    ]:
+        raise ValueError("Input binding parser mixed-loop self-check failed")
 
 
 def relative_path(path: Path, root: Path) -> str:
@@ -1208,7 +1326,7 @@ def collect_pointer_source(
         continuing, completed = execute_java_nodes(
             nodes,
             [{"conditions": [], "condition_values": {}, "actions": [], "case_chain": []}],
-            source_id == "FloatBoard",
+            True,
         )
         completed.extend(continuing)
         event_id = f"{source_id}:{event}"
@@ -1341,8 +1459,8 @@ def validate_matrix(
     dict[str, list[str]],
     dict[str, list[str]],
 ]:
-    if matrix.get("schema_version") != 28:
-        raise ValueError("Matrix schema_version must be 28")
+    if matrix.get("schema_version") != 29:
+        raise ValueError("Matrix schema_version must be 29")
     allowed_statuses = matrix.get("allowed_statuses")
     if allowed_statuses != list(ALLOWED_STATUSES):
         raise ValueError("Matrix allowed_statuses differ from the repository contract")
@@ -1593,7 +1711,7 @@ def build_inventory(legacy_root: Path, matrix_path: Path) -> dict[str, Any]:
         raise ValueError("Every normalized legacy input path must map to the matrix")
 
     return {
-        "schema_version": 28,
+        "schema_version": 29,
         "source": {
             "root": "../lizzieyzy-next-main",
             "version": read_legacy_version(legacy_root),
@@ -1612,7 +1730,7 @@ def build_inventory(legacy_root: Path, matrix_path: Path) -> dict[str, Any]:
             "Menu literal labels cover active string-literal menu constructors; dynamic labels remain represented by their resource or runtime source.",
             "Menu accelerators cover explicit Menu.java setAccelerator calls and direct OS.isWindows guards; other input bindings remain T-003 work.",
             "Input key bindings symbolically expand Input.java, InputIndependentMainBoard.java, InputIndependentSubboard.java, InputSubboard.java, FloatBoard.java, AnalysisFrame table/window, DrawPainting.java, ChooseMoreEngine.java, LoadEngine.java, OtherPrograms.java, TencentKifuDownload.java, FoxKifuDownload.java, BrowserFrame.java, and CaptureTsumeGoFrame.java key dispatch, condition evaluations, executed statements, empty-listener and empty-statement paths, and switch fall-through; controlIsPressed means Control on every platform plus Meta on macOS, and BrowserFrame dispatches Enter through getKeyChar.",
-            "Pointer bindings symbolically expand the two indexed subboard listeners plus FloatBoard, AnalysisFrame, DrawPainting, ChooseMoreEngine, LoadEngine, OtherPrograms, TencentKifuDownload, FoxKifuDownload, BrowserFrame load/stop/label listeners, JFontTextArea, JFontTextField, JIMSendTextPane, the two DemoScrollBarUI2 arrow-button listeners, JPaintTextPane, WindowMenuStrip, YikeLiveDialog, IndependentSubBoard lock/close/top-button plus window listeners, BlunderListPanel, SidebarHeaderPanel, BottomToolbar, and ConfigDialog2 sidebar-nav/toggle-row/color-label listeners across mouse, motion, drag, wheel, and release condition evaluations, early returns, executed statements, and explicit no-action paths; data-dependent loops and click try/catch handlers are preserved as normalized atomic statements.",
+            "Pointer bindings symbolically expand the two indexed subboard listeners plus FloatBoard, AnalysisFrame, DrawPainting, ChooseMoreEngine, LoadEngine, OtherPrograms, TencentKifuDownload, FoxKifuDownload, BrowserFrame load/stop/label listeners, JFontTextArea, JFontTextField, JIMSendTextPane, the two DemoScrollBarUI2 arrow-button listeners, JPaintTextPane, WindowMenuStrip, YikeLiveDialog, IndependentSubBoard and IndependentMainBoard lock/close/top-button plus window listeners, BlunderListPanel, SidebarHeaderPanel, BottomToolbar, and ConfigDialog2 sidebar-nav/toggle-row/color-label listeners across mouse, motion, drag, wheel, and release condition evaluations, early returns, executed statements, and explicit no-action paths; data-dependent loops and click try/catch handlers are preserved as normalized atomic statements, while local boolean tracking retains a known value across loops that can only assign the same literal so impossible branches are pruned.",
             "Other key-listener and pointer-listener classes remain T-003 work.",
         ],
         "matrix_summary": {
