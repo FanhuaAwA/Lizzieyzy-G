@@ -71,13 +71,13 @@
 - 旧项目使用 Maven；`pom.xml` 目标 Java 17，旧 GitHub CI 配置 JDK 21。
 - 静态盘点：约 276 个主 Java 文件、179,215 行，约 145 个测试 Java 文件。
 - 最大类包括约 18,146 行的 `LizzieFrame.java`、10,401 行的 `Menu.java`、5,618 行的 `Leelaz.java`。
-- T-003 按“活跃字面量叶键 + 明确持久化 JSON 接收者”的当前静态口径检出 596 个配置键和 1,627 处引用，另有 37 个仅出现在 `Config.java` 注释中的历史候选键；嵌套规范路径、计算键和逐用例语义归属仍未完成。
-- T-003 按 `Menu.java` 中活跃的 `Menu.*`/`menu.*` 资源读取检出 383 个菜单资源键和 473 处引用，现有矩阵关联 48 个键；12 个活跃硬编码菜单字面量已全部反向关联；两个显式 `setAccelerator`（`Shift+O`、仅 Windows 的 `Alt+O`）均已反向关联。`Input.java` 的 `keyPressed`/`keyReleased` 现有 56 个活跃 `VK_*` case（54/2），其中 15 个 case 已关联现有矩阵行；其余 335 个资源键、41 个 case 的工作流归属，以及 modifier/fall-through/动作组合、计算配置键和鼠标绑定仍待盘点。
+- T-003 按“活跃字面量叶键 + 明确持久化 JSON 接收者”的当前静态口径检出 596 个配置键和 1,627 处引用，现有矩阵关联 36 个键；另有 37 个仅出现在 `Config.java` 注释中的历史候选键；其余 560 个字面量键、嵌套规范路径、计算键和逐用例语义归属仍未完成。
+- T-003 按 `Menu.java` 中活跃的 `Menu.*`/`menu.*` 资源读取检出 383 个菜单资源键和 473 处引用，现有矩阵关联 48 个键；12 个活跃硬编码菜单字面量和两个显式 `setAccelerator`（`Shift+O`、仅 Windows 的 `Alt+O`）均已全部反向关联。`Input.java` 的 `keyPressed`/`keyReleased` 现有 56 个活跃 `VK_*` case（54/2），已展开为 162 条互斥控制流路径并全部反向关联 40 行矩阵；路径保留 Control/Meta 差异、条件方法副作用、无动作分支、实际执行语句和 switch fall-through。其余 335 个菜单资源键、其他键监听器和鼠标绑定仍待盘点。
 - AI 计算由外部 KataGo/Leela 进程承担；旧程序主要负责 GTP、规则/棋谱状态和 UI。
 - 本机没有系统级 `mvn`，T-003 已在仓库外下载并校验 Apache Maven 3.9.16，在仓库外隔离副本以 Temurin 21.0.11 执行 `mvn -Dfmt.skip=true test`：1,161 项测试、0 failure、0 error、1 项按操作系统条件 skip；旧源码 576 个文件逐一比对无变化。
 - 本机 `PATH` 当前先解析到 `C:/Program Files (x86)/dotnet/dotnet.exe`，该 x86 host 没有 SDK；项目命令必须显式使用 `C:/Program Files/dotnet/dotnet.exe` 的 x64 稳定 SDK。`global.json` 已固定 `10.0.103`、`latestPatch` 且禁止 preview；另有 `8.0.420` 和不得用于本项目的 `10.0.300-preview...`。
 - T-002 使用官方 `Avalonia.Templates 12.1.0` 创建 Desktop，新壳和 headless 测试统一使用 Avalonia `12.1.0`，测试统一使用 xUnit v3 `3.2.2`。
-- T-003 的机器可读矩阵位于 `migration/equivalence-matrix.json`，生成清单位于 `migration/legacy-inventory.json`；运行 `python scripts/generate_legacy_inventory.py` 生成，运行 `python scripts/generate_legacy_inventory.py --check` 验证来源指纹、证据、状态、配置引用和生成结果未漂移。
+- T-003 的机器可读矩阵位于 `migration/equivalence-matrix.json`，生成清单位于 `migration/legacy-inventory.json`；运行 `python scripts/generate_legacy_inventory.py` 生成，运行 `python scripts/generate_legacy_inventory.py --check` 验证来源指纹、证据、状态、配置引用、精确输入绑定和生成结果未漂移。
 
 ### 1.3 本文档已完成内容
 
@@ -654,7 +654,7 @@ push 成功但 CI 未通过时，任务状态仍是“进行中”。修复使�
 | --- | --- | --- | --- |
 | T-001 | 完成 | 确定新版源码目录 | 用户已确认 `F:/Lizzieyzy-GL/Lizzieyzy-G/` 为重构后源码根目录 |
 | T-002 | 完成 | 创建最小 .NET 10 + Avalonia SLNX solution | SDK/依赖/锁文件、3 个产品项目和对应测试、真实空棋盘启动退出、format、Release build、5 项 tests 和依赖审计均通过；实现提交 `c17873dde901b77637e770c241dbdc3e3037218a` 已推送，draft PR `#1` 为 OPEN/CLEAN；Actions 尚未建立并由 T-006 跟踪 |
-| T-003 | 进行中 | 建立旧版行为基线和功能等价矩阵 | 已校验便携 Maven 并在隔离副本跑通旧版 1,161 项测试；已生成 576 文件来源指纹、596 活跃配置叶键/1,627 引用、37 注释候选键、383 菜单资源键/473 活跃引用、12 个硬编码菜单字面量和 56 个 `Input.java` 键 case，并建立 20 个 `已盘点` 高风险用例；当前关联 34 配置键、48 菜单资源键、全部 12 个菜单字面量、全部 2 个显式 accelerator 和 15 个输入 case；详细工具栏、Windows 更新和清除个人数据行由提交 `ddfc406ac68ba707bbbcf5b42810ba49c23222e9` 建立并已推送到 draft PR `#2`，旧版更新计算键和清除数据假成功缺陷已显式登记；堆叠 draft PR `#2` 为 OPEN/CLEAN；下一步完成 562 配置键、335 菜单资源键和 41 个输入 case 的工作流归属，归一 modifier/fall-through/动作组合、嵌套/计算键，并补 SGF/GIB 与 GTP 语料、旧版动态截图及 GUI/引擎分离性能 |
+| T-003 | 进行中 | 建立旧版行为基线和功能等价矩阵 | 已校验便携 Maven 并在隔离副本跑通旧版 1,161 项测试；已生成 576 文件来源指纹、596 活跃配置叶键/1,627 引用、37 注释候选键、383 菜单资源键/473 活跃引用、12 个硬编码菜单字面量、56 个 `Input.java` 键 case 和 162 条精确控制流路径，并建立 40 个 `已盘点` 用例；当前关联 36 配置键、48 菜单资源键、全部菜单字面量/accelerator/case/精确路径；提交 `8dc40e96ebdb45c6def4c3f0471c25373ad0f327` 归一 Control/Meta、条件副作用、无动作路径和 switch fall-through，并登记分享空实现、在线入口吞异常、临时棋盘恢复疑似错误、人机对局与规则设置 sleep 轮询等禁止照搬缺陷；堆叠 draft PR `#2` 继续承载 T-003；下一步盘点 `InputIndependentMainBoard`、`InputSubboard`、`FloatBoard`、各对话框键监听器及鼠标绑定，再继续 560 配置键、335 菜单资源键、嵌套/计算键、SGF/GIB 与 GTP 语料、旧版动态截图及 GUI/引擎分离性能 |
 | T-004 | 未开始 | 配置兼容清单和迁移器 | 以 T-003 当前 596 个活跃字面量叶键及后续发现项为输入，备份、未知键保留、原子保存和回滚测试通过 |
 | T-005 | 未开始 | 实现本地质量门脚本 | solution 存在后创建跨平台 `scripts/quality.ps1`，实际执行并传播 format/build/test/smoke/实测失败，Windows/macOS/Linux 均验证非零退出 |
 | T-006 | 未开始 | 实现 GitHub Actions | 三平台 CI、fast smoke、real KataGo、security、release 在 GitHub 真实跑通，预期失败能被拦截并记录 run URL |
@@ -667,7 +667,7 @@ push 成功但 CI 未通过时，任务状态仍是“进行中”。修复使�
 | T-013 | 未开始 | 建立专业设计系统与组件展示页 | 用户批准视觉方向；design token、全状态组件、棋盘/图表规范、三平台视觉矩阵和无障碍实测通过 |
 | T-014 | 未开始 | 建立可靠性、恢复与长稳体系 | crash/恢复证据、故障注入、100 次棋谱循环、50 次引擎循环和 8 小时 soak 均按 §6.4 通过 |
 
-当前可用范围仅为能启动、显示 19×19 空棋盘并正常关闭的原生新壳；不包含棋谱、设置迁移、引擎或其他旧版功能，不能替代旧版。下一步继续 T-003，把 `Input.java` 的 modifier、fall-through 和动作分支归一为精确绑定并反向关联现有/新增矩阵行；后续任何部分功能必须新增/拆分 ID，不得藏在“进行中”描述里。
+当前可用范围仅为能启动、显示 19×19 空棋盘并正常关闭的原生新壳；不包含棋谱、设置迁移、引擎或其他旧版功能，不能替代旧版。下一步继续 T-003，盘点 `Input.java` 之外的键监听器与鼠标绑定并反向关联矩阵，然后继续配置、菜单、嵌套/计算键和动态语料；后续任何部分功能必须新增/拆分 ID，不得藏在“进行中”描述里。
 
 ### 12.2 最近验证记录
 
@@ -683,6 +683,7 @@ push 成功但 CI 未通过时，任务状态仍是“进行中”。修复使�
 | 2026-07-13 | T-003 菜单与快捷键反向索引 | 矩阵和生成清单升级到 schema 2；生成器同时识别大小写 `Menu.*`/`menu.*`，383 个活跃菜单资源键/473 引用中 47 个反向关联现有 17 行矩阵，`Shift+O` 与仅 Windows 的 `Alt+O` 两个显式 accelerator 均关联；伪菜单键和伪快捷键 mutation 均被拒绝；与 HEAD 做语义比较确认来源指纹、596 配置键索引和 145 个测试文件清单未变；`python scripts/generate_legacy_inventory.py --check`、x64 SDK 10.0.103 locked restore、format verify、Release `/warnaserror` build 和 5 项 tests 均退出 0，build 为 0 warning/0 error，Release 窗口实测显示 19×19 空棋盘后正常关闭；增量提交 `8736e2b0f28a54fae7bfd545565f514bc9377b7e` 已推送到 draft PR `https://github.com/FanhuaAwA/Lizzieyzy-G/pull/2` | T-003 仍未完成：336 个菜单资源键、硬编码菜单文字和其他输入绑定尚未关联；本轮无产品路径变化，性能、DPI、无障碍、故障恢复、长稳和安装包验证不适用；Actions 由 T-006 跟踪，当前无 run URL |
 | 2026-07-13 | T-003 硬编码菜单与输入 case 反向索引 | 矩阵和生成清单升级到 schema 3；`Menu.java` 12 个活跃硬编码菜单字面量全部生成，6 个语言项关联 `SETTINGS-LANGUAGE-001`；`Input.java` 54 个 `keyPressed` 与 2 个 `keyReleased` `VK_*` case 全部生成，15 个 case 关联现有矩阵行，并记录局部 modifier 检查但不伪称完整组合语义；伪菜单字面量和伪输入 case mutation 均被拒绝，双向映射/唯一性断言通过；与 HEAD 语义比较确认来源指纹、596 配置键、383 菜单资源键和 2 个 accelerator 未变；`python scripts/generate_legacy_inventory.py --check`、x64 SDK 10.0.103 locked restore、format verify、Release `/warnaserror` build 和 5 项 tests 均退出 0，build 为 0 warning/0 error；Release 窗口实测显示 19×19 空棋盘后正常关闭；实现提交 `d976c852b94843258503ec4b3b0a6811af18dd37` 已推送到 draft PR `https://github.com/FanhuaAwA/Lizzieyzy-G/pull/2` | T-003 仍未完成：568 配置键、336 菜单资源键、6 个菜单字面量和 41 个输入 case 尚未关联工作流；modifier/fall-through/动作组合及鼠标输入仍未归一；本轮无产品路径变化，性能、DPI、无障碍、故障恢复、长稳和安装包验证不适用；Actions 由 T-006 跟踪，当前无 run URL |
 | 2026-07-13 | T-003 详细工具栏、更新与隐私动作矩阵 | 新增 `UI-DETAILED-TOOLBAR-001`、`UPDATE-WINDOWS-001`、`PRIVACY-CLEAR-DATA-001`，20 行矩阵均为 `已盘点`；12/12 个硬编码菜单字面量全部反向关联，配置叶键关联 28→34、菜单资源键关联 47→48；静态证据确认 `windows-update-last-check-date`/`windows-update-ignored-version` 为常量间接键，尚未计入 596 字面量口径；清除个人数据四键中三键为 remove-only，且旧版 `Config.save()` 失败后仍显示成功，目标行为明确禁止照搬；伪标签 mutation、双向映射、HEAD 语义比较、独立安全 review 和秘密扫描通过；x64 SDK 10.0.103 locked restore、format verify、Release `/warnaserror` build 和 5 项 tests 均退出 0，build 为 0 warning/0 error；Release 窗口实测显示 19×19 空棋盘后正常关闭；实现提交 `ddfc406ac68ba707bbbcf5b42810ba49c23222e9` 已推送到 draft PR `https://github.com/FanhuaAwA/Lizzieyzy-G/pull/2` | T-003 仍未完成：562 配置键、335 菜单资源键和 41 个输入 case 尚未关联工作流，计算/嵌套键与精确输入动作仍未归一；未执行旧版真实更新、下载或清除数据，相关动态行为尚未验证；本轮无产品路径变化，性能、DPI、无障碍、故障恢复、长稳和安装包验证不适用；Actions 由 T-006 跟踪，当前无 run URL |
+| 2026-07-13 | T-003 `Input.java` 精确输入绑定矩阵 | 矩阵和生成清单升级到 schema 4；轻量静态解析器把 56 个 `keyPressed`/`keyReleased` case 展开为 162 条互斥路径，记录 Control/Meta 差异、条件求值及方法副作用、执行语句、无动作分支、case 链和按键后统一刷新，162/162 均反向关联 40 行 `已盘点` 矩阵；配置关联 34→36，菜单资源键维持 48，菜单字面量和 accelerator 继续全覆盖；独立 review 纠正 N 默认分支的人机新对局归属，并登记分享空实现、在线入口吞异常、临时棋盘恢复疑似错误及 sleep 轮询缺陷；伪绑定 mutation 被拒绝，来源指纹、596 配置键、菜单提取和 Java 测试清单语义比较通过，只有预期的 fall-through modifier 修正；严格 UTF-8、生成新鲜度、diff/秘密/动态执行审计通过；x64 SDK 10.0.103 locked restore、format verify、Release `/warnaserror` build 和 5 项 tests 均退出 0，build 为 0 warning/0 error；Release 窗口实测显示 19×19 空棋盘后正常关闭；实现提交 `8dc40e96ebdb45c6def4c3f0471c25373ad0f327` | T-003 仍未完成：560 配置键、335 菜单资源键、其他键监听器和鼠标绑定、嵌套/计算键、跨实现 SGF/GIB 与 GTP 语料、旧版动态截图、性能和跨平台验证均待完成；本轮未修改产品代码或旧 Java，未执行旧版真实更新、下载、清除数据或在线同步；Actions 由 T-006 跟踪，当前无 run URL |
 
 ### 12.3 更新规则
 
