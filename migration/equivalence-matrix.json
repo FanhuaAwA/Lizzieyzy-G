@@ -1,5 +1,5 @@
 {
-  "schema_version": 26,
+  "schema_version": 27,
   "allowed_statuses": [
     "未盘点",
     "已盘点",
@@ -863,7 +863,7 @@
     {
       "id": "UI-DETAILED-TOOLBAR-001",
       "category": "界面显示",
-      "legacy_entry": "仅中文的详细工具栏子菜单允许启用过时详细栏、显示展开按钮并调整三个模块顺序",
+      "legacy_entry": "仅中文的详细工具栏子菜单允许启用过时详细栏、显示展开按钮并调整三个模块顺序；BottomToolbar 自身的 MouseListener 在背景 mouseClicked 时调用 setTxtUnfocuse 结束参数输入焦点，其 pressed/released/entered/exited 均为空路径",
       "legacy_menu_keys": ["Menu.bottomToolBar"],
       "legacy_menu_labels": [
         "详细工具栏(过时的)(仅中文)",
@@ -872,25 +872,46 @@
         "设置模块顺序"
       ],
       "legacy_shortcuts": [],
-      "legacy_input_cases": [],
-      "legacy_input_bindings": [],
+      "legacy_input_cases": [
+        "BottomToolbar:mouseClicked",
+        "BottomToolbar:mousePressed",
+        "BottomToolbar:mouseReleased",
+        "BottomToolbar:mouseEntered",
+        "BottomToolbar:mouseExited"
+      ],
+      "legacy_input_bindings": [
+        "BottomToolbar:mouseClicked#1",
+        "BottomToolbar:mousePressed#1",
+        "BottomToolbar:mouseReleased#1",
+        "BottomToolbar:mouseEntered#1",
+        "BottomToolbar:mouseExited#1"
+      ],
       "java_evidence": [
         { "path": "src/main/java/featurecat/lizzie/gui/Menu.java", "symbol": "showDetailedBar" },
         { "path": "src/main/java/featurecat/lizzie/gui/Menu.java", "symbol": "showDetailedMenu" },
         { "path": "src/main/java/featurecat/lizzie/gui/ToolbarPositionConfig.java", "symbol": "class ToolbarPositionConfig" },
-        { "path": "src/main/java/featurecat/lizzie/gui/BottomToolbar.java", "symbol": "anaPanelOrder" }
+        { "path": "src/main/java/featurecat/lizzie/gui/BottomToolbar.java", "symbol": "this.addMouseListener" },
+        { "path": "src/main/java/featurecat/lizzie/gui/BottomToolbar.java", "symbol": "setTxtUnfocuse" },
+        { "path": "src/main/java/featurecat/lizzie/gui/BottomToolbar.java", "symbol": "anaPanelOrder" },
+        { "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "symbol": "toolbar = new BottomToolbar()" },
+        { "path": "src/main/java/featurecat/lizzie/gui/AccessibilitySupport.java", "symbol": "installWindowFocusCycling" },
+        { "path": "src/main/java/featurecat/lizzie/Config.java", "symbol": "persistedUi.put(\"toolbar-parameter\", toolbarParameter)" }
       ],
       "config_keys": ["show-detailed-toolbar-menu", "main-window-other", "toolbar-parameter"],
-      "inputs_preconditions": "资源中的 Lizzie.isChinese 为 yes 时显示该子菜单（现有 zh_CN/zh_TW/zh_HK）；主窗口和底部工具栏已创建。",
-      "success_behavior": "确认启用后把工具栏切换到详细高度；展开按钮选择被持久化；顺序对话框更新自动分析、引擎对战和自动落子三个面板顺序。",
-      "failure_cancel_behavior": "拒绝过时功能确认或取消顺序对话框时保持原状态；重复顺序和配置保存失败不得静默破坏已有布局。",
-      "data_io": "读写 show-detailed-toolbar-menu；工具栏高度存于 main-window-other 数组；三个顺序值存于 toolbar-parameter 数组索引 32–34。",
+      "inputs_preconditions": "资源中的 Lizzie.isChinese 为 yes 时显示详细工具栏子菜单（现有 zh_CN/zh_TW/zh_HK）；主窗口唯一构造 BottomToolbar 并把它加入 F6 焦点区。面板 listener 只收到工具栏自身暴露背景的事件，子按钮、文本框和三个详细子面板消费自己的事件；mouseClicked 不检查鼠标按钮、点击次数或 modifier。若 18 个参数文本框之一持有焦点，背景点击进入 setTxtUnfocuse 的对应分支。LizzieFrame 另把 Input 的 mouseWheelMoved 挂到 toolbar，该来源按 Input.java 后续盘点，不冒充本类 binding。",
+      "success_behavior": "确认启用后把工具栏切换到详细高度；展开按钮选择被持久化；顺序对话框更新自动分析、引擎对战和自动落子三个面板顺序。任意鼠标键、任意点击次数的工具栏背景 mouseClicked 都调用 setTxtUnfocuse；该方法对当前聚焦的 18 个参数文本框逐个临时 setFocusable(false) 后恢复 true，从而强制失焦。txtFirstAnaMove/txtLastAnaMove 的 FocusListener 尝试更新 firstMove/lastMove，解析失败被吞掉并保留旧运行时值；其余字段只结束编辑焦点，实际业务动作稍后读取文本。mousePressed、mouseReleased、mouseEntered 和 mouseExited 各有一条显式无动作路径。目标版使用 Avalonia 原生焦点、命令和逐字段校验，不移植 18 组手工 focusable 翻转。",
+      "failure_cancel_behavior": "拒绝过时功能确认或取消顺序对话框时保持原状态。点击子控件不会冒泡到面板 listener，背景点击也没有左键/单击约束；setTxtUnfocuse 的 18 段重复逻辑会绕过正常焦点遍历，并可能与 AccessibilitySupport 的动态 F6 focusable 恢复状态冲突。起止手数失焦时的空值/越界/解析错误无反馈，其他参数没有失焦提交或统一范围校验；后续 Config.persist 会把无法解析的文本降为 -1 并直接覆盖 51 槽数组。目标版必须保留原有效值直到完整验证通过，显示字段错误，支持 Escape/取消与可预测焦点恢复，并以原子写入/备份保护布局和参数；重复顺序或保存失败不得静默破坏已有布局。",
+      "data_io": "读写 show-detailed-toolbar-menu；工具栏高度存于 main-window-other 数组。toolbar-parameter 是长度恰为 51 的混合位置数组，索引 0–31 保存分析/自动播放/引擎对战参数，32–34 保存三个面板顺序，其余保存展开、上限、黑白选择和模式等状态；构造时仅接受精确长度，Config.persist 从当前控件重新组装并直接写 persist 文件，数值解析失败写 -1。背景点击本身不立即持久化，但可触发起止手数 FocusListener 更新内存字段。",
       "external_dependencies": [],
       "target_modules": ["Lizzie.Core", "Lizzie.Desktop"],
-      "automated_evidence": [],
-      "manual_acceptance": "在中文与非中文环境分别检查入口；覆盖启用确认/取消、展开按钮、三个唯一顺序、重复顺序拒绝及重启恢复。",
+      "automated_evidence": [
+        { "path": "src/test/java/featurecat/lizzie/gui/AccessibilitySupportTest.java", "symbol": "iconButtonsReceiveReadableSemanticsAndTooltip" },
+        { "path": "src/test/java/featurecat/lizzie/gui/UiLocalizationGuardTest.java", "symbol": "primaryUiDirectLiteralsStayOnTheExplicitNonLanguageWhitelist" },
+        { "path": "src/test/java/featurecat/lizzie/LocalizationResourceParityTest.java", "symbol": "allMaintainedBundlesHaveIdenticalKeysOrderAndPlaceholders" }
+      ],
+      "manual_acceptance": "在中文与非中文环境分别检查入口；覆盖启用确认/取消、展开按钮、三个唯一顺序、重复顺序拒绝及重启恢复。展开详细栏后逐一聚焦 18 个参数框，再分别点击工具栏背景、子按钮、子面板与字段；覆盖左中右键、单/双击、Enter/Tab/Shift+Tab/F6/Escape、无效/空/超界值、重启恢复和保存失败。确认只有背景 click 走面板 listener，四个空事件无副作用，焦点/选择/IME 不丢失，字段错误可见且无效值不覆盖旧配置；在浅/深/高对比、100/125/150/200% DPI、窄窗/长翻译及 Narrator/NVDA 下核对焦点顺序、名称、状态和 overflow 菜单。",
       "status": "已盘点",
-      "evidence": "四个硬编码字面量、菜单监听器、布局字段和数组持久化位置已静态定位；旧版没有该工作流的专用自动测试，动态 UI 证据尚未捕获。"
+      "evidence": "四个硬编码字面量、菜单监听器、响应式/overflow 布局字段、唯一 BottomToolbar 构造、F6 focus zone、面板五事件、18 个 focus-owner 分支、两个 FocusListener 和 51 槽数组读写已静态定位。共享测试仅覆盖资源一致性、可见文字白名单和 AccessibilitySupport 的按钮/标签/进度语义；BottomToolbarPassDetectionTest 与 ToolbarIconCacheTest 不触发本 listener。旧版没有面板 pointer 分发、18 字段失焦、F6/IME、输入范围、保存回滚、DPI/真实渲染或辅助技术专项测试，动态 UI 证据尚未捕获。"
     },
     {
       "id": "UPDATE-WINDOWS-001",

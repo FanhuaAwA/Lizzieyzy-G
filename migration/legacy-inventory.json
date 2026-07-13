@@ -1,5 +1,5 @@
 {
-  "schema_version": 26,
+  "schema_version": 27,
   "source": {
     "root": "../lizzieyzy-next-main",
     "version": "yzy2.5.3",
@@ -18,7 +18,7 @@
     "Menu literal labels cover active string-literal menu constructors; dynamic labels remain represented by their resource or runtime source.",
     "Menu accelerators cover explicit Menu.java setAccelerator calls and direct OS.isWindows guards; other input bindings remain T-003 work.",
     "Input key bindings symbolically expand Input.java, InputIndependentMainBoard.java, InputIndependentSubboard.java, InputSubboard.java, FloatBoard.java, AnalysisFrame table/window, DrawPainting.java, ChooseMoreEngine.java, LoadEngine.java, OtherPrograms.java, TencentKifuDownload.java, FoxKifuDownload.java, BrowserFrame.java, and CaptureTsumeGoFrame.java key dispatch, condition evaluations, executed statements, empty-listener and empty-statement paths, and switch fall-through; controlIsPressed means Control on every platform plus Meta on macOS, and BrowserFrame dispatches Enter through getKeyChar.",
-    "Pointer bindings symbolically expand the two indexed subboard listeners plus FloatBoard, AnalysisFrame, DrawPainting, ChooseMoreEngine, LoadEngine, OtherPrograms, TencentKifuDownload, FoxKifuDownload, BrowserFrame load/stop/label listeners, JFontTextArea, JFontTextField, JIMSendTextPane, the two DemoScrollBarUI2 arrow-button listeners, JPaintTextPane, WindowMenuStrip, YikeLiveDialog, IndependentSubBoard lock/close/top-button plus window listeners, BlunderListPanel, and SidebarHeaderPanel across mouse, motion, drag, wheel, and release condition evaluations, early returns, executed statements, and explicit no-action paths; data-dependent loops and click try/catch handlers are preserved as normalized atomic statements.",
+    "Pointer bindings symbolically expand the two indexed subboard listeners plus FloatBoard, AnalysisFrame, DrawPainting, ChooseMoreEngine, LoadEngine, OtherPrograms, TencentKifuDownload, FoxKifuDownload, BrowserFrame load/stop/label listeners, JFontTextArea, JFontTextField, JIMSendTextPane, the two DemoScrollBarUI2 arrow-button listeners, JPaintTextPane, WindowMenuStrip, YikeLiveDialog, IndependentSubBoard lock/close/top-button plus window listeners, BlunderListPanel, SidebarHeaderPanel, and BottomToolbar across mouse, motion, drag, wheel, and release condition evaluations, early returns, executed statements, and explicit no-action paths; data-dependent loops and click try/catch handlers are preserved as normalized atomic statements.",
     "Other key-listener and pointer-listener classes remain T-003 work."
   ],
   "matrix_summary": {
@@ -49,11 +49,11 @@
     "active_input_key_bindings": 365,
     "mapped_input_key_bindings": 365,
     "unmapped_input_key_bindings": 0,
-    "active_input_pointer_events": 80,
-    "mapped_input_pointer_events": 80,
+    "active_input_pointer_events": 85,
+    "mapped_input_pointer_events": 85,
     "unmapped_input_pointer_events": 0,
-    "active_input_pointer_bindings": 160,
-    "mapped_input_pointer_bindings": 160,
+    "active_input_pointer_bindings": 165,
+    "mapped_input_pointer_bindings": 165,
     "unmapped_input_pointer_bindings": 0
   },
   "config": {
@@ -30786,10 +30786,16 @@
         "source": "src/main/java/featurecat/lizzie/gui/SidebarHeaderPanel.java",
         "active_pointer_events": 1,
         "active_pointer_bindings": 6
+      },
+      {
+        "id": "BottomToolbar",
+        "source": "src/main/java/featurecat/lizzie/gui/BottomToolbar.java",
+        "active_pointer_events": 5,
+        "active_pointer_bindings": 5
       }
     ],
-    "active_pointer_events": 80,
-    "active_pointer_bindings": 160,
+    "active_pointer_events": 85,
+    "active_pointer_bindings": 165,
     "pointer_events": [
       {
         "event_id": "InputIndependentSubboard:mouseClicked",
@@ -31589,6 +31595,56 @@
         "binding_count": 6,
         "matrix_ids": [
           "UI-BLUNDER-SCROLLBAR-001"
+        ]
+      },
+      {
+        "event_id": "BottomToolbar:mouseClicked",
+        "source_id": "BottomToolbar",
+        "event": "mouseClicked",
+        "line": 1536,
+        "binding_count": 1,
+        "matrix_ids": [
+          "UI-DETAILED-TOOLBAR-001"
+        ]
+      },
+      {
+        "event_id": "BottomToolbar:mousePressed",
+        "source_id": "BottomToolbar",
+        "event": "mousePressed",
+        "line": 1541,
+        "binding_count": 1,
+        "matrix_ids": [
+          "UI-DETAILED-TOOLBAR-001"
+        ]
+      },
+      {
+        "event_id": "BottomToolbar:mouseReleased",
+        "source_id": "BottomToolbar",
+        "event": "mouseReleased",
+        "line": 1546,
+        "binding_count": 1,
+        "matrix_ids": [
+          "UI-DETAILED-TOOLBAR-001"
+        ]
+      },
+      {
+        "event_id": "BottomToolbar:mouseEntered",
+        "source_id": "BottomToolbar",
+        "event": "mouseEntered",
+        "line": 1552,
+        "binding_count": 1,
+        "matrix_ids": [
+          "UI-DETAILED-TOOLBAR-001"
+        ]
+      },
+      {
+        "event_id": "BottomToolbar:mouseExited",
+        "source_id": "BottomToolbar",
+        "event": "mouseExited",
+        "line": 1558,
+        "binding_count": 1,
+        "matrix_ids": [
+          "UI-DETAILED-TOOLBAR-001"
         ]
       }
     ],
@@ -36579,6 +36635,71 @@
         ],
         "matrix_ids": [
           "UI-BLUNDER-SCROLLBAR-001"
+        ]
+      },
+      {
+        "binding": "BottomToolbar:mouseClicked#1",
+        "event_id": "BottomToolbar:mouseClicked",
+        "source_id": "BottomToolbar",
+        "event": "mouseClicked",
+        "line": 1536,
+        "conditions": [],
+        "statements": [
+          {
+            "line": 1537,
+            "statement": "setTxtUnfocuse();"
+          }
+        ],
+        "matrix_ids": [
+          "UI-DETAILED-TOOLBAR-001"
+        ]
+      },
+      {
+        "binding": "BottomToolbar:mousePressed#1",
+        "event_id": "BottomToolbar:mousePressed",
+        "source_id": "BottomToolbar",
+        "event": "mousePressed",
+        "line": 1541,
+        "conditions": [],
+        "statements": [],
+        "matrix_ids": [
+          "UI-DETAILED-TOOLBAR-001"
+        ]
+      },
+      {
+        "binding": "BottomToolbar:mouseReleased#1",
+        "event_id": "BottomToolbar:mouseReleased",
+        "source_id": "BottomToolbar",
+        "event": "mouseReleased",
+        "line": 1546,
+        "conditions": [],
+        "statements": [],
+        "matrix_ids": [
+          "UI-DETAILED-TOOLBAR-001"
+        ]
+      },
+      {
+        "binding": "BottomToolbar:mouseEntered#1",
+        "event_id": "BottomToolbar:mouseEntered",
+        "source_id": "BottomToolbar",
+        "event": "mouseEntered",
+        "line": 1552,
+        "conditions": [],
+        "statements": [],
+        "matrix_ids": [
+          "UI-DETAILED-TOOLBAR-001"
+        ]
+      },
+      {
+        "binding": "BottomToolbar:mouseExited#1",
+        "event_id": "BottomToolbar:mouseExited",
+        "source_id": "BottomToolbar",
+        "event": "mouseExited",
+        "line": 1558,
+        "conditions": [],
+        "statements": [],
+        "matrix_ids": [
+          "UI-DETAILED-TOOLBAR-001"
         ]
       }
     ]
