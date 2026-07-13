@@ -1,5 +1,5 @@
 {
-  "schema_version": 13,
+  "schema_version": 14,
   "source": {
     "root": "../lizzieyzy-next-main",
     "version": "yzy2.5.3",
@@ -17,8 +17,8 @@
     "Menu keys cover active Menu.java resource lookups with Menu. or menu. prefixes.",
     "Menu literal labels cover active string-literal menu constructors; dynamic labels remain represented by their resource or runtime source.",
     "Menu accelerators cover explicit Menu.java setAccelerator calls and direct OS.isWindows guards; other input bindings remain T-003 work.",
-    "Input key bindings symbolically expand Input.java, InputIndependentMainBoard.java, InputIndependentSubboard.java, InputSubboard.java, FloatBoard.java, AnalysisFrame table/window, DrawPainting.java, ChooseMoreEngine.java, LoadEngine.java, OtherPrograms.java, and TencentKifuDownload.java key dispatch, condition evaluations, executed statements, empty-listener and empty-statement paths, and switch fall-through; controlIsPressed means Control on every platform plus Meta on macOS.",
-    "Pointer bindings symbolically expand the two indexed subboard listeners plus FloatBoard, AnalysisFrame, DrawPainting, ChooseMoreEngine, LoadEngine, OtherPrograms, and TencentKifuDownload mouse, motion, drag, wheel, and release condition evaluations, early returns, executed statements, and explicit no-action paths; data-dependent loops and click try/catch handlers are preserved as normalized atomic statements.",
+    "Input key bindings symbolically expand Input.java, InputIndependentMainBoard.java, InputIndependentSubboard.java, InputSubboard.java, FloatBoard.java, AnalysisFrame table/window, DrawPainting.java, ChooseMoreEngine.java, LoadEngine.java, OtherPrograms.java, TencentKifuDownload.java, and FoxKifuDownload.java key dispatch, condition evaluations, executed statements, empty-listener and empty-statement paths, and switch fall-through; controlIsPressed means Control on every platform plus Meta on macOS.",
+    "Pointer bindings symbolically expand the two indexed subboard listeners plus FloatBoard, AnalysisFrame, DrawPainting, ChooseMoreEngine, LoadEngine, OtherPrograms, TencentKifuDownload, and FoxKifuDownload mouse, motion, drag, wheel, and release condition evaluations, early returns, executed statements, and explicit no-action paths; data-dependent loops and click try/catch handlers are preserved as normalized atomic statements.",
     "Other key-listener and pointer-listener classes remain T-003 work."
   ],
   "matrix_summary": {
@@ -35,25 +35,25 @@
     "mapped_config_leaf_keys": 50,
     "unmapped_config_leaf_keys": 546,
     "active_menu_resource_keys": 383,
-    "mapped_menu_resource_keys": 52,
-    "unmapped_menu_resource_keys": 331,
+    "mapped_menu_resource_keys": 53,
+    "unmapped_menu_resource_keys": 330,
     "active_menu_literal_labels": 12,
     "mapped_menu_literal_labels": 12,
     "unmapped_menu_literal_labels": 0,
     "active_menu_accelerators": 2,
     "mapped_menu_accelerators": 2,
     "unmapped_menu_accelerators": 0,
-    "active_input_key_cases": 140,
-    "mapped_input_key_cases": 140,
+    "active_input_key_cases": 141,
+    "mapped_input_key_cases": 141,
     "unmapped_input_key_cases": 0,
-    "active_input_key_bindings": 361,
-    "mapped_input_key_bindings": 361,
+    "active_input_key_bindings": 362,
+    "mapped_input_key_bindings": 362,
     "unmapped_input_key_bindings": 0,
-    "active_input_pointer_events": 32,
-    "mapped_input_pointer_events": 32,
+    "active_input_pointer_events": 33,
+    "mapped_input_pointer_events": 33,
     "unmapped_input_pointer_events": 0,
-    "active_input_pointer_bindings": 76,
-    "mapped_input_pointer_bindings": 76,
+    "active_input_pointer_bindings": 79,
+    "mapped_input_pointer_bindings": 79,
     "unmapped_input_pointer_bindings": 0
   },
   "config": {
@@ -1238,6 +1238,7 @@
         "key": "auto-quick-analyze-on-load",
         "reference_count": 3,
         "matrix_ids": [
+          "ONLINE-FOX-001",
           "ONLINE-TENCENT-001"
         ],
         "references": [
@@ -7662,6 +7663,7 @@
         "key": "network-proxy-host",
         "reference_count": 1,
         "matrix_ids": [
+          "ONLINE-FOX-001",
           "ONLINE-TENCENT-001"
         ],
         "references": [
@@ -7677,6 +7679,7 @@
         "key": "network-proxy-mode",
         "reference_count": 1,
         "matrix_ids": [
+          "ONLINE-FOX-001",
           "ONLINE-TENCENT-001"
         ],
         "references": [
@@ -7692,6 +7695,7 @@
         "key": "network-proxy-port",
         "reference_count": 1,
         "matrix_ids": [
+          "ONLINE-FOX-001",
           "ONLINE-TENCENT-001"
         ],
         "references": [
@@ -8462,7 +8466,8 @@
         "key": "read-komi",
         "reference_count": 3,
         "matrix_ids": [
-          "KIFU-OPEN-001"
+          "KIFU-OPEN-001",
+          "ONLINE-FOX-001"
         ],
         "references": [
           {
@@ -15155,7 +15160,9 @@
       },
       {
         "key": "Menu.foxKifuButton",
-        "matrix_ids": [],
+        "matrix_ids": [
+          "ONLINE-FOX-001"
+        ],
         "lines": [
           7793
         ]
@@ -17351,12 +17358,24 @@
         "post_dispatch_actions": {
           "keyPressed": []
         }
+      },
+      {
+        "id": "FoxKifuDownload",
+        "source": "src/main/java/featurecat/lizzie/gui/FoxKifuDownload.java",
+        "active_key_cases": 1,
+        "active_key_bindings": 1,
+        "events": {
+          "keyPressed": 1
+        },
+        "post_dispatch_actions": {
+          "keyPressed": []
+        }
       }
     ],
-    "active_key_cases": 140,
-    "active_key_bindings": 361,
+    "active_key_cases": 141,
+    "active_key_bindings": 362,
     "events": {
-      "keyPressed": 136,
+      "keyPressed": 137,
       "keyReleased": 4
     },
     "cases": [
@@ -19378,6 +19397,18 @@
         "binding_count": 1,
         "matrix_ids": [
           "ONLINE-TENCENT-001"
+        ]
+      },
+      {
+        "case": "FoxKifuDownload:keyPressed:VK_ENTER",
+        "source_id": "FoxKifuDownload",
+        "event": "keyPressed",
+        "key": "VK_ENTER",
+        "line": 114,
+        "modifier_checks": [],
+        "binding_count": 1,
+        "matrix_ids": [
+          "ONLINE-FOX-001"
         ]
       }
     ],
@@ -30308,6 +30339,27 @@
         "matrix_ids": [
           "ONLINE-TENCENT-001"
         ]
+      },
+      {
+        "binding": "FoxKifuDownload:keyPressed:VK_ENTER#1",
+        "case": "FoxKifuDownload:keyPressed:VK_ENTER",
+        "source_id": "FoxKifuDownload",
+        "event": "keyPressed",
+        "key": "VK_ENTER",
+        "line": 114,
+        "conditions": [],
+        "case_chain": [
+          "FoxKifuDownload:keyPressed:VK_ENTER"
+        ],
+        "statements": [
+          {
+            "line": 115,
+            "statement": "getFoxKifus();"
+          }
+        ],
+        "matrix_ids": [
+          "ONLINE-FOX-001"
+        ]
       }
     ],
     "pointer_sources": [
@@ -30364,10 +30416,16 @@
         "source": "src/main/java/featurecat/lizzie/gui/TencentKifuDownload.java",
         "active_pointer_events": 1,
         "active_pointer_bindings": 2
+      },
+      {
+        "id": "FoxKifuDownload",
+        "source": "src/main/java/featurecat/lizzie/gui/FoxKifuDownload.java",
+        "active_pointer_events": 1,
+        "active_pointer_bindings": 3
       }
     ],
-    "active_pointer_events": 32,
-    "active_pointer_bindings": 76,
+    "active_pointer_events": 33,
+    "active_pointer_bindings": 79,
     "pointer_events": [
       {
         "event_id": "InputIndependentSubboard:mouseClicked",
@@ -30687,6 +30745,16 @@
         "binding_count": 2,
         "matrix_ids": [
           "ONLINE-TENCENT-001"
+        ]
+      },
+      {
+        "event_id": "FoxKifuDownload:mouseClicked",
+        "source_id": "FoxKifuDownload",
+        "event": "mouseClicked",
+        "line": 206,
+        "binding_count": 3,
+        "matrix_ids": [
+          "ONLINE-FOX-001"
         ]
       }
     ],
@@ -33335,6 +33403,96 @@
         ],
         "matrix_ids": [
           "ONLINE-TENCENT-001"
+        ]
+      },
+      {
+        "binding": "FoxKifuDownload:mouseClicked#1",
+        "event_id": "FoxKifuDownload:mouseClicked",
+        "source_id": "FoxKifuDownload",
+        "event": "mouseClicked",
+        "line": 206,
+        "conditions": [
+          {
+            "expression": "e.getClickCount() == 2",
+            "expected": true
+          },
+          {
+            "expression": "row >= 0 && col >= 0 && foxReq != null",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 207,
+            "statement": "int row = table.rowAtPoint(e.getPoint());"
+          },
+          {
+            "line": 208,
+            "statement": "int col = table.columnAtPoint(e.getPoint());"
+          },
+          {
+            "line": 211,
+            "statement": "loadFoxKifu(table.getValueAt(row, 10).toString());"
+          }
+        ],
+        "matrix_ids": [
+          "ONLINE-FOX-001"
+        ]
+      },
+      {
+        "binding": "FoxKifuDownload:mouseClicked#2",
+        "event_id": "FoxKifuDownload:mouseClicked",
+        "source_id": "FoxKifuDownload",
+        "event": "mouseClicked",
+        "line": 206,
+        "conditions": [
+          {
+            "expression": "e.getClickCount() == 2",
+            "expected": true
+          },
+          {
+            "expression": "row >= 0 && col >= 0 && foxReq != null",
+            "expected": false
+          }
+        ],
+        "statements": [
+          {
+            "line": 207,
+            "statement": "int row = table.rowAtPoint(e.getPoint());"
+          },
+          {
+            "line": 208,
+            "statement": "int col = table.columnAtPoint(e.getPoint());"
+          }
+        ],
+        "matrix_ids": [
+          "ONLINE-FOX-001"
+        ]
+      },
+      {
+        "binding": "FoxKifuDownload:mouseClicked#3",
+        "event_id": "FoxKifuDownload:mouseClicked",
+        "source_id": "FoxKifuDownload",
+        "event": "mouseClicked",
+        "line": 206,
+        "conditions": [
+          {
+            "expression": "e.getClickCount() == 2",
+            "expected": false
+          }
+        ],
+        "statements": [
+          {
+            "line": 207,
+            "statement": "int row = table.rowAtPoint(e.getPoint());"
+          },
+          {
+            "line": 208,
+            "statement": "int col = table.columnAtPoint(e.getPoint());"
+          }
+        ],
+        "matrix_ids": [
+          "ONLINE-FOX-001"
         ]
       }
     ]

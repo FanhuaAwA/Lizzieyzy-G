@@ -1,5 +1,5 @@
 {
-  "schema_version": 13,
+  "schema_version": 14,
   "allowed_statuses": [
     "未盘点",
     "已盘点",
@@ -486,30 +486,64 @@
     {
       "id": "ONLINE-FOX-001",
       "category": "在线棋谱",
-      "legacy_entry": "FoxKifuDownload 搜索并下载野狐棋谱",
-      "legacy_menu_keys": ["Menu.foxKifu"],
+      "legacy_entry": "菜单、详细工具栏或底部工具栏 Menu.foxKifu、Menu.foxKifuButton 打开或复用 FoxKifuDownload；搜索按钮或查询框 Enter 请求列表，表格任意鼠标按键双击有效单元格或操作列按钮请求详情并载入当前棋盘",
+      "legacy_menu_keys": ["Menu.foxKifu", "Menu.foxKifuButton"],
       "legacy_menu_labels": [],
       "legacy_shortcuts": [],
-      "legacy_input_cases": [],
-      "legacy_input_bindings": [],
-      "java_evidence": [
-        { "path": "src/main/java/featurecat/lizzie/gui/FoxKifuDownload.java", "symbol": "class FoxKifuDownload" }
+      "legacy_input_cases": [
+        "FoxKifuDownload:keyPressed:VK_ENTER",
+        "FoxKifuDownload:mouseClicked"
       ],
-      "config_keys": ["fox-recent-searches", "last-fox-name", "fox-after-get"],
-      "inputs_preconditions": "网络可用；用户提供有效搜索条件。",
-      "success_behavior": "分页搜索、展示结果并下载选中的棋谱，保存最近搜索和后续动作设置。",
-      "failure_cancel_behavior": "网络、协议或下载失败时报告错误且允许重试；取消不载入不完整棋谱。",
-      "data_io": "野狐网络请求、响应解析、本地配置与可选棋谱文件。",
-      "external_dependencies": ["野狐网络接口", "HTTP 客户端"],
-      "target_modules": ["Lizzie.Core", "Lizzie.Desktop"],
+      "legacy_input_bindings": [
+        "FoxKifuDownload:keyPressed:VK_ENTER#1",
+        "FoxKifuDownload:mouseClicked#1",
+        "FoxKifuDownload:mouseClicked#2",
+        "FoxKifuDownload:mouseClicked#3"
+      ],
+      "java_evidence": [
+        { "path": "src/main/java/featurecat/lizzie/gui/Menu.java", "symbol": "Menu.foxKifu" },
+        { "path": "src/main/java/featurecat/lizzie/gui/BottomToolbar.java", "symbol": "Menu.foxKifu" },
+        { "path": "src/main/java/featurecat/lizzie/gui/FoxKifuDownload.java", "symbol": "class FoxKifuDownload" },
+        { "path": "src/main/java/featurecat/lizzie/analysis/GetFoxRequest.java", "symbol": "class GetFoxRequest" },
+        { "path": "src/main/java/featurecat/lizzie/util/NetworkProxy.java", "symbol": "class NetworkProxy" },
+        { "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "symbol": "loadDownloadedSgfString" },
+        { "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "symbol": "preloadQuickAnalysisEngineForKifuBrowsing" }
+      ],
+      "config_keys": [
+        "fox-recent-searches",
+        "last-fox-name",
+        "fox-after-get",
+        "read-komi",
+        "auto-quick-analyze-on-load",
+        "network-proxy-mode",
+        "network-proxy-host",
+        "network-proxy-port"
+      ],
+      "inputs_preconditions": "主菜单已创建；打开入口会在 EDT 创建/复用窗口并预热快速分析引擎。查询必须非空；纯数字查询直接作为 uid，其他查询先按昵称解析 uid。搜索和详情互斥，详情动作要求已有请求对象、非空 chessId 且未在载入。查询框 Enter 不检查修饰键；表格监听器不区分鼠标按键，只要求双击、有效行列和非空请求对象。",
+      "success_behavior": "列表接口每批至多返回 100 项、窗口每页显示 25 行，并用末项 chessId 游标继续取页；成功非空列表才把 uid/昵称去重后插到最多 8 项最近搜索。详情优先依次尝试两个 CGI，再回退 H5 接口；响应 SGF 会去除非主线变化、保留落子与必要根属性，并尝试恢复野狐窗口化残缺分支。规范化后的 SGF 文本以 read-komi 选项直接替换当前棋盘，不写棋谱文件；随后刷新，并在 auto-quick-analyze-on-load 启用、棋谱含真实着手且不处于对局/批量/试下等排除状态时强制走下载棋谱的静默快速全盘分析路径，否则恢复普通前台分析。载入成功后按 fox-after-get 选择最小化、隐藏或保持窗口，并把焦点还给主窗口。",
+      "failure_cancel_behavior": "空查询、搜索/载入冲突会提示后返回；无首批结果、尾页、越界和分页失败分别保持或恢复可重试状态。旧回调以请求对象身份隔离，但分页游标在解析列表前提交：带 fox_action=uid 的明确失败会回滚，畸形 JSON 在提交后抛错却不会回滚，同一页可能永久被去重；isComplete 仅控制页签省略号，预取仍可能额外请求一次空尾页。连接 20 秒、读取 25 秒，每个端点的 IOException 最多 3 次尝试并等待 350/700ms；详情三个端点最坏合计 9 次。旧版没有取消按钮，隐藏/关闭窗口不停止请求，执行器可能存活；后续动作下拉框监听器也处理 DESELECTED 事件并在初始化时保存，越界 fox-after-get 可令构造失败。非 2xx–3xx 仍读取 error stream，全文、JSON、列表、SGF、递归深度和属性值均无上限；递归 SGF 树和窗口恢复可能造成栈、内存或 CPU 拒绝服务，解析异常回退到原始 SGF，响应解析异常还把完整原文拼入提示。配置保存失败只打印堆栈，界面仍像已保存；载入完成仅由 repaint 后固定 120ms 计时器触发，且刷新抛错仍继续完成。目标版必须仅使用 HTTPS、可取消异步请求、请求代次与游标事务隔离、状态码校验、响应/JSON/列表/SGF/递归与计算上限、有限错误摘要和确定性的 busy/呈现/执行器收尾；配置值需校验，保存失败不得假装成功。",
+      "data_io": "通过 NetworkProxy 以 UTF-8 URL 编码访问固定接口，使用系统、手动 HTTP 代理或直连；昵称、列表及 H5 详情为 HTTPS，但旧版详情会先把 chessid POST 到两个明文 HTTP CGI，存在窃听和篡改风险，目标版不得保留。响应全文一次性读入内存并解析 JSON/SGF；详情仅载入内存棋盘，不创建或覆盖本地棋谱文件。触发搜索即保存 last-fox-name，成功非空列表保存 fox-recent-searches，后续动作选择保存 fox-after-get；代理三键是多个联网调用共享配置。",
+      "external_dependencies": [
+        "野狐固定 HTTPS 接口 h5.foxwq.com 与 newframe.foxwq.com",
+        "旧版不安全的明文 HTTP CGI happyapp.huanle.qq.com 与 cgi.foxwq.com",
+        "系统/手动 HTTP 代理与 DNS/TLS",
+        "SGF 解析器、当前棋盘和可选外部 GTP 快速分析引擎"
+      ],
+      "target_modules": ["Lizzie.Core", "Lizzie.Engine", "Lizzie.Desktop"],
       "automated_evidence": [
         { "path": "src/test/java/featurecat/lizzie/analysis/GetFoxRequestTest.java", "symbol": "GetFoxRequestTest" },
         { "path": "src/test/java/featurecat/lizzie/gui/FoxKifuDownloadPaginationCursorTest.java", "symbol": "FoxKifuDownloadPaginationCursorTest" },
-        { "path": "src/test/java/featurecat/lizzie/gui/FoxKifuDownloadResponsePayloadTest.java", "symbol": "FoxKifuDownloadResponsePayloadTest" }
+        { "path": "src/test/java/featurecat/lizzie/gui/FoxKifuDownloadResponsePayloadTest.java", "symbol": "FoxKifuDownloadResponsePayloadTest" },
+        { "path": "src/test/java/featurecat/lizzie/rules/BoardNodeKindHistoryPipelineTest.java", "symbol": "foxMainBranchExtractionSkipsSnapshotsAndKeepsPasses" },
+        { "path": "src/test/java/featurecat/lizzie/gui/KifuLoadFinisherTest.java", "symbol": "completionRunsEvenWhenRefreshThrows" },
+        { "path": "src/test/java/featurecat/lizzie/gui/LizzieFrameRegressionTest.java", "symbol": "downloadedKifuStartsSilentQuickAnalyzeAndForegroundAnalysis" },
+        { "path": "src/test/java/featurecat/lizzie/util/NetworkProxyTest.java", "symbol": "manualModeUsesConfiguredHttpProxy" },
+        { "path": "src/test/java/featurecat/lizzie/util/NetworkProxyInventoryTest.java", "symbol": "outboundJavaNetworkCallersUseNetworkProxyHelper" },
+        { "path": "src/test/java/featurecat/lizzie/ConfigNetworkProxyDefaultsTest.java", "symbol": "defaultConfigUsesDirectProxy" }
       ],
-      "manual_acceptance": "使用固定响应夹具核对搜索、分页、下载和失败重试；真实网络仅作为补充验收。",
+      "manual_acceptance": "用受控本地服务/代理夹具覆盖菜单、详细工具栏和底部工具栏复用、空/普通/纯数字/超长/Unicode 查询、Enter 各修饰键、每页 25/每批 100、首尾翻页、提前预取、空尾页、畸形分页、最近搜索去重/上限/清空确认和三种载入后动作；逐一测试任意鼠标按键的单击/双击、表格外、无请求、操作列重复点击。详情夹具覆盖合法、窗口化、损坏、深嵌套、巨大 SGF，空白/缺字段/巨大响应，非 2xx、慢连接/慢读取、重试、代理无效、关闭/隐藏/新搜索竞态、游标回滚和保存失败；核对目标版 HTTPS-only、取消和代次隔离、资源上限、当前棋盘替换、快速分析、副作用、焦点与无本地棋谱文件写入。真实网络仅作用户明确授权后的补充验收。",
       "status": "已盘点",
-      "evidence": "请求与分页测试已在旧版通过；外部接口契约快照尚未固化。"
+      "evidence": "已静态贯通三个入口、Enter、表格三条 pointer 路径、列表/游标/最近搜索、配置持久化、固定接口/代理、SGF 规范化与恢复、当前棋盘载入和后续快速分析。旧测试覆盖 SGF 主线/让子与窗口恢复的部分样例、UTF-8 全文/空响应/中途读取失败、shutdown 后丢弃回调、带动作错误、空 HTTP 结果包装、分页游标回滚/去重、成功内容分类、下载棋谱分析收尾和代理默认值；未覆盖真实 HTTP、状态码、超时、重试、明文降级、请求取消、响应/递归/计算上限、畸形分页游标、窗口生命周期或保存失败。未执行真实野狐网络请求、下载、用户配置/文件写入或旧版 GUI 动态录制。"
     },
     {
       "id": "ONLINE-TENCENT-001",
