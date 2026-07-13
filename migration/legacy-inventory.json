@@ -1,5 +1,5 @@
 {
-  "schema_version": 25,
+  "schema_version": 26,
   "source": {
     "root": "../lizzieyzy-next-main",
     "version": "yzy2.5.3",
@@ -18,7 +18,7 @@
     "Menu literal labels cover active string-literal menu constructors; dynamic labels remain represented by their resource or runtime source.",
     "Menu accelerators cover explicit Menu.java setAccelerator calls and direct OS.isWindows guards; other input bindings remain T-003 work.",
     "Input key bindings symbolically expand Input.java, InputIndependentMainBoard.java, InputIndependentSubboard.java, InputSubboard.java, FloatBoard.java, AnalysisFrame table/window, DrawPainting.java, ChooseMoreEngine.java, LoadEngine.java, OtherPrograms.java, TencentKifuDownload.java, FoxKifuDownload.java, BrowserFrame.java, and CaptureTsumeGoFrame.java key dispatch, condition evaluations, executed statements, empty-listener and empty-statement paths, and switch fall-through; controlIsPressed means Control on every platform plus Meta on macOS, and BrowserFrame dispatches Enter through getKeyChar.",
-    "Pointer bindings symbolically expand the two indexed subboard listeners plus FloatBoard, AnalysisFrame, DrawPainting, ChooseMoreEngine, LoadEngine, OtherPrograms, TencentKifuDownload, FoxKifuDownload, BrowserFrame load/stop/label listeners, JFontTextArea, JFontTextField, JIMSendTextPane, the two DemoScrollBarUI2 arrow-button listeners, JPaintTextPane, WindowMenuStrip, YikeLiveDialog, IndependentSubBoard lock/close/top-button plus window listeners, and BlunderListPanel across mouse, motion, drag, wheel, and release condition evaluations, early returns, executed statements, and explicit no-action paths; data-dependent loops and click try/catch handlers are preserved as normalized atomic statements.",
+    "Pointer bindings symbolically expand the two indexed subboard listeners plus FloatBoard, AnalysisFrame, DrawPainting, ChooseMoreEngine, LoadEngine, OtherPrograms, TencentKifuDownload, FoxKifuDownload, BrowserFrame load/stop/label listeners, JFontTextArea, JFontTextField, JIMSendTextPane, the two DemoScrollBarUI2 arrow-button listeners, JPaintTextPane, WindowMenuStrip, YikeLiveDialog, IndependentSubBoard lock/close/top-button plus window listeners, BlunderListPanel, and SidebarHeaderPanel across mouse, motion, drag, wheel, and release condition evaluations, early returns, executed statements, and explicit no-action paths; data-dependent loops and click try/catch handlers are preserved as normalized atomic statements.",
     "Other key-listener and pointer-listener classes remain T-003 work."
   ],
   "matrix_summary": {
@@ -32,8 +32,8 @@
       "用户批准不迁移": 0
     },
     "active_config_leaf_keys": 596,
-    "mapped_config_leaf_keys": 101,
-    "unmapped_config_leaf_keys": 495,
+    "mapped_config_leaf_keys": 103,
+    "unmapped_config_leaf_keys": 493,
     "active_menu_resource_keys": 383,
     "mapped_menu_resource_keys": 61,
     "unmapped_menu_resource_keys": 322,
@@ -49,11 +49,11 @@
     "active_input_key_bindings": 365,
     "mapped_input_key_bindings": 365,
     "unmapped_input_key_bindings": 0,
-    "active_input_pointer_events": 79,
-    "mapped_input_pointer_events": 79,
+    "active_input_pointer_events": 80,
+    "mapped_input_pointer_events": 80,
     "unmapped_input_pointer_events": 0,
-    "active_input_pointer_bindings": 154,
-    "mapped_input_pointer_bindings": 154,
+    "active_input_pointer_bindings": 160,
+    "mapped_input_pointer_bindings": 160,
     "unmapped_input_pointer_bindings": 0
   },
   "config": {
@@ -3186,6 +3186,7 @@
         "key": "comment-background-color",
         "reference_count": 3,
         "matrix_ids": [
+          "UI-BLUNDER-SCROLLBAR-001",
           "UI-TEXT-EDIT-001"
         ],
         "references": [
@@ -5156,6 +5157,7 @@
         "key": "glass-panel-border-color",
         "reference_count": 1,
         "matrix_ids": [
+          "UI-BLUNDER-SCROLLBAR-001",
           "UI-TEXT-EDIT-001",
           "UI-WINDOW-MENU-STRIP-001"
         ],
@@ -5186,7 +5188,9 @@
       {
         "key": "glass-panel-overlay-color",
         "reference_count": 1,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "UI-BLUNDER-SCROLLBAR-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -5199,7 +5203,9 @@
       {
         "key": "glass-panel-shadow-color",
         "reference_count": 1,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "UI-BLUNDER-SCROLLBAR-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -30774,10 +30780,16 @@
         "source": "src/main/java/featurecat/lizzie/gui/BlunderListPanel.java",
         "active_pointer_events": 3,
         "active_pointer_bindings": 4
+      },
+      {
+        "id": "SidebarHeaderPanel",
+        "source": "src/main/java/featurecat/lizzie/gui/SidebarHeaderPanel.java",
+        "active_pointer_events": 1,
+        "active_pointer_bindings": 6
       }
     ],
-    "active_pointer_events": 79,
-    "active_pointer_bindings": 154,
+    "active_pointer_events": 80,
+    "active_pointer_bindings": 160,
     "pointer_events": [
       {
         "event_id": "InputIndependentSubboard:mouseClicked",
@@ -31565,6 +31577,16 @@
         "event": "mouseClicked",
         "line": 50,
         "binding_count": 2,
+        "matrix_ids": [
+          "UI-BLUNDER-SCROLLBAR-001"
+        ]
+      },
+      {
+        "event_id": "SidebarHeaderPanel:mouseClicked",
+        "source_id": "SidebarHeaderPanel",
+        "event": "mouseClicked",
+        "line": 72,
+        "binding_count": 6,
         "matrix_ids": [
           "UI-BLUNDER-SCROLLBAR-001"
         ]
@@ -36277,6 +36299,282 @@
           {
             "line": 51,
             "statement": "ProblemMoveEntry clicked = getEntryAt(e.getX(), e.getY());"
+          }
+        ],
+        "matrix_ids": [
+          "UI-BLUNDER-SCROLLBAR-001"
+        ]
+      },
+      {
+        "binding": "SidebarHeaderPanel:mouseClicked#1",
+        "event_id": "SidebarHeaderPanel:mouseClicked",
+        "source_id": "SidebarHeaderPanel",
+        "event": "mouseClicked",
+        "line": 72,
+        "conditions": [
+          {
+            "expression": "primarySegment == FIRST_SEGMENT",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 73,
+            "statement": "Point point = e.getPoint();"
+          },
+          {
+            "line": 74,
+            "statement": "FontMetrics metrics = getFontMetrics(headerFont());"
+          },
+          {
+            "line": 76,
+            "statement": "int primarySegment = primarySegmentIndexAt(point, Lizzie.config.isAppleStyle, metrics);"
+          },
+          {
+            "line": 78,
+            "statement": "parentPanel.switchTo(\"COMMENTS\");"
+          },
+          {
+            "line": 79,
+            "statement": "return;"
+          }
+        ],
+        "matrix_ids": [
+          "UI-BLUNDER-SCROLLBAR-001"
+        ]
+      },
+      {
+        "binding": "SidebarHeaderPanel:mouseClicked#2",
+        "event_id": "SidebarHeaderPanel:mouseClicked",
+        "source_id": "SidebarHeaderPanel",
+        "event": "mouseClicked",
+        "line": 72,
+        "conditions": [
+          {
+            "expression": "primarySegment == FIRST_SEGMENT",
+            "expected": false
+          },
+          {
+            "expression": "primarySegment == SECOND_SEGMENT",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 73,
+            "statement": "Point point = e.getPoint();"
+          },
+          {
+            "line": 74,
+            "statement": "FontMetrics metrics = getFontMetrics(headerFont());"
+          },
+          {
+            "line": 76,
+            "statement": "int primarySegment = primarySegmentIndexAt(point, Lizzie.config.isAppleStyle, metrics);"
+          },
+          {
+            "line": 82,
+            "statement": "parentPanel.switchTo(\"BLUNDERS\");"
+          },
+          {
+            "line": 83,
+            "statement": "return;"
+          }
+        ],
+        "matrix_ids": [
+          "UI-BLUNDER-SCROLLBAR-001"
+        ]
+      },
+      {
+        "binding": "SidebarHeaderPanel:mouseClicked#3",
+        "event_id": "SidebarHeaderPanel:mouseClicked",
+        "source_id": "SidebarHeaderPanel",
+        "event": "mouseClicked",
+        "line": 72,
+        "conditions": [
+          {
+            "expression": "primarySegment == FIRST_SEGMENT",
+            "expected": false
+          },
+          {
+            "expression": "primarySegment == SECOND_SEGMENT",
+            "expected": false
+          },
+          {
+            "expression": "!Lizzie.config.isShowingBlunderTabel",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 73,
+            "statement": "Point point = e.getPoint();"
+          },
+          {
+            "line": 74,
+            "statement": "FontMetrics metrics = getFontMetrics(headerFont());"
+          },
+          {
+            "line": 76,
+            "statement": "int primarySegment = primarySegmentIndexAt(point, Lizzie.config.isAppleStyle, metrics);"
+          },
+          {
+            "line": 87,
+            "statement": "return;"
+          }
+        ],
+        "matrix_ids": [
+          "UI-BLUNDER-SCROLLBAR-001"
+        ]
+      },
+      {
+        "binding": "SidebarHeaderPanel:mouseClicked#4",
+        "event_id": "SidebarHeaderPanel:mouseClicked",
+        "source_id": "SidebarHeaderPanel",
+        "event": "mouseClicked",
+        "line": 72,
+        "conditions": [
+          {
+            "expression": "primarySegment == FIRST_SEGMENT",
+            "expected": false
+          },
+          {
+            "expression": "primarySegment == SECOND_SEGMENT",
+            "expected": false
+          },
+          {
+            "expression": "!Lizzie.config.isShowingBlunderTabel",
+            "expected": false
+          },
+          {
+            "expression": "sideSegment == FIRST_SEGMENT",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 73,
+            "statement": "Point point = e.getPoint();"
+          },
+          {
+            "line": 74,
+            "statement": "FontMetrics metrics = getFontMetrics(headerFont());"
+          },
+          {
+            "line": 76,
+            "statement": "int primarySegment = primarySegmentIndexAt(point, Lizzie.config.isAppleStyle, metrics);"
+          },
+          {
+            "line": 90,
+            "statement": "int sideSegment = sideSegmentIndexAt(point, Lizzie.config.isAppleStyle, metrics);"
+          },
+          {
+            "line": 92,
+            "statement": "Lizzie.frame.setProblemListSideFilter(ProblemListSideFilter.BLACK);"
+          }
+        ],
+        "matrix_ids": [
+          "UI-BLUNDER-SCROLLBAR-001"
+        ]
+      },
+      {
+        "binding": "SidebarHeaderPanel:mouseClicked#5",
+        "event_id": "SidebarHeaderPanel:mouseClicked",
+        "source_id": "SidebarHeaderPanel",
+        "event": "mouseClicked",
+        "line": 72,
+        "conditions": [
+          {
+            "expression": "primarySegment == FIRST_SEGMENT",
+            "expected": false
+          },
+          {
+            "expression": "primarySegment == SECOND_SEGMENT",
+            "expected": false
+          },
+          {
+            "expression": "!Lizzie.config.isShowingBlunderTabel",
+            "expected": false
+          },
+          {
+            "expression": "sideSegment == FIRST_SEGMENT",
+            "expected": false
+          },
+          {
+            "expression": "sideSegment == SECOND_SEGMENT",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 73,
+            "statement": "Point point = e.getPoint();"
+          },
+          {
+            "line": 74,
+            "statement": "FontMetrics metrics = getFontMetrics(headerFont());"
+          },
+          {
+            "line": 76,
+            "statement": "int primarySegment = primarySegmentIndexAt(point, Lizzie.config.isAppleStyle, metrics);"
+          },
+          {
+            "line": 90,
+            "statement": "int sideSegment = sideSegmentIndexAt(point, Lizzie.config.isAppleStyle, metrics);"
+          },
+          {
+            "line": 94,
+            "statement": "Lizzie.frame.setProblemListSideFilter(ProblemListSideFilter.WHITE);"
+          }
+        ],
+        "matrix_ids": [
+          "UI-BLUNDER-SCROLLBAR-001"
+        ]
+      },
+      {
+        "binding": "SidebarHeaderPanel:mouseClicked#6",
+        "event_id": "SidebarHeaderPanel:mouseClicked",
+        "source_id": "SidebarHeaderPanel",
+        "event": "mouseClicked",
+        "line": 72,
+        "conditions": [
+          {
+            "expression": "primarySegment == FIRST_SEGMENT",
+            "expected": false
+          },
+          {
+            "expression": "primarySegment == SECOND_SEGMENT",
+            "expected": false
+          },
+          {
+            "expression": "!Lizzie.config.isShowingBlunderTabel",
+            "expected": false
+          },
+          {
+            "expression": "sideSegment == FIRST_SEGMENT",
+            "expected": false
+          },
+          {
+            "expression": "sideSegment == SECOND_SEGMENT",
+            "expected": false
+          }
+        ],
+        "statements": [
+          {
+            "line": 73,
+            "statement": "Point point = e.getPoint();"
+          },
+          {
+            "line": 74,
+            "statement": "FontMetrics metrics = getFontMetrics(headerFont());"
+          },
+          {
+            "line": 76,
+            "statement": "int primarySegment = primarySegmentIndexAt(point, Lizzie.config.isAppleStyle, metrics);"
+          },
+          {
+            "line": 90,
+            "statement": "int sideSegment = sideSegmentIndexAt(point, Lizzie.config.isAppleStyle, metrics);"
           }
         ],
         "matrix_ids": [

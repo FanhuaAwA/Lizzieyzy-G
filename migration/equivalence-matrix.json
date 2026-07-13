@@ -1,5 +1,5 @@
 {
-  "schema_version": 25,
+  "schema_version": 26,
   "allowed_statuses": [
     "未盘点",
     "已盘点",
@@ -2300,7 +2300,7 @@
     {
       "id": "UI-BLUNDER-SCROLLBAR-001",
       "category": "界面显示",
-      "legacy_entry": "LizzieFrame 为变化列表安装普通 DemoScrollBarUI2(false)，为黑白恶手表的垂直滚动条各安装 DemoScrollBarUI2(true)；后者给上下箭头各增加一组侧栏 hover 监听器；SidebarPanel 的 BLUNDERS 卡片用 BlunderListPanel 展示问题手，指针移动高亮、离开清除，点击命中行跳到对应着手前位置",
+      "legacy_entry": "LizzieFrame 为变化列表安装普通 DemoScrollBarUI2(false)，为黑白恶手表的垂直滚动条各安装 DemoScrollBarUI2(true)；后者给上下箭头各增加一组侧栏 hover 监听器；SidebarPanel 的 BLUNDERS 卡片用 BlunderListPanel 展示问题手，指针移动高亮、离开清除，点击命中行跳到对应着手前位置；SidebarHeaderPanel 用自绘评论/问题手与黑/白分段命中区切换卡片和过滤器，并显示评估进度",
       "legacy_menu_keys": [
         "Menu.showCommentConrolPane",
         "Menu.showCommentConrolPane.tooltip",
@@ -2316,7 +2316,8 @@
         "DemoScrollBarUI2Decrease:mouseEntered",
         "BlunderListPanel:mouseMoved",
         "BlunderListPanel:mouseExited",
-        "BlunderListPanel:mouseClicked"
+        "BlunderListPanel:mouseClicked",
+        "SidebarHeaderPanel:mouseClicked"
       ],
       "legacy_input_bindings": [
         "DemoScrollBarUI2Increase:mouseExited#1",
@@ -2330,7 +2331,13 @@
         "BlunderListPanel:mouseMoved#1",
         "BlunderListPanel:mouseExited#1",
         "BlunderListPanel:mouseClicked#1",
-        "BlunderListPanel:mouseClicked#2"
+        "BlunderListPanel:mouseClicked#2",
+        "SidebarHeaderPanel:mouseClicked#1",
+        "SidebarHeaderPanel:mouseClicked#2",
+        "SidebarHeaderPanel:mouseClicked#3",
+        "SidebarHeaderPanel:mouseClicked#4",
+        "SidebarHeaderPanel:mouseClicked#5",
+        "SidebarHeaderPanel:mouseClicked#6"
       ],
       "java_evidence": [
         { "path": "src/main/java/featurecat/lizzie/gui/DemoScrollBarUI2.java", "symbol": "public DemoScrollBarUI2(boolean needAddAction)" },
@@ -2347,6 +2354,13 @@
         { "path": "src/main/java/featurecat/lizzie/gui/BlunderListPanel.java", "symbol": "public void updateSnapshot(ProblemListSnapshot snapshot)" },
         { "path": "src/main/java/featurecat/lizzie/gui/BlunderListPanel.java", "symbol": "private List<ProblemMoveEntry> getMergedEntries()" },
         { "path": "src/main/java/featurecat/lizzie/gui/BlunderListPanel.java", "symbol": "protected void paintComponent(Graphics g)" },
+        { "path": "src/main/java/featurecat/lizzie/gui/SidebarHeaderPanel.java", "symbol": "public SidebarHeaderPanel(SidebarPanel parentPanel)" },
+        { "path": "src/main/java/featurecat/lizzie/gui/SidebarHeaderPanel.java", "symbol": "static int primarySegmentIndexAt(Point point, boolean appleStyle, FontMetrics metrics)" },
+        { "path": "src/main/java/featurecat/lizzie/gui/SidebarHeaderPanel.java", "symbol": "static int sideSegmentIndexAt(Point point, boolean appleStyle, FontMetrics metrics)" },
+        { "path": "src/main/java/featurecat/lizzie/gui/SidebarHeaderPanel.java", "symbol": "private void installKeyboardActions()" },
+        { "path": "src/main/java/featurecat/lizzie/gui/SidebarHeaderPanel.java", "symbol": "public void updateSnapshot(ProblemListSnapshot snapshot)" },
+        { "path": "src/main/java/featurecat/lizzie/gui/SidebarHeaderPanel.java", "symbol": "public void setShowingBlunders(boolean showingBlunders)" },
+        { "path": "src/main/java/featurecat/lizzie/gui/SidebarHeaderPanel.java", "symbol": "protected void paintComponent(Graphics g)" },
         { "path": "src/main/java/featurecat/lizzie/gui/ProblemListSideFilter.java", "symbol": "public static ProblemListSideFilter fromConfigValue(String value)" },
         { "path": "src/main/java/featurecat/lizzie/Config.java", "symbol": "public void setShowComment(boolean showComment)" },
         { "path": "src/main/java/featurecat/lizzie/gui/Menu.java", "symbol": "final JFontCheckBoxMenuItem commitPane" },
@@ -2373,28 +2387,42 @@
         "win-loss-threshold-5",
         "ui-font-name",
         "is-apple-style",
+        "comment-background-color",
+        "glass-panel-overlay-color",
+        "glass-panel-border-color",
+        "glass-panel-shadow-color",
         "glass-panel-highlight-color",
         "glass-accent-color",
         "glass-corner-radius"
       ],
-      "inputs_preconditions": "三个已知构造点都把 UI delegate 安装到垂直滚动条；变化列表传 false，不添加本类 listener，黑白恶手表各传 true，BasicScrollBarUI 创建上下箭头时各安装一组 mouseEntered/mouseExited。事件不检查鼠标按键、点击次数或修饰键；hide-blunder-table-control-pane 为真时四个事件都在副作用前返回。Menu.commitPane 的显示请求还受 extra-mode 约束：Four_Sub 或 Double_Engine 会由 Config.setShowComment 强制改回 false。BlunderListPanel 只有 currentSnapshot 非空且 y≥20、按 64 px 行槽计算的索引位于当前侧过滤后的合并列表内时才命中；x 被读取但完全不参与命中，左右 padding 与卡片底部 12 px 空隙仍算整行，mouseClicked 同样不检查按键、点击次数或修饰键。旧 side filter 只实际支持 BLACK/WHITE，配置非法或 ALL 都退化为 BLACK。",
-      "success_behavior": "旧版把首选宽高固定为 8 px，以 needAddAction 选择两组硬编码 track/thumb 灰色，用 0.7 alpha 绘制 9 px 滑块；三个已知垂直实例只加载 smallDown/smallUp，上下箭头进入且未隐藏控制时调用 setBlunderControlPane(false,true)。show-comment 为假时该方法先隐藏侧栏；为真时按 is-showing-blunder-table 调 SidebarPanel.switchTo，再显示侧栏，随后事件无条件显示旧 commentBlunderControlPane。switchTo 每次都把模式写入 uiConfig；COMMENTS 分支还同步 appendComment，满足引擎、间隔、候选和配置条件时可由 SGFParser.appendComment 改写当前节点评论，BLUNDERS 分支同步遍历整条主线，按 visits 与胜率损失阈值筛选，分黑白后排序并发布不可修改快照。Menu.commitPane 在 Normal 等允许模式下切换整个评论/问题手侧栏；Min 模式的显示请求会先切回 Normal，Four_Sub/Double_Engine 则保持 show-comment=false 并隐藏侧栏。列表再次按 winrateLossAbs 降序、moveNumber 升序合并排序；mouseMoved 更新行高亮，mouseExited 清除高亮，命中点击把坐标转换后跳到 moveNumber-1、写 clickbadmove 并刷新，未命中分支无动作。problem-list-metric 虽持久化但刷新、setter 和卡片都强制 WINRATE，score list 实质不可用。原 showCommentConrolPane 只控制旧箭头 hover 面板。目标版复用 Avalonia 原生虚拟化 ListBox/ScrollViewer、主题 token 与已有棋盘导航命令：Core 从一致且带 generation 的棋盘快照计算一次有界列表，Desktop 只用主按钮单击或 Enter/Space 激活稳定节点身份；导航成功后才更新高亮，失败保持棋盘/选择不变并给出可访问反馈。不移植 Swing UI delegate、旧 JTable、自绘卡片、重复排序或旧 PNG。",
-      "failure_cancel_behavior": "隐藏配置为真时保持当前侧栏和旧面板状态不变；Four_Sub/Double_Engine 下 Menu.commitPane 的显示请求被有意拒绝，菜单状态保持未选中且侧栏隐藏。资源缺失会让 ImageIO.read(null) 抛出未捕获的 IllegalArgumentException，IOException 仅打印堆栈并留下空图标；四处 getResourceAsStream 均未关闭，且无已知水平实例会走 smallRight/smallLeft 分支。固定 8/9 px、负 margin、硬编码颜色和纯 pointer hover 不适配高 DPI、高对比、触控、键盘或辅助技术。commentBlunderControlPane 仅被创建为无子项黑色 JPanel，未发现 bounds/size 设置；setBlunderControlPane 的两个参数也已不再使用。问题列表的任意鼠标键、单击或双击都能激活整行槽；jumpToProblemMove 不检查 goToMoveNumber 返回值，广泛 catch 只打印堆栈，可能留下已移动棋盘或错误 clickbadmove 而无用户反馈。快照没有棋局 generation/节点身份，载谱、编辑或排队更新后可按同手数导航到另一状态；hoveredIndex 在快照或过滤器变化时不清除。每次 mouseMoved、click、preferredSize 和 paint 都复制并 O(n log n) 重排，paint 不按 clip 虚拟化且逐行格式化/创建渐变；隐藏侧栏因 listener 始终存在仍扫描整条主线，超长棋谱、NaN/Infinity 分析值、负值/无穷阈值及 rows×64 整数溢出可造成错误显示或 UI/内存拒绝服务。固定 12/14/18 字号、20/64 px 几何、硬编码暗色/中文空态/emoji、窄宽负绘制尺寸和纯自绘无子项语义未覆盖 DPI、高对比、本地化、键盘、触控或辅助技术。目标版校验 finite/范围/阈值顺序，以可取消、合并、带代次和资源上限的后台快照丢弃旧结果；detach/关闭时解绑，原生列表提供焦点、名称、角色、选择与动作，资源/主题/导航失败时仍保持可操作和一致。",
-      "data_io": "读取 hide-blunder-table-control-pane、show-comment、extra-mode、is-showing-blunder-table、append-winrate-to-comment、analyze-update-interval-centisec、use-morandi-colors，以及问题列表的 problem-list-metric、problem-list-side-filter、problem-list-winrate-threshold、blunder-playouts-threshold、win-loss-threshold-1..5、ui-font-name、is-apple-style、glass-panel-highlight-color、glass-accent-color、glass-corner-radius。SidebarPanel.switchTo 与 Menu.commitPane 更新 uiConfig 中的模式/可见性；Config.setShowComment 在 Four_Sub/Double_Engine 下把显示请求改回 false，Min 下可先切换 extra-mode。COMMENTS 链可读取引擎候选并修改当前 BoardHistoryNode.comment。BLUNDERS 链读取当前棋盘主线、NodeInfo、分析运行态和阈值，替换内存 ProblemListSnapshot；点击读取 entry move/coords，改变当前棋盘位置与 clickbadmove 后刷新。problem-list-side-filter/metric 与其他 put 不立即调用 Config.save，磁盘持久化依赖后续保存/退出。该列表不访问网络或文件；score-loss-threshold-1..5、旧 JTable 阈值/排序/导出键和 Menu.showBlunderBar 不属于本路径。",
+      "inputs_preconditions": "三个已知构造点都把 UI delegate 安装到垂直滚动条；变化列表传 false，不添加本类 listener，黑白恶手表各传 true，BasicScrollBarUI 创建上下箭头时各安装一组 mouseEntered/mouseExited。事件不检查鼠标按键、点击次数或修饰键；hide-blunder-table-control-pane 为真时四个事件都在副作用前返回。Menu.commitPane 的显示请求还受 extra-mode 约束：Four_Sub 或 Double_Engine 会由 Config.setShowComment 强制改回 false。BlunderListPanel 只有 currentSnapshot 非空且 y≥20、按 64 px 行槽计算的索引位于当前侧过滤后的合并列表内时才命中；x 被读取但完全不参与命中，左右 padding 与卡片底部 12 px 空隙仍算整行，mouseClicked 同样不检查按键、点击次数或修饰键。SidebarHeaderPanel 唯一 mouseClicked 也不检查按键、次数或修饰键：先按当前字体和 Apple/classic 几何命中评论/问题手，主区未命中且当前确为问题手卡片时才命中黑/白，否则早退或无动作；classic 主区第二段与黑棋段在约 x=100..107 存在重叠并由主区优先。旧 side filter 只实际支持 BLACK/WHITE，配置非法或 ALL 都退化为 BLACK。Header 另装 Left/Right/B/W/Enter 的 WHEN_FOCUSED 动作但不属于本轮 KeyListener 静态索引；其中 B/W 没有问题手模式 guard。",
+      "success_behavior": "旧版把首选宽高固定为 8 px，以 needAddAction 选择两组硬编码 track/thumb 灰色，用 0.7 alpha 绘制 9 px 滑块；三个已知垂直实例只加载 smallDown/smallUp，上下箭头进入且未隐藏控制时调用 setBlunderControlPane(false,true)。show-comment 为假时该方法先隐藏侧栏；为真时按 is-showing-blunder-table 调 SidebarPanel.switchTo，再显示侧栏，随后事件无条件显示旧 commentBlunderControlPane。switchTo 每次都把模式写入 uiConfig；COMMENTS 分支还同步 appendComment，满足引擎、间隔、候选和配置条件时可由 SGFParser.appendComment 改写当前节点评论，BLUNDERS 分支同步遍历整条主线，按 visits 与胜率损失阈值筛选，分黑白后排序并发布不可修改快照。Menu.commitPane 在 Normal 等允许模式下切换整个评论/问题手侧栏；Min 模式的显示请求会先切回 Normal，Four_Sub/Double_Engine 则保持 show-comment=false 并隐藏侧栏。SidebarHeaderPanel 的评论/问题手命中和 Left/Right/Enter 复用同一 switchTo 副作用；黑/白命中及 B/W 通过 setProblemListSideFilter 写入 uiConfig 并通知 listener，快照进度按 0..totalMoves 钳制显示 running/partial/complete tooltip 并触发 accessible visible-data 通知。列表再次按 winrateLossAbs 降序、moveNumber 升序合并排序；mouseMoved 更新行高亮，mouseExited 清除高亮，命中点击把坐标转换后跳到 moveNumber-1、写 clickbadmove 并刷新，未命中分支无动作。problem-list-metric 虽持久化但刷新、setter 和卡片都强制 WINRATE，score list 实质不可用。原 showCommentConrolPane 只控制旧箭头 hover 面板。目标版复用 Avalonia 原生 TabControl/ToggleButton、虚拟化 ListBox/ScrollViewer、ProgressBar/TextBlock、主题 token 与已有棋盘导航命令：Core 从一致且带 generation 的棋盘快照计算一次有界列表，Desktop 为评论/问题手与黑/白提供独立可聚焦、具名称/角色/选中态的命令，只用主按钮单击或 Enter/Space 激活稳定节点身份；导航成功后才更新高亮，失败保持棋盘/选择不变并给出可访问反馈。不移植 Swing UI delegate、旧 JTable、自绘命中控件/卡片、重复排序或旧 PNG。",
+      "failure_cancel_behavior": "隐藏配置为真时保持当前侧栏和旧面板状态不变；Four_Sub/Double_Engine 下 Menu.commitPane 的显示请求被有意拒绝，菜单状态保持未选中且侧栏隐藏。资源缺失会让 ImageIO.read(null) 抛出未捕获的 IllegalArgumentException，IOException 仅打印堆栈并留下空图标；四处 getResourceAsStream 均未关闭，且无已知水平实例会走 smallRight/smallLeft 分支。固定 8/9 px、负 margin、硬编码颜色和纯 pointer hover 不适配高 DPI、高对比、触控、键盘或辅助技术。commentBlunderControlPane 仅被创建为无子项黑色 JPanel，未发现 bounds/size 设置；setBlunderControlPane 的两个参数也已不再使用。问题列表的任意鼠标键、单击或双击都能激活整行槽；jumpToProblemMove 不检查 goToMoveNumber 返回值，广泛 catch 只打印堆栈，可能留下已移动棋盘或错误 clickbadmove 而无用户反馈。快照没有棋局 generation/节点身份，载谱、编辑或排队更新后可按同手数导航到另一状态；hoveredIndex 在快照或过滤器变化时不清除。每次 mouseMoved、click、preferredSize 和 paint 都复制并 O(n log n) 重排，paint 不按 clip 虚拟化且逐行格式化/创建渐变；隐藏侧栏因 listener 始终存在仍扫描整条主线，超长棋谱、NaN/Infinity 分析值、负值/无穷阈值及 rows×64 整数溢出可造成错误显示或 UI/内存拒绝服务。Header 的任意鼠标键/单击次数都可切换并重复触发 appendComment、全主线刷新或配置通知；B/W 键在评论模式仍静默改过滤器。Header 虽 setFocusable(true)，但 F6 zone 枚举优先收集后代文本控件且不把无子项 JPanel 加入候选，mouseClicked 也不请求焦点，故五个键动作可达性不可靠；单个自绘 JPanel 只有整体名称/描述与焦点框，没有四段独立角色、选中态或动作。固定 12px/200×48/56 和 Apple 132/92 px、classic 本地化文字宽度会在长翻译、窄宽/高 DPI 下裁切、重叠或让主区抢占黑棋命中，进度 pill 空间不足时只静默不画；text() 吞资源异常并回退英文，畸形 MessageFormat 模式可在 EDT 抛错。SidebarPanel 注册的 snapshotListener 没有已知 remove 调用，同值过滤仍写配置/通知/重绘。目标版校验 finite/范围/阈值顺序，以可取消、合并、带代次和资源上限的后台快照丢弃旧结果；detach/关闭时解绑，原生控件提供焦点、名称、角色、选择与动作，资源/主题/导航失败时仍保持可操作和一致。",
+      "data_io": "读取 hide-blunder-table-control-pane、show-comment、extra-mode、is-showing-blunder-table、append-winrate-to-comment、analyze-update-interval-centisec、use-morandi-colors，以及问题列表的 problem-list-metric、problem-list-side-filter、problem-list-winrate-threshold、blunder-playouts-threshold、win-loss-threshold-1..5、ui-font-name、is-apple-style、comment-background-color、glass-panel-overlay-color、glass-panel-border-color、glass-panel-shadow-color、glass-panel-highlight-color、glass-accent-color、glass-corner-radius。Header 还读取 SidebarHeader.* 本地化资源和当前 ProblemListSnapshot；SidebarPanel.switchTo 与 Menu.commitPane 更新 uiConfig 中的模式/可见性，Header 的黑/白 pointer/键盘动作更新 problem-list-side-filter。Config.setShowComment 在 Four_Sub/Double_Engine 下把显示请求改回 false，Min 下可先切换 extra-mode。COMMENTS 链可读取引擎候选并修改当前 BoardHistoryNode.comment。BLUNDERS 链读取当前棋盘主线、NodeInfo、分析运行态和阈值，替换内存 ProblemListSnapshot；点击读取 entry move/coords，改变当前棋盘位置与 clickbadmove 后刷新。problem-list-side-filter/metric 与其他 put 不立即调用 Config.save，磁盘持久化依赖后续保存/退出。该侧栏不访问网络或文件；score-loss-threshold-1..5、旧 JTable 阈值/排序/导出键和 Menu.showBlunderBar 不属于本路径。",
       "external_dependencies": [
-        "Swing BasicScrollBarUI、鼠标 hover 与 UI 缩放",
+        "Swing BasicScrollBarUI、JPanel/CardLayout、AWT FontMetrics/Graphics2D、pointer/键盘焦点与 UI 缩放",
         "classpath assets/smallDown.png、smallRight.png、smallUp.png、smallLeft.png",
+        "ResourceBundle、MessageFormat 与 Swing AccessibilitySupport",
         "当前棋盘主线、节点评论与 GTP 引擎候选分析数据"
       ],
       "target_modules": ["Lizzie.Core", "Lizzie.Desktop"],
       "automated_evidence": [
         { "path": "src/test/java/featurecat/lizzie/gui/BlunderListPanelLayoutTest.java", "symbol": "problemListTracksViewportWidthInsteadOfStaleComponentWidth" },
         { "path": "src/test/java/featurecat/lizzie/gui/BlunderListPanelLayoutTest.java", "symbol": "shortProblemListFillsViewportAndLongProblemListScrollsVertically" },
-        { "path": "src/test/java/featurecat/lizzie/gui/BlunderListPanelLayoutTest.java", "symbol": "scrollIncrementsMatchProblemCardRhythm" }
+        { "path": "src/test/java/featurecat/lizzie/gui/BlunderListPanelLayoutTest.java", "symbol": "scrollIncrementsMatchProblemCardRhythm" },
+        { "path": "src/test/java/featurecat/lizzie/gui/SidebarHeaderPanelHitTest.java", "symbol": "classicProblemTabUsesTheWholeVisibleLabel" },
+        { "path": "src/test/java/featurecat/lizzie/gui/SidebarHeaderPanelHitTest.java", "symbol": "classicSeparatorGapDoesNotSwitchTabs" },
+        { "path": "src/test/java/featurecat/lizzie/gui/SidebarHeaderPanelHitTest.java", "symbol": "appleSegmentedControlStillUsesFullHalves" },
+        { "path": "src/test/java/featurecat/lizzie/gui/SidebarHeaderPanelHitTest.java", "symbol": "sideFilterHitTestingMatchesVisibleLabels" },
+        { "path": "src/test/java/featurecat/lizzie/gui/SidebarHeaderPanelHitTest.java", "symbol": "problemHeaderKeepsFiltersInlineWithoutTakingAnExtraRow" },
+        { "path": "src/test/java/featurecat/lizzie/gui/SidebarHeaderPanelHitTest.java", "symbol": "progressLabelExplainsTheRightSideCounter" },
+        { "path": "src/test/java/featurecat/lizzie/gui/PanelBackgroundStyleTest.java", "symbol": "sidebarPanelFillUsesConfiguredCommentBackground" },
+        { "path": "src/test/java/featurecat/lizzie/LocalizationResourceParityTest.java", "symbol": "allMaintainedBundlesHaveIdenticalKeysOrderAndPlaceholders" },
+        { "path": "src/test/java/featurecat/lizzie/gui/UiLocalizationGuardTest.java", "symbol": "primaryUiDirectLiteralsStayOnTheExplicitNonLanguageWhitelist" }
       ],
-      "manual_acceptance": "在 Windows、macOS、Linux 的浅色、深色、高对比和 100%/150%/200% DPI 下检查评论/问题手侧栏、列表与滚动条：在 Normal/Min/Four_Sub/Double_Engine 分别触发 Menu.commitPane，确认允许模式正确显示/隐藏、Min 显示时切回 Normal、Four_Sub/Double_Engine 拒绝显示且菜单保持未选中；黑/白过滤、阈值、严重度、排序、运行/空/错误/超长状态与当前项一致。主按钮单击和 Enter/Space 跳到问题手之前，右键/中键/空隙/陈旧项不导航，失败不改变棋盘或高亮。用鼠标、触控、Tab/方向/Page/Home/End 和 Narrator/VoiceOver/Orca 验证每行名称、角色、当前/选中状态、焦点恢复和滚动；覆盖 show-comment/extra-mode/is-showing-blunder-table/hide-blunder-table-control-pane、窗口缩放、长翻译与主题切换。以超长主线和活跃引擎连续刷新，确认 hover 不写配置/SGF、不在 UI 线程重排整表，旧 generation 被丢弃，隐藏/销毁后无订阅、线程或内存增长。",
+      "manual_acceptance": "在 Windows、macOS、Linux 的浅色、深色、高对比和 100%/150%/200% DPI 下检查评论/问题手侧栏、header、列表与滚动条：在 Normal/Min/Four_Sub/Double_Engine 分别触发 Menu.commitPane，确认允许模式正确显示/隐藏、Min 显示时切回 Normal、Four_Sub/Double_Engine 拒绝显示且菜单保持未选中；以左右键、Enter、主按钮单击和独立可聚焦分段切换评论/问题手，以黑/白命令过滤，右键/中键/双击、段间空隙和评论态 B/W 不产生意外写入。覆盖 classic/Apple、窄宽、长中日韩/泰文/英文、进度 0/partial/running/complete、同值更新、主题切换与焦点恢复；Narrator/VoiceOver/Orca 应分别读出四个分段的名称、角色、选中态和动作，不能只有整体 JPanel。验证阈值、严重度、排序、运行/空/错误/超长状态与当前项一致；主按钮单击和 Enter/Space 跳到问题手之前，陈旧项不导航，失败不改变棋盘或高亮。覆盖 show-comment/extra-mode/is-showing-blunder-table/hide-blunder-table-control-pane、窗口缩放和主题键。以超长主线和活跃引擎连续刷新，确认 hover 不写配置/SGF、不在 UI 线程重排整表，旧 generation 被丢弃，隐藏/销毁后无订阅、线程或内存增长。",
       "status": "已盘点",
-      "evidence": "DemoScrollBarUI2 的第 1/第 2 组 entered/exited 方法按 ordinal 分成上下箭头两个来源，共 4 个事件/8 条路径；BlunderListPanel 新增单一来源精确覆盖 mouseMoved 1、mouseExited 1 与 mouseClicked 真/假 2，共 3 个事件/4 条路径，普通快照/paint/Scrollable 方法未冒充 pointer binding。静态链确认 Menu.commitPane→Config.setShowComment→SidebarPanel，并确认 shouldHideCommentPanel 在 Four_Sub/Double_Engine 强制拒绝显示、Min 显示请求切回 Normal；同时确认唯一 BlunderListPanel 构造/监听器、AnalysisEngine 与 frame 刷新入口、全主线快照筛选/排序、BLACK/WHITE 与 dormant ALL/score、任意按键和整行槽命中、jumpToProblemMove 的棋盘副作用，以及旧 JTable/胜率图恶手条旁路不属于本源。BlunderListPanelLayoutTest 的 3 项仅覆盖 viewport 宽度、短/长高度和滚动增量；未覆盖 pointer、排序/过滤/阈值、跳转失败/陈旧代次、异常数值、线程/取消/解绑、性能、DPI、主题、键盘、触控或辅助技术。旧测试无 DemoScrollBarUI2 侧栏 hover、资源失败或下游副作用专项覆盖；本轮未运行旧 GUI、修改配置、棋谱或用户数据。"
+      "evidence": "DemoScrollBarUI2 的第 1/第 2 组 entered/exited 方法按 ordinal 分成上下箭头两个来源，共 4 个事件/8 条路径；BlunderListPanel 单一来源精确覆盖 mouseMoved 1、mouseExited 1 与 mouseClicked 真/假 2，共 3 个事件/4 条路径；SidebarHeaderPanel 新增单一 mouseClicked 事件 6 条互斥路径，依次为评论、问题手、评论态空白早退、黑、白和问题手态空白无动作，普通 paint/focus/键盘 action 未冒充 pointer binding。静态链确认 Menu.commitPane→Config.setShowComment→SidebarPanel，并确认 shouldHideCommentPanel 在 Four_Sub/Double_Engine 强制拒绝显示、Min 显示请求切回 Normal；同时确认唯一 Header/BlunderList 构造、InputMap 键动作、listener 注册无解绑、AnalysisEngine 与 frame 刷新入口、全主线快照筛选/排序、BLACK/WHITE 与 dormant ALL/score、任意按键/整行槽命中、jumpToProblemMove 棋盘副作用及父 SidebarPanel 主题键，旧 JTable/胜率图恶手条旁路不属于本源。SidebarHeaderPanelHitTest 的 6 项只覆盖简体中文 helper 命中、固定高度和进度文案，UiLocalizationGuardTest 只拦部分直接 UI 字面量；均未 dispatch 真实 pointer/键盘/focus，也未断言 switchTo、配置写入、appendComment、刷新、订阅解绑、长翻译、DPI、主题或辅助技术。BlunderListPanelLayoutTest 的 3 项仅覆盖 viewport 宽度、短/长高度和滚动增量；未覆盖 pointer、排序/过滤/阈值、跳转失败/陈旧代次、异常数值、线程/取消/解绑或性能。旧测试无 DemoScrollBarUI2 侧栏 hover、资源失败或下游副作用专项覆盖；本轮未运行旧 GUI、修改配置、棋谱或用户数据。"
     },
     {
       "id": "UI-TEXT-EDIT-001",
