@@ -127,11 +127,17 @@ INPUT_CONDITIONAL_KEY_SOURCES = (
         "keyPressed",
         1,
     ),
+    (
+        "BrowserFrame",
+        "src/main/java/featurecat/lizzie/gui/BrowserFrame.java",
+        "keyPressed",
+        1,
+    ),
 )
 INPUT_POINTER_METHOD = re.compile(
     r"public\s+void\s+(?P<event>mouseClicked|mousePressed|mouseWheelMoved|mouseReleased|"
     r"mouseEntered|mouseExited|mouseMoved|mouseDragged)\s*\(\s*"
-    r"(?:MouseEvent|MouseWheelEvent)\s+"
+    r"(?:java\.awt\.event\.)?(?:MouseEvent|MouseWheelEvent)\s+"
     r"[A-Za-z_$][\w$]*\s*\)\s*\{"
 )
 INPUT_POINTER_SOURCES = (
@@ -205,6 +211,29 @@ INPUT_POINTER_SOURCES = (
         "FoxKifuDownload",
         "src/main/java/featurecat/lizzie/gui/FoxKifuDownload.java",
         {"mouseClicked"},
+    ),
+    (
+        "BrowserFrameLoad",
+        "src/main/java/featurecat/lizzie/gui/BrowserFrame.java",
+        {"mouseClicked"},
+        {"mouseClicked": 1},
+    ),
+    (
+        "BrowserFrameStop",
+        "src/main/java/featurecat/lizzie/gui/BrowserFrame.java",
+        {"mouseClicked"},
+        {"mouseClicked": 2},
+    ),
+    (
+        "BrowserFrameLabelButton",
+        "src/main/java/featurecat/lizzie/gui/BrowserFrame.java",
+        {"mouseEntered", "mouseExited", "mousePressed", "mouseReleased"},
+        {
+            "mouseEntered": 1,
+            "mouseExited": 1,
+            "mousePressed": 1,
+            "mouseReleased": 1,
+        },
     ),
 )
 INPUT_MODIFIER_CHECKS = (
@@ -969,7 +998,8 @@ def collect_conditional_key_source(
     nodes = parse_java_sequence(source, open_brace + 1, method_end)
     parameter = re.escape(method_match.group("parameter"))
     key_check = re.compile(
-        rf"{parameter}\.getKeyCode\s*\(\s*\)\s*==\s*KeyEvent\.(VK_[A-Z0-9_]+)"
+        rf"{parameter}\.(?:getKeyCode|getKeyChar)\s*\(\s*\)\s*==\s*"
+        r"KeyEvent\.(VK_[A-Z0-9_]+)"
     )
     for node in nodes:
         if node["kind"] != "if" or node["else"]:
@@ -1042,15 +1072,28 @@ def collect_conditional_key_source(
 
 
 def collect_pointer_source(
-    legacy_root: Path, source_id: str, source_path: str, expected_events: set[str]
+    legacy_root: Path,
+    source_id: str,
+    source_path: str,
+    expected_events: set[str],
+    method_ordinals: dict[str, int] | None = None,
 ) -> dict[str, Any]:
     input_path = legacy_root / source_path
     source = strip_java_comments(input_path.read_text(encoding="utf-8", errors="replace"))
     events: list[dict[str, Any]] = []
     bindings: list[dict[str, Any]] = []
     seen_events: set[str] = set()
+    event_ordinals: dict[str, int] = {}
+    if method_ordinals is not None:
+        if set(method_ordinals) != expected_events or any(
+            ordinal < 1 for ordinal in method_ordinals.values()
+        ):
+            raise ValueError(f"{input_path.name} has invalid pointer method ordinals")
     for method_match in INPUT_POINTER_METHOD.finditer(source):
         event = method_match.group("event")
+        event_ordinals[event] = event_ordinals.get(event, 0) + 1
+        if method_ordinals is not None and method_ordinals.get(event) != event_ordinals[event]:
+            continue
         if event in seen_events:
             raise ValueError(f"{input_path.name} contains duplicate {event} methods")
         seen_events.add(event)
@@ -1120,8 +1163,8 @@ def collect_input_cases(legacy_root: Path) -> dict[str, Any]:
         for source in sources
     ]
     pointer_sources = [
-        collect_pointer_source(legacy_root, source_id, source_path, expected_events)
-        for source_id, source_path, expected_events in INPUT_POINTER_SOURCES
+        collect_pointer_source(legacy_root, *source)
+        for source in INPUT_POINTER_SOURCES
     ]
     pointer_events = [entry for source in pointer_sources for entry in source["events"]]
     pointer_bindings = [entry for source in pointer_sources for entry in source["bindings"]]
@@ -1193,8 +1236,8 @@ def validate_matrix(
     dict[str, list[str]],
     dict[str, list[str]],
 ]:
-    if matrix.get("schema_version") != 14:
-        raise ValueError("Matrix schema_version must be 14")
+    if matrix.get("schema_version") != 15:
+        raise ValueError("Matrix schema_version must be 15")
     allowed_statuses = matrix.get("allowed_statuses")
     if allowed_statuses != list(ALLOWED_STATUSES):
         raise ValueError("Matrix allowed_statuses differ from the repository contract")
@@ -1445,7 +1488,7 @@ def build_inventory(legacy_root: Path, matrix_path: Path) -> dict[str, Any]:
         raise ValueError("Every normalized legacy input path must map to the matrix")
 
     return {
-        "schema_version": 14,
+        "schema_version": 15,
         "source": {
             "root": "../lizzieyzy-next-main",
             "version": read_legacy_version(legacy_root),
@@ -1463,8 +1506,8 @@ def build_inventory(legacy_root: Path, matrix_path: Path) -> dict[str, Any]:
             "Menu keys cover active Menu.java resource lookups with Menu. or menu. prefixes.",
             "Menu literal labels cover active string-literal menu constructors; dynamic labels remain represented by their resource or runtime source.",
             "Menu accelerators cover explicit Menu.java setAccelerator calls and direct OS.isWindows guards; other input bindings remain T-003 work.",
-            "Input key bindings symbolically expand Input.java, InputIndependentMainBoard.java, InputIndependentSubboard.java, InputSubboard.java, FloatBoard.java, AnalysisFrame table/window, DrawPainting.java, ChooseMoreEngine.java, LoadEngine.java, OtherPrograms.java, TencentKifuDownload.java, and FoxKifuDownload.java key dispatch, condition evaluations, executed statements, empty-listener and empty-statement paths, and switch fall-through; controlIsPressed means Control on every platform plus Meta on macOS.",
-            "Pointer bindings symbolically expand the two indexed subboard listeners plus FloatBoard, AnalysisFrame, DrawPainting, ChooseMoreEngine, LoadEngine, OtherPrograms, TencentKifuDownload, and FoxKifuDownload mouse, motion, drag, wheel, and release condition evaluations, early returns, executed statements, and explicit no-action paths; data-dependent loops and click try/catch handlers are preserved as normalized atomic statements.",
+            "Input key bindings symbolically expand Input.java, InputIndependentMainBoard.java, InputIndependentSubboard.java, InputSubboard.java, FloatBoard.java, AnalysisFrame table/window, DrawPainting.java, ChooseMoreEngine.java, LoadEngine.java, OtherPrograms.java, TencentKifuDownload.java, FoxKifuDownload.java, and BrowserFrame.java key dispatch, condition evaluations, executed statements, empty-listener and empty-statement paths, and switch fall-through; controlIsPressed means Control on every platform plus Meta on macOS, and BrowserFrame dispatches Enter through getKeyChar.",
+            "Pointer bindings symbolically expand the two indexed subboard listeners plus FloatBoard, AnalysisFrame, DrawPainting, ChooseMoreEngine, LoadEngine, OtherPrograms, TencentKifuDownload, FoxKifuDownload, and BrowserFrame load/stop/label listeners across mouse, motion, drag, wheel, and release condition evaluations, early returns, executed statements, and explicit no-action paths; data-dependent loops and click try/catch handlers are preserved as normalized atomic statements.",
             "Other key-listener and pointer-listener classes remain T-003 work.",
         ],
         "matrix_summary": {

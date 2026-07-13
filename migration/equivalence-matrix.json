@@ -1,5 +1,5 @@
 {
-  "schema_version": 14,
+  "schema_version": 15,
   "allowed_statuses": [
     "未盘点",
     "已盘点",
@@ -605,39 +605,72 @@
     {
       "id": "ONLINE-YIKE-001",
       "category": "在线棋谱",
-      "legacy_entry": "YikeApiClient、YikeUrlParser 与 YikeSgfMainline 处理弈客链接、接口和主线",
+      "legacy_entry": "Menu.yikeLiveWeb 经 LizzieFrame.bowser 创建或复用 BrowserFrame；地址框 Enter 或“载入”标签导航并启动弈客同步，“停止”标签终止同步；BrowserFrame 以 JCEF 页内探针和 cefQuery bridge 把弈客响应/几何交给 OnlineDialog，YikeApiClient、YikeUrlParser 与 YikeSgfMainline 处理链接、接口和主线",
       "legacy_menu_keys": ["Menu.yikeLive", "Menu.yikeLiveWeb", "Menu.yikeRoom"],
       "legacy_menu_labels": [],
       "legacy_shortcuts": ["Shift+O"],
       "legacy_input_cases": [
         "keyPressed:VK_O",
-        "InputIndependentMainBoard:keyPressed:VK_O"
+        "InputIndependentMainBoard:keyPressed:VK_O",
+        "BrowserFrame:keyPressed:VK_ENTER",
+        "BrowserFrameLoad:mouseClicked",
+        "BrowserFrameStop:mouseClicked",
+        "BrowserFrameLabelButton:mouseEntered",
+        "BrowserFrameLabelButton:mouseExited",
+        "BrowserFrameLabelButton:mousePressed",
+        "BrowserFrameLabelButton:mouseReleased"
       ],
       "legacy_input_bindings": [
         "keyPressed:VK_O#3",
-        "InputIndependentMainBoard:keyPressed:VK_O#3"
+        "InputIndependentMainBoard:keyPressed:VK_O#3",
+        "BrowserFrame:keyPressed:VK_ENTER#1",
+        "BrowserFrameLoad:mouseClicked#1",
+        "BrowserFrameStop:mouseClicked#1",
+        "BrowserFrameLabelButton:mouseEntered#1",
+        "BrowserFrameLabelButton:mouseExited#1",
+        "BrowserFrameLabelButton:mousePressed#1",
+        "BrowserFrameLabelButton:mouseReleased#1"
       ],
       "java_evidence": [
+        { "path": "src/main/java/featurecat/lizzie/gui/BrowserFrame.java", "symbol": "class BrowserFrame" },
+        { "path": "src/main/java/featurecat/lizzie/gui/BrowserFrame.java", "symbol": "installYikeUnitePoller" },
+        { "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "symbol": "bowser" },
+        { "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "symbol": "syncOnline" },
+        { "path": "src/main/java/featurecat/lizzie/gui/OnlineDialog.java", "symbol": "handleYikeUniteSgf" },
+        { "path": "src/main/java/featurecat/lizzie/gui/OnlineDialog.java", "symbol": "handleYikeGeometryProbe" },
+        { "path": "src/main/java/featurecat/lizzie/gui/YikeQueryWorker.java", "symbol": "class YikeQueryWorker" },
         { "path": "src/main/java/featurecat/lizzie/gui/YikeApiClient.java", "symbol": "class YikeApiClient" },
         { "path": "src/main/java/featurecat/lizzie/gui/YikeUrlParser.java", "symbol": "class YikeUrlParser" },
-        { "path": "src/main/java/featurecat/lizzie/gui/YikeSgfMainline.java", "symbol": "class YikeSgfMainline" }
+        { "path": "src/main/java/featurecat/lizzie/gui/YikeSgfMainline.java", "symbol": "class YikeSgfMainline" },
+        { "path": "src/main/java/featurecat/lizzie/util/YikeSyncDebugLog.java", "symbol": "class YikeSyncDebugLog" }
       ],
-      "config_keys": [],
-      "inputs_preconditions": "用户提供受支持的弈客链接或会话标识，网络可用。",
-      "success_behavior": "规范化链接，获取棋局数据并生成可载入的 SGF 主线。",
-      "failure_cancel_behavior": "非法链接、接口错误或几何数据异常时报告错误且不破坏当前棋盘。",
-      "data_io": "弈客网络接口、URL 和 SGF 文本。",
-      "external_dependencies": ["弈客网络接口", "HTTP 客户端"],
+      "config_keys": ["log-console-to-file"],
+      "inputs_preconditions": "运行平台受 JCEF 支持且本地固定版本运行时完整或可安全取得；用户从弈客入口打开浏览器，或在地址框提供链接。只有受支持的弈客 HTTPS origin、可识别房间 URL 和用户明确启用的同步会话才允许建立页内 bridge；本地帮助等非弈客页面不得获得同步能力。",
+      "success_behavior": "窗口化浏览器显示页面、更新地址和前后导航；地址框 Enter 不区分修饰键，旧版同时存在 ActionListener 与 keyPressed，可能对同一 Enter 重复 loadURL，后者还启动同步；“载入”标签对任意鼠标按键/点击次数先启动同步再导航，“停止”标签对任意鼠标按键/点击次数停止同步，两个 JLabel 的进入、离开、按下、释放仅改变背景。可识别房间建立或幂等刷新 OnlineDialog，会话响应经有界单线程队列解析、去重并载入 SGF 主线，几何只在匹配会话后生效。目标版应使用可键盘聚焦的原生按钮、每个意图只执行一次，并以严格 origin/协议/会话 token 和消息 schema 隔离必要 WebView。",
+      "failure_cancel_behavior": "空白或不可识别 URL 会报告状态；旧版地址框、弹窗重定向和复用窗口可导航任意 scheme/host，cefQuery 不校验 origin、frame、会话 token 或消息长度，任意页面可投递 yikeUnite/yikeGeometry。YikeUrlParser 的宽松正则接受非官方主机并据其拼接 API 主机；页内脚本全局改写 fetch/XHR/WebSocket、扫描全部 DOM/canvas/SVG 并安排多轮 timer/observer，停止仅清主 poller，隐藏、关窗、切换非弈客页面或复用窗口不会完整撤销 hook、几何任务、bridge、CEF client/app 或同步状态。渲染进程终止会无上限重载，载入错误页用 innerHTML/拼接脚本展示未充分转义的 URL/错误；构造/可见性跨线程且运行时 build 可能长时间阻塞。旧版 JCEF 安装目录元数据不符时可能递归删除候选 jcef-bundle，再由依赖库联网安装固定 release；缓存建目录失败被忽略。bridge 队列虽限 64 并丢最旧任务，但单条 JSON、候选数组、响应文本和 SGF 解析无整体上限，异常多处静默吞掉；调试日志和可选全局 stderr 文件可记录完整 URL/响应摘要、无轮换且写入路径可由系统属性指定。目标版必须 HTTPS/官方 allowlist、证书与运行时签名/哈希验证、受控安装和原子缓存、消息/DOM/SGF/队列/日志上限、脱敏、取消/代次隔离、有限重试、完整 teardown 和明确错误；取消或切页不得再接受陈旧回调，也不得破坏当前棋盘。",
+      "data_io": "弈客页面、API URL、认证上下文、cefQuery JSON、几何候选、HTTP 响应和 SGF 文本；JCEF 固定 release 元数据/原生运行时位于候选 jcef-bundle，浏览器缓存位于 LOCALAPPDATA/LizzieYzy Next/jcef-cache 或 ~/.lizzieyzy-next/jcef-cache。启用 log-console-to-file 时追加 LastErrorLogs_<version>.txt；调试系统属性可追加 target/yike-sync-debug.log 或指定路径。旧版可能由 jcefmaven 下载/安装运行时，盘点未执行该下载。",
+      "external_dependencies": [
+        "弈客 HTTPS 页面与 api.yikeweiqi.com、api-new.yikeweiqi.com、game-server.yikeweiqi.com",
+        "JCEF/Chromium 127.0.6533.100 与 jcefmaven 127.3.1",
+        "DNS、TLS、文件系统缓存和可选调试日志",
+        "当前棋盘、SGF 解析器、OnlineDialog 与外部读盘联动"
+      ],
       "target_modules": ["Lizzie.Core", "Lizzie.Desktop"],
       "automated_evidence": [
+        { "path": "src/test/java/featurecat/lizzie/gui/BrowserFrameJcefBundleTest.java", "symbol": "BrowserFrameJcefBundleTest" },
+        { "path": "src/test/java/featurecat/lizzie/gui/BrowserFrameLocaleTest.java", "symbol": "BrowserFrameLocaleTest" },
+        { "path": "src/test/java/featurecat/lizzie/gui/BrowserFrameWindowedDependencyTest.java", "symbol": "BrowserFrameWindowedDependencyTest" },
+        { "path": "src/test/java/featurecat/lizzie/gui/BrowserFrameYikeSyncControlTest.java", "symbol": "BrowserFrameYikeSyncControlTest" },
+        { "path": "src/test/java/featurecat/lizzie/gui/OnlineDialogYikeSessionStateTest.java", "symbol": "OnlineDialogYikeSessionStateTest" },
         { "path": "src/test/java/featurecat/lizzie/gui/YikeApiClientTest.java", "symbol": "YikeApiClientTest" },
         { "path": "src/test/java/featurecat/lizzie/gui/YikeUrlParserTest.java", "symbol": "YikeUrlParserTest" },
         { "path": "src/test/java/featurecat/lizzie/gui/YikeSgfMainlineTest.java", "symbol": "YikeSgfMainlineTest" },
-        { "path": "src/test/java/featurecat/lizzie/gui/YikeGeometryNormalizationTest.java", "symbol": "YikeGeometryNormalizationTest" }
+        { "path": "src/test/java/featurecat/lizzie/gui/YikeGeometryNormalizationTest.java", "symbol": "YikeGeometryNormalizationTest" },
+        { "path": "src/test/java/featurecat/lizzie/util/YikeSyncDebugLogTest.java", "symbol": "YikeSyncDebugLogTest" }
       ],
-      "manual_acceptance": "用固定接口夹具测试合法链接、非法链接、几何归一化和 SGF 主线载入。",
+      "manual_acceptance": "仅用受控本地 HTTPS 页面/API 和隔离临时目录：覆盖首次缺失/完整/陈旧/损坏/错误平台 JCEF bundle、离线与哈希失败、缓存/日志只读和磁盘满；覆盖官方/伪官方/恶意 host、http/file/javascript/data scheme、弹窗、载入错误和渲染崩溃上限。逐一验证地址框 Enter（含各修饰键）只执行一次，以及载入/停止标签的左中右键、单/双击、hover/press/release、键盘焦点和屏幕阅读器语义。向 bridge 注入错误 origin/frame/token、空白/畸形/重复/陈旧/超大 JSON、候选数组、HTTP 响应与深/大 SGF，核对 allowlist、大小/频率上限、脱敏错误、当前棋盘不变、队列背压和会话隔离；反复打开、隐藏、关闭、弈客/帮助页切换并停止，确认 hook/timer/observer/router/client/cache/线程全部释放且无后续网络或回调。真实弈客网络和运行时下载仅在用户明确授权后补充验收。",
       "status": "已盘点",
-      "evidence": "核心解析与接口测试已在旧版通过；在线契约快照仍待固化。"
+      "evidence": "已静态贯通菜单到 BrowserFrame 创建/复用、地址 Enter、载入/停止及四个标签视觉 pointer 事件、JCEF bundle/cache/日志、任意导航/弹窗、load/crash 生命周期、页内 hook/探针、cefQuery、YikeQueryWorker、OnlineDialog 会话/几何/SGF 和停止链路。旧测试覆盖 bundle 元数据发现、locale、窗口化依赖、URL/会话选择、几何归一化、部分陈旧结果隔离和调试开关；未覆盖真实 JCEF 构造/下载、WebView origin/bridge 安全、任意导航、重复 Enter、输入无障碍、消息/DOM/响应/SGF 上限、完整 teardown、渲染崩溃重试、日志脱敏/轮换或磁盘失败。未执行真实弈客网络、JCEF 下载、用户缓存/日志写入或旧版 GUI 动态录制。"
     },
     {
       "id": "ONLINE-SYNC-001",
