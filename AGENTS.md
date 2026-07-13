@@ -2,7 +2,7 @@
 
 本文是 `F:/Lizzieyzy-GL/Lizzieyzy-G/` 唯一的 AI 项目总文档，适用于该重构源码目录下全部代码、文档、脚本和工作流。目标是让上下文有限的 AI 仍能持续、真实、可验证地完成长期重构。
 
-最后更新：2026-07-13
+最后更新：2026-07-14
 
 ---
 
@@ -72,7 +72,7 @@
 - 静态盘点：约 276 个主 Java 文件、179,215 行，约 145 个测试 Java 文件。
 - 最大类包括约 18,146 行的 `LizzieFrame.java`、10,401 行的 `Menu.java`、5,618 行的 `Leelaz.java`。
 - T-003 按“活跃字面量叶键 + 明确持久化 JSON 接收者”的当前静态口径检出 596 个配置键和 1,627 处引用，现有矩阵关联 39 个键；另有 37 个仅出现在 `Config.java` 注释中的历史候选键；其余 557 个字面量键、嵌套规范路径、计算键和逐用例语义归属仍未完成。
-- T-003 按 `Menu.java` 中活跃的 `Menu.*`/`menu.*` 资源读取检出 383 个菜单资源键和 473 处引用，现有矩阵关联 49 个键；12 个活跃硬编码菜单字面量和两个显式 `setAccelerator`（`Shift+O`、仅 Windows 的 `Alt+O`）均已全部反向关联。七个文件的八个已纳入键源合计 139/139 个活跃 `VK_*` case、360/360 条路径；五个 pointer 源合计 25/25 个事件、62/62 条可达路径；全部反向关联 45 行矩阵并保留来源、修饰键、条件方法副作用、早退、空动作、执行语句、switch fall-through、数据依赖循环和原子 try/catch。代码库另有 13 个含键事件方法的文件和 25 个含鼠标事件方法的文件未纳入；其余 334 个菜单资源键也仍待盘点。
+- T-003 按 `Menu.java` 中活跃的 `Menu.*`/`menu.*` 资源读取检出 383 个菜单资源键和 473 处引用，现有矩阵关联 49 个键；12 个活跃硬编码菜单字面量和两个显式 `setAccelerator`（`Shift+O`、仅 Windows 的 `Alt+O`）均已全部反向关联。八个文件的九个已纳入键源合计 139/139 个活跃 `VK_*` case、360/360 条路径；六个 pointer 源合计 27/27 个事件、68/68 条可达路径；全部反向关联 45 行矩阵并保留来源、修饰键、条件方法副作用、早退、空监听/空动作、执行语句、switch fall-through、数据依赖循环和原子 try/catch。代码库另有 12 个含键事件方法的文件和 24 个含鼠标事件方法的文件未纳入；其余 334 个菜单资源键也仍待盘点。
 - AI 计算由外部 KataGo/Leela 进程承担；旧程序主要负责 GTP、规则/棋谱状态和 UI。
 - 本机没有系统级 `mvn`，T-003 已在仓库外下载并校验 Apache Maven 3.9.16，在仓库外隔离副本以 Temurin 21.0.11 执行 `mvn -Dfmt.skip=true test`：1,161 项测试、0 failure、0 error、1 项按操作系统条件 skip；旧源码 576 个文件逐一比对无变化。
 - 本机 `PATH` 当前先解析到 `C:/Program Files (x86)/dotnet/dotnet.exe`，该 x86 host 没有 SDK；项目命令必须显式使用 `C:/Program Files/dotnet/dotnet.exe` 的 x64 稳定 SDK。`global.json` 已固定 `10.0.103`、`latestPatch` 且禁止 preview；另有 `8.0.420` 和不得用于本项目的 `10.0.300-preview...`。
@@ -654,7 +654,7 @@ push 成功但 CI 未通过时，任务状态仍是“进行中”。修复使�
 | --- | --- | --- | --- |
 | T-001 | 完成 | 确定新版源码目录 | 用户已确认 `F:/Lizzieyzy-GL/Lizzieyzy-G/` 为重构后源码根目录 |
 | T-002 | 完成 | 创建最小 .NET 10 + Avalonia SLNX solution | SDK/依赖/锁文件、3 个产品项目和对应测试、真实空棋盘启动退出、format、Release build、5 项 tests 和依赖审计均通过；实现提交 `c17873dde901b77637e770c241dbdc3e3037218a` 已推送，draft PR `#1` 为 OPEN/CLEAN；Actions 尚未建立并由 T-006 跟踪 |
-| T-003 | 进行中 | 建立旧版行为基线和功能等价矩阵 | 已校验便携 Maven 并在隔离副本跑通旧版 1,161 项测试；已生成 576 文件来源指纹、596 活跃配置叶键/1,627 引用、37 注释候选键、383 菜单资源键/473 活跃引用、12 个硬编码菜单字面量，以及七个文件的八个键盘来源共 139 个 case/360 条路径、五个 pointer 来源共 25 个事件/62 条路径，并建立 45 个 `已盘点` 用例；当前关联 39 配置键、49 菜单资源键、全部菜单字面量/accelerator 和已纳入输入源的全部 case/事件/路径；提交 `402676ba91656c66d0821b3197c39b1465a55d8d` 补入 AnalysisFrame 输入，提交 `d84c41125c4847b7edd6b94c0ffcf07324eb7b4c` 补入 DrawPainting 的 Escape、鼠标释放/拖动/移动、颜色持久化与工具栏入口及 `UI-FREE-DRAWING-001`，均已推送到 draft PR `#2`；下一步盘点剩余文件中最小且同时含键盘和鼠标监听器的 `ChooseMoreEngine.java`，之后处理其余输入文件，再继续 557 配置键、334 菜单资源键、嵌套/计算键、SGF/GIB 与 GTP 语料、旧版动态截图及 GUI/引擎分离性能 |
+| T-003 | 进行中 | 建立旧版行为基线和功能等价矩阵 | 已校验便携 Maven 并在隔离副本跑通旧版 1,161 项测试；已生成 576 文件来源指纹、596 活跃配置叶键/1,627 引用、37 注释候选键、383 菜单资源键/473 活跃引用、12 个硬编码菜单字面量，以及八个文件的九个键盘来源共 139 个 case/360 条路径、六个 pointer 来源共 27 个事件/68 条路径，并建立 45 个 `已盘点` 用例；当前关联 39 配置键、49 菜单资源键、全部菜单字面量/accelerator 和已纳入输入源的全部 case/事件/路径；提交 `d84c41125c4847b7edd6b94c0ffcf07324eb7b4c` 补入 DrawPainting 输入及 `UI-FREE-DRAWING-001`，提交 `dc4c05a5dd088ef9ba8047a444764486031a9917` 补入 ChooseMoreEngine 的空键监听、表格点击和空表头释放并扩展 `ENGINE-LIFECYCLE-001`，均已推送到 draft PR `#2`；下一步盘点剩余文件中最小且同时含键盘和鼠标监听器的 `LoadEngine.java`，之后处理其余输入文件，再继续 557 配置键、334 菜单资源键、嵌套/计算键、SGF/GIB 与 GTP 语料、旧版动态截图及 GUI/引擎分离性能 |
 | T-004 | 未开始 | 配置兼容清单和迁移器 | 以 T-003 当前 596 个活跃字面量叶键及后续发现项为输入，备份、未知键保留、原子保存和回滚测试通过 |
 | T-005 | 未开始 | 实现本地质量门脚本 | solution 存在后创建跨平台 `scripts/quality.ps1`，实际执行并传播 format/build/test/smoke/实测失败，Windows/macOS/Linux 均验证非零退出 |
 | T-006 | 未开始 | 实现 GitHub Actions | 三平台 CI、fast smoke、real KataGo、security、release 在 GitHub 真实跑通，预期失败能被拦截并记录 run URL |
@@ -667,7 +667,7 @@ push 成功但 CI 未通过时，任务状态仍是“进行中”。修复使�
 | T-013 | 未开始 | 建立专业设计系统与组件展示页 | 用户批准视觉方向；design token、全状态组件、棋盘/图表规范、三平台视觉矩阵和无障碍实测通过 |
 | T-014 | 未开始 | 建立可靠性、恢复与长稳体系 | crash/恢复证据、故障注入、100 次棋谱循环、50 次引擎循环和 8 小时 soak 均按 §6.4 通过 |
 
-当前可用范围仅为能启动、显示 19×19 空棋盘并正常关闭的原生新壳；不包含棋谱、设置迁移、引擎或其他旧版功能，不能替代旧版。下一步继续 T-003，盘点 `ChooseMoreEngine.java` 的空键监听器、表格点击和空表头释放入口并反向关联矩阵；后续任何部分功能必须新增/拆分 ID，不得藏在“进行中”描述里。
+当前可用范围仅为能启动、显示 19×19 空棋盘并正常关闭的原生新壳；不包含棋谱、设置迁移、引擎或其他旧版功能，不能替代旧版。下一步继续 T-003，盘点 `LoadEngine.java` 的键盘、表格点击和表头释放入口并反向关联矩阵；后续任何部分功能必须新增/拆分 ID，不得藏在“进行中”描述里。
 
 ### 12.2 最近验证记录
 
@@ -689,6 +689,7 @@ push 成功但 CI 未通过时，任务状态仍是“进行中”。修复使�
 | 2026-07-13 | T-003 FloatBoard 键盘与 pointer 输入 | 矩阵和生成清单升级到 schema 7；复用同一轻量解析器，仅补充无 switch 的顶层按键分发、块状 `for` 原子记录和 FloatBoard 局部布尔赋值追踪，纳入 11 case/16 条键路径及鼠标按下、离开、滚轮、移动 4 事件/20 条可达 pointer 路径；总计 128/128 case、349/349 键路径、16/16 pointer 事件和 39/39 pointer 路径全部反向关联 43 行 `已盘点` 矩阵，新增 `BOARD-FLOAT-INPUT-001`；伪 binding 与整行漏映射 mutation 均被拒绝；旧四个键源、两个子棋盘 pointer 源、来源指纹、配置、菜单和 Java 测试清单与 HEAD 一致；完整 diff、严格 UTF-8、秘密、动态执行和旧基准只读 review 通过；x64 SDK 10.0.103 locked restore、format verify、Release `/warnaserror` build 和 5 项 tests 均退出 0，build 为 0 warning/0 error；Release 实图确认 `LizzieYzy GL` 19×19 空棋盘并正常退出；实现提交 `2b658119131641850f1697a64a2bba87bddabc99` 与验证台账提交 `90254295bdeeb5f261f554376de6a168df6a479e` 已推送到 draft PR `https://github.com/FanhuaAwA/Lizzieyzy-G/pull/2`，当时 local/remote SHA 一致且 PR 为 OPEN/CLEAN、无 checks/Actions run | T-003 仍未完成：另有 15 个键事件文件、27 个鼠标事件文件、560 配置键、335 个菜单资源键、嵌套/计算键、跨实现 SGF/GIB 与 GTP 语料、旧版动态截图、性能和跨平台验证；本轮未修改产品代码或旧 Java，FloatBoard 新版输入、外部读盘动态等价、DPI、无障碍均未验证，空壳冒烟不能证明这些功能；未执行旧版在线、下载、更新或用户数据操作；Actions 由 T-006 跟踪，当前无 run URL |
 | 2026-07-13 | T-003 AnalysisFrame 键盘与 pointer 输入 | 矩阵和生成清单升级到 schema 8；复用轻量解析器并仅补充同文件同事件监听器序号、`mouseDragged` 和 try/catch 原子记录，纳入 AnalysisFrame 表格 6 case、窗口 4 case 共 10 条键路径，以及移动/拖动/滚轮/离开/点击/表头释放 6 事件/18 条 pointer 路径；总计 138/138 case、359/359 键路径、22/22 pointer 事件和 57/57 pointer 路径全部反向关联 44 行 `已盘点` 矩阵，新增 `UI-ANALYSIS-FRAME-001`，并把 `anaframe-use-mousemove`、`suggestions-always-ontop` 纳入配置映射；伪 binding 与整行漏映射 mutation 均被拒绝，旧输入记录、来源指纹、菜单和 Java 测试清单与 HEAD 一致；严格 UTF-8/LF、生成新鲜度、JSON/Python、完整 diff、秘密、动态执行、依赖漏洞和旧基准只读 review 通过；汇总断言首次因 PowerShell 管道内中文源码字面量编码不一致失败，改用矩阵自身状态常量后复跑通过，仓库数据未修改；x64 SDK 10.0.103 locked restore、format verify、Release `/warnaserror` build 和 5 项 tests 均退出 0，build 为 0 warning/0 error；Release 实图确认 `LizzieYzy GL` 19×19 空棋盘并正常退出；实现提交 `402676ba91656c66d0821b3197c39b1465a55d8d` 已推送到 draft PR `https://github.com/FanhuaAwA/Lizzieyzy-G/pull/2` | T-003 仍未完成：另有 14 个键事件文件、26 个鼠标事件文件、558 配置键、335 个菜单资源键、嵌套/计算键、跨实现 SGF/GIB 与 GTP 语料、旧版动态截图、性能和跨平台验证；本轮未修改产品代码或旧 Java，因此 AnalysisFrame 新版交互、动态等价、DPI、无障碍和真实引擎候选均未验证，空壳冒烟不能证明这些功能；未执行旧版在线、下载、更新或用户数据操作；Actions 由 T-006 跟踪，当前无 run URL；唯一推荐下一步为盘点 `DrawPainting.java` |
 | 2026-07-14 | T-003 DrawPainting 键盘与 pointer 输入 | 矩阵和生成清单升级到 schema 9；现有解析器无需新增分支，仅登记 DrawPainting 键盘和 pointer 来源，纳入 1 个 Escape case/1 条键路径，以及释放/拖动/移动 3 事件/5 条 pointer 路径；总计 139/139 case、360/360 键路径、25/25 pointer 事件和 62/62 pointer 路径全部反向关联 45 行 `已盘点` 矩阵，新增 `UI-FREE-DRAWING-001`，并关联 `last-painting-color` 与 `Menu.drawPainting.toolTipText`；静态下游保留任意鼠标按键拖动、仅左键提交非空笔迹、两条 release 空路径、空 mouseMoved、颜色/撤销/清空/关闭动作和 DrawPainting 自身不调用 Config.save 的事实；伪 binding 与整行漏映射 mutation 均被拒绝，旧输入记录、来源指纹、既有配置/菜单记录和 Java 测试清单与 HEAD 一致；严格 UTF-8/LF、生成新鲜度、JSON/Python、完整 diff、秘密、动态执行、依赖漏洞和旧基准只读 review 通过；x64 SDK 10.0.103 locked restore、format verify、Release `/warnaserror` build 和 5 项 tests 均退出 0，build 为 0 warning/0 error；Release 实图确认 `LizzieYzy GL` 19×19 空棋盘并正常退出；实现提交 `d84c41125c4847b7edd6b94c0ffcf07324eb7b4c` 已推送到 draft PR `https://github.com/FanhuaAwA/Lizzieyzy-G/pull/2` | T-003 仍未完成：另有 13 个键事件文件、25 个鼠标事件文件、557 配置键、334 个菜单资源键、嵌套/计算键、跨实现 SGF/GIB 与 GTP 语料、旧版动态截图、性能和跨平台验证；本轮未修改产品代码或旧 Java，因此新版自由绘图、动态等价、焦点、多 DPI、无障碍、资源缺失降级和颜色重启持久化均未验证，空壳冒烟不能证明这些功能；Actions 由 T-006 跟踪，当前无 run URL；唯一推荐下一步为盘点 `ChooseMoreEngine.java` |
+| 2026-07-14 | T-003 ChooseMoreEngine 键盘与 pointer 输入 | 矩阵和生成清单升级到 schema 10；现有解析器无需新增分支，仅登记 ChooseMoreEngine 的空 `keyPressed` 来源和 pointer 来源，键总数保持 139/139 case、360/360 路径，新增点击/表头释放 2 事件/6 条 pointer 路径，总计 27/27 事件、68/68 路径全部反向关联 45 行 `已盘点` 矩阵；扩展 `ENGINE-LIFECYCLE-001`，静态下游保留配置至少 21 个引擎才出现更多引擎入口、模式 1/2 切主/副引擎、非右键且非双击选择、双击或右击立即切换、无效单元格与空表头/键监听无动作、未选择确认先隐藏再提示及点击异常只打印堆栈的事实；完整 diff review 纠正“仅左键选择”为旧版真实的“任何非右键且点击次数不等于 2”；伪 binding 与整事件漏映射 mutation 均被拒绝，旧输入记录、来源指纹、配置、菜单和 Java 测试清单与 HEAD 一致；严格 UTF-8/LF、生成新鲜度、JSON/Python、秘密、动态执行、依赖漏洞和旧基准只读 review 通过；x64 SDK 10.0.103 locked restore、format verify、Release `/warnaserror` build 和 5 项 tests 均退出 0，build 为 0 warning/0 error；Release 实图确认 `LizzieYzy GL` 19×19 空棋盘并正常退出；实现提交 `dc4c05a5dd088ef9ba8047a444764486031a9917` 已推送到 draft PR `https://github.com/FanhuaAwA/Lizzieyzy-G/pull/2` | T-003 仍未完成：另有 12 个键事件文件、24 个鼠标事件文件、557 配置键、334 个菜单资源键、嵌套/计算键、跨实现 SGF/GIB 与 GTP 语料、旧版动态截图、性能和跨平台验证；本轮未修改产品代码或旧 Java，因此新版更多引擎窗口、动态切换、焦点、多 DPI、无障碍、错误恢复和真实引擎进程均未验证，空壳冒烟不能证明这些功能；Actions 由 T-006 跟踪，当前无 run URL；唯一推荐下一步为盘点 `LoadEngine.java` |
 
 ### 12.3 更新规则
 
