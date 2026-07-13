@@ -61,9 +61,8 @@ ANY_MENU_LITERAL_CONSTRUCTOR_CALL = re.compile(
 )
 INPUT_KEY_METHOD = re.compile(
     r"public\s+void\s+(?P<event>keyPressed|keyReleased)\s*"
-    r"\(\s*KeyEvent\s+e\s*\)\s*\{"
+    r"\(\s*KeyEvent\s+(?P<parameter>[A-Za-z_$][\w$]*)\s*\)\s*\{"
 )
-INPUT_KEY_SWITCH = re.compile(r"switch\s*\(\s*e\.getKeyCode\s*\(\s*\)\s*\)\s*\{")
 INPUT_KEY_CASE = re.compile(r"\bcase\s+(?P<key>VK_[A-Z0-9_]+)\s*:")
 INPUT_DEFAULT_CASE = re.compile(r"\bdefault\s*:")
 INPUT_KEY_SOURCES = (
@@ -72,6 +71,23 @@ INPUT_KEY_SOURCES = (
         "InputIndependentMainBoard",
         "src/main/java/featurecat/lizzie/gui/InputIndependentMainBoard.java",
     ),
+    (
+        "InputIndependentSubboard",
+        "src/main/java/featurecat/lizzie/gui/InputIndependentSubboard.java",
+    ),
+    ("InputSubboard", "src/main/java/featurecat/lizzie/gui/InputSubboard.java"),
+)
+INPUT_POINTER_METHOD = re.compile(
+    r"public\s+void\s+(?P<event>mouseClicked|mousePressed|mouseWheelMoved|mouseReleased|"
+    r"mouseEntered|mouseExited)\s*\(\s*(?:MouseEvent|MouseWheelEvent)\s+"
+    r"[A-Za-z_$][\w$]*\s*\)\s*\{"
+)
+INPUT_POINTER_SOURCES = (
+    (
+        "InputIndependentSubboard",
+        "src/main/java/featurecat/lizzie/gui/InputIndependentSubboard.java",
+    ),
+    ("InputSubboard", "src/main/java/featurecat/lizzie/gui/InputSubboard.java"),
 )
 INPUT_MODIFIER_CHECKS = (
     ("Alt", re.compile(r"\be\.isAltDown\s*\(\s*\)")),
@@ -318,9 +334,14 @@ def parse_java_statement(source: str, index: int, end: int) -> tuple[dict[str, A
                 braces -= 1
             elif char == ";" and parentheses == brackets == braces == 0:
                 statement = normalize_java(source[index : cursor + 1])
+                kind = "action"
+                if statement == "break;":
+                    kind = "break"
+                elif statement == "return;":
+                    kind = "return"
                 return (
                     {
-                        "kind": "break" if statement == "break;" else "action",
+                        "kind": kind,
                         "statement": statement,
                         "line": line_number(source, index),
                     },
@@ -368,7 +389,18 @@ def execute_java_nodes(
                 {**path, "actions": [*path["actions"], {"line": node["line"], "statement": node["statement"]}]}
                 for path in continuing
             ]
-        elif node["kind"] == "break":
+        elif node["kind"] in {"break", "return"}:
+            if node["kind"] == "return":
+                continuing = [
+                    {
+                        **path,
+                        "actions": [
+                            *path["actions"],
+                            {"line": node["line"], "statement": node["statement"]},
+                        ],
+                    }
+                    for path in continuing
+                ]
             broken.extend(continuing)
             continuing = []
         else:
@@ -399,6 +431,14 @@ def validate_input_parser() -> None:
     statements = [[action["statement"] for action in path["actions"]] for path in completed]
     if continuing or statements != [["first();"], ["second();"]]:
         raise ValueError("Input binding parser fall-through self-check failed")
+    returning = "if (stop()) return; after();"
+    continuing, completed = execute_java_nodes(
+        parse_java_sequence(returning, 0, len(returning)), initial
+    )
+    completed.extend(continuing)
+    statements = [[action["statement"] for action in path["actions"]] for path in completed]
+    if statements != [["return;"], ["after();"]]:
+        raise ValueError("Input binding parser return self-check failed")
 
 
 def relative_path(path: Path, root: Path) -> str:
@@ -529,10 +569,20 @@ def collect_switch_key_source(
         seen_events.add(event)
         open_brace = method_match.end() - 1
         method_end = closing_brace(source, open_brace)
-        switch_match = INPUT_KEY_SWITCH.search(source, open_brace + 1, method_end)
+        parameter = re.escape(method_match.group("parameter"))
+        switch_match = re.search(
+            rf"switch\s*\(\s*{parameter}\.getKeyCode\s*\(\s*\)\s*\)\s*\{{",
+            source[open_brace + 1 : method_end],
+        )
         if not switch_match:
-            raise ValueError(f"{input_path.name} {event} has no supported key-code switch")
-        switch_open = switch_match.end() - 1
+            if normalize_java(source[open_brace + 1 : method_end]):
+                raise ValueError(f"{input_path.name} {event} has no supported key-code switch")
+            post_dispatch_actions[event] = []
+            continue
+        switch_start = open_brace + 1 + switch_match.start()
+        switch_open = open_brace + switch_match.end()
+        if normalize_java(source[open_brace + 1 : switch_start]):
+            raise ValueError(f"{input_path.name} {event} has unsupported pre-switch statements")
         switch_end = closing_brace(source, switch_open)
         case_matches = list(INPUT_KEY_CASE.finditer(source, switch_open + 1, switch_end))
         default_match = INPUT_DEFAULT_CASE.search(source, switch_open + 1, switch_end)
@@ -651,6 +701,74 @@ def collect_switch_key_source(
     }
 
 
+def collect_pointer_source(
+    legacy_root: Path, source_id: str, source_path: str
+) -> dict[str, Any]:
+    input_path = legacy_root / source_path
+    source = strip_java_comments(input_path.read_text(encoding="utf-8", errors="replace"))
+    events: list[dict[str, Any]] = []
+    bindings: list[dict[str, Any]] = []
+    seen_events: set[str] = set()
+    for method_match in INPUT_POINTER_METHOD.finditer(source):
+        event = method_match.group("event")
+        if event in seen_events:
+            raise ValueError(f"{input_path.name} contains duplicate {event} methods")
+        seen_events.add(event)
+        open_brace = method_match.end() - 1
+        method_end = closing_brace(source, open_brace)
+        nodes = parse_java_sequence(source, open_brace + 1, method_end)
+        continuing, completed = execute_java_nodes(
+            nodes,
+            [{"conditions": [], "condition_values": {}, "actions": [], "case_chain": []}],
+        )
+        completed.extend(continuing)
+        event_id = f"{source_id}:{event}"
+        for ordinal, path in enumerate(completed, start=1):
+            bindings.append(
+                {
+                    "binding": f"{event_id}#{ordinal}",
+                    "event_id": event_id,
+                    "source_id": source_id,
+                    "event": event,
+                    "line": line_number(source, method_match.start()),
+                    "conditions": path["conditions"],
+                    "statements": path["actions"],
+                }
+            )
+        events.append(
+            {
+                "event_id": event_id,
+                "source_id": source_id,
+                "event": event,
+                "line": line_number(source, method_match.start()),
+                "binding_count": len(completed),
+            }
+        )
+
+    expected_events = {
+        "mouseClicked",
+        "mousePressed",
+        "mouseWheelMoved",
+        "mouseReleased",
+        "mouseEntered",
+        "mouseExited",
+    }
+    if seen_events != expected_events:
+        raise ValueError(f"{input_path.name} pointer methods differ from expected: {sorted(seen_events)}")
+    event_ids = [entry["event_id"] for entry in events]
+    binding_ids = [entry["binding"] for entry in bindings]
+    if len(event_ids) != len(set(event_ids)) or len(binding_ids) != len(set(binding_ids)):
+        raise ValueError(f"{input_path.name} produced duplicate normalized pointer input")
+    return {
+        "id": source_id,
+        "source": relative_path(input_path, legacy_root),
+        "active_pointer_events": len(events),
+        "active_pointer_bindings": len(bindings),
+        "events": events,
+        "bindings": bindings,
+    }
+
+
 def collect_input_cases(legacy_root: Path) -> dict[str, Any]:
     sources = [
         collect_switch_key_source(legacy_root, source_id, source_path)
@@ -662,8 +780,20 @@ def collect_input_cases(legacy_root: Path) -> dict[str, Any]:
         {key: value for key, value in source.items() if key not in {"cases", "bindings"}}
         for source in sources
     ]
-    case_ids = [entry["case"] for entry in cases]
-    binding_ids = [entry["binding"] for entry in bindings]
+    pointer_sources = [
+        collect_pointer_source(legacy_root, source_id, source_path)
+        for source_id, source_path in INPUT_POINTER_SOURCES
+    ]
+    pointer_events = [entry for source in pointer_sources for entry in source["events"]]
+    pointer_bindings = [entry for source in pointer_sources for entry in source["bindings"]]
+    pointer_source_summaries = [
+        {key: value for key, value in source.items() if key not in {"events", "bindings"}}
+        for source in pointer_sources
+    ]
+    case_ids = [entry["case"] for entry in cases] + [
+        entry["event_id"] for entry in pointer_events
+    ]
+    binding_ids = [entry["binding"] for entry in bindings + pointer_bindings]
     if len(case_ids) != len(set(case_ids)):
         raise ValueError("Legacy key sources produced duplicate normalized cases")
     if len(binding_ids) != len(set(binding_ids)):
@@ -678,6 +808,11 @@ def collect_input_cases(legacy_root: Path) -> dict[str, Any]:
         },
         "cases": cases,
         "bindings": bindings,
+        "pointer_sources": pointer_source_summaries,
+        "active_pointer_events": len(pointer_events),
+        "active_pointer_bindings": len(pointer_bindings),
+        "pointer_events": pointer_events,
+        "pointer_bindings": pointer_bindings,
     }
 
 
@@ -719,8 +854,8 @@ def validate_matrix(
     dict[str, list[str]],
     dict[str, list[str]],
 ]:
-    if matrix.get("schema_version") != 5:
-        raise ValueError("Matrix schema_version must be 5")
+    if matrix.get("schema_version") != 6:
+        raise ValueError("Matrix schema_version must be 6")
     allowed_statuses = matrix.get("allowed_statuses")
     if allowed_statuses != list(ALLOWED_STATUSES):
         raise ValueError("Matrix allowed_statuses differ from the repository contract")
@@ -826,7 +961,7 @@ def validate_matrix(
         for binding in row["legacy_input_bindings"]:
             if binding not in input_bindings:
                 raise ValueError(
-                    f"{row_id}: input binding is outside the normalized legacy key inventory: {binding}"
+                    f"{row_id}: input binding is outside the normalized legacy input inventory: {binding}"
                 )
             implied_input_cases.add(input_bindings[binding])
             matrix_ids_by_input_binding[binding].append(row_id)
@@ -837,7 +972,7 @@ def validate_matrix(
         for input_case in implied_input_cases:
             if input_case not in input_cases:
                 raise ValueError(
-                    f"{row_id}: input case is outside the active legacy key inventory: {input_case}"
+                    f"{row_id}: input case is outside the active legacy input inventory: {input_case}"
                 )
             matrix_ids_by_input_case[input_case].append(row_id)
     return (
@@ -876,8 +1011,13 @@ def build_inventory(legacy_root: Path, matrix_path: Path) -> dict[str, Any]:
         {entry["key"] for entry in menu["keys"]},
         {entry["label"] for entry in menu["literal_labels"]},
         {entry["shortcut"] for entry in menu["accelerators"]},
-        {entry["case"] for entry in input_inventory["cases"]},
-        {entry["binding"]: entry["case"] for entry in input_inventory["bindings"]},
+        {entry["case"] for entry in input_inventory["cases"]}
+        | {entry["event_id"] for entry in input_inventory["pointer_events"]},
+        {entry["binding"]: entry["case"] for entry in input_inventory["bindings"]}
+        | {
+            entry["binding"]: entry["event_id"]
+            for entry in input_inventory["pointer_bindings"]
+        },
         fingerprint,
     )
     config_entries = [
@@ -930,6 +1070,20 @@ def build_inventory(legacy_root: Path, matrix_path: Path) -> dict[str, Any]:
         }
         for entry in input_inventory["bindings"]
     ]
+    input_inventory["pointer_events"] = [
+        {
+            **entry,
+            "matrix_ids": matrix_ids_by_input_case.get(entry["event_id"], []),
+        }
+        for entry in input_inventory["pointer_events"]
+    ]
+    input_inventory["pointer_bindings"] = [
+        {
+            **entry,
+            "matrix_ids": matrix_ids_by_input_binding.get(entry["binding"], []),
+        }
+        for entry in input_inventory["pointer_bindings"]
+    ]
     mapped_menu_keys = sum(bool(entry["matrix_ids"]) for entry in menu["keys"])
     mapped_menu_labels = sum(bool(entry["matrix_ids"]) for entry in menu["literal_labels"])
     mapped_shortcuts = sum(bool(entry["matrix_ids"]) for entry in menu["accelerators"])
@@ -937,9 +1091,22 @@ def build_inventory(legacy_root: Path, matrix_path: Path) -> dict[str, Any]:
     mapped_input_bindings = sum(
         bool(entry["matrix_ids"]) for entry in input_inventory["bindings"]
     )
+    mapped_pointer_events = sum(
+        bool(entry["matrix_ids"]) for entry in input_inventory["pointer_events"]
+    )
+    mapped_pointer_bindings = sum(
+        bool(entry["matrix_ids"]) for entry in input_inventory["pointer_bindings"]
+    )
+    if (
+        mapped_input_cases != len(input_inventory["cases"])
+        or mapped_input_bindings != len(input_inventory["bindings"])
+        or mapped_pointer_events != len(input_inventory["pointer_events"])
+        or mapped_pointer_bindings != len(input_inventory["pointer_bindings"])
+    ):
+        raise ValueError("Every normalized legacy input path must map to the matrix")
 
     return {
-        "schema_version": 5,
+        "schema_version": 6,
         "source": {
             "root": "../lizzieyzy-next-main",
             "version": read_legacy_version(legacy_root),
@@ -957,8 +1124,9 @@ def build_inventory(legacy_root: Path, matrix_path: Path) -> dict[str, Any]:
             "Menu keys cover active Menu.java resource lookups with Menu. or menu. prefixes.",
             "Menu literal labels cover active string-literal menu constructors; dynamic labels remain represented by their resource or runtime source.",
             "Menu accelerators cover explicit Menu.java setAccelerator calls and direct OS.isWindows guards; other input bindings remain T-003 work.",
-            "Input key bindings symbolically expand Input.java and InputIndependentMainBoard.java keyPressed/keyReleased condition evaluations, executed statements, empty-statement paths, and switch fall-through; controlIsPressed means Control on every platform plus Meta on macOS.",
-            "Other key-listener classes and mouse bindings remain T-003 work.",
+            "Input key bindings symbolically expand Input.java, InputIndependentMainBoard.java, InputIndependentSubboard.java, and InputSubboard.java keyPressed/keyReleased condition evaluations, executed statements, empty-statement paths, and switch fall-through; controlIsPressed means Control on every platform plus Meta on macOS.",
+            "Pointer bindings symbolically expand the two indexed subboard listeners' mouse and wheel condition evaluations, early returns, executed statements, and explicit no-action paths.",
+            "Other key-listener and pointer-listener classes remain T-003 work.",
         ],
         "matrix_summary": {
             "rows": len(matrix["rows"]),
@@ -985,6 +1153,14 @@ def build_inventory(legacy_root: Path, matrix_path: Path) -> dict[str, Any]:
             "mapped_input_key_bindings": mapped_input_bindings,
             "unmapped_input_key_bindings": len(input_inventory["bindings"])
             - mapped_input_bindings,
+            "active_input_pointer_events": len(input_inventory["pointer_events"]),
+            "mapped_input_pointer_events": mapped_pointer_events,
+            "unmapped_input_pointer_events": len(input_inventory["pointer_events"])
+            - mapped_pointer_events,
+            "active_input_pointer_bindings": len(input_inventory["pointer_bindings"]),
+            "mapped_input_pointer_bindings": mapped_pointer_bindings,
+            "unmapped_input_pointer_bindings": len(input_inventory["pointer_bindings"])
+            - mapped_pointer_bindings,
         },
         "config": {
             "active_literal_leaf_keys": len(config_entries),

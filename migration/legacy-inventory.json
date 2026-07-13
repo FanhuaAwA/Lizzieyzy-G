@@ -1,5 +1,5 @@
 {
-  "schema_version": 5,
+  "schema_version": 6,
   "source": {
     "root": "../lizzieyzy-next-main",
     "version": "yzy2.5.3",
@@ -17,14 +17,15 @@
     "Menu keys cover active Menu.java resource lookups with Menu. or menu. prefixes.",
     "Menu literal labels cover active string-literal menu constructors; dynamic labels remain represented by their resource or runtime source.",
     "Menu accelerators cover explicit Menu.java setAccelerator calls and direct OS.isWindows guards; other input bindings remain T-003 work.",
-    "Input key bindings symbolically expand Input.java and InputIndependentMainBoard.java keyPressed/keyReleased condition evaluations, executed statements, empty-statement paths, and switch fall-through; controlIsPressed means Control on every platform plus Meta on macOS.",
-    "Other key-listener classes and mouse bindings remain T-003 work."
+    "Input key bindings symbolically expand Input.java, InputIndependentMainBoard.java, InputIndependentSubboard.java, and InputSubboard.java keyPressed/keyReleased condition evaluations, executed statements, empty-statement paths, and switch fall-through; controlIsPressed means Control on every platform plus Meta on macOS.",
+    "Pointer bindings symbolically expand the two indexed subboard listeners' mouse and wheel condition evaluations, early returns, executed statements, and explicit no-action paths.",
+    "Other key-listener and pointer-listener classes remain T-003 work."
   ],
   "matrix_summary": {
-    "rows": 40,
+    "rows": 42,
     "statuses": {
       "未盘点": 0,
-      "已盘点": 40,
+      "已盘点": 42,
       "实施中": 0,
       "已实现待验证": 0,
       "已验证": 0,
@@ -42,12 +43,18 @@
     "active_menu_accelerators": 2,
     "mapped_menu_accelerators": 2,
     "unmapped_menu_accelerators": 0,
-    "active_input_key_cases": 112,
-    "mapped_input_key_cases": 112,
+    "active_input_key_cases": 117,
+    "mapped_input_key_cases": 117,
     "unmapped_input_key_cases": 0,
-    "active_input_key_bindings": 324,
-    "mapped_input_key_bindings": 324,
-    "unmapped_input_key_bindings": 0
+    "active_input_key_bindings": 333,
+    "mapped_input_key_bindings": 333,
+    "unmapped_input_key_bindings": 0,
+    "active_input_pointer_events": 12,
+    "mapped_input_pointer_events": 12,
+    "unmapped_input_pointer_events": 0,
+    "active_input_pointer_bindings": 19,
+    "mapped_input_pointer_bindings": 19,
+    "unmapped_input_pointer_bindings": 0
   },
   "config": {
     "active_literal_leaf_keys": 596,
@@ -17183,12 +17190,40 @@
           ],
           "keyReleased": []
         }
+      },
+      {
+        "id": "InputIndependentSubboard",
+        "source": "src/main/java/featurecat/lizzie/gui/InputIndependentSubboard.java",
+        "active_key_cases": 3,
+        "active_key_bindings": 5,
+        "events": {
+          "keyPressed": 3,
+          "keyReleased": 0
+        },
+        "post_dispatch_actions": {
+          "keyPressed": [],
+          "keyReleased": []
+        }
+      },
+      {
+        "id": "InputSubboard",
+        "source": "src/main/java/featurecat/lizzie/gui/InputSubboard.java",
+        "active_key_cases": 2,
+        "active_key_bindings": 4,
+        "events": {
+          "keyPressed": 2,
+          "keyReleased": 0
+        },
+        "post_dispatch_actions": {
+          "keyPressed": [],
+          "keyReleased": []
+        }
       }
     ],
-    "active_key_cases": 112,
-    "active_key_bindings": 324,
+    "active_key_cases": 117,
+    "active_key_bindings": 333,
     "events": {
-      "keyPressed": 108,
+      "keyPressed": 113,
       "keyReleased": 4
     },
     "cases": [
@@ -18866,6 +18901,74 @@
         "binding_count": 1,
         "matrix_ids": [
           "BOARD-TEMPORARY-001"
+        ]
+      },
+      {
+        "case": "InputIndependentSubboard:keyPressed:VK_SPACE",
+        "source_id": "InputIndependentSubboard",
+        "event": "keyPressed",
+        "key": "VK_SPACE",
+        "line": 46,
+        "modifier_checks": [],
+        "binding_count": 1,
+        "matrix_ids": [
+          "ANALYSIS-PONDER-001"
+        ]
+      },
+      {
+        "case": "InputIndependentSubboard:keyPressed:VK_Q",
+        "source_id": "InputIndependentSubboard",
+        "event": "keyPressed",
+        "key": "VK_Q",
+        "line": 49,
+        "modifier_checks": [
+          "Alt"
+        ],
+        "binding_count": 2,
+        "matrix_ids": [
+          "UI-LAYOUT-001"
+        ]
+      },
+      {
+        "case": "InputIndependentSubboard:keyPressed:VK_W",
+        "source_id": "InputIndependentSubboard",
+        "event": "keyPressed",
+        "key": "VK_W",
+        "line": 54,
+        "modifier_checks": [
+          "Alt"
+        ],
+        "binding_count": 2,
+        "matrix_ids": [
+          "UI-LAYOUT-001"
+        ]
+      },
+      {
+        "case": "InputSubboard:keyPressed:VK_R",
+        "source_id": "InputSubboard",
+        "event": "keyPressed",
+        "key": "VK_R",
+        "line": 80,
+        "modifier_checks": [
+          "Alt"
+        ],
+        "binding_count": 2,
+        "matrix_ids": [
+          "ENGINE-GAME-CONTROL-001"
+        ]
+      },
+      {
+        "case": "InputSubboard:keyPressed:VK_T",
+        "source_id": "InputSubboard",
+        "event": "keyPressed",
+        "key": "VK_T",
+        "line": 83,
+        "modifier_checks": [
+          "Alt"
+        ],
+        "binding_count": 2,
+        "matrix_ids": [
+          "ENGINE-GAME-CONTROL-001"
         ]
       }
     ],
@@ -28921,6 +29024,800 @@
         ],
         "matrix_ids": [
           "BOARD-TEMPORARY-001"
+        ]
+      },
+      {
+        "binding": "InputIndependentSubboard:keyPressed:VK_SPACE#1",
+        "case": "InputIndependentSubboard:keyPressed:VK_SPACE",
+        "source_id": "InputIndependentSubboard",
+        "event": "keyPressed",
+        "key": "VK_SPACE",
+        "line": 46,
+        "conditions": [],
+        "case_chain": [
+          "InputIndependentSubboard:keyPressed:VK_SPACE"
+        ],
+        "statements": [
+          {
+            "line": 47,
+            "statement": "Lizzie.frame.togglePonderMannul();"
+          }
+        ],
+        "matrix_ids": [
+          "ANALYSIS-PONDER-001"
+        ]
+      },
+      {
+        "binding": "InputIndependentSubboard:keyPressed:VK_Q#1",
+        "case": "InputIndependentSubboard:keyPressed:VK_Q",
+        "source_id": "InputIndependentSubboard",
+        "event": "keyPressed",
+        "key": "VK_Q",
+        "line": 49,
+        "conditions": [
+          {
+            "expression": "e.isAltDown()",
+            "expected": true
+          }
+        ],
+        "case_chain": [
+          "InputIndependentSubboard:keyPressed:VK_Q"
+        ],
+        "statements": [
+          {
+            "line": 51,
+            "statement": "Lizzie.frame.toggleIndependentMainBoard();"
+          }
+        ],
+        "matrix_ids": [
+          "UI-LAYOUT-001"
+        ]
+      },
+      {
+        "binding": "InputIndependentSubboard:keyPressed:VK_Q#2",
+        "case": "InputIndependentSubboard:keyPressed:VK_Q",
+        "source_id": "InputIndependentSubboard",
+        "event": "keyPressed",
+        "key": "VK_Q",
+        "line": 49,
+        "conditions": [
+          {
+            "expression": "e.isAltDown()",
+            "expected": false
+          }
+        ],
+        "case_chain": [
+          "InputIndependentSubboard:keyPressed:VK_Q"
+        ],
+        "statements": [],
+        "matrix_ids": [
+          "UI-LAYOUT-001"
+        ]
+      },
+      {
+        "binding": "InputIndependentSubboard:keyPressed:VK_W#1",
+        "case": "InputIndependentSubboard:keyPressed:VK_W",
+        "source_id": "InputIndependentSubboard",
+        "event": "keyPressed",
+        "key": "VK_W",
+        "line": 54,
+        "conditions": [
+          {
+            "expression": "e.isAltDown()",
+            "expected": true
+          }
+        ],
+        "case_chain": [
+          "InputIndependentSubboard:keyPressed:VK_W"
+        ],
+        "statements": [
+          {
+            "line": 56,
+            "statement": "Lizzie.frame.toggleIndependentSubBoard();"
+          }
+        ],
+        "matrix_ids": [
+          "UI-LAYOUT-001"
+        ]
+      },
+      {
+        "binding": "InputIndependentSubboard:keyPressed:VK_W#2",
+        "case": "InputIndependentSubboard:keyPressed:VK_W",
+        "source_id": "InputIndependentSubboard",
+        "event": "keyPressed",
+        "key": "VK_W",
+        "line": 54,
+        "conditions": [
+          {
+            "expression": "e.isAltDown()",
+            "expected": false
+          }
+        ],
+        "case_chain": [
+          "InputIndependentSubboard:keyPressed:VK_W"
+        ],
+        "statements": [],
+        "matrix_ids": [
+          "UI-LAYOUT-001"
+        ]
+      },
+      {
+        "binding": "InputSubboard:keyPressed:VK_R#1",
+        "case": "InputSubboard:keyPressed:VK_R",
+        "source_id": "InputSubboard",
+        "event": "keyPressed",
+        "key": "VK_R",
+        "line": 80,
+        "conditions": [
+          {
+            "expression": "e.isAltDown()",
+            "expected": true
+          }
+        ],
+        "case_chain": [
+          "InputSubboard:keyPressed:VK_R"
+        ],
+        "statements": [
+          {
+            "line": 81,
+            "statement": "Lizzie.engineManager.stopEngineGame(-1, true);"
+          }
+        ],
+        "matrix_ids": [
+          "ENGINE-GAME-CONTROL-001"
+        ]
+      },
+      {
+        "binding": "InputSubboard:keyPressed:VK_R#2",
+        "case": "InputSubboard:keyPressed:VK_R",
+        "source_id": "InputSubboard",
+        "event": "keyPressed",
+        "key": "VK_R",
+        "line": 80,
+        "conditions": [
+          {
+            "expression": "e.isAltDown()",
+            "expected": false
+          }
+        ],
+        "case_chain": [
+          "InputSubboard:keyPressed:VK_R"
+        ],
+        "statements": [],
+        "matrix_ids": [
+          "ENGINE-GAME-CONTROL-001"
+        ]
+      },
+      {
+        "binding": "InputSubboard:keyPressed:VK_T#1",
+        "case": "InputSubboard:keyPressed:VK_T",
+        "source_id": "InputSubboard",
+        "event": "keyPressed",
+        "key": "VK_T",
+        "line": 83,
+        "conditions": [
+          {
+            "expression": "e.isAltDown()",
+            "expected": true
+          }
+        ],
+        "case_chain": [
+          "InputSubboard:keyPressed:VK_T"
+        ],
+        "statements": [
+          {
+            "line": 84,
+            "statement": "LizzieFrame.toolbar.btnEnginePkStop.doClick();"
+          }
+        ],
+        "matrix_ids": [
+          "ENGINE-GAME-CONTROL-001"
+        ]
+      },
+      {
+        "binding": "InputSubboard:keyPressed:VK_T#2",
+        "case": "InputSubboard:keyPressed:VK_T",
+        "source_id": "InputSubboard",
+        "event": "keyPressed",
+        "key": "VK_T",
+        "line": 83,
+        "conditions": [
+          {
+            "expression": "e.isAltDown()",
+            "expected": false
+          }
+        ],
+        "case_chain": [
+          "InputSubboard:keyPressed:VK_T"
+        ],
+        "statements": [],
+        "matrix_ids": [
+          "ENGINE-GAME-CONTROL-001"
+        ]
+      }
+    ],
+    "pointer_sources": [
+      {
+        "id": "InputIndependentSubboard",
+        "source": "src/main/java/featurecat/lizzie/gui/InputIndependentSubboard.java",
+        "active_pointer_events": 6,
+        "active_pointer_bindings": 6
+      },
+      {
+        "id": "InputSubboard",
+        "source": "src/main/java/featurecat/lizzie/gui/InputSubboard.java",
+        "active_pointer_events": 6,
+        "active_pointer_bindings": 13
+      }
+    ],
+    "active_pointer_events": 12,
+    "active_pointer_bindings": 19,
+    "pointer_events": [
+      {
+        "event_id": "InputIndependentSubboard:mouseClicked",
+        "source_id": "InputIndependentSubboard",
+        "event": "mouseClicked",
+        "line": 11,
+        "binding_count": 1,
+        "matrix_ids": [
+          "BOARD-SUBBOARD-INPUT-001"
+        ]
+      },
+      {
+        "event_id": "InputIndependentSubboard:mousePressed",
+        "source_id": "InputIndependentSubboard",
+        "event": "mousePressed",
+        "line": 14,
+        "binding_count": 1,
+        "matrix_ids": [
+          "BOARD-SUBBOARD-INPUT-001"
+        ]
+      },
+      {
+        "event_id": "InputIndependentSubboard:mouseWheelMoved",
+        "source_id": "InputIndependentSubboard",
+        "event": "mouseWheelMoved",
+        "line": 19,
+        "binding_count": 1,
+        "matrix_ids": [
+          "BOARD-SUBBOARD-INPUT-001"
+        ]
+      },
+      {
+        "event_id": "InputIndependentSubboard:mouseReleased",
+        "source_id": "InputIndependentSubboard",
+        "event": "mouseReleased",
+        "line": 25,
+        "binding_count": 1,
+        "matrix_ids": [
+          "BOARD-SUBBOARD-INPUT-001"
+        ]
+      },
+      {
+        "event_id": "InputIndependentSubboard:mouseEntered",
+        "source_id": "InputIndependentSubboard",
+        "event": "mouseEntered",
+        "line": 31,
+        "binding_count": 1,
+        "matrix_ids": [
+          "BOARD-SUBBOARD-INPUT-001"
+        ]
+      },
+      {
+        "event_id": "InputIndependentSubboard:mouseExited",
+        "source_id": "InputIndependentSubboard",
+        "event": "mouseExited",
+        "line": 37,
+        "binding_count": 1,
+        "matrix_ids": [
+          "BOARD-SUBBOARD-INPUT-001"
+        ]
+      },
+      {
+        "event_id": "InputSubboard:mouseClicked",
+        "source_id": "InputSubboard",
+        "event": "mouseClicked",
+        "line": 11,
+        "binding_count": 1,
+        "matrix_ids": [
+          "BOARD-SUBBOARD-INPUT-001"
+        ]
+      },
+      {
+        "event_id": "InputSubboard:mousePressed",
+        "source_id": "InputSubboard",
+        "event": "mousePressed",
+        "line": 14,
+        "binding_count": 1,
+        "matrix_ids": [
+          "BOARD-SUBBOARD-INPUT-001"
+        ]
+      },
+      {
+        "event_id": "InputSubboard:mouseWheelMoved",
+        "source_id": "InputSubboard",
+        "event": "mouseWheelMoved",
+        "line": 27,
+        "binding_count": 8,
+        "matrix_ids": [
+          "BOARD-SUBBOARD-INPUT-001"
+        ]
+      },
+      {
+        "event_id": "InputSubboard:mouseReleased",
+        "source_id": "InputSubboard",
+        "event": "mouseReleased",
+        "line": 59,
+        "binding_count": 1,
+        "matrix_ids": [
+          "BOARD-SUBBOARD-INPUT-001"
+        ]
+      },
+      {
+        "event_id": "InputSubboard:mouseEntered",
+        "source_id": "InputSubboard",
+        "event": "mouseEntered",
+        "line": 65,
+        "binding_count": 1,
+        "matrix_ids": [
+          "BOARD-SUBBOARD-INPUT-001"
+        ]
+      },
+      {
+        "event_id": "InputSubboard:mouseExited",
+        "source_id": "InputSubboard",
+        "event": "mouseExited",
+        "line": 71,
+        "binding_count": 1,
+        "matrix_ids": [
+          "BOARD-SUBBOARD-INPUT-001"
+        ]
+      }
+    ],
+    "pointer_bindings": [
+      {
+        "binding": "InputIndependentSubboard:mouseClicked#1",
+        "event_id": "InputIndependentSubboard:mouseClicked",
+        "source_id": "InputIndependentSubboard",
+        "event": "mouseClicked",
+        "line": 11,
+        "conditions": [],
+        "statements": [],
+        "matrix_ids": [
+          "BOARD-SUBBOARD-INPUT-001"
+        ]
+      },
+      {
+        "binding": "InputIndependentSubboard:mousePressed#1",
+        "event_id": "InputIndependentSubboard:mousePressed",
+        "source_id": "InputIndependentSubboard",
+        "event": "mousePressed",
+        "line": 14,
+        "conditions": [],
+        "statements": [
+          {
+            "line": 15,
+            "statement": "Lizzie.frame.processIndependentPressOnSub(e);"
+          }
+        ],
+        "matrix_ids": [
+          "BOARD-SUBBOARD-INPUT-001"
+        ]
+      },
+      {
+        "binding": "InputIndependentSubboard:mouseWheelMoved#1",
+        "event_id": "InputIndependentSubboard:mouseWheelMoved",
+        "source_id": "InputIndependentSubboard",
+        "event": "mouseWheelMoved",
+        "line": 19,
+        "conditions": [],
+        "statements": [
+          {
+            "line": 21,
+            "statement": "Lizzie.frame.processIndependentSubboardMouseWheelMoved(e);"
+          }
+        ],
+        "matrix_ids": [
+          "BOARD-SUBBOARD-INPUT-001"
+        ]
+      },
+      {
+        "binding": "InputIndependentSubboard:mouseReleased#1",
+        "event_id": "InputIndependentSubboard:mouseReleased",
+        "source_id": "InputIndependentSubboard",
+        "event": "mouseReleased",
+        "line": 25,
+        "conditions": [],
+        "statements": [],
+        "matrix_ids": [
+          "BOARD-SUBBOARD-INPUT-001"
+        ]
+      },
+      {
+        "binding": "InputIndependentSubboard:mouseEntered#1",
+        "event_id": "InputIndependentSubboard:mouseEntered",
+        "source_id": "InputIndependentSubboard",
+        "event": "mouseEntered",
+        "line": 31,
+        "conditions": [],
+        "statements": [
+          {
+            "line": 33,
+            "statement": "Lizzie.frame.processIndependentSubboardMouseEntered();"
+          }
+        ],
+        "matrix_ids": [
+          "BOARD-SUBBOARD-INPUT-001"
+        ]
+      },
+      {
+        "binding": "InputIndependentSubboard:mouseExited#1",
+        "event_id": "InputIndependentSubboard:mouseExited",
+        "source_id": "InputIndependentSubboard",
+        "event": "mouseExited",
+        "line": 37,
+        "conditions": [],
+        "statements": [
+          {
+            "line": 39,
+            "statement": "Lizzie.frame.processIndependentSubboardMouseExited();"
+          }
+        ],
+        "matrix_ids": [
+          "BOARD-SUBBOARD-INPUT-001"
+        ]
+      },
+      {
+        "binding": "InputSubboard:mouseClicked#1",
+        "event_id": "InputSubboard:mouseClicked",
+        "source_id": "InputSubboard",
+        "event": "mouseClicked",
+        "line": 11,
+        "conditions": [],
+        "statements": [],
+        "matrix_ids": [
+          "BOARD-SUBBOARD-INPUT-001"
+        ]
+      },
+      {
+        "binding": "InputSubboard:mousePressed#1",
+        "event_id": "InputSubboard:mousePressed",
+        "source_id": "InputSubboard",
+        "event": "mousePressed",
+        "line": 14,
+        "conditions": [],
+        "statements": [
+          {
+            "line": 15,
+            "statement": "Lizzie.frame.processPressOnSub(e);"
+          }
+        ],
+        "matrix_ids": [
+          "BOARD-SUBBOARD-INPUT-001"
+        ]
+      },
+      {
+        "binding": "InputSubboard:mouseWheelMoved#1",
+        "event_id": "InputSubboard:mouseWheelMoved",
+        "source_id": "InputSubboard",
+        "event": "mouseWheelMoved",
+        "line": 27,
+        "conditions": [
+          {
+            "expression": "Lizzie.frame.processSubboardMouseWheelMoved(e)",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 35,
+            "statement": "return;"
+          }
+        ],
+        "matrix_ids": [
+          "BOARD-SUBBOARD-INPUT-001"
+        ]
+      },
+      {
+        "binding": "InputSubboard:mouseWheelMoved#2",
+        "event_id": "InputSubboard:mouseWheelMoved",
+        "source_id": "InputSubboard",
+        "event": "mouseWheelMoved",
+        "line": 27,
+        "conditions": [
+          {
+            "expression": "Lizzie.frame.processSubboardMouseWheelMoved(e)",
+            "expected": false
+          },
+          {
+            "expression": "e.getWhen() - wheelWhen > 0",
+            "expected": true
+          },
+          {
+            "expression": "e.getWheelRotation() > 0",
+            "expected": true
+          },
+          {
+            "expression": "LizzieFrame.boardRenderer.isShowingBranch()",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 39,
+            "statement": "wheelWhen = e.getWhen();"
+          },
+          {
+            "line": 42,
+            "statement": "Lizzie.frame.doBranch(1);"
+          },
+          {
+            "line": 43,
+            "statement": "Lizzie.frame.refresh();"
+          }
+        ],
+        "matrix_ids": [
+          "BOARD-SUBBOARD-INPUT-001"
+        ]
+      },
+      {
+        "binding": "InputSubboard:mouseWheelMoved#3",
+        "event_id": "InputSubboard:mouseWheelMoved",
+        "source_id": "InputSubboard",
+        "event": "mouseWheelMoved",
+        "line": 27,
+        "conditions": [
+          {
+            "expression": "Lizzie.frame.processSubboardMouseWheelMoved(e)",
+            "expected": false
+          },
+          {
+            "expression": "e.getWhen() - wheelWhen > 0",
+            "expected": true
+          },
+          {
+            "expression": "e.getWheelRotation() > 0",
+            "expected": true
+          },
+          {
+            "expression": "LizzieFrame.boardRenderer.isShowingBranch()",
+            "expected": false
+          },
+          {
+            "expression": "LizzieFrame.boardRenderer.incrementDisplayedBranchLength(1)",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 39,
+            "statement": "wheelWhen = e.getWhen();"
+          },
+          {
+            "line": 46,
+            "statement": "Lizzie.frame.refresh();"
+          }
+        ],
+        "matrix_ids": [
+          "BOARD-SUBBOARD-INPUT-001"
+        ]
+      },
+      {
+        "binding": "InputSubboard:mouseWheelMoved#4",
+        "event_id": "InputSubboard:mouseWheelMoved",
+        "source_id": "InputSubboard",
+        "event": "mouseWheelMoved",
+        "line": 27,
+        "conditions": [
+          {
+            "expression": "Lizzie.frame.processSubboardMouseWheelMoved(e)",
+            "expected": false
+          },
+          {
+            "expression": "e.getWhen() - wheelWhen > 0",
+            "expected": true
+          },
+          {
+            "expression": "e.getWheelRotation() > 0",
+            "expected": true
+          },
+          {
+            "expression": "LizzieFrame.boardRenderer.isShowingBranch()",
+            "expected": false
+          },
+          {
+            "expression": "LizzieFrame.boardRenderer.incrementDisplayedBranchLength(1)",
+            "expected": false
+          }
+        ],
+        "statements": [
+          {
+            "line": 39,
+            "statement": "wheelWhen = e.getWhen();"
+          }
+        ],
+        "matrix_ids": [
+          "BOARD-SUBBOARD-INPUT-001"
+        ]
+      },
+      {
+        "binding": "InputSubboard:mouseWheelMoved#5",
+        "event_id": "InputSubboard:mouseWheelMoved",
+        "source_id": "InputSubboard",
+        "event": "mouseWheelMoved",
+        "line": 27,
+        "conditions": [
+          {
+            "expression": "Lizzie.frame.processSubboardMouseWheelMoved(e)",
+            "expected": false
+          },
+          {
+            "expression": "e.getWhen() - wheelWhen > 0",
+            "expected": true
+          },
+          {
+            "expression": "e.getWheelRotation() > 0",
+            "expected": false
+          },
+          {
+            "expression": "e.getWheelRotation() < 0",
+            "expected": true
+          },
+          {
+            "expression": "LizzieFrame.boardRenderer.isShowingBranch()",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 39,
+            "statement": "wheelWhen = e.getWhen();"
+          },
+          {
+            "line": 51,
+            "statement": "Lizzie.frame.doBranch(-1);"
+          },
+          {
+            "line": 52,
+            "statement": "Lizzie.frame.refresh();"
+          }
+        ],
+        "matrix_ids": [
+          "BOARD-SUBBOARD-INPUT-001"
+        ]
+      },
+      {
+        "binding": "InputSubboard:mouseWheelMoved#6",
+        "event_id": "InputSubboard:mouseWheelMoved",
+        "source_id": "InputSubboard",
+        "event": "mouseWheelMoved",
+        "line": 27,
+        "conditions": [
+          {
+            "expression": "Lizzie.frame.processSubboardMouseWheelMoved(e)",
+            "expected": false
+          },
+          {
+            "expression": "e.getWhen() - wheelWhen > 0",
+            "expected": true
+          },
+          {
+            "expression": "e.getWheelRotation() > 0",
+            "expected": false
+          },
+          {
+            "expression": "e.getWheelRotation() < 0",
+            "expected": true
+          },
+          {
+            "expression": "LizzieFrame.boardRenderer.isShowingBranch()",
+            "expected": false
+          }
+        ],
+        "statements": [
+          {
+            "line": 39,
+            "statement": "wheelWhen = e.getWhen();"
+          }
+        ],
+        "matrix_ids": [
+          "BOARD-SUBBOARD-INPUT-001"
+        ]
+      },
+      {
+        "binding": "InputSubboard:mouseWheelMoved#7",
+        "event_id": "InputSubboard:mouseWheelMoved",
+        "source_id": "InputSubboard",
+        "event": "mouseWheelMoved",
+        "line": 27,
+        "conditions": [
+          {
+            "expression": "Lizzie.frame.processSubboardMouseWheelMoved(e)",
+            "expected": false
+          },
+          {
+            "expression": "e.getWhen() - wheelWhen > 0",
+            "expected": true
+          },
+          {
+            "expression": "e.getWheelRotation() > 0",
+            "expected": false
+          },
+          {
+            "expression": "e.getWheelRotation() < 0",
+            "expected": false
+          }
+        ],
+        "statements": [
+          {
+            "line": 39,
+            "statement": "wheelWhen = e.getWhen();"
+          }
+        ],
+        "matrix_ids": [
+          "BOARD-SUBBOARD-INPUT-001"
+        ]
+      },
+      {
+        "binding": "InputSubboard:mouseWheelMoved#8",
+        "event_id": "InputSubboard:mouseWheelMoved",
+        "source_id": "InputSubboard",
+        "event": "mouseWheelMoved",
+        "line": 27,
+        "conditions": [
+          {
+            "expression": "Lizzie.frame.processSubboardMouseWheelMoved(e)",
+            "expected": false
+          },
+          {
+            "expression": "e.getWhen() - wheelWhen > 0",
+            "expected": false
+          }
+        ],
+        "statements": [],
+        "matrix_ids": [
+          "BOARD-SUBBOARD-INPUT-001"
+        ]
+      },
+      {
+        "binding": "InputSubboard:mouseReleased#1",
+        "event_id": "InputSubboard:mouseReleased",
+        "source_id": "InputSubboard",
+        "event": "mouseReleased",
+        "line": 59,
+        "conditions": [],
+        "statements": [],
+        "matrix_ids": [
+          "BOARD-SUBBOARD-INPUT-001"
+        ]
+      },
+      {
+        "binding": "InputSubboard:mouseEntered#1",
+        "event_id": "InputSubboard:mouseEntered",
+        "source_id": "InputSubboard",
+        "event": "mouseEntered",
+        "line": 65,
+        "conditions": [],
+        "statements": [],
+        "matrix_ids": [
+          "BOARD-SUBBOARD-INPUT-001"
+        ]
+      },
+      {
+        "binding": "InputSubboard:mouseExited#1",
+        "event_id": "InputSubboard:mouseExited",
+        "source_id": "InputSubboard",
+        "event": "mouseExited",
+        "line": 71,
+        "conditions": [],
+        "statements": [
+          {
+            "line": 73,
+            "statement": "Lizzie.frame.onMouseExited();"
+          }
+        ],
+        "matrix_ids": [
+          "BOARD-SUBBOARD-INPUT-001"
         ]
       }
     ]

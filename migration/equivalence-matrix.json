@@ -1,5 +1,5 @@
 {
-  "schema_version": 5,
+  "schema_version": 6,
   "allowed_statuses": [
     "未盘点",
     "已盘点",
@@ -877,6 +877,41 @@
       "evidence": "四条快捷条件路径和入口方法已定位；完整对局状态机、取消和崩溃恢复仍待纵切实现。"
     },
     {
+      "id": "ENGINE-GAME-CONTROL-001",
+      "category": "引擎对局",
+      "legacy_entry": "引擎对局期间 InputSubboard 接管主面板输入；Alt+R 手动停止对局，Alt+T 触发工具栏暂停/继续动作",
+      "legacy_menu_keys": [],
+      "legacy_menu_labels": [],
+      "legacy_shortcuts": [],
+      "legacy_input_cases": [
+        "InputSubboard:keyPressed:VK_R",
+        "InputSubboard:keyPressed:VK_T"
+      ],
+      "legacy_input_bindings": [
+        "InputSubboard:keyPressed:VK_R#1",
+        "InputSubboard:keyPressed:VK_R#2",
+        "InputSubboard:keyPressed:VK_T#1",
+        "InputSubboard:keyPressed:VK_T#2"
+      ],
+      "java_evidence": [
+        { "path": "src/main/java/featurecat/lizzie/gui/InputSubboard.java", "symbol": "Lizzie.engineManager.stopEngineGame(-1, true)" },
+        { "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "symbol": "mainPanel.addKeyListener(input2)" },
+        { "path": "src/main/java/featurecat/lizzie/gui/BottomToolbar.java", "symbol": "btnEnginePkStop.addActionListener" },
+        { "path": "src/main/java/featurecat/lizzie/analysis/EngineManager.java", "symbol": "public void stopEngineGame(int resgnEngineIndex, boolean mannul)" }
+      ],
+      "config_keys": [],
+      "inputs_preconditions": "主窗口已切换到引擎对局输入路由；Alt 修饰键按下。",
+      "success_behavior": "Alt+R 以手动原因停止当前引擎对局；Alt+T 复用工具栏同一动作，在运行和暂停状态间切换且文案与引擎状态一致。",
+      "failure_cancel_behavior": "无活动对局或引擎已退出时保持棋盘和历史不变并呈现真实状态；无 Alt 的 R/T 明确无动作。",
+      "data_io": "更新内存对局、工具栏和引擎生命周期状态；停止时可能按既有策略保存已完成对局。",
+      "external_dependencies": ["GTP 引擎进程"],
+      "target_modules": ["Lizzie.Core", "Lizzie.Engine", "Lizzie.Desktop"],
+      "automated_evidence": [],
+      "manual_acceptance": "以确定性 GTP 对局覆盖 Alt+R、Alt+T 暂停/继续、无修饰 R/T、引擎提前退出及停止后的进程树和棋盘历史。",
+      "status": "已盘点",
+      "evidence": "InputSubboard 的四条 Alt 真/假路径已精确展开；旧版通过按钮 doClick 复用暂停逻辑，目标不得另造分叉状态机。"
+    },
+    {
       "id": "TSUMEGO-001",
       "category": "死活题",
       "legacy_entry": "Shift+E 打开死活题窗口，Shift+T 启动屏幕取题",
@@ -1016,20 +1051,23 @@
     {
       "id": "ANALYSIS-PONDER-001",
       "category": "分析",
-      "legacy_entry": "Space 调用 LizzieFrame.togglePonderMannul 切换前台持续分析",
+      "legacy_entry": "主窗口、独立主棋盘或独立副棋盘的 Space 调用 LizzieFrame.togglePonderMannul 切换前台持续分析",
       "legacy_menu_keys": [],
       "legacy_menu_labels": [],
       "legacy_shortcuts": [],
       "legacy_input_cases": [
         "keyPressed:VK_SPACE",
-        "InputIndependentMainBoard:keyPressed:VK_SPACE"
+        "InputIndependentMainBoard:keyPressed:VK_SPACE",
+        "InputIndependentSubboard:keyPressed:VK_SPACE"
       ],
       "legacy_input_bindings": [
         "keyPressed:VK_SPACE#1",
-        "InputIndependentMainBoard:keyPressed:VK_SPACE#1"
+        "InputIndependentMainBoard:keyPressed:VK_SPACE#1",
+        "InputIndependentSubboard:keyPressed:VK_SPACE#1"
       ],
       "java_evidence": [
         { "path": "src/main/java/featurecat/lizzie/gui/Input.java", "symbol": "togglePonderMannul" },
+        { "path": "src/main/java/featurecat/lizzie/gui/InputIndependentSubboard.java", "symbol": "Lizzie.frame.togglePonderMannul()" },
         { "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "symbol": "togglePonderMannul" }
       ],
       "config_keys": [],
@@ -1042,7 +1080,7 @@
       "automated_evidence": [],
       "manual_acceptance": "用确定性与真实引擎分别反复开始/停止，核对请求停止、UI 状态、迟到响应和进程退出。",
       "status": "已盘点",
-      "evidence": "无修饰 Space 的唯一动作路径已定位；目标取消时序和真实引擎实测待建立。"
+      "evidence": "三个已盘点输入源的无修饰 Space 均落到同一动作；目标取消时序和真实引擎实测待建立。"
     },
     {
       "id": "BOARD-VARIATION-001",
@@ -1129,6 +1167,66 @@
       "manual_acceptance": "用至少九个候选和两个分支覆盖鼠标内外、变化开关、试下、主线、主窗口/独立主棋盘 R 重放及无目标路径。",
       "status": "已盘点",
       "evidence": "两个输入源的数字 1–8 无 Alt 路径均经连续 case fall-through 到 VK_9；独立源 R 调用 replayBranchIndependentMainBoard，主源调用 replayBranch，差异已保留。"
+    },
+    {
+      "id": "BOARD-SUBBOARD-INPUT-001",
+      "category": "棋盘与对局",
+      "legacy_entry": "InputSubboard 与 InputIndependentSubboard 接收副棋盘鼠标按下、滚轮、进入/离开及监听器空操作事件",
+      "legacy_menu_keys": [],
+      "legacy_menu_labels": [],
+      "legacy_shortcuts": [],
+      "legacy_input_cases": [
+        "InputIndependentSubboard:mouseClicked",
+        "InputIndependentSubboard:mousePressed",
+        "InputIndependentSubboard:mouseWheelMoved",
+        "InputIndependentSubboard:mouseReleased",
+        "InputIndependentSubboard:mouseEntered",
+        "InputIndependentSubboard:mouseExited",
+        "InputSubboard:mouseClicked",
+        "InputSubboard:mousePressed",
+        "InputSubboard:mouseWheelMoved",
+        "InputSubboard:mouseReleased",
+        "InputSubboard:mouseEntered",
+        "InputSubboard:mouseExited"
+      ],
+      "legacy_input_bindings": [
+        "InputIndependentSubboard:mouseClicked#1",
+        "InputIndependentSubboard:mousePressed#1",
+        "InputIndependentSubboard:mouseWheelMoved#1",
+        "InputIndependentSubboard:mouseReleased#1",
+        "InputIndependentSubboard:mouseEntered#1",
+        "InputIndependentSubboard:mouseExited#1",
+        "InputSubboard:mouseClicked#1",
+        "InputSubboard:mousePressed#1",
+        "InputSubboard:mouseWheelMoved#1",
+        "InputSubboard:mouseWheelMoved#2",
+        "InputSubboard:mouseWheelMoved#3",
+        "InputSubboard:mouseWheelMoved#4",
+        "InputSubboard:mouseWheelMoved#5",
+        "InputSubboard:mouseWheelMoved#6",
+        "InputSubboard:mouseWheelMoved#7",
+        "InputSubboard:mouseWheelMoved#8",
+        "InputSubboard:mouseReleased#1",
+        "InputSubboard:mouseEntered#1",
+        "InputSubboard:mouseExited#1"
+      ],
+      "java_evidence": [
+        { "path": "src/main/java/featurecat/lizzie/gui/InputSubboard.java", "symbol": "public void mouseWheelMoved(MouseWheelEvent e)" },
+        { "path": "src/main/java/featurecat/lizzie/gui/InputIndependentSubboard.java", "symbol": "public void mouseWheelMoved(MouseWheelEvent e)" },
+        { "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "symbol": "public boolean processSubboardMouseWheelMoved(MouseWheelEvent e)" },
+        { "path": "src/main/java/featurecat/lizzie/gui/IndependentSubBoard.java", "symbol": "public void processIndependentPressOnSub(MouseEvent e)" }
+      ],
+      "config_keys": [],
+      "inputs_preconditions": "对应监听器已挂到主面板或独立副棋盘；鼠标坐标、按钮、滚轮方向和当前对局/思考模式决定有效分支。",
+      "success_behavior": "普通或四副棋盘鼠标左/右键调整候选序号，中键切换大副棋盘；滚轮在副棋盘或未处理区域移动对应变化长度；独立副棋盘按下/滚轮调整候选与变化，进入/离开更新悬停和窗口控制按钮；离开主面板清理悬停、拖子和选择框状态。",
+      "failure_cancel_behavior": "对局或思考模式禁止的按下保持无动作；重复/零方向滚轮、边界候选和非目标区域不越界修改；mouseClicked、mouseReleased 与普通 mouseEntered 的旧监听器空操作路径保持显式。",
+      "data_io": "只更新内存 renderer、候选序号、变化长度、悬停/拖拽状态和窗口控件可见性，不持久化。",
+      "external_dependencies": [],
+      "target_modules": ["Lizzie.Core", "Lizzie.Desktop"],
+      "automated_evidence": [],
+      "manual_acceptance": "在普通、四副棋盘、独立副棋盘和引擎对局输入路由中覆盖左/中/右键、滚轮正负/零、边界、重复事件、进入/离开及所有显式空操作，核对变化、候选、焦点与清理状态。",
+      "status": "已盘点",
+      "evidence": "12 个 pointer 事件展开为 19 条互斥路径；InputSubboard 滚轮的早退、8 条条件路径和空动作均已生成，两个源的空接口方法也未被遗漏。"
     },
     {
       "id": "ANALYSIS-DISPLAY-001",
@@ -1465,7 +1563,7 @@
     {
       "id": "UI-LAYOUT-001",
       "category": "界面显示",
-      "legacy_entry": "Control+Z、Primary+Alt+Q/A、方括号与 Alt+1–9 调整置顶、独立棋盘、棋盘占比和窗口布局模式",
+      "legacy_entry": "Control+Z、Primary+Alt+Q/A、方括号与 Alt+1–9 调整置顶、独立棋盘、棋盘占比和窗口布局；独立副棋盘 Alt+Q/W 切换独立主/副棋盘",
       "legacy_menu_keys": [],
       "legacy_menu_labels": [],
       "legacy_shortcuts": [],
@@ -1497,7 +1595,9 @@
         "InputIndependentMainBoard:keyPressed:VK_6",
         "InputIndependentMainBoard:keyPressed:VK_7",
         "InputIndependentMainBoard:keyPressed:VK_8",
-        "InputIndependentMainBoard:keyPressed:VK_9"
+        "InputIndependentMainBoard:keyPressed:VK_9",
+        "InputIndependentSubboard:keyPressed:VK_Q",
+        "InputIndependentSubboard:keyPressed:VK_W"
       ],
       "legacy_input_bindings": [
         "keyPressed:VK_Z#1",
@@ -1533,24 +1633,29 @@
         "InputIndependentMainBoard:keyPressed:VK_6#1",
         "InputIndependentMainBoard:keyPressed:VK_7#1",
         "InputIndependentMainBoard:keyPressed:VK_8#1",
-        "InputIndependentMainBoard:keyPressed:VK_9#2"
+        "InputIndependentMainBoard:keyPressed:VK_9#2",
+        "InputIndependentSubboard:keyPressed:VK_Q#1",
+        "InputIndependentSubboard:keyPressed:VK_Q#2",
+        "InputIndependentSubboard:keyPressed:VK_W#1",
+        "InputIndependentSubboard:keyPressed:VK_W#2"
       ],
       "java_evidence": [
         { "path": "src/main/java/featurecat/lizzie/gui/Input.java", "symbol": "defaultMode" },
         { "path": "src/main/java/featurecat/lizzie/gui/Input.java", "symbol": "BoardPositionProportion" },
-        { "path": "src/main/java/featurecat/lizzie/gui/InputIndependentMainBoard.java", "symbol": "switchToCustomMode(1)" }
+        { "path": "src/main/java/featurecat/lizzie/gui/InputIndependentMainBoard.java", "symbol": "switchToCustomMode(1)" },
+        { "path": "src/main/java/featurecat/lizzie/gui/InputIndependentSubboard.java", "symbol": "Lizzie.frame.toggleIndependentSubBoard()" }
       ],
       "config_keys": [],
-      "inputs_preconditions": "主窗口已布局；独立副棋盘只在未同步外部棋盘时可切换。",
+      "inputs_preconditions": "对应主窗口或独立棋盘接收键盘输入；主窗口中的独立副棋盘只在未同步外部棋盘时可切换。",
       "success_behavior": "按分支切换置顶、独立棋盘、预设/自定义布局或在 0–8 边界内调整棋盘占比；保留主窗口与独立主棋盘已确认的上下文差异。",
       "failure_cancel_behavior": "占比到边界或同步棋盘禁止切换时保持无动作；布局切换失败不得丢失可见面板或窗口位置；未动态确认前不得静默合并两个窗口的 Alt+7 行为。",
       "data_io": "更新窗口布局、置顶和独立棋盘状态；具体持久化键仍待配置矩阵关联。",
       "external_dependencies": ["操作系统窗口管理"],
       "target_modules": ["Lizzie.Desktop"],
       "automated_evidence": [],
-      "manual_acceptance": "分别在主窗口和独立主棋盘覆盖 Alt+1–9，重点核对 Alt+7/8；再覆盖占比两端无动作、置顶、主/副独立窗口、同步禁用、重启和多 DPI。",
+      "manual_acceptance": "分别在主窗口和独立主棋盘覆盖 Alt+1–9，重点核对 Alt+7/8；在独立副棋盘覆盖 Alt+Q/W 与无 Alt 空动作；再覆盖占比边界、置顶、同步禁用、重启和多 DPI。",
       "status": "已盘点",
-      "evidence": "两个输入源均保留 Control 与 Primary 差异；主源 Alt+7 进入 independentBoardMode，独立源 Alt+7 fall-through 到 VK_8 并调用 switchToCustomMode(1)，该上下文差异已显式登记。"
+      "evidence": "主/独立主棋盘输入保留 Control 与 Primary 差异及 Alt+7 上下文差异；独立副棋盘 Alt+Q/W 的真分支切换窗口，假分支无动作。"
     },
     {
       "id": "BOARD-TEMPORARY-001",
