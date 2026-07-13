@@ -1,5 +1,5 @@
 {
-  "schema_version": 9,
+  "schema_version": 10,
   "source": {
     "root": "../lizzieyzy-next-main",
     "version": "yzy2.5.3",
@@ -17,8 +17,8 @@
     "Menu keys cover active Menu.java resource lookups with Menu. or menu. prefixes.",
     "Menu literal labels cover active string-literal menu constructors; dynamic labels remain represented by their resource or runtime source.",
     "Menu accelerators cover explicit Menu.java setAccelerator calls and direct OS.isWindows guards; other input bindings remain T-003 work.",
-    "Input key bindings symbolically expand Input.java, InputIndependentMainBoard.java, InputIndependentSubboard.java, InputSubboard.java, FloatBoard.java, AnalysisFrame table/window, and DrawPainting.java key dispatch, condition evaluations, executed statements, empty-statement paths, and switch fall-through; controlIsPressed means Control on every platform plus Meta on macOS.",
-    "Pointer bindings symbolically expand the two indexed subboard listeners plus FloatBoard, AnalysisFrame, and DrawPainting mouse, motion, drag, wheel, and release condition evaluations, early returns, executed statements, and explicit no-action paths; data-dependent loops and AnalysisFrame click try/catch handlers are preserved as normalized atomic statements.",
+    "Input key bindings symbolically expand Input.java, InputIndependentMainBoard.java, InputIndependentSubboard.java, InputSubboard.java, FloatBoard.java, AnalysisFrame table/window, DrawPainting.java, and ChooseMoreEngine.java key dispatch, condition evaluations, executed statements, empty-listener and empty-statement paths, and switch fall-through; controlIsPressed means Control on every platform plus Meta on macOS.",
+    "Pointer bindings symbolically expand the two indexed subboard listeners plus FloatBoard, AnalysisFrame, DrawPainting, and ChooseMoreEngine mouse, motion, drag, wheel, and release condition evaluations, early returns, executed statements, and explicit no-action paths; data-dependent loops and click try/catch handlers are preserved as normalized atomic statements.",
     "Other key-listener and pointer-listener classes remain T-003 work."
   ],
   "matrix_summary": {
@@ -49,11 +49,11 @@
     "active_input_key_bindings": 360,
     "mapped_input_key_bindings": 360,
     "unmapped_input_key_bindings": 0,
-    "active_input_pointer_events": 25,
-    "mapped_input_pointer_events": 25,
+    "active_input_pointer_events": 27,
+    "mapped_input_pointer_events": 27,
     "unmapped_input_pointer_events": 0,
-    "active_input_pointer_bindings": 62,
-    "mapped_input_pointer_bindings": 62,
+    "active_input_pointer_bindings": 68,
+    "mapped_input_pointer_bindings": 68,
     "unmapped_input_pointer_bindings": 0
   },
   "config": {
@@ -17274,6 +17274,18 @@
         "post_dispatch_actions": {
           "keyPressed": []
         }
+      },
+      {
+        "id": "ChooseMoreEngine",
+        "source": "src/main/java/featurecat/lizzie/gui/ChooseMoreEngine.java",
+        "active_key_cases": 0,
+        "active_key_bindings": 0,
+        "events": {
+          "keyPressed": 0
+        },
+        "post_dispatch_actions": {
+          "keyPressed": []
+        }
       }
     ],
     "active_key_cases": 139,
@@ -30230,10 +30242,16 @@
         "source": "src/main/java/featurecat/lizzie/gui/DrawPainting.java",
         "active_pointer_events": 3,
         "active_pointer_bindings": 5
+      },
+      {
+        "id": "ChooseMoreEngine",
+        "source": "src/main/java/featurecat/lizzie/gui/ChooseMoreEngine.java",
+        "active_pointer_events": 2,
+        "active_pointer_bindings": 6
       }
     ],
-    "active_pointer_events": 25,
-    "active_pointer_bindings": 62,
+    "active_pointer_events": 27,
+    "active_pointer_bindings": 68,
     "pointer_events": [
       {
         "event_id": "InputIndependentSubboard:mouseClicked",
@@ -30483,6 +30501,26 @@
         "binding_count": 1,
         "matrix_ids": [
           "UI-FREE-DRAWING-001"
+        ]
+      },
+      {
+        "event_id": "ChooseMoreEngine:mouseClicked",
+        "source_id": "ChooseMoreEngine",
+        "event": "mouseClicked",
+        "line": 169,
+        "binding_count": 5,
+        "matrix_ids": [
+          "ENGINE-LIFECYCLE-001"
+        ]
+      },
+      {
+        "event_id": "ChooseMoreEngine:mouseReleased",
+        "source_id": "ChooseMoreEngine",
+        "event": "mouseReleased",
+        "line": 222,
+        "binding_count": 1,
+        "matrix_ids": [
+          "ENGINE-LIFECYCLE-001"
         ]
       }
     ],
@@ -32750,6 +32788,188 @@
         "statements": [],
         "matrix_ids": [
           "UI-FREE-DRAWING-001"
+        ]
+      },
+      {
+        "binding": "ChooseMoreEngine:mouseClicked#1",
+        "event_id": "ChooseMoreEngine:mouseClicked",
+        "source_id": "ChooseMoreEngine",
+        "event": "mouseClicked",
+        "line": 169,
+        "conditions": [
+          {
+            "expression": "e.getClickCount() == 2",
+            "expected": true
+          },
+          {
+            "expression": "row >= 0 && col >= 0",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 170,
+            "statement": "int row = table.rowAtPoint(e.getPoint());"
+          },
+          {
+            "line": 171,
+            "statement": "int col = table.columnAtPoint(e.getPoint());"
+          },
+          {
+            "line": 174,
+            "statement": "try { handleTableDoubleClick(row, col); } catch (Exception ex) { ex.printStackTrace(); }"
+          }
+        ],
+        "matrix_ids": [
+          "ENGINE-LIFECYCLE-001"
+        ]
+      },
+      {
+        "binding": "ChooseMoreEngine:mouseClicked#2",
+        "event_id": "ChooseMoreEngine:mouseClicked",
+        "source_id": "ChooseMoreEngine",
+        "event": "mouseClicked",
+        "line": 169,
+        "conditions": [
+          {
+            "expression": "e.getClickCount() == 2",
+            "expected": true
+          },
+          {
+            "expression": "row >= 0 && col >= 0",
+            "expected": false
+          }
+        ],
+        "statements": [
+          {
+            "line": 170,
+            "statement": "int row = table.rowAtPoint(e.getPoint());"
+          },
+          {
+            "line": 171,
+            "statement": "int col = table.columnAtPoint(e.getPoint());"
+          }
+        ],
+        "matrix_ids": [
+          "ENGINE-LIFECYCLE-001"
+        ]
+      },
+      {
+        "binding": "ChooseMoreEngine:mouseClicked#3",
+        "event_id": "ChooseMoreEngine:mouseClicked",
+        "source_id": "ChooseMoreEngine",
+        "event": "mouseClicked",
+        "line": 169,
+        "conditions": [
+          {
+            "expression": "e.getClickCount() == 2",
+            "expected": false
+          },
+          {
+            "expression": "row >= 0 && col >= 0",
+            "expected": true
+          },
+          {
+            "expression": "e.getButton() == MouseEvent.BUTTON3",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 170,
+            "statement": "int row = table.rowAtPoint(e.getPoint());"
+          },
+          {
+            "line": 171,
+            "statement": "int col = table.columnAtPoint(e.getPoint());"
+          },
+          {
+            "line": 183,
+            "statement": "try { handleTableDoubleClick(row, col); } catch (Exception ex) { ex.printStackTrace(); }"
+          }
+        ],
+        "matrix_ids": [
+          "ENGINE-LIFECYCLE-001"
+        ]
+      },
+      {
+        "binding": "ChooseMoreEngine:mouseClicked#4",
+        "event_id": "ChooseMoreEngine:mouseClicked",
+        "source_id": "ChooseMoreEngine",
+        "event": "mouseClicked",
+        "line": 169,
+        "conditions": [
+          {
+            "expression": "e.getClickCount() == 2",
+            "expected": false
+          },
+          {
+            "expression": "row >= 0 && col >= 0",
+            "expected": true
+          },
+          {
+            "expression": "e.getButton() == MouseEvent.BUTTON3",
+            "expected": false
+          }
+        ],
+        "statements": [
+          {
+            "line": 170,
+            "statement": "int row = table.rowAtPoint(e.getPoint());"
+          },
+          {
+            "line": 171,
+            "statement": "int col = table.columnAtPoint(e.getPoint());"
+          },
+          {
+            "line": 189,
+            "statement": "try { handleTableClick(row, col); } catch (Exception ex) { ex.printStackTrace(); }"
+          }
+        ],
+        "matrix_ids": [
+          "ENGINE-LIFECYCLE-001"
+        ]
+      },
+      {
+        "binding": "ChooseMoreEngine:mouseClicked#5",
+        "event_id": "ChooseMoreEngine:mouseClicked",
+        "source_id": "ChooseMoreEngine",
+        "event": "mouseClicked",
+        "line": 169,
+        "conditions": [
+          {
+            "expression": "e.getClickCount() == 2",
+            "expected": false
+          },
+          {
+            "expression": "row >= 0 && col >= 0",
+            "expected": false
+          }
+        ],
+        "statements": [
+          {
+            "line": 170,
+            "statement": "int row = table.rowAtPoint(e.getPoint());"
+          },
+          {
+            "line": 171,
+            "statement": "int col = table.columnAtPoint(e.getPoint());"
+          }
+        ],
+        "matrix_ids": [
+          "ENGINE-LIFECYCLE-001"
+        ]
+      },
+      {
+        "binding": "ChooseMoreEngine:mouseReleased#1",
+        "event_id": "ChooseMoreEngine:mouseReleased",
+        "source_id": "ChooseMoreEngine",
+        "event": "mouseReleased",
+        "line": 222,
+        "conditions": [],
+        "statements": [],
+        "matrix_ids": [
+          "ENGINE-LIFECYCLE-001"
         ]
       }
     ]
