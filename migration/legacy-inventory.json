@@ -1,5 +1,5 @@
 {
-  "schema_version": 22,
+  "schema_version": 23,
   "source": {
     "root": "../lizzieyzy-next-main",
     "version": "yzy2.5.3",
@@ -18,7 +18,7 @@
     "Menu literal labels cover active string-literal menu constructors; dynamic labels remain represented by their resource or runtime source.",
     "Menu accelerators cover explicit Menu.java setAccelerator calls and direct OS.isWindows guards; other input bindings remain T-003 work.",
     "Input key bindings symbolically expand Input.java, InputIndependentMainBoard.java, InputIndependentSubboard.java, InputSubboard.java, FloatBoard.java, AnalysisFrame table/window, DrawPainting.java, ChooseMoreEngine.java, LoadEngine.java, OtherPrograms.java, TencentKifuDownload.java, FoxKifuDownload.java, BrowserFrame.java, and CaptureTsumeGoFrame.java key dispatch, condition evaluations, executed statements, empty-listener and empty-statement paths, and switch fall-through; controlIsPressed means Control on every platform plus Meta on macOS, and BrowserFrame dispatches Enter through getKeyChar.",
-    "Pointer bindings symbolically expand the two indexed subboard listeners plus FloatBoard, AnalysisFrame, DrawPainting, ChooseMoreEngine, LoadEngine, OtherPrograms, TencentKifuDownload, FoxKifuDownload, BrowserFrame load/stop/label listeners, JFontTextArea, JFontTextField, JIMSendTextPane, the two DemoScrollBarUI2 arrow-button listeners, JPaintTextPane, and WindowMenuStrip across mouse, motion, drag, wheel, and release condition evaluations, early returns, executed statements, and explicit no-action paths; data-dependent loops and click try/catch handlers are preserved as normalized atomic statements.",
+    "Pointer bindings symbolically expand the two indexed subboard listeners plus FloatBoard, AnalysisFrame, DrawPainting, ChooseMoreEngine, LoadEngine, OtherPrograms, TencentKifuDownload, FoxKifuDownload, BrowserFrame load/stop/label listeners, JFontTextArea, JFontTextField, JIMSendTextPane, the two DemoScrollBarUI2 arrow-button listeners, JPaintTextPane, WindowMenuStrip, and YikeLiveDialog across mouse, motion, drag, wheel, and release condition evaluations, early returns, executed statements, and explicit no-action paths; data-dependent loops and click try/catch handlers are preserved as normalized atomic statements.",
     "Other key-listener and pointer-listener classes remain T-003 work."
   ],
   "matrix_summary": {
@@ -32,8 +32,8 @@
       "用户批准不迁移": 0
     },
     "active_config_leaf_keys": 596,
-    "mapped_config_leaf_keys": 81,
-    "unmapped_config_leaf_keys": 515,
+    "mapped_config_leaf_keys": 83,
+    "unmapped_config_leaf_keys": 513,
     "active_menu_resource_keys": 383,
     "mapped_menu_resource_keys": 58,
     "unmapped_menu_resource_keys": 325,
@@ -49,11 +49,11 @@
     "active_input_key_bindings": 365,
     "mapped_input_key_bindings": 365,
     "unmapped_input_key_bindings": 0,
-    "active_input_pointer_events": 66,
-    "mapped_input_pointer_events": 66,
+    "active_input_pointer_events": 67,
+    "mapped_input_pointer_events": 67,
     "unmapped_input_pointer_events": 0,
-    "active_input_pointer_bindings": 122,
-    "mapped_input_pointer_bindings": 122,
+    "active_input_pointer_bindings": 124,
+    "mapped_input_pointer_bindings": 124,
     "unmapped_input_pointer_bindings": 0
   },
   "config": {
@@ -339,7 +339,9 @@
       {
         "key": "always-gotolast-onlive",
         "reference_count": 2,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "ONLINE-YIKE-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -1246,7 +1248,8 @@
         "reference_count": 3,
         "matrix_ids": [
           "ONLINE-FOX-001",
-          "ONLINE-TENCENT-001"
+          "ONLINE-TENCENT-001",
+          "ONLINE-YIKE-001"
         ],
         "references": [
           {
@@ -7038,7 +7041,9 @@
       {
         "key": "mains-always-ontop",
         "reference_count": 5,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "ONLINE-YIKE-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -7710,7 +7715,8 @@
         "reference_count": 1,
         "matrix_ids": [
           "ONLINE-FOX-001",
-          "ONLINE-TENCENT-001"
+          "ONLINE-TENCENT-001",
+          "ONLINE-YIKE-001"
         ],
         "references": [
           {
@@ -7726,7 +7732,8 @@
         "reference_count": 1,
         "matrix_ids": [
           "ONLINE-FOX-001",
-          "ONLINE-TENCENT-001"
+          "ONLINE-TENCENT-001",
+          "ONLINE-YIKE-001"
         ],
         "references": [
           {
@@ -7742,7 +7749,8 @@
         "reference_count": 1,
         "matrix_ids": [
           "ONLINE-FOX-001",
-          "ONLINE-TENCENT-001"
+          "ONLINE-TENCENT-001",
+          "ONLINE-YIKE-001"
         ],
         "references": [
           {
@@ -8516,7 +8524,8 @@
         "reference_count": 3,
         "matrix_ids": [
           "KIFU-OPEN-001",
-          "ONLINE-FOX-001"
+          "ONLINE-FOX-001",
+          "ONLINE-YIKE-001"
         ],
         "references": [
           {
@@ -30683,10 +30692,16 @@
         "source": "src/main/java/featurecat/lizzie/gui/WindowMenuStrip.java",
         "active_pointer_events": 3,
         "active_pointer_bindings": 5
+      },
+      {
+        "id": "YikeLiveDialog",
+        "source": "src/main/java/featurecat/lizzie/gui/YikeLiveDialog.java",
+        "active_pointer_events": 1,
+        "active_pointer_bindings": 2
       }
     ],
-    "active_pointer_events": 66,
-    "active_pointer_bindings": 122,
+    "active_pointer_events": 67,
+    "active_pointer_bindings": 124,
     "pointer_events": [
       {
         "event_id": "InputIndependentSubboard:mouseClicked",
@@ -31346,6 +31361,16 @@
         "binding_count": 1,
         "matrix_ids": [
           "UI-WINDOW-MENU-STRIP-001"
+        ]
+      },
+      {
+        "event_id": "YikeLiveDialog:mouseClicked",
+        "source_id": "YikeLiveDialog",
+        "event": "mouseClicked",
+        "line": 89,
+        "binding_count": 2,
+        "matrix_ids": [
+          "ONLINE-YIKE-001"
         ]
       }
     ],
@@ -34882,6 +34907,45 @@
         ],
         "matrix_ids": [
           "UI-WINDOW-MENU-STRIP-001"
+        ]
+      },
+      {
+        "binding": "YikeLiveDialog:mouseClicked#1",
+        "event_id": "YikeLiveDialog:mouseClicked",
+        "source_id": "YikeLiveDialog",
+        "event": "mouseClicked",
+        "line": 89,
+        "conditions": [
+          {
+            "expression": "e.getClickCount() == 2",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 91,
+            "statement": "syncSelectedGame();"
+          }
+        ],
+        "matrix_ids": [
+          "ONLINE-YIKE-001"
+        ]
+      },
+      {
+        "binding": "YikeLiveDialog:mouseClicked#2",
+        "event_id": "YikeLiveDialog:mouseClicked",
+        "source_id": "YikeLiveDialog",
+        "event": "mouseClicked",
+        "line": 89,
+        "conditions": [
+          {
+            "expression": "e.getClickCount() == 2",
+            "expected": false
+          }
+        ],
+        "statements": [],
+        "matrix_ids": [
+          "ONLINE-YIKE-001"
         ]
       }
     ]
