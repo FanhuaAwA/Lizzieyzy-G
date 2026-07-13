@@ -1,0 +1,433 @@
+{
+  "schema_version": 1,
+  "allowed_statuses": [
+    "未盘点",
+    "已盘点",
+    "实施中",
+    "已实现待验证",
+    "已验证",
+    "用户批准不迁移"
+  ],
+  "legacy_baseline": {
+    "version": "yzy2.5.3",
+    "source_root": "../lizzieyzy-next-main",
+    "source_fingerprint_sha256": "4615770949982e1d0742b7e6009be25e3345d97946d98ac243af65e5d98f4f23",
+    "verification": {
+      "platform": "Windows 11 x64",
+      "java": "Eclipse Temurin 21.0.11 x64",
+      "maven": "Apache Maven 3.9.16",
+      "maven_archive_sha512": "ed41650d42485cfc243fad22158caf9cbb5dc408ce7a09ddb94dd42a019de929ca43065bfa450612cf12bf78b5cafa3884b96c090de326ff590448c933454af3",
+      "command": "mvn -Dfmt.skip=true test",
+      "execution_scope": "repository-external isolated copy containing pom.xml and src",
+      "tests": 1161,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 1,
+      "skipped_test": "featurecat.lizzie.util.CommandLaunchHelperTest.configureProcessBuilderOnNonWindowsPreservesPathAndAppliesWorkingDirectory",
+      "source_files_compared": 576,
+      "source_differences": 0,
+      "dynamic_ui_capture": "待完成"
+    }
+  },
+  "rows": [
+    {
+      "id": "BOARD-NEW-001",
+      "category": "棋盘与对局",
+      "legacy_entry": "菜单 Menu.newBoard 调用 LizzieFrame.newEmptyBoard",
+      "legacy_shortcuts": [],
+      "java_evidence": [
+        { "path": "src/main/java/featurecat/lizzie/gui/Menu.java", "symbol": "newBoard" },
+        { "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "symbol": "newEmptyBoard" }
+      ],
+      "config_keys": ["new-game-komi"],
+      "inputs_preconditions": "应用已启动；用户可从文件菜单创建新棋盘。",
+      "success_behavior": "创建空棋盘并按设置初始化新对局贴目。",
+      "failure_cancel_behavior": "用户取消参数输入时保留当前棋盘。",
+      "data_io": "内存棋盘状态；无必需磁盘写入。",
+      "external_dependencies": [],
+      "target_modules": ["Lizzie.Core", "Lizzie.Desktop"],
+      "automated_evidence": [],
+      "manual_acceptance": "在旧版与新版分别新建 19x19 棋盘，核对空棋盘、贴目和取消行为。",
+      "status": "已盘点",
+      "evidence": "静态入口与配置键已定位；新版实现和新旧动态对照均未开始。"
+    },
+    {
+      "id": "BOARD-HISTORY-001",
+      "category": "棋盘与对局",
+      "legacy_entry": "BoardHistoryList 与 BoardHistoryNode 管理主线、分支和前后导航",
+      "legacy_shortcuts": [],
+      "java_evidence": [
+        { "path": "src/main/java/featurecat/lizzie/rules/BoardHistoryList.java", "symbol": "class BoardHistoryList" },
+        { "path": "src/main/java/featurecat/lizzie/rules/BoardHistoryNode.java", "symbol": "class BoardHistoryNode" }
+      ],
+      "config_keys": ["show-leelaz-variation", "new-move-number-in-branch"],
+      "inputs_preconditions": "棋谱包含至少一个落子；分支场景需要同一节点存在多个后继。",
+      "success_behavior": "导航保持棋盘、提子、着手身份和分支结构一致。",
+      "failure_cancel_behavior": "到达首尾节点时不得越界或破坏历史树。",
+      "data_io": "内存棋盘历史树。",
+      "external_dependencies": [],
+      "target_modules": ["Lizzie.Core", "Lizzie.Desktop"],
+      "automated_evidence": [
+        { "path": "src/test/java/featurecat/lizzie/rules/BoardHistoryMoveIdentityTest.java", "symbol": "BoardHistoryMoveIdentityTest" },
+        { "path": "src/test/java/featurecat/lizzie/rules/BoardHistoryListSyncSnapshotTest.java", "symbol": "BoardHistoryListSyncSnapshotTest" },
+        { "path": "src/test/java/featurecat/lizzie/rules/BoardHistoryNodeRemovedStoneReplayTest.java", "symbol": "BoardHistoryNodeRemovedStoneReplayTest" }
+      ],
+      "manual_acceptance": "在主线与两个分支间前后导航，核对落子、提子和分支编号。",
+      "status": "已盘点",
+      "evidence": "旧版相关测试已在隔离 Maven 基线通过；尚未形成跨实现夹具。"
+    },
+    {
+      "id": "KIFU-OPEN-001",
+      "category": "棋谱文件",
+      "legacy_entry": "菜单 Menu.open 调用 LizzieFrame.openFile，并分派 SGFParser 或 GIBParser",
+      "legacy_shortcuts": [],
+      "java_evidence": [
+        { "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "symbol": "openFile" },
+        { "path": "src/main/java/featurecat/lizzie/rules/SGFParser.java", "symbol": "class SGFParser" },
+        { "path": "src/main/java/featurecat/lizzie/rules/GIBParser.java", "symbol": "class GIBParser" }
+      ],
+      "config_keys": ["read-komi", "load-sgf-last", "recent-file-paths"],
+      "inputs_preconditions": "用户选择可读的 SGF 或 GIB 文件。",
+      "success_behavior": "解析元数据、主线和分支，并按设置处理贴目与上次目录。",
+      "failure_cancel_behavior": "取消文件选择不改变当前棋盘；无效或不可读文件给出错误且不损坏当前状态。",
+      "data_io": "读取 SGF/GIB 文件并更新最近文件路径。",
+      "external_dependencies": ["本地文件系统"],
+      "target_modules": ["Lizzie.Core", "Lizzie.Desktop"],
+      "automated_evidence": [],
+      "manual_acceptance": "用含主线、分支、注释和提子的 SGF 及一份 GIB 做新旧对照；另测取消和损坏文件。",
+      "status": "已盘点",
+      "evidence": "解析入口已定位；旧版缺少以 SGFParser/GIBParser 命名的直接回归测试，是明确测试缺口。"
+    },
+    {
+      "id": "KIFU-SAVE-001",
+      "category": "棋谱文件",
+      "legacy_entry": "菜单保存调用 LizzieFrame.saveOriFile，另存为调用 LizzieFrame.saveFile",
+      "legacy_shortcuts": [],
+      "java_evidence": [
+        { "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "symbol": "saveOriFile" },
+        { "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "symbol": "saveFile" }
+      ],
+      "config_keys": [],
+      "inputs_preconditions": "当前棋盘存在可序列化棋谱；另存为需要用户选择路径。",
+      "success_behavior": "将当前棋谱保存到原路径或用户选择的新路径。",
+      "failure_cancel_behavior": "取消另存为不写文件；写入失败需报告且不得截断已有有效文件。",
+      "data_io": "写入本地 SGF 文件。",
+      "external_dependencies": ["本地文件系统"],
+      "target_modules": ["Lizzie.Core", "Lizzie.Desktop"],
+      "automated_evidence": [],
+      "manual_acceptance": "新旧分别保存同一含分支棋谱并重新打开，比较可见结构；另测取消和只读目录。",
+      "status": "已盘点",
+      "evidence": "保存入口已定位；序列化夹具和原子写入失败路径仍待补齐。"
+    },
+    {
+      "id": "KIFU-CLIPBOARD-001",
+      "category": "棋谱文件",
+      "legacy_entry": "LizzieFrame.copySgf 与 LizzieFrame.pasteSgf 提供 SGF 剪贴板交换",
+      "legacy_shortcuts": [],
+      "java_evidence": [
+        { "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "symbol": "copySgf" },
+        { "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "symbol": "pasteSgf" }
+      ],
+      "config_keys": [],
+      "inputs_preconditions": "复制需要当前棋谱；粘贴需要剪贴板中存在 SGF 文本。",
+      "success_behavior": "复制产生可再次解析的 SGF；粘贴载入其棋盘历史。",
+      "failure_cancel_behavior": "空剪贴板或无效 SGF 不破坏当前棋盘，并向用户报告。",
+      "data_io": "系统文本剪贴板。",
+      "external_dependencies": ["Windows 剪贴板"],
+      "target_modules": ["Lizzie.Core", "Lizzie.Desktop"],
+      "automated_evidence": [],
+      "manual_acceptance": "复制含分支棋谱后粘贴回应用，并测试空文本和损坏 SGF。",
+      "status": "已盘点",
+      "evidence": "旧版方法已定位；剪贴板动态行为尚未捕获。"
+    },
+    {
+      "id": "KIFU-SCREENSHOT-001",
+      "category": "棋谱文件",
+      "legacy_entry": "LizzieFrame.saveMainBoardPicture 与 saveSubBoardPicture 导出棋盘图像",
+      "legacy_shortcuts": [],
+      "java_evidence": [
+        { "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "symbol": "saveMainBoardPicture" },
+        { "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "symbol": "saveSubBoardPicture" }
+      ],
+      "config_keys": [],
+      "inputs_preconditions": "主棋盘或副棋盘已渲染；用户选择可写路径。",
+      "success_behavior": "按当前可见棋盘生成可打开的图像文件。",
+      "failure_cancel_behavior": "取消不写文件；写入失败需报告且应用保持可用。",
+      "data_io": "写入本地图像文件。",
+      "external_dependencies": ["本地文件系统", "图像编码器"],
+      "target_modules": ["Lizzie.Desktop"],
+      "automated_evidence": [],
+      "manual_acceptance": "在相同棋盘状态下导出主、副棋盘，核对尺寸、坐标、棋子和提示层。",
+      "status": "已盘点",
+      "evidence": "导出方法已定位；像素基线和缩放场景仍待建立。"
+    },
+    {
+      "id": "ENGINE-LIFECYCLE-001",
+      "category": "引擎",
+      "legacy_entry": "EngineManager 管理引擎选择、启动、重启和关闭，菜单暴露相应入口",
+      "legacy_shortcuts": [],
+      "java_evidence": [
+        { "path": "src/main/java/featurecat/lizzie/analysis/EngineManager.java", "symbol": "class EngineManager" },
+        { "path": "src/main/java/featurecat/lizzie/gui/Menu.java", "symbol": "restartCurrentEngine" }
+      ],
+      "config_keys": ["engine-settings-list", "default-engine", "auto-check-engine-alive"],
+      "inputs_preconditions": "至少配置一个可执行的 GTP 引擎命令。",
+      "success_behavior": "选择默认或指定引擎，建立进程和 GTP 会话，并可重启或有序关闭。",
+      "failure_cancel_behavior": "命令无效、启动超时或进程异常退出时报告明确状态且不残留失控进程。",
+      "data_io": "读取引擎设置；创建和管理外部进程。",
+      "external_dependencies": ["GTP 引擎可执行文件", "操作系统进程管理"],
+      "target_modules": ["Lizzie.Engine", "Lizzie.Desktop"],
+      "automated_evidence": [
+        { "path": "src/test/java/featurecat/lizzie/EngineStartupStatusTest.java", "symbol": "EngineStartupStatusTest" },
+        { "path": "src/test/java/featurecat/lizzie/analysis/EngineStartupDialogPolicyTest.java", "symbol": "EngineStartupDialogPolicyTest" },
+        { "path": "src/test/java/featurecat/lizzie/gui/MoreEnginesStartupModeTest.java", "symbol": "MoreEnginesStartupModeTest" }
+      ],
+      "manual_acceptance": "用一个正常假引擎和一个立即退出的假引擎，检查选择、重启、错误提示和进程清理。",
+      "status": "已盘点",
+      "evidence": "生命周期类、配置和旧版回归测试已定位；真实进程录制与新版实现待完成。"
+    },
+    {
+      "id": "ENGINE-GTP-001",
+      "category": "引擎",
+      "legacy_entry": "Leelaz 负责 GTP 命令发送、响应绑定、分析流和失败恢复",
+      "legacy_shortcuts": [],
+      "java_evidence": [
+        { "path": "src/main/java/featurecat/lizzie/analysis/Leelaz.java", "symbol": "class Leelaz" },
+        { "path": "src/main/java/featurecat/lizzie/analysis/LeelazEngineCommandSink.java", "symbol": "LeelazEngineCommandSink" }
+      ],
+      "config_keys": ["limit-branch-length", "limit-max-suggestion", "always-gtp"],
+      "inputs_preconditions": "引擎进程已启动并提供标准输入、输出和错误流。",
+      "success_behavior": "命令与带编号响应正确绑定，分析建议持续更新并遵守限制设置。",
+      "failure_cancel_behavior": "超时、错误响应、stderr 噪声和进程退出不得错配后续响应；停止分析应及时生效。",
+      "data_io": "GTP 文本协议双向流和引擎 stderr。",
+      "external_dependencies": ["GTP 引擎进程"],
+      "target_modules": ["Lizzie.Engine", "Lizzie.Core"],
+      "automated_evidence": [
+        { "path": "src/test/java/featurecat/lizzie/analysis/LeelazLoadSgfResponseBindingTest.java", "symbol": "LeelazLoadSgfResponseBindingTest" },
+        { "path": "src/test/java/featurecat/lizzie/analysis/LeelazExclusiveRemoteGtpSessionTest.java", "symbol": "LeelazExclusiveRemoteGtpSessionTest" },
+        { "path": "src/test/java/featurecat/lizzie/analysis/LeelazPonderStateTest.java", "symbol": "LeelazPonderStateTest" }
+      ],
+      "manual_acceptance": "以可控假 GTP 进程注入成功、错误、延迟和异常退出序列，核对命令绑定与恢复。",
+      "status": "已盘点",
+      "evidence": "旧版故障注入测试已通过；协议录制夹具和新版回放器仍待建立。"
+    },
+    {
+      "id": "ANALYSIS-FULL-001",
+      "category": "分析",
+      "legacy_entry": "BottomToolbar.flashAnalyzeAllGame 调用 LizzieFrame.flashAnalyzeGame 执行整谱或批量分析",
+      "legacy_shortcuts": [],
+      "java_evidence": [
+        { "path": "src/main/java/featurecat/lizzie/gui/BottomToolbar.java", "symbol": "flashAnalyzeAllGame" },
+        { "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "symbol": "flashAnalyzeGame" }
+      ],
+      "config_keys": ["batch-analysis-playouts", "analysis-engine-command", "analysis-engine-preload"],
+      "inputs_preconditions": "棋谱已载入；分析引擎配置有效且可启动。",
+      "success_behavior": "按设定访问量分析目标节点，写回分析结果并可批量处理。",
+      "failure_cancel_behavior": "用户停止或引擎失败时停止后续任务，保留已完成结果并恢复可交互状态。",
+      "data_io": "读取棋谱历史、调用引擎、更新节点分析数据；批量模式读取多个文件。",
+      "external_dependencies": ["分析引擎", "批量模式下的本地文件系统"],
+      "target_modules": ["Lizzie.Core", "Lizzie.Engine", "Lizzie.Desktop"],
+      "automated_evidence": [
+        { "path": "src/test/java/featurecat/lizzie/analysis/AnalysisEngineRequestTest.java", "symbol": "AnalysisEngineRequestTest" },
+        { "path": "src/test/java/featurecat/lizzie/util/AnalysisEngineCommandHelperTest.java", "symbol": "AnalysisEngineCommandHelperTest" }
+      ],
+      "manual_acceptance": "对一份短棋谱执行整谱分析并中途取消，再用两份文件执行批量分析，核对进度和结果保留。",
+      "status": "已盘点",
+      "evidence": "入口、配置和底层请求测试已定位；端到端任务状态仍待动态捕获。"
+    },
+    {
+      "id": "ONLINE-FOX-001",
+      "category": "在线棋谱",
+      "legacy_entry": "FoxKifuDownload 搜索并下载野狐棋谱",
+      "legacy_shortcuts": [],
+      "java_evidence": [
+        { "path": "src/main/java/featurecat/lizzie/gui/FoxKifuDownload.java", "symbol": "class FoxKifuDownload" }
+      ],
+      "config_keys": ["fox-recent-searches", "last-fox-name", "fox-after-get"],
+      "inputs_preconditions": "网络可用；用户提供有效搜索条件。",
+      "success_behavior": "分页搜索、展示结果并下载选中的棋谱，保存最近搜索和后续动作设置。",
+      "failure_cancel_behavior": "网络、协议或下载失败时报告错误且允许重试；取消不载入不完整棋谱。",
+      "data_io": "野狐网络请求、响应解析、本地配置与可选棋谱文件。",
+      "external_dependencies": ["野狐网络接口", "HTTP 客户端"],
+      "target_modules": ["Lizzie.Core", "Lizzie.Desktop"],
+      "automated_evidence": [
+        { "path": "src/test/java/featurecat/lizzie/analysis/GetFoxRequestTest.java", "symbol": "GetFoxRequestTest" },
+        { "path": "src/test/java/featurecat/lizzie/gui/FoxKifuDownloadPaginationCursorTest.java", "symbol": "FoxKifuDownloadPaginationCursorTest" },
+        { "path": "src/test/java/featurecat/lizzie/gui/FoxKifuDownloadResponsePayloadTest.java", "symbol": "FoxKifuDownloadResponsePayloadTest" }
+      ],
+      "manual_acceptance": "使用固定响应夹具核对搜索、分页、下载和失败重试；真实网络仅作为补充验收。",
+      "status": "已盘点",
+      "evidence": "请求与分页测试已在旧版通过；外部接口契约快照尚未固化。"
+    },
+    {
+      "id": "ONLINE-TENCENT-001",
+      "category": "在线棋谱",
+      "legacy_entry": "TencentKifuDownload 搜索并下载腾讯围棋棋谱",
+      "legacy_shortcuts": [],
+      "java_evidence": [
+        { "path": "src/main/java/featurecat/lizzie/gui/TencentKifuDownload.java", "symbol": "class TencentKifuDownload" }
+      ],
+      "config_keys": ["tencent-recent-searches", "last-tencent-name", "tencent-after-get"],
+      "inputs_preconditions": "网络可用；用户提供有效搜索条件。",
+      "success_behavior": "搜索、展示并下载选中的腾讯围棋棋谱，保存最近搜索和后续动作设置。",
+      "failure_cancel_behavior": "网络、协议或下载失败时报告错误且允许重试；取消不载入不完整棋谱。",
+      "data_io": "腾讯围棋网络请求、响应解析、本地配置与可选棋谱文件。",
+      "external_dependencies": ["腾讯围棋网络接口", "HTTP 客户端"],
+      "target_modules": ["Lizzie.Core", "Lizzie.Desktop"],
+      "automated_evidence": [
+        { "path": "src/test/java/featurecat/lizzie/analysis/GetTencentRequestTest.java", "symbol": "GetTencentRequestTest" },
+        { "path": "src/test/java/featurecat/lizzie/gui/TencentKifuDownloadTest.java", "symbol": "TencentKifuDownloadTest" }
+      ],
+      "manual_acceptance": "使用固定响应夹具核对搜索、下载、后续动作和失败重试。",
+      "status": "已盘点",
+      "evidence": "请求与下载测试已在旧版通过；外部接口契约快照尚未固化。"
+    },
+    {
+      "id": "ONLINE-YIKE-001",
+      "category": "在线棋谱",
+      "legacy_entry": "YikeApiClient、YikeUrlParser 与 YikeSgfMainline 处理弈客链接、接口和主线",
+      "legacy_shortcuts": [],
+      "java_evidence": [
+        { "path": "src/main/java/featurecat/lizzie/gui/YikeApiClient.java", "symbol": "class YikeApiClient" },
+        { "path": "src/main/java/featurecat/lizzie/gui/YikeUrlParser.java", "symbol": "class YikeUrlParser" },
+        { "path": "src/main/java/featurecat/lizzie/gui/YikeSgfMainline.java", "symbol": "class YikeSgfMainline" }
+      ],
+      "config_keys": [],
+      "inputs_preconditions": "用户提供受支持的弈客链接或会话标识，网络可用。",
+      "success_behavior": "规范化链接，获取棋局数据并生成可载入的 SGF 主线。",
+      "failure_cancel_behavior": "非法链接、接口错误或几何数据异常时报告错误且不破坏当前棋盘。",
+      "data_io": "弈客网络接口、URL 和 SGF 文本。",
+      "external_dependencies": ["弈客网络接口", "HTTP 客户端"],
+      "target_modules": ["Lizzie.Core", "Lizzie.Desktop"],
+      "automated_evidence": [
+        { "path": "src/test/java/featurecat/lizzie/gui/YikeApiClientTest.java", "symbol": "YikeApiClientTest" },
+        { "path": "src/test/java/featurecat/lizzie/gui/YikeUrlParserTest.java", "symbol": "YikeUrlParserTest" },
+        { "path": "src/test/java/featurecat/lizzie/gui/YikeSgfMainlineTest.java", "symbol": "YikeSgfMainlineTest" },
+        { "path": "src/test/java/featurecat/lizzie/gui/YikeGeometryNormalizationTest.java", "symbol": "YikeGeometryNormalizationTest" }
+      ],
+      "manual_acceptance": "用固定接口夹具测试合法链接、非法链接、几何归一化和 SGF 主线载入。",
+      "status": "已盘点",
+      "evidence": "核心解析与接口测试已在旧版通过；在线契约快照仍待固化。"
+    },
+    {
+      "id": "ONLINE-SYNC-001",
+      "category": "在线棋盘同步",
+      "legacy_entry": "ReadBoard 管理外部棋盘读取、快照同步、恢复和关闭",
+      "legacy_shortcuts": [],
+      "java_evidence": [
+        { "path": "src/main/java/featurecat/lizzie/analysis/ReadBoard.java", "symbol": "class ReadBoard" },
+        { "path": "src/main/java/featurecat/lizzie/analysis/ReadBoardStream.java", "symbol": "class ReadBoardStream" }
+      ],
+      "config_keys": ["always-sync-boardstat"],
+      "inputs_preconditions": "外部读盘源可连接；当前棋盘允许同步。",
+      "success_behavior": "按策略应用远端快照和落子，保持元数据、引擎状态与本地待处理着手一致。",
+      "failure_cancel_behavior": "断流、非法更新或关闭时停止后台活动，保留一致状态并支持受控恢复。",
+      "data_io": "外部棋盘更新流、同步快照和本地棋盘状态。",
+      "external_dependencies": ["外部读盘程序或数据流"],
+      "target_modules": ["Lizzie.Core", "Lizzie.Engine", "Lizzie.Desktop"],
+      "automated_evidence": [
+        { "path": "src/test/java/featurecat/lizzie/analysis/ReadBoardStreamTest.java", "symbol": "ReadBoardStreamTest" },
+        { "path": "src/test/java/featurecat/lizzie/analysis/ReadBoardSyncDecisionTest.java", "symbol": "ReadBoardSyncDecisionTest" },
+        { "path": "src/test/java/featurecat/lizzie/analysis/ReadBoardResumeLifecycleTest.java", "symbol": "ReadBoardResumeLifecycleTest" },
+        { "path": "src/test/java/featurecat/lizzie/analysis/ReadBoardShutdownTest.java", "symbol": "ReadBoardShutdownTest" }
+      ],
+      "manual_acceptance": "回放正常、重复、断流和恢复序列，核对棋盘、元数据、后台任务与引擎恢复。",
+      "status": "已盘点",
+      "evidence": "同步决策和生命周期测试已在旧版通过；跨实现流回放器尚未建立。"
+    },
+    {
+      "id": "SETTINGS-LANGUAGE-001",
+      "category": "设置与本地化",
+      "legacy_entry": "Menu.selectLanguage 写入 use-language 并提示重启",
+      "legacy_shortcuts": [],
+      "java_evidence": [
+        { "path": "src/main/java/featurecat/lizzie/gui/Menu.java", "symbol": "selectLanguage" },
+        { "path": "src/main/java/featurecat/lizzie/AppLocale.java", "symbol": "enum AppLocale" }
+      ],
+      "config_keys": ["use-language"],
+      "inputs_preconditions": "用户从语言菜单选择系统、简中、繁中、英语、日语、韩语或泰语。",
+      "success_behavior": "保存语言选择并按旧版契约提示重启后生效。",
+      "failure_cancel_behavior": "保存失败需报告；取消重启不丢失已保存选择。",
+      "data_io": "持久化 UI 语言配置。",
+      "external_dependencies": ["本地化资源包"],
+      "target_modules": ["Lizzie.Desktop"],
+      "automated_evidence": [
+        { "path": "src/test/java/featurecat/lizzie/AppLocaleTest.java", "symbol": "AppLocaleTest" }
+      ],
+      "manual_acceptance": "逐一选择支持的语言并重启，核对菜单文本、回退和系统语言选项。",
+      "status": "已盘点",
+      "evidence": "语言枚举、菜单和测试已定位；资源完整性与新版重启流程仍待验证。"
+    },
+    {
+      "id": "SETTINGS-THEME-001",
+      "category": "设置与外观",
+      "legacy_entry": "主题设置通过 ConfigDialog2 和 Theme 影响棋盘与窗口渲染",
+      "legacy_shortcuts": [],
+      "java_evidence": [
+        { "path": "src/main/java/featurecat/lizzie/theme/Theme.java", "symbol": "class Theme" },
+        { "path": "src/main/java/featurecat/lizzie/gui/ConfigDialog2.java", "symbol": "class ConfigDialog2" }
+      ],
+      "config_keys": ["theme", "board-style"],
+      "inputs_preconditions": "用户打开外观设置并选择有效主题或棋盘样式。",
+      "success_behavior": "保存选择并使棋盘、颜色、字体和相关资源按契约更新。",
+      "failure_cancel_behavior": "取消保留原主题；缺失或损坏资源回退到安全默认值。",
+      "data_io": "读取主题资源并持久化主题配置。",
+      "external_dependencies": ["主题资源文件"],
+      "target_modules": ["Lizzie.Desktop"],
+      "automated_evidence": [
+        { "path": "src/test/java/featurecat/lizzie/ConfigBoardStyleTest.java", "symbol": "ConfigBoardStyleTest" },
+        { "path": "src/test/java/featurecat/lizzie/util/NewThemeAssetsTest.java", "symbol": "NewThemeAssetsTest" },
+        { "path": "src/test/java/featurecat/lizzie/gui/MessageThemeTest.java", "symbol": "MessageThemeTest" }
+      ],
+      "manual_acceptance": "切换默认与自定义主题，重启后核对棋盘、字体、提示框及损坏资源回退。",
+      "status": "已盘点",
+      "evidence": "主题配置、资源测试已定位；像素与 DPI 基线仍待捕获。"
+    },
+    {
+      "id": "UI-COORDS-001",
+      "category": "界面显示",
+      "legacy_entry": "坐标菜单调用 Config.toggleCoordinates 并刷新棋盘",
+      "legacy_shortcuts": [],
+      "java_evidence": [
+        { "path": "src/main/java/featurecat/lizzie/Config.java", "symbol": "toggleCoordinates" },
+        { "path": "src/main/java/featurecat/lizzie/gui/Menu.java", "symbol": "toggleCoordinates" }
+      ],
+      "config_keys": ["show-coordinates", "coords"],
+      "inputs_preconditions": "棋盘窗口可见。",
+      "success_behavior": "切换坐标显示并立即重绘，重启后保留选择。",
+      "failure_cancel_behavior": "配置保存失败时报告且界面状态与持久化状态不应静默分叉。",
+      "data_io": "持久化坐标显示配置。",
+      "external_dependencies": [],
+      "target_modules": ["Lizzie.Desktop"],
+      "automated_evidence": [],
+      "manual_acceptance": "切换坐标、调整窗口和 DPI、重启应用，核对四边标签和持久化。",
+      "status": "已盘点",
+      "evidence": "菜单动作与配置方法已定位；旧版截图和多 DPI 行为待捕获。"
+    },
+    {
+      "id": "REMOTE-COMPUTE-001",
+      "category": "远程计算",
+      "legacy_entry": "RemoteComputeConfig 解析远程 GTP/SSH 配置，Utils 读取 analysis-engine-ssh-info",
+      "legacy_shortcuts": [],
+      "java_evidence": [
+        { "path": "src/main/java/featurecat/lizzie/analysis/remote/RemoteComputeConfig.java", "symbol": "class RemoteComputeConfig" },
+        { "path": "src/main/java/featurecat/lizzie/util/Utils.java", "symbol": "analysis-engine-ssh-info" }
+      ],
+      "config_keys": ["analysis-engine-ssh-info"],
+      "inputs_preconditions": "用户配置远程主机、认证和远端引擎参数。",
+      "success_behavior": "解析配置并建立可供 GTP 使用的远程传输。",
+      "failure_cancel_behavior": "缺失字段、认证失败、超时或断连时报告明确错误并释放连接。",
+      "data_io": "读取远程计算配置；通过 SSH 或远程 GTP 传输命令和响应。",
+      "external_dependencies": ["SSH/远程 GTP 服务", "网络"],
+      "target_modules": ["Lizzie.Engine", "Lizzie.Desktop"],
+      "automated_evidence": [
+        { "path": "src/test/java/featurecat/lizzie/analysis/remote/RemoteComputeConfigTest.java", "symbol": "RemoteComputeConfigTest" },
+        { "path": "src/test/java/featurecat/lizzie/analysis/remote/ZhiziGtpTransportTest.java", "symbol": "ZhiziGtpTransportTest" },
+        { "path": "src/test/java/featurecat/lizzie/gui/RemoteComputeQrDependencyTest.java", "symbol": "RemoteComputeQrDependencyTest" }
+      ],
+      "manual_acceptance": "使用本地可控 SSH/GTP 端点测试成功、错误凭据、超时和断连清理。",
+      "status": "已盘点",
+      "evidence": "配置与传输测试已在旧版通过；真实端点录制和新版实现待完成。"
+    }
+  ]
+}
