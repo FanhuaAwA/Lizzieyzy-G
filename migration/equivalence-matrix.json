@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "allowed_statuses": [
     "未盘点",
     "已盘点",
@@ -35,7 +35,9 @@
       "category": "棋盘与对局",
       "legacy_entry": "菜单 Menu.newBoard 调用 LizzieFrame.newEmptyBoard",
       "legacy_menu_keys": ["Menu.newBoard"],
+      "legacy_menu_labels": [],
       "legacy_shortcuts": [],
+      "legacy_input_cases": ["keyPressed:VK_N"],
       "java_evidence": [
         { "path": "src/main/java/featurecat/lizzie/gui/Menu.java", "symbol": "newBoard" },
         { "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "symbol": "newEmptyBoard" }
@@ -57,7 +59,18 @@
       "category": "棋盘与对局",
       "legacy_entry": "BoardHistoryList 与 BoardHistoryNode 管理主线、分支和前后导航",
       "legacy_menu_keys": ["Menu.backToMainBranch", "Menu.deleteBranch", "Menu.setAsMain"],
+      "legacy_menu_labels": [],
       "legacy_shortcuts": [],
+      "legacy_input_cases": [
+        "keyPressed:VK_RIGHT",
+        "keyPressed:VK_LEFT",
+        "keyPressed:VK_UP",
+        "keyPressed:VK_PAGE_DOWN",
+        "keyPressed:VK_DOWN",
+        "keyPressed:VK_PAGE_UP",
+        "keyPressed:VK_HOME",
+        "keyPressed:VK_END"
+      ],
       "java_evidence": [
         { "path": "src/main/java/featurecat/lizzie/rules/BoardHistoryList.java", "symbol": "class BoardHistoryList" },
         { "path": "src/main/java/featurecat/lizzie/rules/BoardHistoryNode.java", "symbol": "class BoardHistoryNode" }
@@ -83,7 +96,9 @@
       "category": "棋谱文件",
       "legacy_entry": "菜单 Menu.open 调用 LizzieFrame.openFile，并分派 SGFParser 或 GIBParser",
       "legacy_menu_keys": ["Menu.open", "Menu.openRecent"],
+      "legacy_menu_labels": [],
       "legacy_shortcuts": [],
+      "legacy_input_cases": ["keyPressed:VK_O"],
       "java_evidence": [
         { "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "symbol": "openFile" },
         { "path": "src/main/java/featurecat/lizzie/rules/SGFParser.java", "symbol": "class SGFParser" },
@@ -113,7 +128,9 @@
         "Menu.saveCommentRaw",
         "Menu.saveBranchRaw"
       ],
+      "legacy_menu_labels": [],
       "legacy_shortcuts": [],
+      "legacy_input_cases": ["keyPressed:VK_S"],
       "java_evidence": [
         { "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "symbol": "saveOriFile" },
         { "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "symbol": "saveFile" }
@@ -135,7 +152,9 @@
       "category": "棋谱文件",
       "legacy_entry": "LizzieFrame.copySgf 与 LizzieFrame.pasteSgf 提供 SGF 剪贴板交换",
       "legacy_menu_keys": ["Menu.copySgf", "Menu.pasteSgf"],
+      "legacy_menu_labels": [],
       "legacy_shortcuts": [],
+      "legacy_input_cases": ["keyPressed:VK_C", "keyPressed:VK_V"],
       "java_evidence": [
         { "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "symbol": "copySgf" },
         { "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "symbol": "pasteSgf" }
@@ -157,7 +176,9 @@
       "category": "棋谱文件",
       "legacy_entry": "LizzieFrame.saveMainBoardPicture 与 saveSubBoardPicture 导出棋盘图像",
       "legacy_menu_keys": ["Menu.saveMainBoardScreen", "Menu.saveSubBoardScreen"],
+      "legacy_menu_labels": [],
       "legacy_shortcuts": [],
+      "legacy_input_cases": ["keyPressed:VK_C", "keyPressed:VK_S"],
       "java_evidence": [
         { "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "symbol": "saveMainBoardPicture" },
         { "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "symbol": "saveSubBoardPicture" }
@@ -186,7 +207,9 @@
         "Menu.shutdownOtherEngine",
         "Menu.shutdownAllEngine"
       ],
+      "legacy_menu_labels": [],
       "legacy_shortcuts": [],
+      "legacy_input_cases": [],
       "java_evidence": [
         { "path": "src/main/java/featurecat/lizzie/analysis/EngineManager.java", "symbol": "class EngineManager" },
         { "path": "src/main/java/featurecat/lizzie/gui/Menu.java", "symbol": "restartCurrentEngine" }
@@ -212,7 +235,9 @@
       "category": "引擎",
       "legacy_entry": "Leelaz 负责 GTP 命令发送、响应绑定、分析流和失败恢复",
       "legacy_menu_keys": ["Menu.engineParameters", "Menu.engineRules"],
+      "legacy_menu_labels": [],
       "legacy_shortcuts": [],
+      "legacy_input_cases": ["keyPressed:VK_E"],
       "java_evidence": [
         { "path": "src/main/java/featurecat/lizzie/analysis/Leelaz.java", "symbol": "class Leelaz" },
         { "path": "src/main/java/featurecat/lizzie/analysis/LeelazEngineCommandSink.java", "symbol": "LeelazEngineCommandSink" }
@@ -243,7 +268,9 @@
         "Menu.batchAnalyze",
         "Menu.batchAnalysisMode"
       ],
+      "legacy_menu_labels": [],
       "legacy_shortcuts": [],
+      "legacy_input_cases": ["keyPressed:VK_B"],
       "java_evidence": [
         { "path": "src/main/java/featurecat/lizzie/gui/BottomToolbar.java", "symbol": "flashAnalyzeAllGame" },
         { "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "symbol": "flashAnalyzeGame" }
@@ -268,7 +295,9 @@
       "category": "在线棋谱",
       "legacy_entry": "FoxKifuDownload 搜索并下载野狐棋谱",
       "legacy_menu_keys": ["Menu.foxKifu"],
+      "legacy_menu_labels": [],
       "legacy_shortcuts": [],
+      "legacy_input_cases": [],
       "java_evidence": [
         { "path": "src/main/java/featurecat/lizzie/gui/FoxKifuDownload.java", "symbol": "class FoxKifuDownload" }
       ],
@@ -293,7 +322,9 @@
       "category": "在线棋谱",
       "legacy_entry": "TencentKifuDownload 搜索并下载腾讯围棋棋谱",
       "legacy_menu_keys": ["Menu.tencentKifu"],
+      "legacy_menu_labels": [],
       "legacy_shortcuts": [],
+      "legacy_input_cases": [],
       "java_evidence": [
         { "path": "src/main/java/featurecat/lizzie/gui/TencentKifuDownload.java", "symbol": "class TencentKifuDownload" }
       ],
@@ -317,7 +348,9 @@
       "category": "在线棋谱",
       "legacy_entry": "YikeApiClient、YikeUrlParser 与 YikeSgfMainline 处理弈客链接、接口和主线",
       "legacy_menu_keys": ["Menu.yikeLive", "Menu.yikeLiveWeb", "Menu.yikeRoom"],
+      "legacy_menu_labels": [],
       "legacy_shortcuts": ["Shift+O"],
+      "legacy_input_cases": ["keyPressed:VK_O"],
       "java_evidence": [
         { "path": "src/main/java/featurecat/lizzie/gui/YikeApiClient.java", "symbol": "class YikeApiClient" },
         { "path": "src/main/java/featurecat/lizzie/gui/YikeUrlParser.java", "symbol": "class YikeUrlParser" },
@@ -351,7 +384,9 @@
         "Menu.alwaysKeepBoardStatSync",
         "Menu.readBoardGetFocus"
       ],
+      "legacy_menu_labels": [],
       "legacy_shortcuts": ["Alt+O"],
+      "legacy_input_cases": ["keyPressed:VK_O"],
       "java_evidence": [
         { "path": "src/main/java/featurecat/lizzie/analysis/ReadBoard.java", "symbol": "class ReadBoard" },
         { "path": "src/main/java/featurecat/lizzie/analysis/ReadBoardStream.java", "symbol": "class ReadBoardStream" }
@@ -378,7 +413,9 @@
       "category": "设置与本地化",
       "legacy_entry": "Menu.selectLanguage 写入 use-language 并提示重启",
       "legacy_menu_keys": ["menu.language", "menu.language.default"],
+      "legacy_menu_labels": ["English", "日本語", "한국어", "ไทย", "简体中文", "繁體中文"],
       "legacy_shortcuts": [],
+      "legacy_input_cases": [],
       "java_evidence": [
         { "path": "src/main/java/featurecat/lizzie/gui/Menu.java", "symbol": "selectLanguage" },
         { "path": "src/main/java/featurecat/lizzie/AppLocale.java", "symbol": "enum AppLocale" }
@@ -408,7 +445,9 @@
         "Menu.boardStyleJapanese",
         "Menu.boardStyleChineseClassic"
       ],
+      "legacy_menu_labels": [],
       "legacy_shortcuts": [],
+      "legacy_input_cases": [],
       "java_evidence": [
         { "path": "src/main/java/featurecat/lizzie/theme/Theme.java", "symbol": "class Theme" },
         { "path": "src/main/java/featurecat/lizzie/gui/ConfigDialog2.java", "symbol": "class ConfigDialog2" }
@@ -434,7 +473,9 @@
       "category": "界面显示",
       "legacy_entry": "坐标菜单调用 Config.toggleCoordinates 并刷新棋盘",
       "legacy_menu_keys": ["Menu.coordsMenu"],
+      "legacy_menu_labels": [],
       "legacy_shortcuts": [],
+      "legacy_input_cases": ["keyPressed:VK_C"],
       "java_evidence": [
         { "path": "src/main/java/featurecat/lizzie/Config.java", "symbol": "toggleCoordinates" },
         { "path": "src/main/java/featurecat/lizzie/gui/Menu.java", "symbol": "toggleCoordinates" }
@@ -456,7 +497,9 @@
       "category": "远程计算",
       "legacy_entry": "RemoteComputeConfig 解析远程 GTP/SSH 配置，Utils 读取 analysis-engine-ssh-info",
       "legacy_menu_keys": ["Menu.remoteCompute"],
+      "legacy_menu_labels": [],
       "legacy_shortcuts": [],
+      "legacy_input_cases": [],
       "java_evidence": [
         { "path": "src/main/java/featurecat/lizzie/analysis/remote/RemoteComputeConfig.java", "symbol": "class RemoteComputeConfig" },
         { "path": "src/main/java/featurecat/lizzie/util/Utils.java", "symbol": "analysis-engine-ssh-info" }

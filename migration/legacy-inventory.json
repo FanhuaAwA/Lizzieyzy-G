@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "source": {
     "root": "../lizzieyzy-next-main",
     "version": "yzy2.5.3",
@@ -15,7 +15,9 @@
     "Nested canonical JSON paths, computed keys, and semantic use-case mapping remain T-003 work.",
     "Commented-only Config.java keys are evidence, not active migration requirements.",
     "Menu keys cover active Menu.java resource lookups with Menu. or menu. prefixes.",
-    "Menu accelerators cover explicit Menu.java setAccelerator calls and direct OS.isWindows guards; other input bindings remain T-003 work."
+    "Menu literal labels cover active string-literal menu constructors; dynamic labels remain represented by their resource or runtime source.",
+    "Menu accelerators cover explicit Menu.java setAccelerator calls and direct OS.isWindows guards; other input bindings remain T-003 work.",
+    "Input key cases cover active Input.java keyPressed/keyReleased VK_* dispatch and local modifier checks; exact fall-through, branch combinations, actions, and mouse bindings remain T-003 work."
   ],
   "matrix_summary": {
     "rows": 17,
@@ -33,9 +35,15 @@
     "active_menu_resource_keys": 383,
     "mapped_menu_resource_keys": 47,
     "unmapped_menu_resource_keys": 336,
+    "active_menu_literal_labels": 12,
+    "mapped_menu_literal_labels": 6,
+    "unmapped_menu_literal_labels": 6,
     "active_menu_accelerators": 2,
     "mapped_menu_accelerators": 2,
-    "unmapped_menu_accelerators": 0
+    "unmapped_menu_accelerators": 0,
+    "active_input_key_cases": 56,
+    "mapped_input_key_cases": 15,
+    "unmapped_input_key_cases": 41
   },
   "config": {
     "active_literal_leaf_keys": 596,
@@ -14076,6 +14084,8 @@
     "source": "src/main/java/featurecat/lizzie/gui/Menu.java",
     "unique_resource_keys": 383,
     "resource_references": 473,
+    "unique_literal_labels": 12,
+    "literal_label_references": 12,
     "set_accelerator_calls": 2,
     "accelerators": [
       {
@@ -14095,6 +14105,140 @@
           "ONLINE-SYNC-001"
         ],
         "line": 4083
+      }
+    ],
+    "literal_labels": [
+      {
+        "label": "English",
+        "matrix_ids": [
+          "SETTINGS-LANGUAGE-001"
+        ],
+        "references": [
+          {
+            "type": "JFontCheckBoxMenuItem",
+            "line": 5243
+          }
+        ]
+      },
+      {
+        "label": "ไทย",
+        "matrix_ids": [
+          "SETTINGS-LANGUAGE-001"
+        ],
+        "references": [
+          {
+            "type": "JFontCheckBoxMenuItem",
+            "line": 5257
+          }
+        ]
+      },
+      {
+        "label": "使用详细工具栏",
+        "matrix_ids": [],
+        "references": [
+          {
+            "type": "JFontCheckBoxMenuItem",
+            "line": 4375
+          }
+        ]
+      },
+      {
+        "label": "日本語",
+        "matrix_ids": [
+          "SETTINGS-LANGUAGE-001"
+        ],
+        "references": [
+          {
+            "type": "JFontCheckBoxMenuItem",
+            "line": 5247
+          }
+        ]
+      },
+      {
+        "label": "显示拓展/隐藏详细工具栏按钮",
+        "matrix_ids": [],
+        "references": [
+          {
+            "type": "JFontCheckBoxMenuItem",
+            "line": 4407
+          }
+        ]
+      },
+      {
+        "label": "检查更新",
+        "matrix_ids": [],
+        "references": [
+          {
+            "type": "JFontMenuItem",
+            "line": 5090
+          }
+        ]
+      },
+      {
+        "label": "清除所有个人数据",
+        "matrix_ids": [],
+        "references": [
+          {
+            "type": "JFontMenuItem",
+            "line": 5095
+          }
+        ]
+      },
+      {
+        "label": "简体中文",
+        "matrix_ids": [
+          "SETTINGS-LANGUAGE-001"
+        ],
+        "references": [
+          {
+            "type": "JFontCheckBoxMenuItem",
+            "line": 5235
+          }
+        ]
+      },
+      {
+        "label": "繁體中文",
+        "matrix_ids": [
+          "SETTINGS-LANGUAGE-001"
+        ],
+        "references": [
+          {
+            "type": "JFontCheckBoxMenuItem",
+            "line": 5239
+          }
+        ]
+      },
+      {
+        "label": "设置模块顺序",
+        "matrix_ids": [],
+        "references": [
+          {
+            "type": "JFontMenuItem",
+            "line": 4420
+          }
+        ]
+      },
+      {
+        "label": "详细工具栏(过时的)(仅中文)",
+        "matrix_ids": [],
+        "references": [
+          {
+            "type": "JFontMenu",
+            "line": 4372
+          }
+        ]
+      },
+      {
+        "label": "한국어",
+        "matrix_ids": [
+          "SETTINGS-LANGUAGE-001"
+        ],
+        "references": [
+          {
+            "type": "JFontCheckBoxMenuItem",
+            "line": 5252
+          }
+        ]
       }
     ],
     "keys": [
@@ -16962,6 +17106,605 @@
         "lines": [
           5231
         ]
+      }
+    ]
+  },
+  "input": {
+    "source": "src/main/java/featurecat/lizzie/gui/Input.java",
+    "active_key_cases": 56,
+    "events": {
+      "keyPressed": 54,
+      "keyReleased": 2
+    },
+    "cases": [
+      {
+        "case": "keyPressed:VK_E",
+        "event": "keyPressed",
+        "key": "VK_E",
+        "line": 281,
+        "modifier_checks": [
+          "Alt",
+          "ControlOrMetaOnMac",
+          "Shift"
+        ],
+        "matrix_ids": [
+          "ENGINE-GTP-001"
+        ]
+      },
+      {
+        "case": "keyPressed:VK_RIGHT",
+        "event": "keyPressed",
+        "key": "VK_RIGHT",
+        "line": 290,
+        "modifier_checks": [
+          "Alt",
+          "ControlOrMetaOnMac",
+          "Shift"
+        ],
+        "matrix_ids": [
+          "BOARD-HISTORY-001"
+        ]
+      },
+      {
+        "case": "keyPressed:VK_LEFT",
+        "event": "keyPressed",
+        "key": "VK_LEFT",
+        "line": 306,
+        "modifier_checks": [
+          "Alt",
+          "ControlOrMetaOnMac",
+          "Shift"
+        ],
+        "matrix_ids": [
+          "BOARD-HISTORY-001"
+        ]
+      },
+      {
+        "case": "keyPressed:VK_U",
+        "event": "keyPressed",
+        "key": "VK_U",
+        "line": 322,
+        "modifier_checks": [],
+        "matrix_ids": []
+      },
+      {
+        "case": "keyPressed:VK_UP",
+        "event": "keyPressed",
+        "key": "VK_UP",
+        "line": 325,
+        "modifier_checks": [
+          "Alt",
+          "ControlOrMetaOnMac",
+          "Shift"
+        ],
+        "matrix_ids": [
+          "BOARD-HISTORY-001"
+        ]
+      },
+      {
+        "case": "keyPressed:VK_PAGE_DOWN",
+        "event": "keyPressed",
+        "key": "VK_PAGE_DOWN",
+        "line": 346,
+        "modifier_checks": [],
+        "matrix_ids": [
+          "BOARD-HISTORY-001"
+        ]
+      },
+      {
+        "case": "keyPressed:VK_DOWN",
+        "event": "keyPressed",
+        "key": "VK_DOWN",
+        "line": 356,
+        "modifier_checks": [
+          "Alt",
+          "ControlOrMetaOnMac",
+          "Shift"
+        ],
+        "matrix_ids": [
+          "BOARD-HISTORY-001"
+        ]
+      },
+      {
+        "case": "keyPressed:VK_N",
+        "event": "keyPressed",
+        "key": "VK_N",
+        "line": 376,
+        "modifier_checks": [
+          "Alt"
+        ],
+        "matrix_ids": [
+          "BOARD-NEW-001"
+        ]
+      },
+      {
+        "case": "keyPressed:VK_SPACE",
+        "event": "keyPressed",
+        "key": "VK_SPACE",
+        "line": 383,
+        "modifier_checks": [],
+        "matrix_ids": []
+      },
+      {
+        "case": "keyPressed:VK_L",
+        "event": "keyPressed",
+        "key": "VK_L",
+        "line": 387,
+        "modifier_checks": [],
+        "matrix_ids": []
+      },
+      {
+        "case": "keyPressed:VK_P",
+        "event": "keyPressed",
+        "key": "VK_P",
+        "line": 395,
+        "modifier_checks": [],
+        "matrix_ids": []
+      },
+      {
+        "case": "keyPressed:VK_COMMA",
+        "event": "keyPressed",
+        "key": "VK_COMMA",
+        "line": 399,
+        "modifier_checks": [
+          "Alt"
+        ],
+        "matrix_ids": []
+      },
+      {
+        "case": "keyPressed:VK_M",
+        "event": "keyPressed",
+        "key": "VK_M",
+        "line": 410,
+        "modifier_checks": [
+          "Alt",
+          "ControlOrMetaOnMac"
+        ],
+        "matrix_ids": []
+      },
+      {
+        "case": "keyPressed:VK_J",
+        "event": "keyPressed",
+        "key": "VK_J",
+        "line": 420,
+        "modifier_checks": [],
+        "matrix_ids": []
+      },
+      {
+        "case": "keyPressed:VK_F",
+        "event": "keyPressed",
+        "key": "VK_F",
+        "line": 424,
+        "modifier_checks": [
+          "ControlOrMetaOnMac",
+          "Shift"
+        ],
+        "matrix_ids": []
+      },
+      {
+        "case": "keyPressed:VK_H",
+        "event": "keyPressed",
+        "key": "VK_H",
+        "line": 436,
+        "modifier_checks": [],
+        "matrix_ids": []
+      },
+      {
+        "case": "keyPressed:VK_PAGE_UP",
+        "event": "keyPressed",
+        "key": "VK_PAGE_UP",
+        "line": 447,
+        "modifier_checks": [],
+        "matrix_ids": [
+          "BOARD-HISTORY-001"
+        ]
+      },
+      {
+        "case": "keyPressed:VK_I",
+        "event": "keyPressed",
+        "key": "VK_I",
+        "line": 457,
+        "modifier_checks": [
+          "Control"
+        ],
+        "matrix_ids": []
+      },
+      {
+        "case": "keyPressed:VK_S",
+        "event": "keyPressed",
+        "key": "VK_S",
+        "line": 466,
+        "modifier_checks": [
+          "Alt",
+          "Control",
+          "Shift"
+        ],
+        "matrix_ids": [
+          "KIFU-SAVE-001",
+          "KIFU-SCREENSHOT-001"
+        ]
+      },
+      {
+        "case": "keyPressed:VK_O",
+        "event": "keyPressed",
+        "key": "VK_O",
+        "line": 492,
+        "modifier_checks": [
+          "Alt",
+          "Control",
+          "Shift"
+        ],
+        "matrix_ids": [
+          "KIFU-OPEN-001",
+          "ONLINE-SYNC-001",
+          "ONLINE-YIKE-001"
+        ]
+      },
+      {
+        "case": "keyPressed:VK_V",
+        "event": "keyPressed",
+        "key": "VK_V",
+        "line": 504,
+        "modifier_checks": [
+          "Alt",
+          "ControlOrMetaOnMac"
+        ],
+        "matrix_ids": [
+          "KIFU-CLIPBOARD-001"
+        ]
+      },
+      {
+        "case": "keyPressed:VK_HOME",
+        "event": "keyPressed",
+        "key": "VK_HOME",
+        "line": 520,
+        "modifier_checks": [
+          "ControlOrMetaOnMac"
+        ],
+        "matrix_ids": [
+          "BOARD-HISTORY-001"
+        ]
+      },
+      {
+        "case": "keyPressed:VK_END",
+        "event": "keyPressed",
+        "key": "VK_END",
+        "line": 535,
+        "modifier_checks": [],
+        "matrix_ids": [
+          "BOARD-HISTORY-001"
+        ]
+      },
+      {
+        "case": "keyPressed:VK_X",
+        "event": "keyPressed",
+        "key": "VK_X",
+        "line": 543,
+        "modifier_checks": [
+          "Alt",
+          "Shift"
+        ],
+        "matrix_ids": []
+      },
+      {
+        "case": "keyPressed:VK_W",
+        "event": "keyPressed",
+        "key": "VK_W",
+        "line": 573,
+        "modifier_checks": [
+          "Alt",
+          "ControlOrMetaOnMac"
+        ],
+        "matrix_ids": []
+      },
+      {
+        "case": "keyPressed:VK_G",
+        "event": "keyPressed",
+        "key": "VK_G",
+        "line": 579,
+        "modifier_checks": [
+          "Alt",
+          "Shift"
+        ],
+        "matrix_ids": []
+      },
+      {
+        "case": "keyPressed:VK_T",
+        "event": "keyPressed",
+        "key": "VK_T",
+        "line": 586,
+        "modifier_checks": [
+          "Alt",
+          "ControlOrMetaOnMac",
+          "Shift"
+        ],
+        "matrix_ids": []
+      },
+      {
+        "case": "keyPressed:VK_Y",
+        "event": "keyPressed",
+        "key": "VK_Y",
+        "line": 598,
+        "modifier_checks": [],
+        "matrix_ids": []
+      },
+      {
+        "case": "keyPressed:VK_C",
+        "event": "keyPressed",
+        "key": "VK_C",
+        "line": 603,
+        "modifier_checks": [
+          "Alt",
+          "ControlOrMetaOnMac",
+          "Shift"
+        ],
+        "matrix_ids": [
+          "KIFU-CLIPBOARD-001",
+          "KIFU-SCREENSHOT-001",
+          "UI-COORDS-001"
+        ]
+      },
+      {
+        "case": "keyPressed:VK_ENTER",
+        "event": "keyPressed",
+        "key": "VK_ENTER",
+        "line": 615,
+        "modifier_checks": [
+          "Alt"
+        ],
+        "matrix_ids": []
+      },
+      {
+        "case": "keyPressed:VK_B",
+        "event": "keyPressed",
+        "key": "VK_B",
+        "line": 623,
+        "modifier_checks": [
+          "Alt",
+          "Control"
+        ],
+        "matrix_ids": [
+          "ANALYSIS-FULL-001"
+        ]
+      },
+      {
+        "case": "keyPressed:VK_DELETE",
+        "event": "keyPressed",
+        "key": "VK_DELETE",
+        "line": 634,
+        "modifier_checks": [],
+        "matrix_ids": []
+      },
+      {
+        "case": "keyPressed:VK_BACK_SPACE",
+        "event": "keyPressed",
+        "key": "VK_BACK_SPACE",
+        "line": 635,
+        "modifier_checks": [
+          "Alt",
+          "Shift"
+        ],
+        "matrix_ids": []
+      },
+      {
+        "case": "keyPressed:VK_Z",
+        "event": "keyPressed",
+        "key": "VK_Z",
+        "line": 648,
+        "modifier_checks": [
+          "Alt",
+          "Control"
+        ],
+        "matrix_ids": []
+      },
+      {
+        "case": "keyPressed:VK_Q",
+        "event": "keyPressed",
+        "key": "VK_Q",
+        "line": 657,
+        "modifier_checks": [
+          "Alt",
+          "ControlOrMetaOnMac"
+        ],
+        "matrix_ids": []
+      },
+      {
+        "case": "keyPressed:VK_A",
+        "event": "keyPressed",
+        "key": "VK_A",
+        "line": 666,
+        "modifier_checks": [
+          "Alt",
+          "ControlOrMetaOnMac",
+          "Shift"
+        ],
+        "matrix_ids": []
+      },
+      {
+        "case": "keyPressed:VK_DECIMAL",
+        "event": "keyPressed",
+        "key": "VK_DECIMAL",
+        "line": 684,
+        "modifier_checks": [],
+        "matrix_ids": []
+      },
+      {
+        "case": "keyPressed:VK_SLASH",
+        "event": "keyPressed",
+        "key": "VK_SLASH",
+        "line": 685,
+        "modifier_checks": [],
+        "matrix_ids": []
+      },
+      {
+        "case": "keyPressed:VK_PERIOD",
+        "event": "keyPressed",
+        "key": "VK_PERIOD",
+        "line": 694,
+        "modifier_checks": [],
+        "matrix_ids": []
+      },
+      {
+        "case": "keyPressed:VK_D",
+        "event": "keyPressed",
+        "key": "VK_D",
+        "line": 701,
+        "modifier_checks": [
+          "Alt",
+          "Shift"
+        ],
+        "matrix_ids": []
+      },
+      {
+        "case": "keyPressed:VK_R",
+        "event": "keyPressed",
+        "key": "VK_R",
+        "line": 711,
+        "modifier_checks": [],
+        "matrix_ids": []
+      },
+      {
+        "case": "keyPressed:VK_OPEN_BRACKET",
+        "event": "keyPressed",
+        "key": "VK_OPEN_BRACKET",
+        "line": 718,
+        "modifier_checks": [],
+        "matrix_ids": []
+      },
+      {
+        "case": "keyPressed:VK_CLOSE_BRACKET",
+        "event": "keyPressed",
+        "key": "VK_CLOSE_BRACKET",
+        "line": 725,
+        "modifier_checks": [],
+        "matrix_ids": []
+      },
+      {
+        "case": "keyPressed:VK_K",
+        "event": "keyPressed",
+        "key": "VK_K",
+        "line": 732,
+        "modifier_checks": [
+          "Alt"
+        ],
+        "matrix_ids": []
+      },
+      {
+        "case": "keyPressed:VK_1",
+        "event": "keyPressed",
+        "key": "VK_1",
+        "line": 739,
+        "modifier_checks": [
+          "Alt"
+        ],
+        "matrix_ids": []
+      },
+      {
+        "case": "keyPressed:VK_2",
+        "event": "keyPressed",
+        "key": "VK_2",
+        "line": 744,
+        "modifier_checks": [
+          "Alt"
+        ],
+        "matrix_ids": []
+      },
+      {
+        "case": "keyPressed:VK_3",
+        "event": "keyPressed",
+        "key": "VK_3",
+        "line": 749,
+        "modifier_checks": [
+          "Alt"
+        ],
+        "matrix_ids": []
+      },
+      {
+        "case": "keyPressed:VK_4",
+        "event": "keyPressed",
+        "key": "VK_4",
+        "line": 754,
+        "modifier_checks": [
+          "Alt"
+        ],
+        "matrix_ids": []
+      },
+      {
+        "case": "keyPressed:VK_5",
+        "event": "keyPressed",
+        "key": "VK_5",
+        "line": 759,
+        "modifier_checks": [
+          "Alt"
+        ],
+        "matrix_ids": []
+      },
+      {
+        "case": "keyPressed:VK_6",
+        "event": "keyPressed",
+        "key": "VK_6",
+        "line": 764,
+        "modifier_checks": [
+          "Alt"
+        ],
+        "matrix_ids": []
+      },
+      {
+        "case": "keyPressed:VK_7",
+        "event": "keyPressed",
+        "key": "VK_7",
+        "line": 769,
+        "modifier_checks": [
+          "Alt"
+        ],
+        "matrix_ids": []
+      },
+      {
+        "case": "keyPressed:VK_8",
+        "event": "keyPressed",
+        "key": "VK_8",
+        "line": 774,
+        "modifier_checks": [
+          "Alt"
+        ],
+        "matrix_ids": []
+      },
+      {
+        "case": "keyPressed:VK_9",
+        "event": "keyPressed",
+        "key": "VK_9",
+        "line": 779,
+        "modifier_checks": [
+          "Alt",
+          "ControlOrMetaOnMac"
+        ],
+        "matrix_ids": []
+      },
+      {
+        "case": "keyPressed:VK_0",
+        "event": "keyPressed",
+        "key": "VK_0",
+        "line": 786,
+        "modifier_checks": [
+          "ControlOrMetaOnMac"
+        ],
+        "matrix_ids": []
+      },
+      {
+        "case": "keyReleased:VK_X",
+        "event": "keyReleased",
+        "key": "VK_X",
+        "line": 801,
+        "modifier_checks": [],
+        "matrix_ids": []
+      },
+      {
+        "case": "keyReleased:VK_Z",
+        "event": "keyReleased",
+        "key": "VK_Z",
+        "line": 806,
+        "modifier_checks": [],
+        "matrix_ids": []
       }
     ]
   },

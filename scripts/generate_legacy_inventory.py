@@ -51,6 +51,26 @@ MENU_ACCELERATOR_CALL = re.compile(
     r"KeyEvent\.VK_(?P<key>[A-Z0-9_]+)\s*,\s*InputEvent\.(?P<modifier>[A-Z_]+)_DOWN_MASK"
     r"\s*\)\s*\)"
 )
+MENU_LITERAL_CONSTRUCTOR_CALL = re.compile(
+    r"new\s+(?P<type>JFontMenu|JFontMenuItem|JFontCheckBoxMenuItem|"
+    r"JMenu|JMenuItem|JCheckBoxMenuItem)\s*\(\s*"
+    r'"(?P<label>(?:\\.|[^"\\])*)"'
+)
+ANY_MENU_LITERAL_CONSTRUCTOR_CALL = re.compile(
+    r"new\s+[A-Za-z_$][\w$]*(?:Menu|MenuItem)\s*\(\s*\""
+)
+INPUT_KEY_METHOD = re.compile(
+    r"public\s+void\s+(?P<event>keyPressed|keyReleased)\s*"
+    r"\(\s*KeyEvent\s+e\s*\)\s*\{"
+)
+INPUT_KEY_CASE = re.compile(r"\bcase\s+(?P<key>VK_[A-Z0-9_]+)\s*:")
+INPUT_MODIFIER_CHECKS = (
+    ("Alt", re.compile(r"\be\.isAltDown\s*\(\s*\)")),
+    ("Control", re.compile(r"\be\.isControlDown\s*\(\s*\)")),
+    ("ControlOrMetaOnMac", re.compile(r"\bcontrolIsPressed\s*\(\s*e\s*\)")),
+    ("Meta", re.compile(r"\be\.isMetaDown\s*\(\s*\)")),
+    ("Shift", re.compile(r"\be\.isShiftDown\s*\(\s*\)")),
+)
 PERSISTENT_RECEIVER_SUFFIXES = (
     ".uiConfig",
     ".leelazConfig",
@@ -74,7 +94,9 @@ REQUIRED_ROW_FIELDS = {
     "category",
     "legacy_entry",
     "legacy_menu_keys",
+    "legacy_menu_labels",
     "legacy_shortcuts",
+    "legacy_input_cases",
     "java_evidence",
     "config_keys",
     "inputs_preconditions",
@@ -171,6 +193,34 @@ def line_number(source: str, offset: int) -> int:
     return source.count("\n", 0, offset) + 1
 
 
+def closing_brace(source: str, open_brace: int) -> int:
+    depth = 0
+    state = "code"
+    index = open_brace
+    while index < len(source):
+        char = source[index]
+        following = source[index + 1] if index + 1 < len(source) else ""
+        if state == "code":
+            if char == '"':
+                state = "string"
+            elif char == "'":
+                state = "char"
+            elif char == "{":
+                depth += 1
+            elif char == "}":
+                depth -= 1
+                if depth == 0:
+                    return index
+        elif char == "\\" and following:
+            index += 1
+        elif state == "string" and char == '"':
+            state = "code"
+        elif state == "char" and char == "'":
+            state = "code"
+        index += 1
+    raise ValueError("Unbalanced Java braces while collecting input cases")
+
+
 def relative_path(path: Path, root: Path) -> str:
     return path.relative_to(root).as_posix()
 
@@ -240,6 +290,18 @@ def collect_menu_resources(legacy_root: Path) -> dict[str, Any]:
     references: dict[str, list[int]] = defaultdict(list)
     for match in MENU_RESOURCE_CALL.finditer(source):
         references[match.group("key")].append(line_number(source, match.start()))
+    literal_references: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    for match in MENU_LITERAL_CONSTRUCTOR_CALL.finditer(source):
+        literal_references[match.group("label")].append(
+            {
+                "type": match.group("type"),
+                "line": line_number(source, match.start()),
+            }
+        )
+    if sum(map(len, literal_references.values())) != len(
+        ANY_MENU_LITERAL_CONSTRUCTOR_CALL.findall(source)
+    ):
+        raise ValueError("Menu.java contains an unsupported literal menu constructor")
     accelerators = [
         {
             "item": match.group("item"),
@@ -256,11 +318,66 @@ def collect_menu_resources(legacy_root: Path) -> dict[str, Any]:
         "source": relative_path(menu_path, legacy_root),
         "unique_resource_keys": len(references),
         "resource_references": sum(len(lines) for lines in references.values()),
+        "unique_literal_labels": len(literal_references),
+        "literal_label_references": sum(map(len, literal_references.values())),
         "set_accelerator_calls": accelerator_calls,
         "accelerators": accelerators,
+        "literal_labels": [
+            {"label": label, "references": entries}
+            for label, entries in sorted(literal_references.items())
+        ],
         "keys": [
             {"key": key, "lines": lines} for key, lines in sorted(references.items())
         ],
+    }
+
+
+def collect_input_cases(legacy_root: Path) -> dict[str, Any]:
+    input_path = legacy_root / "src/main/java/featurecat/lizzie/gui/Input.java"
+    source = strip_java_comments(input_path.read_text(encoding="utf-8", errors="replace"))
+    cases: list[dict[str, Any]] = []
+    seen_events: set[str] = set()
+    for method_match in INPUT_KEY_METHOD.finditer(source):
+        event = method_match.group("event")
+        if event in seen_events:
+            raise ValueError(f"Input.java contains duplicate {event} methods")
+        seen_events.add(event)
+        open_brace = method_match.end() - 1
+        method_end = closing_brace(source, open_brace)
+        case_matches = list(INPUT_KEY_CASE.finditer(source, open_brace + 1, method_end))
+        for index, case_match in enumerate(case_matches):
+            segment_end = (
+                case_matches[index + 1].start() if index + 1 < len(case_matches) else method_end
+            )
+            segment = source[case_match.end() : segment_end]
+            cases.append(
+                {
+                    "case": f'{event}:{case_match.group("key")}',
+                    "event": event,
+                    "key": case_match.group("key"),
+                    "line": line_number(source, case_match.start()),
+                    "modifier_checks": [
+                        name for name, pattern in INPUT_MODIFIER_CHECKS if pattern.search(segment)
+                    ],
+                }
+            )
+
+    expected_events = {"keyPressed", "keyReleased"}
+    if seen_events != expected_events:
+        raise ValueError(f"Input.java key methods differ from expected: {sorted(seen_events)}")
+    if len(cases) != len(INPUT_KEY_CASE.findall(source)):
+        raise ValueError("Input.java contains a VK_* case outside the indexed key methods")
+    case_ids = [entry["case"] for entry in cases]
+    if len(case_ids) != len(set(case_ids)):
+        raise ValueError("Input.java contains duplicate key cases in an indexed method")
+    return {
+        "source": relative_path(input_path, legacy_root),
+        "active_key_cases": len(cases),
+        "events": {
+            event: sum(entry["event"] == event for entry in cases)
+            for event in sorted(expected_events)
+        },
+        "cases": cases,
     }
 
 
@@ -289,11 +406,19 @@ def validate_matrix(
     legacy_root: Path,
     config_keys: set[str],
     menu_keys: set[str],
+    menu_labels: set[str],
     menu_shortcuts: set[str],
+    input_cases: set[str],
     fingerprint: str,
-) -> tuple[dict[str, list[str]], dict[str, list[str]], dict[str, list[str]]]:
-    if matrix.get("schema_version") != 2:
-        raise ValueError("Matrix schema_version must be 2")
+) -> tuple[
+    dict[str, list[str]],
+    dict[str, list[str]],
+    dict[str, list[str]],
+    dict[str, list[str]],
+    dict[str, list[str]],
+]:
+    if matrix.get("schema_version") != 3:
+        raise ValueError("Matrix schema_version must be 3")
     allowed_statuses = matrix.get("allowed_statuses")
     if allowed_statuses != list(ALLOWED_STATUSES):
         raise ValueError("Matrix allowed_statuses differ from the repository contract")
@@ -305,7 +430,9 @@ def validate_matrix(
 
     matrix_ids_by_config_key: dict[str, list[str]] = defaultdict(list)
     matrix_ids_by_menu_key: dict[str, list[str]] = defaultdict(list)
+    matrix_ids_by_menu_label: dict[str, list[str]] = defaultdict(list)
     matrix_ids_by_shortcut: dict[str, list[str]] = defaultdict(list)
+    matrix_ids_by_input_case: dict[str, list[str]] = defaultdict(list)
     seen_ids: set[str] = set()
     rows = matrix.get("rows")
     if not isinstance(rows, list) or not rows:
@@ -328,7 +455,9 @@ def validate_matrix(
             raise ValueError(f"{row_id}: unsupported status {row['status']!r}")
         for field in (
             "legacy_menu_keys",
+            "legacy_menu_labels",
             "legacy_shortcuts",
+            "legacy_input_cases",
             "java_evidence",
             "config_keys",
             "external_dependencies",
@@ -339,7 +468,9 @@ def validate_matrix(
                 raise ValueError(f"{row_id}: {field} must be a list")
         for field in REQUIRED_ROW_FIELDS - {
             "legacy_menu_keys",
+            "legacy_menu_labels",
             "legacy_shortcuts",
+            "legacy_input_cases",
             "java_evidence",
             "config_keys",
             "external_dependencies",
@@ -356,7 +487,9 @@ def validate_matrix(
             raise ValueError(f"{row_id}: target_modules contain an unsupported module")
         for field in (
             "legacy_menu_keys",
+            "legacy_menu_labels",
             "legacy_shortcuts",
+            "legacy_input_cases",
             "config_keys",
             "external_dependencies",
             "target_modules",
@@ -373,14 +506,28 @@ def validate_matrix(
             if key not in menu_keys:
                 raise ValueError(f"{row_id}: menu key is outside the active Menu.java inventory: {key}")
             matrix_ids_by_menu_key[key].append(row_id)
+        for label in row["legacy_menu_labels"]:
+            if label not in menu_labels:
+                raise ValueError(
+                    f"{row_id}: menu label is outside the active Menu.java literal inventory: {label}"
+                )
+            matrix_ids_by_menu_label[label].append(row_id)
         for shortcut in row["legacy_shortcuts"]:
             if shortcut not in menu_shortcuts:
                 raise ValueError(f"{row_id}: shortcut is outside the active Menu.java accelerator inventory: {shortcut}")
             matrix_ids_by_shortcut[shortcut].append(row_id)
+        for input_case in row["legacy_input_cases"]:
+            if input_case not in input_cases:
+                raise ValueError(
+                    f"{row_id}: input case is outside the active Input.java inventory: {input_case}"
+                )
+            matrix_ids_by_input_case[input_case].append(row_id)
     return (
         {key: sorted(ids) for key, ids in matrix_ids_by_config_key.items()},
         {key: sorted(ids) for key, ids in matrix_ids_by_menu_key.items()},
+        {label: sorted(ids) for label, ids in matrix_ids_by_menu_label.items()},
         {key: sorted(ids) for key, ids in matrix_ids_by_shortcut.items()},
+        {case: sorted(ids) for case, ids in matrix_ids_by_input_case.items()},
     )
 
 
@@ -394,12 +541,21 @@ def build_inventory(legacy_root: Path, matrix_path: Path) -> dict[str, Any]:
     test_java_files = sorted((legacy_root / "src/test/java").rglob("*.java"))
     config_references, commented_only = collect_config_references(legacy_root, main_java_files)
     menu = collect_menu_resources(legacy_root)
-    matrix_ids_by_config_key, matrix_ids_by_menu_key, matrix_ids_by_shortcut = validate_matrix(
+    input_inventory = collect_input_cases(legacy_root)
+    (
+        matrix_ids_by_config_key,
+        matrix_ids_by_menu_key,
+        matrix_ids_by_menu_label,
+        matrix_ids_by_shortcut,
+        matrix_ids_by_input_case,
+    ) = validate_matrix(
         matrix,
         legacy_root,
         set(config_references),
         {entry["key"] for entry in menu["keys"]},
+        {entry["label"] for entry in menu["literal_labels"]},
         {entry["shortcut"] for entry in menu["accelerators"]},
+        {entry["case"] for entry in input_inventory["cases"]},
         fingerprint,
     )
     config_entries = [
@@ -430,11 +586,28 @@ def build_inventory(legacy_root: Path, matrix_path: Path) -> dict[str, Any]:
         }
         for entry in menu["accelerators"]
     ]
+    menu["literal_labels"] = [
+        {
+            "label": entry["label"],
+            "matrix_ids": matrix_ids_by_menu_label.get(entry["label"], []),
+            "references": entry["references"],
+        }
+        for entry in menu["literal_labels"]
+    ]
+    input_inventory["cases"] = [
+        {
+            **entry,
+            "matrix_ids": matrix_ids_by_input_case.get(entry["case"], []),
+        }
+        for entry in input_inventory["cases"]
+    ]
     mapped_menu_keys = sum(bool(entry["matrix_ids"]) for entry in menu["keys"])
+    mapped_menu_labels = sum(bool(entry["matrix_ids"]) for entry in menu["literal_labels"])
     mapped_shortcuts = sum(bool(entry["matrix_ids"]) for entry in menu["accelerators"])
+    mapped_input_cases = sum(bool(entry["matrix_ids"]) for entry in input_inventory["cases"])
 
     return {
-        "schema_version": 2,
+        "schema_version": 3,
         "source": {
             "root": "../lizzieyzy-next-main",
             "version": read_legacy_version(legacy_root),
@@ -450,7 +623,9 @@ def build_inventory(legacy_root: Path, matrix_path: Path) -> dict[str, Any]:
             "Nested canonical JSON paths, computed keys, and semantic use-case mapping remain T-003 work.",
             "Commented-only Config.java keys are evidence, not active migration requirements.",
             "Menu keys cover active Menu.java resource lookups with Menu. or menu. prefixes.",
+            "Menu literal labels cover active string-literal menu constructors; dynamic labels remain represented by their resource or runtime source.",
             "Menu accelerators cover explicit Menu.java setAccelerator calls and direct OS.isWindows guards; other input bindings remain T-003 work.",
+            "Input key cases cover active Input.java keyPressed/keyReleased VK_* dispatch and local modifier checks; exact fall-through, branch combinations, actions, and mouse bindings remain T-003 work.",
         ],
         "matrix_summary": {
             "rows": len(matrix["rows"]),
@@ -464,9 +639,15 @@ def build_inventory(legacy_root: Path, matrix_path: Path) -> dict[str, Any]:
             "active_menu_resource_keys": len(menu["keys"]),
             "mapped_menu_resource_keys": mapped_menu_keys,
             "unmapped_menu_resource_keys": len(menu["keys"]) - mapped_menu_keys,
+            "active_menu_literal_labels": len(menu["literal_labels"]),
+            "mapped_menu_literal_labels": mapped_menu_labels,
+            "unmapped_menu_literal_labels": len(menu["literal_labels"]) - mapped_menu_labels,
             "active_menu_accelerators": len(menu["accelerators"]),
             "mapped_menu_accelerators": mapped_shortcuts,
             "unmapped_menu_accelerators": len(menu["accelerators"]) - mapped_shortcuts,
+            "active_input_key_cases": len(input_inventory["cases"]),
+            "mapped_input_key_cases": mapped_input_cases,
+            "unmapped_input_key_cases": len(input_inventory["cases"]) - mapped_input_cases,
         },
         "config": {
             "active_literal_leaf_keys": len(config_entries),
@@ -475,6 +656,7 @@ def build_inventory(legacy_root: Path, matrix_path: Path) -> dict[str, Any]:
             "keys": config_entries,
         },
         "menu": menu,
+        "input": input_inventory,
         "tests": {
             "java_files": [relative_path(path, legacy_root) for path in test_java_files]
         },
