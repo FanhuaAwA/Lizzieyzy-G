@@ -66,6 +66,13 @@ INPUT_KEY_METHOD = re.compile(
 INPUT_KEY_SWITCH = re.compile(r"switch\s*\(\s*e\.getKeyCode\s*\(\s*\)\s*\)\s*\{")
 INPUT_KEY_CASE = re.compile(r"\bcase\s+(?P<key>VK_[A-Z0-9_]+)\s*:")
 INPUT_DEFAULT_CASE = re.compile(r"\bdefault\s*:")
+INPUT_KEY_SOURCES = (
+    ("Input", "src/main/java/featurecat/lizzie/gui/Input.java"),
+    (
+        "InputIndependentMainBoard",
+        "src/main/java/featurecat/lizzie/gui/InputIndependentMainBoard.java",
+    ),
+)
 INPUT_MODIFIER_CHECKS = (
     ("Alt", re.compile(r"\be\.isAltDown\s*\(\s*\)")),
     ("Control", re.compile(r"\be\.isControlDown\s*\(\s*\)")),
@@ -254,7 +261,7 @@ def parse_java_body(source: str, index: int, end: int) -> tuple[list[dict[str, A
     if index < end and source[index] == "{":
         close = closing_brace(source, index)
         if close >= end:
-            raise ValueError("Input.java branch block extends beyond its key case")
+            raise ValueError("Legacy key branch block extends beyond its case")
         return parse_java_sequence(source, index + 1, close), close + 1
     node, index = parse_java_statement(source, index, end)
     return [node], index
@@ -265,11 +272,11 @@ def parse_java_statement(source: str, index: int, end: int) -> tuple[dict[str, A
     if word_at(source, index, "if"):
         condition_open = skip_space(source, index + 2, end)
         if condition_open >= end or source[condition_open] != "(":
-            raise ValueError(f"Unsupported Input.java if statement at line {line_number(source, index)}")
+            raise ValueError(f"Unsupported legacy key if statement at line {line_number(source, index)}")
         condition_close = closing_delimiter(source, condition_open, "(", ")")
         if condition_close >= end:
             raise ValueError(
-                f"Input.java condition crosses its case boundary at line {line_number(source, index)}"
+                f"Legacy key condition crosses its case boundary at line {line_number(source, index)}"
             )
         then_nodes, next_index = parse_java_body(source, condition_close + 1, end)
         next_index = skip_space(source, next_index, end)
@@ -326,7 +333,7 @@ def parse_java_statement(source: str, index: int, end: int) -> tuple[dict[str, A
         elif state == "char" and char == "'":
             state = "code"
         cursor += 1
-    raise ValueError(f"Unsupported Input.java statement at line {line_number(source, index)}")
+    raise ValueError(f"Unsupported legacy key statement at line {line_number(source, index)}")
 
 
 def parse_java_sequence(source: str, start: int, end: int) -> list[dict[str, Any]]:
@@ -505,8 +512,11 @@ def collect_menu_resources(legacy_root: Path) -> dict[str, Any]:
     }
 
 
-def collect_input_cases(legacy_root: Path) -> dict[str, Any]:
-    input_path = legacy_root / "src/main/java/featurecat/lizzie/gui/Input.java"
+def collect_switch_key_source(
+    legacy_root: Path, source_id: str, source_path: str
+) -> dict[str, Any]:
+    input_path = legacy_root / source_path
+    id_prefix = "" if source_id == "Input" else f"{source_id}:"
     source = strip_java_comments(input_path.read_text(encoding="utf-8", errors="replace"))
     cases: list[dict[str, Any]] = []
     bindings: list[dict[str, Any]] = []
@@ -515,13 +525,13 @@ def collect_input_cases(legacy_root: Path) -> dict[str, Any]:
     for method_match in INPUT_KEY_METHOD.finditer(source):
         event = method_match.group("event")
         if event in seen_events:
-            raise ValueError(f"Input.java contains duplicate {event} methods")
+            raise ValueError(f"{input_path.name} contains duplicate {event} methods")
         seen_events.add(event)
         open_brace = method_match.end() - 1
         method_end = closing_brace(source, open_brace)
         switch_match = INPUT_KEY_SWITCH.search(source, open_brace + 1, method_end)
         if not switch_match:
-            raise ValueError(f"Input.java {event} has no supported key-code switch")
+            raise ValueError(f"{input_path.name} {event} has no supported key-code switch")
         switch_open = switch_match.end() - 1
         switch_end = closing_brace(source, switch_open)
         case_matches = list(INPUT_KEY_CASE.finditer(source, switch_open + 1, switch_end))
@@ -534,7 +544,7 @@ def collect_input_cases(legacy_root: Path) -> dict[str, Any]:
             if default_match and default_match.start() > case_match.start():
                 candidates.append(default_match.start())
             segment_end = min(candidates)
-            case_id = f'{event}:{case_match.group("key")}'
+            case_id = f'{id_prefix}{event}:{case_match.group("key")}'
             segments.append(
                 {
                     "case": case_id,
@@ -566,12 +576,13 @@ def collect_input_cases(legacy_root: Path) -> dict[str, Any]:
                     break
             completed.extend(paths)
             if not completed:
-                raise ValueError(f"Input.java {segment['case']} produced no binding paths")
+                raise ValueError(f"{input_path.name} {segment['case']} produced no binding paths")
             for ordinal, path in enumerate(completed, start=1):
                 event_bindings.append(
                     {
                         "binding": f'{segment["case"]}#{ordinal}',
                         "case": segment["case"],
+                        "source_id": source_id,
                         "event": event,
                         "key": segment["key"],
                         "line": segment["line"],
@@ -587,7 +598,7 @@ def collect_input_cases(legacy_root: Path) -> dict[str, Any]:
             [{"conditions": [], "condition_values": {}, "actions": [], "case_chain": []}],
         )
         if post_breaks or len(post_paths) != 1 or post_paths[0]["conditions"]:
-            raise ValueError(f"Input.java {event} has unsupported post-switch control flow")
+            raise ValueError(f"{input_path.name} {event} has unsupported post-switch control flow")
         post_dispatch_actions[event] = post_paths[0]["actions"]
         bindings.extend(event_bindings)
 
@@ -603,6 +614,7 @@ def collect_input_cases(legacy_root: Path) -> dict[str, Any]:
             cases.append(
                 {
                     "case": segment["case"],
+                    "source_id": source_id,
                     "event": event,
                     "key": segment["key"],
                     "line": segment["line"],
@@ -615,16 +627,17 @@ def collect_input_cases(legacy_root: Path) -> dict[str, Any]:
 
     expected_events = {"keyPressed", "keyReleased"}
     if seen_events != expected_events:
-        raise ValueError(f"Input.java key methods differ from expected: {sorted(seen_events)}")
+        raise ValueError(f"{input_path.name} key methods differ from expected: {sorted(seen_events)}")
     if len(cases) != len(INPUT_KEY_CASE.findall(source)):
-        raise ValueError("Input.java contains a VK_* case outside the indexed key methods")
+        raise ValueError(f"{input_path.name} contains a VK_* case outside the indexed key methods")
     case_ids = [entry["case"] for entry in cases]
     if len(case_ids) != len(set(case_ids)):
-        raise ValueError("Input.java contains duplicate key cases in an indexed method")
+        raise ValueError(f"{input_path.name} contains duplicate key cases in an indexed method")
     binding_ids = [entry["binding"] for entry in bindings]
     if len(binding_ids) != len(set(binding_ids)):
-        raise ValueError("Input.java produced duplicate normalized key bindings")
+        raise ValueError(f"{input_path.name} produced duplicate normalized key bindings")
     return {
+        "id": source_id,
         "source": relative_path(input_path, legacy_root),
         "active_key_cases": len(cases),
         "active_key_bindings": len(bindings),
@@ -633,6 +646,36 @@ def collect_input_cases(legacy_root: Path) -> dict[str, Any]:
             for event in sorted(expected_events)
         },
         "post_dispatch_actions": post_dispatch_actions,
+        "cases": cases,
+        "bindings": bindings,
+    }
+
+
+def collect_input_cases(legacy_root: Path) -> dict[str, Any]:
+    sources = [
+        collect_switch_key_source(legacy_root, source_id, source_path)
+        for source_id, source_path in INPUT_KEY_SOURCES
+    ]
+    cases = [entry for source in sources for entry in source["cases"]]
+    bindings = [entry for source in sources for entry in source["bindings"]]
+    source_summaries = [
+        {key: value for key, value in source.items() if key not in {"cases", "bindings"}}
+        for source in sources
+    ]
+    case_ids = [entry["case"] for entry in cases]
+    binding_ids = [entry["binding"] for entry in bindings]
+    if len(case_ids) != len(set(case_ids)):
+        raise ValueError("Legacy key sources produced duplicate normalized cases")
+    if len(binding_ids) != len(set(binding_ids)):
+        raise ValueError("Legacy key sources produced duplicate normalized bindings")
+    return {
+        "sources": source_summaries,
+        "active_key_cases": len(cases),
+        "active_key_bindings": len(bindings),
+        "events": {
+            event: sum(entry["event"] == event for entry in cases)
+            for event in ("keyPressed", "keyReleased")
+        },
         "cases": cases,
         "bindings": bindings,
     }
@@ -676,8 +719,8 @@ def validate_matrix(
     dict[str, list[str]],
     dict[str, list[str]],
 ]:
-    if matrix.get("schema_version") != 4:
-        raise ValueError("Matrix schema_version must be 4")
+    if matrix.get("schema_version") != 5:
+        raise ValueError("Matrix schema_version must be 5")
     allowed_statuses = matrix.get("allowed_statuses")
     if allowed_statuses != list(ALLOWED_STATUSES):
         raise ValueError("Matrix allowed_statuses differ from the repository contract")
@@ -783,7 +826,7 @@ def validate_matrix(
         for binding in row["legacy_input_bindings"]:
             if binding not in input_bindings:
                 raise ValueError(
-                    f"{row_id}: input binding is outside the normalized Input.java inventory: {binding}"
+                    f"{row_id}: input binding is outside the normalized legacy key inventory: {binding}"
                 )
             implied_input_cases.add(input_bindings[binding])
             matrix_ids_by_input_binding[binding].append(row_id)
@@ -794,7 +837,7 @@ def validate_matrix(
         for input_case in implied_input_cases:
             if input_case not in input_cases:
                 raise ValueError(
-                    f"{row_id}: input case is outside the active Input.java inventory: {input_case}"
+                    f"{row_id}: input case is outside the active legacy key inventory: {input_case}"
                 )
             matrix_ids_by_input_case[input_case].append(row_id)
     return (
@@ -896,7 +939,7 @@ def build_inventory(legacy_root: Path, matrix_path: Path) -> dict[str, Any]:
     )
 
     return {
-        "schema_version": 4,
+        "schema_version": 5,
         "source": {
             "root": "../lizzieyzy-next-main",
             "version": read_legacy_version(legacy_root),
@@ -914,7 +957,7 @@ def build_inventory(legacy_root: Path, matrix_path: Path) -> dict[str, Any]:
             "Menu keys cover active Menu.java resource lookups with Menu. or menu. prefixes.",
             "Menu literal labels cover active string-literal menu constructors; dynamic labels remain represented by their resource or runtime source.",
             "Menu accelerators cover explicit Menu.java setAccelerator calls and direct OS.isWindows guards; other input bindings remain T-003 work.",
-            "Input key bindings symbolically expand Input.java keyPressed/keyReleased condition evaluations, executed statements, empty-statement paths, and switch fall-through; controlIsPressed means Control on every platform plus Meta on macOS.",
+            "Input key bindings symbolically expand Input.java and InputIndependentMainBoard.java keyPressed/keyReleased condition evaluations, executed statements, empty-statement paths, and switch fall-through; controlIsPressed means Control on every platform plus Meta on macOS.",
             "Other key-listener classes and mouse bindings remain T-003 work.",
         ],
         "matrix_summary": {

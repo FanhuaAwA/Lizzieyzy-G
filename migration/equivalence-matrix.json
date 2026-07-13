@@ -1,5 +1,5 @@
 {
-  "schema_version": 4,
+  "schema_version": 5,
   "allowed_statuses": [
     "未盘点",
     "已盘点",
@@ -62,8 +62,14 @@
       "legacy_menu_keys": [],
       "legacy_menu_labels": [],
       "legacy_shortcuts": [],
-      "legacy_input_cases": ["keyPressed:VK_N"],
-      "legacy_input_bindings": ["keyPressed:VK_N#2"],
+      "legacy_input_cases": [
+        "keyPressed:VK_N",
+        "InputIndependentMainBoard:keyPressed:VK_N"
+      ],
+      "legacy_input_bindings": [
+        "keyPressed:VK_N#2",
+        "InputIndependentMainBoard:keyPressed:VK_N#2"
+      ],
       "java_evidence": [
         { "path": "src/main/java/featurecat/lizzie/gui/Input.java", "symbol": "keyPressed" },
         { "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "symbol": "startNewGame" },
@@ -84,7 +90,7 @@
     {
       "id": "BOARD-HISTORY-001",
       "category": "棋盘与对局",
-      "legacy_entry": "BoardHistoryList 与 BoardHistoryNode 管理主线、分支和前后导航",
+      "legacy_entry": "BoardHistoryList 与 BoardHistoryNode 管理主线、分支和前后导航；Input 与 InputIndependentMainBoard 提供主窗口和独立主棋盘键盘入口",
       "legacy_menu_keys": ["Menu.backToMainBranch", "Menu.deleteBranch", "Menu.setAsMain"],
       "legacy_menu_labels": [],
       "legacy_shortcuts": [],
@@ -98,7 +104,17 @@
         "keyPressed:VK_HOME",
         "keyPressed:VK_END",
         "keyPressed:VK_B",
-        "keyPressed:VK_R"
+        "keyPressed:VK_R",
+        "InputIndependentMainBoard:keyPressed:VK_RIGHT",
+        "InputIndependentMainBoard:keyPressed:VK_LEFT",
+        "InputIndependentMainBoard:keyPressed:VK_UP",
+        "InputIndependentMainBoard:keyPressed:VK_PAGE_DOWN",
+        "InputIndependentMainBoard:keyPressed:VK_DOWN",
+        "InputIndependentMainBoard:keyPressed:VK_PAGE_UP",
+        "InputIndependentMainBoard:keyPressed:VK_HOME",
+        "InputIndependentMainBoard:keyPressed:VK_END",
+        "InputIndependentMainBoard:keyPressed:VK_B",
+        "InputIndependentMainBoard:keyPressed:VK_R"
       ],
       "legacy_input_bindings": [
         "keyPressed:VK_RIGHT#1",
@@ -123,16 +139,40 @@
         "keyPressed:VK_HOME#3",
         "keyPressed:VK_END#1",
         "keyPressed:VK_B#3",
-        "keyPressed:VK_R#1"
+        "keyPressed:VK_R#1",
+        "InputIndependentMainBoard:keyPressed:VK_RIGHT#1",
+        "InputIndependentMainBoard:keyPressed:VK_RIGHT#2",
+        "InputIndependentMainBoard:keyPressed:VK_RIGHT#4",
+        "InputIndependentMainBoard:keyPressed:VK_LEFT#1",
+        "InputIndependentMainBoard:keyPressed:VK_LEFT#3",
+        "InputIndependentMainBoard:keyPressed:VK_LEFT#4",
+        "InputIndependentMainBoard:keyPressed:VK_UP#1",
+        "InputIndependentMainBoard:keyPressed:VK_UP#2",
+        "InputIndependentMainBoard:keyPressed:VK_UP#4",
+        "InputIndependentMainBoard:keyPressed:VK_UP#5",
+        "InputIndependentMainBoard:keyPressed:VK_UP#6",
+        "InputIndependentMainBoard:keyPressed:VK_PAGE_DOWN#1",
+        "InputIndependentMainBoard:keyPressed:VK_PAGE_DOWN#2",
+        "InputIndependentMainBoard:keyPressed:VK_DOWN#1",
+        "InputIndependentMainBoard:keyPressed:VK_DOWN#3",
+        "InputIndependentMainBoard:keyPressed:VK_DOWN#4",
+        "InputIndependentMainBoard:keyPressed:VK_DOWN#5",
+        "InputIndependentMainBoard:keyPressed:VK_PAGE_UP#1",
+        "InputIndependentMainBoard:keyPressed:VK_PAGE_UP#2",
+        "InputIndependentMainBoard:keyPressed:VK_HOME#3",
+        "InputIndependentMainBoard:keyPressed:VK_END#1",
+        "InputIndependentMainBoard:keyPressed:VK_B#3",
+        "InputIndependentMainBoard:keyPressed:VK_R#1"
       ],
       "java_evidence": [
         { "path": "src/main/java/featurecat/lizzie/rules/BoardHistoryList.java", "symbol": "class BoardHistoryList" },
-        { "path": "src/main/java/featurecat/lizzie/rules/BoardHistoryNode.java", "symbol": "class BoardHistoryNode" }
+        { "path": "src/main/java/featurecat/lizzie/rules/BoardHistoryNode.java", "symbol": "class BoardHistoryNode" },
+        { "path": "src/main/java/featurecat/lizzie/gui/InputIndependentMainBoard.java", "symbol": "independentMainBoard.boardRenderer.isShowingBranch()" }
       ],
       "config_keys": ["show-leelaz-variation", "new-move-number-in-branch"],
       "inputs_preconditions": "棋谱包含至少一个落子；分支场景需要同一节点存在多个后继。",
-      "success_behavior": "导航保持棋盘、提子、着手身份和分支结构一致。",
-      "failure_cancel_behavior": "到达首尾节点时不得越界或破坏历史树。",
+      "success_behavior": "导航保持棋盘、提子、着手身份和分支结构一致；独立主棋盘获得焦点时，方向键使用其 renderer 预览和移动分支。",
+      "failure_cancel_behavior": "到达首尾节点时不得越界或破坏历史树；目标版不得把独立窗口的导航静默发送到错误棋盘上下文。",
       "data_io": "内存棋盘历史树。",
       "external_dependencies": [],
       "target_modules": ["Lizzie.Core", "Lizzie.Desktop"],
@@ -141,9 +181,9 @@
         { "path": "src/test/java/featurecat/lizzie/rules/BoardHistoryListSyncSnapshotTest.java", "symbol": "BoardHistoryListSyncSnapshotTest" },
         { "path": "src/test/java/featurecat/lizzie/rules/BoardHistoryNodeRemovedStoneReplayTest.java", "symbol": "BoardHistoryNodeRemovedStoneReplayTest" }
       ],
-      "manual_acceptance": "在主线与两个分支间前后导航，核对落子、提子和分支编号。",
+      "manual_acceptance": "在主窗口和独立主棋盘分别用方向键及 PageUp/PageDown 穿行主线与两个分支，核对焦点目标、落子、提子和分支编号。",
       "status": "已盘点",
-      "evidence": "旧版相关测试已在隔离 Maven 基线通过；尚未形成跨实现夹具。"
+      "evidence": "两个输入源的 46 条本行路径已反向关联；独立源的 Up/Down 使用 independentMainBoard renderer，但 PageUp/PageDown 仍引用主 renderer，是待动态确认的焦点语义差异，不得盲目照搬。"
     },
     {
       "id": "KIFU-OPEN-001",
@@ -152,8 +192,16 @@
       "legacy_menu_keys": ["Menu.open", "Menu.openRecent"],
       "legacy_menu_labels": [],
       "legacy_shortcuts": [],
-      "legacy_input_cases": ["keyPressed:VK_O"],
-      "legacy_input_bindings": ["keyPressed:VK_O#1", "keyPressed:VK_O#4"],
+      "legacy_input_cases": [
+        "keyPressed:VK_O",
+        "InputIndependentMainBoard:keyPressed:VK_O"
+      ],
+      "legacy_input_bindings": [
+        "keyPressed:VK_O#1",
+        "keyPressed:VK_O#4",
+        "InputIndependentMainBoard:keyPressed:VK_O#1",
+        "InputIndependentMainBoard:keyPressed:VK_O#4"
+      ],
       "java_evidence": [
         { "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "symbol": "openFile" },
         { "path": "src/main/java/featurecat/lizzie/rules/SGFParser.java", "symbol": "class SGFParser" },
@@ -185,12 +233,19 @@
       ],
       "legacy_menu_labels": [],
       "legacy_shortcuts": [],
-      "legacy_input_cases": ["keyPressed:VK_S"],
+      "legacy_input_cases": [
+        "keyPressed:VK_S",
+        "InputIndependentMainBoard:keyPressed:VK_S"
+      ],
       "legacy_input_bindings": [
         "keyPressed:VK_S#1",
         "keyPressed:VK_S#2",
         "keyPressed:VK_S#6",
-        "keyPressed:VK_S#7"
+        "keyPressed:VK_S#7",
+        "InputIndependentMainBoard:keyPressed:VK_S#1",
+        "InputIndependentMainBoard:keyPressed:VK_S#2",
+        "InputIndependentMainBoard:keyPressed:VK_S#6",
+        "InputIndependentMainBoard:keyPressed:VK_S#7"
       ],
       "java_evidence": [
         { "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "symbol": "saveOriFile" },
@@ -215,8 +270,18 @@
       "legacy_menu_keys": ["Menu.copySgf", "Menu.pasteSgf"],
       "legacy_menu_labels": [],
       "legacy_shortcuts": [],
-      "legacy_input_cases": ["keyPressed:VK_C", "keyPressed:VK_V"],
-      "legacy_input_bindings": ["keyPressed:VK_C#3", "keyPressed:VK_V#1"],
+      "legacy_input_cases": [
+        "keyPressed:VK_C",
+        "keyPressed:VK_V",
+        "InputIndependentMainBoard:keyPressed:VK_C",
+        "InputIndependentMainBoard:keyPressed:VK_V"
+      ],
+      "legacy_input_bindings": [
+        "keyPressed:VK_C#3",
+        "keyPressed:VK_V#1",
+        "InputIndependentMainBoard:keyPressed:VK_C#3",
+        "InputIndependentMainBoard:keyPressed:VK_V#1"
+      ],
       "java_evidence": [
         { "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "symbol": "copySgf" },
         { "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "symbol": "pasteSgf" }
@@ -240,13 +305,23 @@
       "legacy_menu_keys": ["Menu.saveMainBoardScreen", "Menu.saveSubBoardScreen"],
       "legacy_menu_labels": [],
       "legacy_shortcuts": [],
-      "legacy_input_cases": ["keyPressed:VK_C", "keyPressed:VK_S"],
+      "legacy_input_cases": [
+        "keyPressed:VK_C",
+        "keyPressed:VK_S",
+        "InputIndependentMainBoard:keyPressed:VK_C",
+        "InputIndependentMainBoard:keyPressed:VK_S"
+      ],
       "legacy_input_bindings": [
         "keyPressed:VK_C#1",
         "keyPressed:VK_C#2",
         "keyPressed:VK_S#3",
         "keyPressed:VK_S#4",
-        "keyPressed:VK_S#5"
+        "keyPressed:VK_S#5",
+        "InputIndependentMainBoard:keyPressed:VK_C#1",
+        "InputIndependentMainBoard:keyPressed:VK_C#2",
+        "InputIndependentMainBoard:keyPressed:VK_S#3",
+        "InputIndependentMainBoard:keyPressed:VK_S#4",
+        "InputIndependentMainBoard:keyPressed:VK_S#5"
       ],
       "java_evidence": [
         { "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "symbol": "saveMainBoardPicture" },
@@ -307,8 +382,14 @@
       "legacy_menu_keys": ["Menu.engineParameters", "Menu.engineRules"],
       "legacy_menu_labels": [],
       "legacy_shortcuts": [],
-      "legacy_input_cases": ["keyPressed:VK_E"],
-      "legacy_input_bindings": ["keyPressed:VK_E#4"],
+      "legacy_input_cases": [
+        "keyPressed:VK_E",
+        "InputIndependentMainBoard:keyPressed:VK_E"
+      ],
+      "legacy_input_bindings": [
+        "keyPressed:VK_E#4",
+        "InputIndependentMainBoard:keyPressed:VK_E#4"
+      ],
       "java_evidence": [
         { "path": "src/main/java/featurecat/lizzie/analysis/Leelaz.java", "symbol": "class Leelaz" },
         { "path": "src/main/java/featurecat/lizzie/analysis/LeelazEngineCommandSink.java", "symbol": "LeelazEngineCommandSink" }
@@ -341,8 +422,18 @@
       ],
       "legacy_menu_labels": [],
       "legacy_shortcuts": [],
-      "legacy_input_cases": ["keyPressed:VK_N", "keyPressed:VK_B"],
-      "legacy_input_bindings": ["keyPressed:VK_N#1", "keyPressed:VK_B#2"],
+      "legacy_input_cases": [
+        "keyPressed:VK_N",
+        "keyPressed:VK_B",
+        "InputIndependentMainBoard:keyPressed:VK_N",
+        "InputIndependentMainBoard:keyPressed:VK_B"
+      ],
+      "legacy_input_bindings": [
+        "keyPressed:VK_N#1",
+        "keyPressed:VK_B#2",
+        "InputIndependentMainBoard:keyPressed:VK_N#1",
+        "InputIndependentMainBoard:keyPressed:VK_B#2"
+      ],
       "java_evidence": [
         { "path": "src/main/java/featurecat/lizzie/gui/BottomToolbar.java", "symbol": "flashAnalyzeAllGame" },
         { "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "symbol": "flashAnalyzeGame" }
@@ -424,8 +515,14 @@
       "legacy_menu_keys": ["Menu.yikeLive", "Menu.yikeLiveWeb", "Menu.yikeRoom"],
       "legacy_menu_labels": [],
       "legacy_shortcuts": ["Shift+O"],
-      "legacy_input_cases": ["keyPressed:VK_O"],
-      "legacy_input_bindings": ["keyPressed:VK_O#3"],
+      "legacy_input_cases": [
+        "keyPressed:VK_O",
+        "InputIndependentMainBoard:keyPressed:VK_O"
+      ],
+      "legacy_input_bindings": [
+        "keyPressed:VK_O#3",
+        "InputIndependentMainBoard:keyPressed:VK_O#3"
+      ],
       "java_evidence": [
         { "path": "src/main/java/featurecat/lizzie/gui/YikeApiClient.java", "symbol": "class YikeApiClient" },
         { "path": "src/main/java/featurecat/lizzie/gui/YikeUrlParser.java", "symbol": "class YikeUrlParser" },
@@ -461,8 +558,14 @@
       ],
       "legacy_menu_labels": [],
       "legacy_shortcuts": ["Alt+O"],
-      "legacy_input_cases": ["keyPressed:VK_O"],
-      "legacy_input_bindings": ["keyPressed:VK_O#2"],
+      "legacy_input_cases": [
+        "keyPressed:VK_O",
+        "InputIndependentMainBoard:keyPressed:VK_O"
+      ],
+      "legacy_input_bindings": [
+        "keyPressed:VK_O#2",
+        "InputIndependentMainBoard:keyPressed:VK_O#2"
+      ],
       "java_evidence": [
         { "path": "src/main/java/featurecat/lizzie/analysis/ReadBoard.java", "symbol": "class ReadBoard" },
         { "path": "src/main/java/featurecat/lizzie/analysis/ReadBoardStream.java", "symbol": "class ReadBoardStream" }
@@ -553,8 +656,14 @@
       "legacy_menu_keys": ["Menu.coordsMenu"],
       "legacy_menu_labels": [],
       "legacy_shortcuts": [],
-      "legacy_input_cases": ["keyPressed:VK_C"],
-      "legacy_input_bindings": ["keyPressed:VK_C#4"],
+      "legacy_input_cases": [
+        "keyPressed:VK_C",
+        "InputIndependentMainBoard:keyPressed:VK_C"
+      ],
+      "legacy_input_bindings": [
+        "keyPressed:VK_C#4",
+        "InputIndependentMainBoard:keyPressed:VK_C#4"
+      ],
       "java_evidence": [
         { "path": "src/main/java/featurecat/lizzie/Config.java", "symbol": "toggleCoordinates" },
         { "path": "src/main/java/featurecat/lizzie/gui/Menu.java", "symbol": "toggleCoordinates" }
@@ -698,8 +807,18 @@
       "legacy_menu_keys": [],
       "legacy_menu_labels": [],
       "legacy_shortcuts": [],
-      "legacy_input_cases": ["keyPressed:VK_E", "keyPressed:VK_B"],
-      "legacy_input_bindings": ["keyPressed:VK_E#1", "keyPressed:VK_B#1"],
+      "legacy_input_cases": [
+        "keyPressed:VK_E",
+        "keyPressed:VK_B",
+        "InputIndependentMainBoard:keyPressed:VK_E",
+        "InputIndependentMainBoard:keyPressed:VK_B"
+      ],
+      "legacy_input_bindings": [
+        "keyPressed:VK_E#1",
+        "keyPressed:VK_B#1",
+        "InputIndependentMainBoard:keyPressed:VK_E#1",
+        "InputIndependentMainBoard:keyPressed:VK_B#1"
+      ],
       "java_evidence": [
         { "path": "src/main/java/featurecat/lizzie/gui/Input.java", "symbol": "Lizzie.frame.shareSGF()" },
         { "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "symbol": "public void shareSGF()" }
@@ -723,12 +842,23 @@
       "legacy_menu_keys": [],
       "legacy_menu_labels": [],
       "legacy_shortcuts": [],
-      "legacy_input_cases": ["keyPressed:VK_E", "keyPressed:VK_COMMA", "keyPressed:VK_ENTER"],
+      "legacy_input_cases": [
+        "keyPressed:VK_E",
+        "keyPressed:VK_COMMA",
+        "keyPressed:VK_ENTER",
+        "InputIndependentMainBoard:keyPressed:VK_E",
+        "InputIndependentMainBoard:keyPressed:VK_COMMA",
+        "InputIndependentMainBoard:keyPressed:VK_ENTER"
+      ],
       "legacy_input_bindings": [
         "keyPressed:VK_E#2",
         "keyPressed:VK_COMMA#1",
         "keyPressed:VK_ENTER#1",
-        "keyPressed:VK_ENTER#2"
+        "keyPressed:VK_ENTER#2",
+        "InputIndependentMainBoard:keyPressed:VK_E#2",
+        "InputIndependentMainBoard:keyPressed:VK_COMMA#1",
+        "InputIndependentMainBoard:keyPressed:VK_ENTER#1",
+        "InputIndependentMainBoard:keyPressed:VK_ENTER#2"
       ],
       "java_evidence": [
         { "path": "src/main/java/featurecat/lizzie/gui/Input.java", "symbol": "startEngineGameDialog" },
@@ -753,8 +883,18 @@
       "legacy_menu_keys": [],
       "legacy_menu_labels": [],
       "legacy_shortcuts": [],
-      "legacy_input_cases": ["keyPressed:VK_E", "keyPressed:VK_T"],
-      "legacy_input_bindings": ["keyPressed:VK_E#3", "keyPressed:VK_T#3"],
+      "legacy_input_cases": [
+        "keyPressed:VK_E",
+        "keyPressed:VK_T",
+        "InputIndependentMainBoard:keyPressed:VK_E",
+        "InputIndependentMainBoard:keyPressed:VK_T"
+      ],
+      "legacy_input_bindings": [
+        "keyPressed:VK_E#3",
+        "keyPressed:VK_T#3",
+        "InputIndependentMainBoard:keyPressed:VK_E#3",
+        "InputIndependentMainBoard:keyPressed:VK_T#3"
+      ],
       "java_evidence": [
         { "path": "src/main/java/featurecat/lizzie/gui/Input.java", "symbol": "openTsumego" },
         { "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "symbol": "public void openTsumego()" }
@@ -782,14 +922,23 @@
         "keyPressed:VK_RIGHT",
         "keyPressed:VK_LEFT",
         "keyPressed:VK_UP",
-        "keyPressed:VK_DOWN"
+        "keyPressed:VK_DOWN",
+        "InputIndependentMainBoard:keyPressed:VK_RIGHT",
+        "InputIndependentMainBoard:keyPressed:VK_LEFT",
+        "InputIndependentMainBoard:keyPressed:VK_UP",
+        "InputIndependentMainBoard:keyPressed:VK_DOWN"
       ],
       "legacy_input_bindings": [
         "keyPressed:VK_RIGHT#1",
         "keyPressed:VK_RIGHT#3",
         "keyPressed:VK_LEFT#2",
         "keyPressed:VK_UP#3",
-        "keyPressed:VK_DOWN#2"
+        "keyPressed:VK_DOWN#2",
+        "InputIndependentMainBoard:keyPressed:VK_RIGHT#1",
+        "InputIndependentMainBoard:keyPressed:VK_RIGHT#3",
+        "InputIndependentMainBoard:keyPressed:VK_LEFT#2",
+        "InputIndependentMainBoard:keyPressed:VK_UP#3",
+        "InputIndependentMainBoard:keyPressed:VK_DOWN#2"
       ],
       "java_evidence": [
         { "path": "src/main/java/featurecat/lizzie/gui/Input.java", "symbol": "SpinAndMirror" },
@@ -819,7 +968,12 @@
         "keyPressed:VK_HOME",
         "keyPressed:VK_DELETE",
         "keyPressed:VK_BACK_SPACE",
-        "keyPressed:VK_A"
+        "keyPressed:VK_A",
+        "InputIndependentMainBoard:keyPressed:VK_P",
+        "InputIndependentMainBoard:keyPressed:VK_HOME",
+        "InputIndependentMainBoard:keyPressed:VK_DELETE",
+        "InputIndependentMainBoard:keyPressed:VK_BACK_SPACE",
+        "InputIndependentMainBoard:keyPressed:VK_A"
       ],
       "legacy_input_bindings": [
         "keyPressed:VK_P#1",
@@ -831,7 +985,17 @@
         "keyPressed:VK_BACK_SPACE#1",
         "keyPressed:VK_BACK_SPACE#2",
         "keyPressed:VK_BACK_SPACE#3",
-        "keyPressed:VK_A#4"
+        "keyPressed:VK_A#4",
+        "InputIndependentMainBoard:keyPressed:VK_P#1",
+        "InputIndependentMainBoard:keyPressed:VK_HOME#1",
+        "InputIndependentMainBoard:keyPressed:VK_HOME#2",
+        "InputIndependentMainBoard:keyPressed:VK_DELETE#1",
+        "InputIndependentMainBoard:keyPressed:VK_DELETE#2",
+        "InputIndependentMainBoard:keyPressed:VK_DELETE#3",
+        "InputIndependentMainBoard:keyPressed:VK_BACK_SPACE#1",
+        "InputIndependentMainBoard:keyPressed:VK_BACK_SPACE#2",
+        "InputIndependentMainBoard:keyPressed:VK_BACK_SPACE#3",
+        "InputIndependentMainBoard:keyPressed:VK_A#4"
       ],
       "java_evidence": [
         { "path": "src/main/java/featurecat/lizzie/gui/Input.java", "symbol": "deleteBranch" },
@@ -856,8 +1020,14 @@
       "legacy_menu_keys": [],
       "legacy_menu_labels": [],
       "legacy_shortcuts": [],
-      "legacy_input_cases": ["keyPressed:VK_SPACE"],
-      "legacy_input_bindings": ["keyPressed:VK_SPACE#1"],
+      "legacy_input_cases": [
+        "keyPressed:VK_SPACE",
+        "InputIndependentMainBoard:keyPressed:VK_SPACE"
+      ],
+      "legacy_input_bindings": [
+        "keyPressed:VK_SPACE#1",
+        "InputIndependentMainBoard:keyPressed:VK_SPACE#1"
+      ],
       "java_evidence": [
         { "path": "src/main/java/featurecat/lizzie/gui/Input.java", "symbol": "togglePonderMannul" },
         { "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "symbol": "togglePonderMannul" }
@@ -894,7 +1064,20 @@
         "keyPressed:VK_6",
         "keyPressed:VK_7",
         "keyPressed:VK_8",
-        "keyPressed:VK_9"
+        "keyPressed:VK_9",
+        "InputIndependentMainBoard:keyPressed:VK_COMMA",
+        "InputIndependentMainBoard:keyPressed:VK_L",
+        "InputIndependentMainBoard:keyPressed:VK_V",
+        "InputIndependentMainBoard:keyPressed:VK_R",
+        "InputIndependentMainBoard:keyPressed:VK_1",
+        "InputIndependentMainBoard:keyPressed:VK_2",
+        "InputIndependentMainBoard:keyPressed:VK_3",
+        "InputIndependentMainBoard:keyPressed:VK_4",
+        "InputIndependentMainBoard:keyPressed:VK_5",
+        "InputIndependentMainBoard:keyPressed:VK_6",
+        "InputIndependentMainBoard:keyPressed:VK_7",
+        "InputIndependentMainBoard:keyPressed:VK_8",
+        "InputIndependentMainBoard:keyPressed:VK_9"
       ],
       "legacy_input_bindings": [
         "keyPressed:VK_COMMA#2",
@@ -912,23 +1095,40 @@
         "keyPressed:VK_6#3",
         "keyPressed:VK_7#3",
         "keyPressed:VK_8#3",
-        "keyPressed:VK_9#3"
+        "keyPressed:VK_9#3",
+        "InputIndependentMainBoard:keyPressed:VK_COMMA#2",
+        "InputIndependentMainBoard:keyPressed:VK_COMMA#3",
+        "InputIndependentMainBoard:keyPressed:VK_COMMA#4",
+        "InputIndependentMainBoard:keyPressed:VK_COMMA#5",
+        "InputIndependentMainBoard:keyPressed:VK_L#1",
+        "InputIndependentMainBoard:keyPressed:VK_V#3",
+        "InputIndependentMainBoard:keyPressed:VK_R#1",
+        "InputIndependentMainBoard:keyPressed:VK_1#3",
+        "InputIndependentMainBoard:keyPressed:VK_2#3",
+        "InputIndependentMainBoard:keyPressed:VK_3#3",
+        "InputIndependentMainBoard:keyPressed:VK_4#3",
+        "InputIndependentMainBoard:keyPressed:VK_5#3",
+        "InputIndependentMainBoard:keyPressed:VK_6#3",
+        "InputIndependentMainBoard:keyPressed:VK_7#3",
+        "InputIndependentMainBoard:keyPressed:VK_8#3",
+        "InputIndependentMainBoard:keyPressed:VK_9#3"
       ],
       "java_evidence": [
         { "path": "src/main/java/featurecat/lizzie/gui/Input.java", "symbol": "playCurrentVariation" },
-        { "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "symbol": "public void replayBranch()" }
+        { "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "symbol": "public void replayBranch()" },
+        { "path": "src/main/java/featurecat/lizzie/gui/InputIndependentMainBoard.java", "symbol": "replayBranchIndependentMainBoard" }
       ],
       "config_keys": [],
       "inputs_preconditions": "当前节点存在引擎建议或可见分支；数字键对应 1–9 号建议。",
-      "success_behavior": "按指针位置与显示设置播放当前/最佳变化，进入试下、设为主线、重放分支或预览指定建议。",
+      "success_behavior": "按指针位置与显示设置播放当前/最佳变化，进入试下、设为主线、重放分支或预览指定建议；R 按焦点窗口选择主窗口或独立主棋盘重放入口。",
       "failure_cancel_behavior": "无建议、无分支或已处于不兼容模式时保持棋盘一致；重放可停止且不得阻塞 UI。",
       "data_io": "读取并临时或持久修改棋盘分支与建议选择状态。",
       "external_dependencies": [],
       "target_modules": ["Lizzie.Core", "Lizzie.Desktop"],
       "automated_evidence": [],
-      "manual_acceptance": "用至少九个候选和两个分支覆盖鼠标内外、变化开关、试下、主线、重放及无目标路径。",
+      "manual_acceptance": "用至少九个候选和两个分支覆盖鼠标内外、变化开关、试下、主线、主窗口/独立主棋盘 R 重放及无目标路径。",
       "status": "已盘点",
-      "evidence": "数字 1–8 的无 Alt 路径经连续 case fall-through 到 VK_9，现已展开为各自候选索引；动态分支语义待对照。"
+      "evidence": "两个输入源的数字 1–8 无 Alt 路径均经连续 case fall-through 到 VK_9；独立源 R 调用 replayBranchIndependentMainBoard，主源调用 replayBranch，差异已保留。"
     },
     {
       "id": "ANALYSIS-DISPLAY-001",
@@ -946,7 +1146,16 @@
         "keyPressed:VK_V",
         "keyPressed:VK_T",
         "keyPressed:VK_Y",
-        "keyPressed:VK_K"
+        "keyPressed:VK_K",
+        "InputIndependentMainBoard:keyPressed:VK_U",
+        "InputIndependentMainBoard:keyPressed:VK_M",
+        "InputIndependentMainBoard:keyPressed:VK_J",
+        "InputIndependentMainBoard:keyPressed:VK_F",
+        "InputIndependentMainBoard:keyPressed:VK_H",
+        "InputIndependentMainBoard:keyPressed:VK_V",
+        "InputIndependentMainBoard:keyPressed:VK_T",
+        "InputIndependentMainBoard:keyPressed:VK_Y",
+        "InputIndependentMainBoard:keyPressed:VK_K"
       ],
       "legacy_input_bindings": [
         "keyPressed:VK_U#1",
@@ -962,7 +1171,21 @@
         "keyPressed:VK_T#4",
         "keyPressed:VK_Y#1",
         "keyPressed:VK_K#1",
-        "keyPressed:VK_K#2"
+        "keyPressed:VK_K#2",
+        "InputIndependentMainBoard:keyPressed:VK_U#1",
+        "InputIndependentMainBoard:keyPressed:VK_M#1",
+        "InputIndependentMainBoard:keyPressed:VK_M#2",
+        "InputIndependentMainBoard:keyPressed:VK_M#3",
+        "InputIndependentMainBoard:keyPressed:VK_J#1",
+        "InputIndependentMainBoard:keyPressed:VK_F#1",
+        "InputIndependentMainBoard:keyPressed:VK_F#2",
+        "InputIndependentMainBoard:keyPressed:VK_F#3",
+        "InputIndependentMainBoard:keyPressed:VK_H#1",
+        "InputIndependentMainBoard:keyPressed:VK_V#2",
+        "InputIndependentMainBoard:keyPressed:VK_T#4",
+        "InputIndependentMainBoard:keyPressed:VK_Y#1",
+        "InputIndependentMainBoard:keyPressed:VK_K#1",
+        "InputIndependentMainBoard:keyPressed:VK_K#2"
       ],
       "java_evidence": [
         { "path": "src/main/java/featurecat/lizzie/gui/Input.java", "symbol": "toggleBestMoves" },
@@ -991,7 +1214,11 @@
         "keyPressed:VK_Q",
         "keyPressed:VK_DECIMAL",
         "keyPressed:VK_SLASH",
-        "keyPressed:VK_PERIOD"
+        "keyPressed:VK_PERIOD",
+        "InputIndependentMainBoard:keyPressed:VK_Q",
+        "InputIndependentMainBoard:keyPressed:VK_DECIMAL",
+        "InputIndependentMainBoard:keyPressed:VK_SLASH",
+        "InputIndependentMainBoard:keyPressed:VK_PERIOD"
       ],
       "legacy_input_bindings": [
         "keyPressed:VK_Q#1",
@@ -1000,23 +1227,31 @@
         "keyPressed:VK_SLASH#1",
         "keyPressed:VK_SLASH#2",
         "keyPressed:VK_PERIOD#1",
-        "keyPressed:VK_PERIOD#2"
+        "keyPressed:VK_PERIOD#2",
+        "InputIndependentMainBoard:keyPressed:VK_Q#1",
+        "InputIndependentMainBoard:keyPressed:VK_DECIMAL#1",
+        "InputIndependentMainBoard:keyPressed:VK_DECIMAL#2",
+        "InputIndependentMainBoard:keyPressed:VK_SLASH#1",
+        "InputIndependentMainBoard:keyPressed:VK_SLASH#2",
+        "InputIndependentMainBoard:keyPressed:VK_PERIOD#1",
+        "InputIndependentMainBoard:keyPressed:VK_PERIOD#2"
       ],
       "java_evidence": [
         { "path": "src/main/java/featurecat/lizzie/gui/Input.java", "symbol": "countstones(true)" },
+        { "path": "src/main/java/featurecat/lizzie/gui/InputIndependentMainBoard.java", "symbol": "removeKataEstimateImage" },
         { "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "symbol": "public void toggleScoreMode()" }
       ],
       "config_keys": [],
       "inputs_preconditions": "棋盘可计分；Kata 估算需要兼容引擎与启用快捷键设置。",
-      "success_behavior": "切换终局死活标记、启动/清除形势判断，或在设置允许时切换 Kata 估算。",
-      "failure_cancel_behavior": "引擎或数据不可用时报告真实状态；未启用 Period 快捷键时明确无动作且不改状态。",
+      "success_behavior": "切换终局死活标记、启动/清除形势判断，或在设置允许时切换 Kata 估算；从任一棋盘入口清除时 UI 和计数状态保持一致。",
+      "failure_cancel_behavior": "引擎或数据不可用时报告真实状态；未启用 Period 快捷键时明确无动作且不改状态；清除不得遗留另一棋盘的估算图层。",
       "data_io": "读取棋盘、引擎估算并更新计分/估算覆盖层。",
       "external_dependencies": ["KataGo 形势判断能力"],
       "target_modules": ["Lizzie.Core", "Lizzie.Engine", "Lizzie.Desktop"],
       "automated_evidence": [],
-      "manual_acceptance": "覆盖两种计分状态、两种键位、Period 启用/禁用、引擎不可用及退出后状态恢复。",
+      "manual_acceptance": "在主窗口和独立主棋盘覆盖两种计分状态、Decimal/Slash、Period 启用/禁用、引擎不可用及退出后状态恢复。",
       "status": "已盘点",
-      "evidence": "Decimal 无代码后落入 Slash 的 fall-through、Period 禁用无动作路径和计分状态分支已精确生成。"
+      "evidence": "两个输入源均保留 Decimal→Slash fall-through 和 Period 禁用无动作路径；计数清除时主源调用 clearKataEstimate，独立源仅调用主 renderer.removeKataEstimateImage，状态差异待动态验证。"
     },
     {
       "id": "UI-ANALYSIS-PANELS-001",
@@ -1025,7 +1260,16 @@
       "legacy_menu_keys": [],
       "legacy_menu_labels": [],
       "legacy_shortcuts": [],
-      "legacy_input_cases": ["keyPressed:VK_W", "keyPressed:VK_G", "keyPressed:VK_T", "keyPressed:VK_Z"],
+      "legacy_input_cases": [
+        "keyPressed:VK_W",
+        "keyPressed:VK_G",
+        "keyPressed:VK_T",
+        "keyPressed:VK_Z",
+        "InputIndependentMainBoard:keyPressed:VK_W",
+        "InputIndependentMainBoard:keyPressed:VK_G",
+        "InputIndependentMainBoard:keyPressed:VK_T",
+        "InputIndependentMainBoard:keyPressed:VK_Z"
+      ],
       "legacy_input_bindings": [
         "keyPressed:VK_W#1",
         "keyPressed:VK_W#2",
@@ -1035,7 +1279,16 @@
         "keyPressed:VK_G#3",
         "keyPressed:VK_T#1",
         "keyPressed:VK_T#2",
-        "keyPressed:VK_Z#2"
+        "keyPressed:VK_Z#2",
+        "InputIndependentMainBoard:keyPressed:VK_W#1",
+        "InputIndependentMainBoard:keyPressed:VK_W#2",
+        "InputIndependentMainBoard:keyPressed:VK_W#3",
+        "InputIndependentMainBoard:keyPressed:VK_G#1",
+        "InputIndependentMainBoard:keyPressed:VK_G#2",
+        "InputIndependentMainBoard:keyPressed:VK_G#3",
+        "InputIndependentMainBoard:keyPressed:VK_T#1",
+        "InputIndependentMainBoard:keyPressed:VK_T#2",
+        "InputIndependentMainBoard:keyPressed:VK_Z#2"
       ],
       "java_evidence": [
         { "path": "src/main/java/featurecat/lizzie/gui/Input.java", "symbol": "toggleShowWinrate" },
@@ -1060,12 +1313,21 @@
       "legacy_menu_keys": [],
       "legacy_menu_labels": [],
       "legacy_shortcuts": [],
-      "legacy_input_cases": ["keyPressed:VK_I", "keyPressed:VK_D"],
+      "legacy_input_cases": [
+        "keyPressed:VK_I",
+        "keyPressed:VK_D",
+        "InputIndependentMainBoard:keyPressed:VK_I",
+        "InputIndependentMainBoard:keyPressed:VK_D"
+      ],
       "legacy_input_bindings": [
         "keyPressed:VK_I#1",
         "keyPressed:VK_I#2",
         "keyPressed:VK_D#2",
-        "keyPressed:VK_D#3"
+        "keyPressed:VK_D#3",
+        "InputIndependentMainBoard:keyPressed:VK_I#1",
+        "InputIndependentMainBoard:keyPressed:VK_I#2",
+        "InputIndependentMainBoard:keyPressed:VK_D#2",
+        "InputIndependentMainBoard:keyPressed:VK_D#3"
       ],
       "java_evidence": [
         { "path": "src/main/java/featurecat/lizzie/gui/Input.java", "symbol": "SetBoardSize st" },
@@ -1090,8 +1352,18 @@
       "legacy_menu_keys": [],
       "legacy_menu_labels": [],
       "legacy_shortcuts": [],
-      "legacy_input_cases": ["keyPressed:VK_X", "keyPressed:VK_D"],
-      "legacy_input_bindings": ["keyPressed:VK_X#2", "keyPressed:VK_D#1"],
+      "legacy_input_cases": [
+        "keyPressed:VK_X",
+        "keyPressed:VK_D",
+        "InputIndependentMainBoard:keyPressed:VK_X",
+        "InputIndependentMainBoard:keyPressed:VK_D"
+      ],
+      "legacy_input_bindings": [
+        "keyPressed:VK_X#2",
+        "keyPressed:VK_D#1",
+        "InputIndependentMainBoard:keyPressed:VK_X#2",
+        "InputIndependentMainBoard:keyPressed:VK_D#1"
+      ],
       "java_evidence": [
         { "path": "src/main/java/featurecat/lizzie/gui/Input.java", "symbol": "openMoreEngineDialog" },
         { "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "symbol": "public void setLzSaiEngine()" }
@@ -1115,8 +1387,14 @@
       "legacy_menu_keys": [],
       "legacy_menu_labels": [],
       "legacy_shortcuts": [],
-      "legacy_input_cases": ["keyPressed:VK_X"],
-      "legacy_input_bindings": ["keyPressed:VK_X#1"],
+      "legacy_input_cases": [
+        "keyPressed:VK_X",
+        "InputIndependentMainBoard:keyPressed:VK_X"
+      ],
+      "legacy_input_bindings": [
+        "keyPressed:VK_X#1",
+        "InputIndependentMainBoard:keyPressed:VK_X#1"
+      ],
       "java_evidence": [
         { "path": "src/main/java/featurecat/lizzie/gui/Input.java", "symbol": "openConfigDialog2(0)" },
         { "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "symbol": "public void openConfigDialog2(int index)" }
@@ -1140,7 +1418,12 @@
       "legacy_menu_keys": [],
       "legacy_menu_labels": [],
       "legacy_shortcuts": [],
-      "legacy_input_cases": ["keyPressed:VK_X", "keyReleased:VK_X"],
+      "legacy_input_cases": [
+        "keyPressed:VK_X",
+        "keyReleased:VK_X",
+        "InputIndependentMainBoard:keyPressed:VK_X",
+        "InputIndependentMainBoard:keyReleased:VK_X"
+      ],
       "legacy_input_bindings": [
         "keyPressed:VK_X#3",
         "keyPressed:VK_X#4",
@@ -1151,7 +1434,17 @@
         "keyPressed:VK_X#9",
         "keyPressed:VK_X#10",
         "keyPressed:VK_X#11",
-        "keyReleased:VK_X#1"
+        "keyReleased:VK_X#1",
+        "InputIndependentMainBoard:keyPressed:VK_X#3",
+        "InputIndependentMainBoard:keyPressed:VK_X#4",
+        "InputIndependentMainBoard:keyPressed:VK_X#5",
+        "InputIndependentMainBoard:keyPressed:VK_X#6",
+        "InputIndependentMainBoard:keyPressed:VK_X#7",
+        "InputIndependentMainBoard:keyPressed:VK_X#8",
+        "InputIndependentMainBoard:keyPressed:VK_X#9",
+        "InputIndependentMainBoard:keyPressed:VK_X#10",
+        "InputIndependentMainBoard:keyPressed:VK_X#11",
+        "InputIndependentMainBoard:keyReleased:VK_X#1"
       ],
       "java_evidence": [
         { "path": "src/main/java/featurecat/lizzie/gui/Input.java", "symbol": "drawControls" },
@@ -1190,7 +1483,21 @@
         "keyPressed:VK_6",
         "keyPressed:VK_7",
         "keyPressed:VK_8",
-        "keyPressed:VK_9"
+        "keyPressed:VK_9",
+        "InputIndependentMainBoard:keyPressed:VK_Z",
+        "InputIndependentMainBoard:keyPressed:VK_Q",
+        "InputIndependentMainBoard:keyPressed:VK_A",
+        "InputIndependentMainBoard:keyPressed:VK_OPEN_BRACKET",
+        "InputIndependentMainBoard:keyPressed:VK_CLOSE_BRACKET",
+        "InputIndependentMainBoard:keyPressed:VK_1",
+        "InputIndependentMainBoard:keyPressed:VK_2",
+        "InputIndependentMainBoard:keyPressed:VK_3",
+        "InputIndependentMainBoard:keyPressed:VK_4",
+        "InputIndependentMainBoard:keyPressed:VK_5",
+        "InputIndependentMainBoard:keyPressed:VK_6",
+        "InputIndependentMainBoard:keyPressed:VK_7",
+        "InputIndependentMainBoard:keyPressed:VK_8",
+        "InputIndependentMainBoard:keyPressed:VK_9"
       ],
       "legacy_input_bindings": [
         "keyPressed:VK_Z#1",
@@ -1209,23 +1516,41 @@
         "keyPressed:VK_6#1",
         "keyPressed:VK_7#1",
         "keyPressed:VK_8#1",
-        "keyPressed:VK_9#2"
+        "keyPressed:VK_9#2",
+        "InputIndependentMainBoard:keyPressed:VK_Z#1",
+        "InputIndependentMainBoard:keyPressed:VK_Q#2",
+        "InputIndependentMainBoard:keyPressed:VK_A#2",
+        "InputIndependentMainBoard:keyPressed:VK_A#3",
+        "InputIndependentMainBoard:keyPressed:VK_OPEN_BRACKET#1",
+        "InputIndependentMainBoard:keyPressed:VK_OPEN_BRACKET#2",
+        "InputIndependentMainBoard:keyPressed:VK_CLOSE_BRACKET#1",
+        "InputIndependentMainBoard:keyPressed:VK_CLOSE_BRACKET#2",
+        "InputIndependentMainBoard:keyPressed:VK_1#1",
+        "InputIndependentMainBoard:keyPressed:VK_2#1",
+        "InputIndependentMainBoard:keyPressed:VK_3#1",
+        "InputIndependentMainBoard:keyPressed:VK_4#1",
+        "InputIndependentMainBoard:keyPressed:VK_5#1",
+        "InputIndependentMainBoard:keyPressed:VK_6#1",
+        "InputIndependentMainBoard:keyPressed:VK_7#1",
+        "InputIndependentMainBoard:keyPressed:VK_8#1",
+        "InputIndependentMainBoard:keyPressed:VK_9#2"
       ],
       "java_evidence": [
         { "path": "src/main/java/featurecat/lizzie/gui/Input.java", "symbol": "defaultMode" },
-        { "path": "src/main/java/featurecat/lizzie/gui/Input.java", "symbol": "BoardPositionProportion" }
+        { "path": "src/main/java/featurecat/lizzie/gui/Input.java", "symbol": "BoardPositionProportion" },
+        { "path": "src/main/java/featurecat/lizzie/gui/InputIndependentMainBoard.java", "symbol": "switchToCustomMode(1)" }
       ],
       "config_keys": [],
       "inputs_preconditions": "主窗口已布局；独立副棋盘只在未同步外部棋盘时可切换。",
-      "success_behavior": "按分支切换置顶、独立棋盘、预设/自定义布局或在 0–8 边界内调整棋盘占比。",
-      "failure_cancel_behavior": "占比到边界或同步棋盘禁止切换时保持无动作；布局切换失败不得丢失可见面板或窗口位置。",
+      "success_behavior": "按分支切换置顶、独立棋盘、预设/自定义布局或在 0–8 边界内调整棋盘占比；保留主窗口与独立主棋盘已确认的上下文差异。",
+      "failure_cancel_behavior": "占比到边界或同步棋盘禁止切换时保持无动作；布局切换失败不得丢失可见面板或窗口位置；未动态确认前不得静默合并两个窗口的 Alt+7 行为。",
       "data_io": "更新窗口布局、置顶和独立棋盘状态；具体持久化键仍待配置矩阵关联。",
       "external_dependencies": ["操作系统窗口管理"],
       "target_modules": ["Lizzie.Desktop"],
       "automated_evidence": [],
-      "manual_acceptance": "覆盖九种布局键、占比两端无动作、置顶、主/副独立窗口、同步禁用、重启和多 DPI。",
+      "manual_acceptance": "分别在主窗口和独立主棋盘覆盖 Alt+1–9，重点核对 Alt+7/8；再覆盖占比两端无动作、置顶、主/副独立窗口、同步禁用、重启和多 DPI。",
       "status": "已盘点",
-      "evidence": "17 条动作/边界无动作路径已生成；Control+Z 是严格 Control，而 Q/A 的 Primary 在 macOS 也接受 Meta，差异已保留。"
+      "evidence": "两个输入源均保留 Control 与 Primary 差异；主源 Alt+7 进入 independentBoardMode，独立源 Alt+7 fall-through 到 VK_8 并调用 switchToCustomMode(1)，该上下文差异已显式登记。"
     },
     {
       "id": "BOARD-TEMPORARY-001",
@@ -1234,8 +1559,18 @@
       "legacy_menu_keys": [],
       "legacy_menu_labels": [],
       "legacy_shortcuts": [],
-      "legacy_input_cases": ["keyPressed:VK_Z", "keyReleased:VK_Z"],
-      "legacy_input_bindings": ["keyPressed:VK_Z#3", "keyReleased:VK_Z#1"],
+      "legacy_input_cases": [
+        "keyPressed:VK_Z",
+        "keyReleased:VK_Z",
+        "InputIndependentMainBoard:keyPressed:VK_Z",
+        "InputIndependentMainBoard:keyReleased:VK_Z"
+      ],
+      "legacy_input_bindings": [
+        "keyPressed:VK_Z#3",
+        "keyReleased:VK_Z#1",
+        "InputIndependentMainBoard:keyPressed:VK_Z#3",
+        "InputIndependentMainBoard:keyReleased:VK_Z#1"
+      ],
       "java_evidence": [
         { "path": "src/main/java/featurecat/lizzie/gui/Input.java", "symbol": "startTemporaryBoard" },
         { "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "symbol": "public void stopTemporaryBoard()" }
@@ -1269,7 +1604,17 @@
         "keyPressed:VK_7",
         "keyPressed:VK_8",
         "keyPressed:VK_9",
-        "keyPressed:VK_0"
+        "keyPressed:VK_0",
+        "InputIndependentMainBoard:keyPressed:VK_1",
+        "InputIndependentMainBoard:keyPressed:VK_2",
+        "InputIndependentMainBoard:keyPressed:VK_3",
+        "InputIndependentMainBoard:keyPressed:VK_4",
+        "InputIndependentMainBoard:keyPressed:VK_5",
+        "InputIndependentMainBoard:keyPressed:VK_6",
+        "InputIndependentMainBoard:keyPressed:VK_7",
+        "InputIndependentMainBoard:keyPressed:VK_8",
+        "InputIndependentMainBoard:keyPressed:VK_9",
+        "InputIndependentMainBoard:keyPressed:VK_0"
       ],
       "legacy_input_bindings": [
         "keyPressed:VK_1#2",
@@ -1282,7 +1627,18 @@
         "keyPressed:VK_8#2",
         "keyPressed:VK_9#1",
         "keyPressed:VK_0#1",
-        "keyPressed:VK_0#2"
+        "keyPressed:VK_0#2",
+        "InputIndependentMainBoard:keyPressed:VK_1#2",
+        "InputIndependentMainBoard:keyPressed:VK_2#2",
+        "InputIndependentMainBoard:keyPressed:VK_3#2",
+        "InputIndependentMainBoard:keyPressed:VK_4#2",
+        "InputIndependentMainBoard:keyPressed:VK_5#2",
+        "InputIndependentMainBoard:keyPressed:VK_6#2",
+        "InputIndependentMainBoard:keyPressed:VK_7#2",
+        "InputIndependentMainBoard:keyPressed:VK_8#2",
+        "InputIndependentMainBoard:keyPressed:VK_9#1",
+        "InputIndependentMainBoard:keyPressed:VK_0#1",
+        "InputIndependentMainBoard:keyPressed:VK_0#2"
       ],
       "java_evidence": [
         { "path": "src/main/java/featurecat/lizzie/gui/Input.java", "symbol": "switchEngine(e.getKeyCode() - VK_1, true)" },
@@ -1307,8 +1663,14 @@
       "legacy_menu_keys": [],
       "legacy_menu_labels": [],
       "legacy_shortcuts": [],
-      "legacy_input_cases": ["keyPressed:VK_Q"],
-      "legacy_input_bindings": ["keyPressed:VK_Q#3"],
+      "legacy_input_cases": [
+        "keyPressed:VK_Q",
+        "InputIndependentMainBoard:keyPressed:VK_Q"
+      ],
+      "legacy_input_bindings": [
+        "keyPressed:VK_Q#3",
+        "InputIndependentMainBoard:keyPressed:VK_Q#3"
+      ],
       "java_evidence": [
         { "path": "src/main/java/featurecat/lizzie/gui/Input.java", "symbol": "openOnlineDialog" },
         { "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "symbol": "public void openOnlineDialog()" }
@@ -1332,8 +1694,18 @@
       "legacy_menu_keys": [],
       "legacy_menu_labels": [],
       "legacy_shortcuts": [],
-      "legacy_input_cases": ["keyPressed:VK_A"],
-      "legacy_input_bindings": ["keyPressed:VK_A#1", "keyPressed:VK_A#5", "keyPressed:VK_A#6"],
+      "legacy_input_cases": [
+        "keyPressed:VK_A",
+        "InputIndependentMainBoard:keyPressed:VK_A"
+      ],
+      "legacy_input_bindings": [
+        "keyPressed:VK_A#1",
+        "keyPressed:VK_A#5",
+        "keyPressed:VK_A#6",
+        "InputIndependentMainBoard:keyPressed:VK_A#1",
+        "InputIndependentMainBoard:keyPressed:VK_A#5",
+        "InputIndependentMainBoard:keyPressed:VK_A#6"
+      ],
       "java_evidence": [
         { "path": "src/main/java/featurecat/lizzie/gui/Input.java", "symbol": "AutoPlay autoPlay" },
         { "path": "src/main/java/featurecat/lizzie/gui/StartAnaDialog.java", "symbol": "class StartAnaDialog" }
