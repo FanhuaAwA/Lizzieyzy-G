@@ -1,5 +1,5 @@
 {
-  "schema_version": 24,
+  "schema_version": 25,
   "source": {
     "root": "../lizzieyzy-next-main",
     "version": "yzy2.5.3",
@@ -18,7 +18,7 @@
     "Menu literal labels cover active string-literal menu constructors; dynamic labels remain represented by their resource or runtime source.",
     "Menu accelerators cover explicit Menu.java setAccelerator calls and direct OS.isWindows guards; other input bindings remain T-003 work.",
     "Input key bindings symbolically expand Input.java, InputIndependentMainBoard.java, InputIndependentSubboard.java, InputSubboard.java, FloatBoard.java, AnalysisFrame table/window, DrawPainting.java, ChooseMoreEngine.java, LoadEngine.java, OtherPrograms.java, TencentKifuDownload.java, FoxKifuDownload.java, BrowserFrame.java, and CaptureTsumeGoFrame.java key dispatch, condition evaluations, executed statements, empty-listener and empty-statement paths, and switch fall-through; controlIsPressed means Control on every platform plus Meta on macOS, and BrowserFrame dispatches Enter through getKeyChar.",
-    "Pointer bindings symbolically expand the two indexed subboard listeners plus FloatBoard, AnalysisFrame, DrawPainting, ChooseMoreEngine, LoadEngine, OtherPrograms, TencentKifuDownload, FoxKifuDownload, BrowserFrame load/stop/label listeners, JFontTextArea, JFontTextField, JIMSendTextPane, the two DemoScrollBarUI2 arrow-button listeners, JPaintTextPane, WindowMenuStrip, YikeLiveDialog, and IndependentSubBoard lock/close/top-button plus window listeners across mouse, motion, drag, wheel, and release condition evaluations, early returns, executed statements, and explicit no-action paths; data-dependent loops and click try/catch handlers are preserved as normalized atomic statements.",
+    "Pointer bindings symbolically expand the two indexed subboard listeners plus FloatBoard, AnalysisFrame, DrawPainting, ChooseMoreEngine, LoadEngine, OtherPrograms, TencentKifuDownload, FoxKifuDownload, BrowserFrame load/stop/label listeners, JFontTextArea, JFontTextField, JIMSendTextPane, the two DemoScrollBarUI2 arrow-button listeners, JPaintTextPane, WindowMenuStrip, YikeLiveDialog, IndependentSubBoard lock/close/top-button plus window listeners, and BlunderListPanel across mouse, motion, drag, wheel, and release condition evaluations, early returns, executed statements, and explicit no-action paths; data-dependent loops and click try/catch handlers are preserved as normalized atomic statements.",
     "Other key-listener and pointer-listener classes remain T-003 work."
   ],
   "matrix_summary": {
@@ -32,11 +32,11 @@
       "用户批准不迁移": 0
     },
     "active_config_leaf_keys": 596,
-    "mapped_config_leaf_keys": 90,
-    "unmapped_config_leaf_keys": 506,
+    "mapped_config_leaf_keys": 101,
+    "unmapped_config_leaf_keys": 495,
     "active_menu_resource_keys": 383,
-    "mapped_menu_resource_keys": 59,
-    "unmapped_menu_resource_keys": 324,
+    "mapped_menu_resource_keys": 61,
+    "unmapped_menu_resource_keys": 322,
     "active_menu_literal_labels": 12,
     "mapped_menu_literal_labels": 12,
     "unmapped_menu_literal_labels": 0,
@@ -49,11 +49,11 @@
     "active_input_key_bindings": 365,
     "mapped_input_key_bindings": 365,
     "unmapped_input_key_bindings": 0,
-    "active_input_pointer_events": 76,
-    "mapped_input_pointer_events": 76,
+    "active_input_pointer_events": 79,
+    "mapped_input_pointer_events": 79,
     "unmapped_input_pointer_events": 0,
-    "active_input_pointer_bindings": 150,
-    "mapped_input_pointer_bindings": 150,
+    "active_input_pointer_bindings": 154,
+    "mapped_input_pointer_bindings": 154,
     "unmapped_input_pointer_bindings": 0
   },
   "config": {
@@ -2400,7 +2400,9 @@
       {
         "key": "blunder-playouts-threshold",
         "reference_count": 2,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "UI-BLUNDER-SCROLLBAR-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -4496,7 +4498,9 @@
       {
         "key": "extra-mode",
         "reference_count": 4,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "UI-BLUNDER-SCROLLBAR-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -5093,6 +5097,7 @@
         "key": "glass-accent-color",
         "reference_count": 1,
         "matrix_ids": [
+          "UI-BLUNDER-SCROLLBAR-001",
           "UI-TEXT-EDIT-001"
         ],
         "references": [
@@ -5121,6 +5126,7 @@
         "key": "glass-corner-radius",
         "reference_count": 1,
         "matrix_ids": [
+          "UI-BLUNDER-SCROLLBAR-001",
           "UI-TEXT-EDIT-001",
           "UI-WINDOW-MENU-STRIP-001"
         ],
@@ -5165,7 +5171,9 @@
       {
         "key": "glass-panel-highlight-color",
         "reference_count": 1,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "UI-BLUNDER-SCROLLBAR-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -5716,6 +5724,7 @@
         "key": "is-apple-style",
         "reference_count": 4,
         "matrix_ids": [
+          "UI-BLUNDER-SCROLLBAR-001",
           "UI-TEXT-EDIT-001",
           "UI-WINDOW-MENU-STRIP-001"
         ],
@@ -8257,7 +8266,9 @@
       {
         "key": "problem-list-metric",
         "reference_count": 3,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "UI-BLUNDER-SCROLLBAR-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -8282,7 +8293,9 @@
       {
         "key": "problem-list-side-filter",
         "reference_count": 3,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "UI-BLUNDER-SCROLLBAR-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -8307,7 +8320,9 @@
       {
         "key": "problem-list-winrate-threshold",
         "reference_count": 2,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "UI-BLUNDER-SCROLLBAR-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -13078,6 +13093,7 @@
         "key": "ui-font-name",
         "reference_count": 8,
         "matrix_ids": [
+          "UI-BLUNDER-SCROLLBAR-001",
           "UI-TEXT-EDIT-001"
         ],
         "references": [
@@ -13857,7 +13873,9 @@
       {
         "key": "win-loss-threshold-1",
         "reference_count": 2,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "UI-BLUNDER-SCROLLBAR-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -13876,7 +13894,9 @@
       {
         "key": "win-loss-threshold-2",
         "reference_count": 2,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "UI-BLUNDER-SCROLLBAR-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -13895,7 +13915,9 @@
       {
         "key": "win-loss-threshold-3",
         "reference_count": 2,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "UI-BLUNDER-SCROLLBAR-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -13914,7 +13936,9 @@
       {
         "key": "win-loss-threshold-4",
         "reference_count": 2,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "UI-BLUNDER-SCROLLBAR-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -13933,7 +13957,9 @@
       {
         "key": "win-loss-threshold-5",
         "reference_count": 2,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "UI-BLUNDER-SCROLLBAR-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -14913,14 +14939,18 @@
       },
       {
         "key": "Menu.commitPane",
-        "matrix_ids": [],
+        "matrix_ids": [
+          "UI-BLUNDER-SCROLLBAR-001"
+        ],
         "lines": [
           1112
         ]
       },
       {
         "key": "Menu.commitPane.tooltip",
-        "matrix_ids": [],
+        "matrix_ids": [
+          "UI-BLUNDER-SCROLLBAR-001"
+        ],
         "lines": [
           1113
         ]
@@ -30738,10 +30768,16 @@
         "source": "src/main/java/featurecat/lizzie/gui/IndependentSubBoard.java",
         "active_pointer_events": 3,
         "active_pointer_bindings": 20
+      },
+      {
+        "id": "BlunderListPanel",
+        "source": "src/main/java/featurecat/lizzie/gui/BlunderListPanel.java",
+        "active_pointer_events": 3,
+        "active_pointer_bindings": 4
       }
     ],
-    "active_pointer_events": 76,
-    "active_pointer_bindings": 150,
+    "active_pointer_events": 79,
+    "active_pointer_bindings": 154,
     "pointer_events": [
       {
         "event_id": "InputIndependentSubboard:mouseClicked",
@@ -31501,6 +31537,36 @@
         "binding_count": 6,
         "matrix_ids": [
           "UI-LAYOUT-001"
+        ]
+      },
+      {
+        "event_id": "BlunderListPanel:mouseMoved",
+        "source_id": "BlunderListPanel",
+        "event": "mouseMoved",
+        "line": 39,
+        "binding_count": 1,
+        "matrix_ids": [
+          "UI-BLUNDER-SCROLLBAR-001"
+        ]
+      },
+      {
+        "event_id": "BlunderListPanel:mouseExited",
+        "source_id": "BlunderListPanel",
+        "event": "mouseExited",
+        "line": 44,
+        "binding_count": 1,
+        "matrix_ids": [
+          "UI-BLUNDER-SCROLLBAR-001"
+        ]
+      },
+      {
+        "event_id": "BlunderListPanel:mouseClicked",
+        "source_id": "BlunderListPanel",
+        "event": "mouseClicked",
+        "line": 50,
+        "binding_count": 2,
+        "matrix_ids": [
+          "UI-BLUNDER-SCROLLBAR-001"
         ]
       }
     ],
@@ -36129,6 +36195,92 @@
         ],
         "matrix_ids": [
           "UI-LAYOUT-001"
+        ]
+      },
+      {
+        "binding": "BlunderListPanel:mouseMoved#1",
+        "event_id": "BlunderListPanel:mouseMoved",
+        "source_id": "BlunderListPanel",
+        "event": "mouseMoved",
+        "line": 39,
+        "conditions": [],
+        "statements": [
+          {
+            "line": 40,
+            "statement": "updateHover(e.getX(), e.getY());"
+          }
+        ],
+        "matrix_ids": [
+          "UI-BLUNDER-SCROLLBAR-001"
+        ]
+      },
+      {
+        "binding": "BlunderListPanel:mouseExited#1",
+        "event_id": "BlunderListPanel:mouseExited",
+        "source_id": "BlunderListPanel",
+        "event": "mouseExited",
+        "line": 44,
+        "conditions": [],
+        "statements": [
+          {
+            "line": 45,
+            "statement": "hoveredIndex = -1;"
+          },
+          {
+            "line": 46,
+            "statement": "repaint();"
+          }
+        ],
+        "matrix_ids": [
+          "UI-BLUNDER-SCROLLBAR-001"
+        ]
+      },
+      {
+        "binding": "BlunderListPanel:mouseClicked#1",
+        "event_id": "BlunderListPanel:mouseClicked",
+        "source_id": "BlunderListPanel",
+        "event": "mouseClicked",
+        "line": 50,
+        "conditions": [
+          {
+            "expression": "clicked != null",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 51,
+            "statement": "ProblemMoveEntry clicked = getEntryAt(e.getX(), e.getY());"
+          },
+          {
+            "line": 53,
+            "statement": "Lizzie.frame.jumpToProblemMove(clicked);"
+          }
+        ],
+        "matrix_ids": [
+          "UI-BLUNDER-SCROLLBAR-001"
+        ]
+      },
+      {
+        "binding": "BlunderListPanel:mouseClicked#2",
+        "event_id": "BlunderListPanel:mouseClicked",
+        "source_id": "BlunderListPanel",
+        "event": "mouseClicked",
+        "line": 50,
+        "conditions": [
+          {
+            "expression": "clicked != null",
+            "expected": false
+          }
+        ],
+        "statements": [
+          {
+            "line": 51,
+            "statement": "ProblemMoveEntry clicked = getEntryAt(e.getX(), e.getY());"
+          }
+        ],
+        "matrix_ids": [
+          "UI-BLUNDER-SCROLLBAR-001"
         ]
       }
     ]
