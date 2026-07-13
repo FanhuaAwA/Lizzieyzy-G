@@ -1,5 +1,5 @@
 {
-  "schema_version": 11,
+  "schema_version": 12,
   "allowed_statuses": [
     "未盘点",
     "已盘点",
@@ -2051,6 +2051,59 @@
       "manual_acceptance": "覆盖两个对话框确认/取消、任务开始/停止、引擎失败、进度和工具栏恢复。",
       "status": "已盘点",
       "evidence": "Primary+A 与无修饰 A 的确认/取消条件路径已展开；任务生命周期和进度语义待纵切验证。"
+    },
+    {
+      "id": "EXTERNAL-PROGRAMS-001",
+      "category": "外部程序",
+      "legacy_entry": "快捷链接菜单 Menu.quickLinks 展示已配置命令并由 Menu.editProgram 打开 OtherPrograms；设置对话框保存 show-quick-links 后刷新菜单",
+      "legacy_menu_keys": [
+        "Menu.quickLinks",
+        "Menu.editProgram"
+      ],
+      "legacy_menu_labels": [],
+      "legacy_shortcuts": [],
+      "legacy_input_cases": [
+        "OtherPrograms:mouseClicked",
+        "OtherPrograms:mouseReleased"
+      ],
+      "legacy_input_bindings": [
+        "OtherPrograms:mouseClicked#1",
+        "OtherPrograms:mouseReleased#1"
+      ],
+      "java_evidence": [
+        { "path": "src/main/java/featurecat/lizzie/gui/OtherPrograms.java", "symbol": "public class OtherPrograms extends JPanel" },
+        { "path": "src/main/java/featurecat/lizzie/gui/OtherPrograms.java", "symbol": "private void handleTableClick(int row, int col)" },
+        { "path": "src/main/java/featurecat/lizzie/gui/OtherPrograms.java", "symbol": "private void saveEngineConfig()" },
+        { "path": "src/main/java/featurecat/lizzie/gui/Menu.java", "symbol": "public void updateFastLinks()" },
+        { "path": "src/main/java/featurecat/lizzie/gui/ConfigDialog2.java", "symbol": "LizzieFrame.menu.updateFastLinks();" },
+        { "path": "src/main/java/featurecat/lizzie/analysis/FastLink.java", "symbol": "public void startProgram(String command)" },
+        { "path": "src/main/java/featurecat/lizzie/util/CommandLaunchHelper.java", "symbol": "public static LaunchSpec prepare(List<String> commandParts)" }
+      ],
+      "config_keys": [
+        "program-command-list",
+        "program-name-list",
+        "show-quick-links"
+      ],
+      "inputs_preconditions": "主菜单已创建；show-quick-links 为真时快捷链接菜单可见并含编辑入口，用户可选择固定 30 行表格中的一行，或从文件选择器取得本地命令路径。",
+      "success_behavior": "有效行点击（不区分按键和点击次数）选中该行并启用名称/命令编辑；保存、删除、移到首位、上移或下移后重建快捷链接。菜单命令仅在用户显式点击时按引号感知的参数拆分启动本地进程；目标版使用无 shell 拼接的参数列表、校验可执行文件并明确进程生命周期。设置对话框切换 show-quick-links 时立即保存并刷新可见性。",
+      "failure_cancel_behavior": "取消编辑、退出按钮和窗口关闭只隐藏或复位编辑状态，不启动程序；空键监听和空表头释放无动作。旧版点击表格有效行以外会以 -1 访问模型并在 EDT 抛异常，隐藏快捷链接时也隐藏唯一编辑入口，非 Windows 扫描会隐藏整个面板，启动失败消息创建后不显示；目标版必须保留窗口可用、提供独立可达的管理入口、显示可操作错误且不得静默执行已变更命令。",
+      "data_io": "program-command-list 与 program-name-list 是可不同长度的并行 JSON 数组；读取按命令数组长度迭代、忽略空命令并把缺失名称视为空。表格固定显示 30 行，超过 30 个配置项仍可出现在菜单但不可在该表格访问；选择远端空白行反复保存可在压缩列表末尾追加重复项，删除可暂留空槽。OtherPrograms 的编辑只更新内存配置并刷新菜单，磁盘保存依赖后续正常全局退出；ConfigDialog2 保存显示开关时直接调用 Config.save。目标版迁移需保留未知/超额数据、原子保存并避免并行数组错位。",
+      "external_dependencies": [
+        "用户选择的本地可执行文件、JAR 或脚本",
+        "操作系统文件选择器、文件系统与进程管理"
+      ],
+      "target_modules": [
+        "Lizzie.Core",
+        "Lizzie.Desktop"
+      ],
+      "automated_evidence": [
+        { "path": "src/test/java/featurecat/lizzie/util/CommandLaunchHelperTest.java", "symbol": "prepareInfersSharedExternalWorkingDirectory" },
+        { "path": "src/test/java/featurecat/lizzie/util/CommandLaunchHelperTest.java", "symbol": "configureProcessBuilderAppliesLaunchSpecWorkingDirectory" },
+        { "path": "src/test/java/featurecat/lizzie/util/CommandLaunchHelperTest.java", "symbol": "configureProcessBuilderOnNonWindowsPreservesPathAndAppliesWorkingDirectory" }
+      ],
+      "manual_acceptance": "以空配置、短名称数组、空命令槽、30/31 个条目和无效命令覆盖打开与迁移；检查有效行、空白行、表格外、表头的左/中/右键单击与双击，保存/重复保存/删除/取消/重排/隐藏/关闭/重启；在 Windows、macOS、Linux 覆盖文件选择取消与有效/无效路径，并用受控假程序验证参数边界、工作目录、失败提示、重复启动和进程退出清理。",
+      "status": "已盘点",
+      "evidence": "OtherPrograms 的空 keyPressed、无条件 mouseClicked 和空 mouseReleased 已归一为 2 个事件/2 条路径；菜单可见性、固定表格、并行数组压缩/持久化边界、文件选择和 FastLink 下游仅完成静态盘点，未执行任何用户配置命令或真实外部进程。"
     }
   ]
 }

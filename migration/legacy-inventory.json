@@ -1,5 +1,5 @@
 {
-  "schema_version": 11,
+  "schema_version": 12,
   "source": {
     "root": "../lizzieyzy-next-main",
     "version": "yzy2.5.3",
@@ -17,26 +17,26 @@
     "Menu keys cover active Menu.java resource lookups with Menu. or menu. prefixes.",
     "Menu literal labels cover active string-literal menu constructors; dynamic labels remain represented by their resource or runtime source.",
     "Menu accelerators cover explicit Menu.java setAccelerator calls and direct OS.isWindows guards; other input bindings remain T-003 work.",
-    "Input key bindings symbolically expand Input.java, InputIndependentMainBoard.java, InputIndependentSubboard.java, InputSubboard.java, FloatBoard.java, AnalysisFrame table/window, DrawPainting.java, ChooseMoreEngine.java, and LoadEngine.java key dispatch, condition evaluations, executed statements, empty-listener and empty-statement paths, and switch fall-through; controlIsPressed means Control on every platform plus Meta on macOS.",
-    "Pointer bindings symbolically expand the two indexed subboard listeners plus FloatBoard, AnalysisFrame, DrawPainting, ChooseMoreEngine, and LoadEngine mouse, motion, drag, wheel, and release condition evaluations, early returns, executed statements, and explicit no-action paths; data-dependent loops and click try/catch handlers are preserved as normalized atomic statements.",
+    "Input key bindings symbolically expand Input.java, InputIndependentMainBoard.java, InputIndependentSubboard.java, InputSubboard.java, FloatBoard.java, AnalysisFrame table/window, DrawPainting.java, ChooseMoreEngine.java, LoadEngine.java, and OtherPrograms.java key dispatch, condition evaluations, executed statements, empty-listener and empty-statement paths, and switch fall-through; controlIsPressed means Control on every platform plus Meta on macOS.",
+    "Pointer bindings symbolically expand the two indexed subboard listeners plus FloatBoard, AnalysisFrame, DrawPainting, ChooseMoreEngine, LoadEngine, and OtherPrograms mouse, motion, drag, wheel, and release condition evaluations, early returns, executed statements, and explicit no-action paths; data-dependent loops and click try/catch handlers are preserved as normalized atomic statements.",
     "Other key-listener and pointer-listener classes remain T-003 work."
   ],
   "matrix_summary": {
-    "rows": 45,
+    "rows": 46,
     "statuses": {
       "未盘点": 0,
-      "已盘点": 45,
+      "已盘点": 46,
       "实施中": 0,
       "已实现待验证": 0,
       "已验证": 0,
       "用户批准不迁移": 0
     },
     "active_config_leaf_keys": 596,
-    "mapped_config_leaf_keys": 43,
-    "unmapped_config_leaf_keys": 553,
+    "mapped_config_leaf_keys": 46,
+    "unmapped_config_leaf_keys": 550,
     "active_menu_resource_keys": 383,
-    "mapped_menu_resource_keys": 49,
-    "unmapped_menu_resource_keys": 334,
+    "mapped_menu_resource_keys": 51,
+    "unmapped_menu_resource_keys": 332,
     "active_menu_literal_labels": 12,
     "mapped_menu_literal_labels": 12,
     "unmapped_menu_literal_labels": 0,
@@ -49,11 +49,11 @@
     "active_input_key_bindings": 360,
     "mapped_input_key_bindings": 360,
     "unmapped_input_key_bindings": 0,
-    "active_input_pointer_events": 29,
-    "mapped_input_pointer_events": 29,
+    "active_input_pointer_events": 31,
+    "mapped_input_pointer_events": 31,
     "unmapped_input_pointer_events": 0,
-    "active_input_pointer_bindings": 72,
-    "mapped_input_pointer_bindings": 72,
+    "active_input_pointer_bindings": 74,
+    "mapped_input_pointer_bindings": 74,
     "unmapped_input_pointer_bindings": 0
   },
   "config": {
@@ -8249,7 +8249,9 @@
       {
         "key": "program-command-list",
         "reference_count": 6,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "EXTERNAL-PROGRAMS-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/gui/Menu.java",
@@ -8292,7 +8294,9 @@
       {
         "key": "program-name-list",
         "reference_count": 6,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "EXTERNAL-PROGRAMS-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/gui/Menu.java",
@@ -11223,7 +11227,9 @@
       {
         "key": "show-quick-links",
         "reference_count": 2,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "EXTERNAL-PROGRAMS-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -14988,7 +14994,9 @@
       },
       {
         "key": "Menu.editProgram",
-        "matrix_ids": [],
+        "matrix_ids": [
+          "EXTERNAL-PROGRAMS-001"
+        ],
         "lines": [
           10181
         ]
@@ -16027,7 +16035,9 @@
       },
       {
         "key": "Menu.quickLinks",
-        "matrix_ids": [],
+        "matrix_ids": [
+          "EXTERNAL-PROGRAMS-001"
+        ],
         "lines": [
           5123
         ]
@@ -17298,6 +17308,18 @@
       {
         "id": "LoadEngine",
         "source": "src/main/java/featurecat/lizzie/gui/LoadEngine.java",
+        "active_key_cases": 0,
+        "active_key_bindings": 0,
+        "events": {
+          "keyPressed": 0
+        },
+        "post_dispatch_actions": {
+          "keyPressed": []
+        }
+      },
+      {
+        "id": "OtherPrograms",
+        "source": "src/main/java/featurecat/lizzie/gui/OtherPrograms.java",
         "active_key_cases": 0,
         "active_key_bindings": 0,
         "events": {
@@ -30274,10 +30296,16 @@
         "source": "src/main/java/featurecat/lizzie/gui/LoadEngine.java",
         "active_pointer_events": 2,
         "active_pointer_bindings": 4
+      },
+      {
+        "id": "OtherPrograms",
+        "source": "src/main/java/featurecat/lizzie/gui/OtherPrograms.java",
+        "active_pointer_events": 2,
+        "active_pointer_bindings": 2
       }
     ],
-    "active_pointer_events": 29,
-    "active_pointer_bindings": 72,
+    "active_pointer_events": 31,
+    "active_pointer_bindings": 74,
     "pointer_events": [
       {
         "event_id": "InputIndependentSubboard:mouseClicked",
@@ -30567,6 +30595,26 @@
         "binding_count": 1,
         "matrix_ids": [
           "ENGINE-LIFECYCLE-001"
+        ]
+      },
+      {
+        "event_id": "OtherPrograms:mouseClicked",
+        "source_id": "OtherPrograms",
+        "event": "mouseClicked",
+        "line": 296,
+        "binding_count": 1,
+        "matrix_ids": [
+          "EXTERNAL-PROGRAMS-001"
+        ]
+      },
+      {
+        "event_id": "OtherPrograms:mouseReleased",
+        "source_id": "OtherPrograms",
+        "event": "mouseReleased",
+        "line": 327,
+        "binding_count": 1,
+        "matrix_ids": [
+          "EXTERNAL-PROGRAMS-001"
         ]
       }
     ],
@@ -33122,6 +33170,43 @@
         "statements": [],
         "matrix_ids": [
           "ENGINE-LIFECYCLE-001"
+        ]
+      },
+      {
+        "binding": "OtherPrograms:mouseClicked#1",
+        "event_id": "OtherPrograms:mouseClicked",
+        "source_id": "OtherPrograms",
+        "event": "mouseClicked",
+        "line": 296,
+        "conditions": [],
+        "statements": [
+          {
+            "line": 297,
+            "statement": "int row = table.rowAtPoint(e.getPoint());"
+          },
+          {
+            "line": 298,
+            "statement": "int col = table.columnAtPoint(e.getPoint());"
+          },
+          {
+            "line": 300,
+            "statement": "handleTableClick(row, col);"
+          }
+        ],
+        "matrix_ids": [
+          "EXTERNAL-PROGRAMS-001"
+        ]
+      },
+      {
+        "binding": "OtherPrograms:mouseReleased#1",
+        "event_id": "OtherPrograms:mouseReleased",
+        "source_id": "OtherPrograms",
+        "event": "mouseReleased",
+        "line": 327,
+        "conditions": [],
+        "statements": [],
+        "matrix_ids": [
+          "EXTERNAL-PROGRAMS-001"
         ]
       }
     ]
