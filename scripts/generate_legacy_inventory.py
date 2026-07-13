@@ -63,7 +63,9 @@ INPUT_KEY_METHOD = re.compile(
     r"public\s+void\s+(?P<event>keyPressed|keyReleased)\s*"
     r"\(\s*KeyEvent\s+e\s*\)\s*\{"
 )
+INPUT_KEY_SWITCH = re.compile(r"switch\s*\(\s*e\.getKeyCode\s*\(\s*\)\s*\)\s*\{")
 INPUT_KEY_CASE = re.compile(r"\bcase\s+(?P<key>VK_[A-Z0-9_]+)\s*:")
+INPUT_DEFAULT_CASE = re.compile(r"\bdefault\s*:")
 INPUT_MODIFIER_CHECKS = (
     ("Alt", re.compile(r"\be\.isAltDown\s*\(\s*\)")),
     ("Control", re.compile(r"\be\.isControlDown\s*\(\s*\)")),
@@ -97,6 +99,7 @@ REQUIRED_ROW_FIELDS = {
     "legacy_menu_labels",
     "legacy_shortcuts",
     "legacy_input_cases",
+    "legacy_input_bindings",
     "java_evidence",
     "config_keys",
     "inputs_preconditions",
@@ -194,9 +197,13 @@ def line_number(source: str, offset: int) -> int:
 
 
 def closing_brace(source: str, open_brace: int) -> int:
+    return closing_delimiter(source, open_brace, "{", "}")
+
+
+def closing_delimiter(source: str, open_index: int, opening: str, closing: str) -> int:
     depth = 0
     state = "code"
-    index = open_brace
+    index = open_index
     while index < len(source):
         char = source[index]
         following = source[index + 1] if index + 1 < len(source) else ""
@@ -205,9 +212,9 @@ def closing_brace(source: str, open_brace: int) -> int:
                 state = "string"
             elif char == "'":
                 state = "char"
-            elif char == "{":
+            elif char == opening:
                 depth += 1
-            elif char == "}":
+            elif char == closing:
                 depth -= 1
                 if depth == 0:
                     return index
@@ -218,7 +225,173 @@ def closing_brace(source: str, open_brace: int) -> int:
         elif state == "char" and char == "'":
             state = "code"
         index += 1
-    raise ValueError("Unbalanced Java braces while collecting input cases")
+    raise ValueError(f"Unbalanced Java {opening}{closing} while collecting input bindings")
+
+
+def normalize_java(fragment: str) -> str:
+    return re.sub(r"\s+", " ", fragment).strip()
+
+
+def skip_space(source: str, index: int, end: int) -> int:
+    while index < end and source[index].isspace():
+        index += 1
+    return index
+
+
+def word_at(source: str, index: int, word: str) -> bool:
+    before = source[index - 1] if index else ""
+    after_index = index + len(word)
+    after = source[after_index] if after_index < len(source) else ""
+    return source.startswith(word, index) and not (
+        before and (before.isalnum() or before in "_$")
+    ) and not (
+        after and (after.isalnum() or after in "_$")
+    )
+
+
+def parse_java_body(source: str, index: int, end: int) -> tuple[list[dict[str, Any]], int]:
+    index = skip_space(source, index, end)
+    if index < end and source[index] == "{":
+        close = closing_brace(source, index)
+        if close >= end:
+            raise ValueError("Input.java branch block extends beyond its key case")
+        return parse_java_sequence(source, index + 1, close), close + 1
+    node, index = parse_java_statement(source, index, end)
+    return [node], index
+
+
+def parse_java_statement(source: str, index: int, end: int) -> tuple[dict[str, Any], int]:
+    index = skip_space(source, index, end)
+    if word_at(source, index, "if"):
+        condition_open = skip_space(source, index + 2, end)
+        if condition_open >= end or source[condition_open] != "(":
+            raise ValueError(f"Unsupported Input.java if statement at line {line_number(source, index)}")
+        condition_close = closing_delimiter(source, condition_open, "(", ")")
+        if condition_close >= end:
+            raise ValueError(
+                f"Input.java condition crosses its case boundary at line {line_number(source, index)}"
+            )
+        then_nodes, next_index = parse_java_body(source, condition_close + 1, end)
+        next_index = skip_space(source, next_index, end)
+        else_nodes: list[dict[str, Any]] = []
+        if next_index < end and word_at(source, next_index, "else"):
+            else_nodes, next_index = parse_java_body(source, next_index + 4, end)
+        return (
+            {
+                "kind": "if",
+                "condition": normalize_java(source[condition_open + 1 : condition_close]),
+                "then": then_nodes,
+                "else": else_nodes,
+            },
+            next_index,
+        )
+
+    state = "code"
+    parentheses = brackets = braces = 0
+    cursor = index
+    while cursor < end:
+        char = source[cursor]
+        following = source[cursor + 1] if cursor + 1 < end else ""
+        if state == "code":
+            if char == '"':
+                state = "string"
+            elif char == "'":
+                state = "char"
+            elif char == "(":
+                parentheses += 1
+            elif char == ")":
+                parentheses -= 1
+            elif char == "[":
+                brackets += 1
+            elif char == "]":
+                brackets -= 1
+            elif char == "{":
+                braces += 1
+            elif char == "}":
+                braces -= 1
+            elif char == ";" and parentheses == brackets == braces == 0:
+                statement = normalize_java(source[index : cursor + 1])
+                return (
+                    {
+                        "kind": "break" if statement == "break;" else "action",
+                        "statement": statement,
+                        "line": line_number(source, index),
+                    },
+                    cursor + 1,
+                )
+        elif char == "\\" and following:
+            cursor += 1
+        elif state == "string" and char == '"':
+            state = "code"
+        elif state == "char" and char == "'":
+            state = "code"
+        cursor += 1
+    raise ValueError(f"Unsupported Input.java statement at line {line_number(source, index)}")
+
+
+def parse_java_sequence(source: str, start: int, end: int) -> list[dict[str, Any]]:
+    nodes: list[dict[str, Any]] = []
+    index = skip_space(source, start, end)
+    while index < end:
+        node, index = parse_java_statement(source, index, end)
+        nodes.append(node)
+        index = skip_space(source, index, end)
+    return nodes
+
+
+def branch_path(path: dict[str, Any], expression: str, expected: bool) -> dict[str, Any] | None:
+    values = path["condition_values"]
+    if expression in values:
+        return path if values[expression] == expected else None
+    return {
+        **path,
+        "conditions": [*path["conditions"], {"expression": expression, "expected": expected}],
+        "condition_values": {**values, expression: expected},
+    }
+
+
+def execute_java_nodes(
+    nodes: list[dict[str, Any]], paths: list[dict[str, Any]]
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+    continuing = paths
+    broken: list[dict[str, Any]] = []
+    for node in nodes:
+        if node["kind"] == "action":
+            continuing = [
+                {**path, "actions": [*path["actions"], {"line": node["line"], "statement": node["statement"]}]}
+                for path in continuing
+            ]
+        elif node["kind"] == "break":
+            broken.extend(continuing)
+            continuing = []
+        else:
+            branches: list[dict[str, Any]] = []
+            for path in continuing:
+                for expected, branch_nodes in ((True, node["then"]), (False, node["else"])):
+                    candidate = branch_path(path, node["condition"], expected)
+                    if candidate is None:
+                        continue
+                    branch_continuing, branch_broken = execute_java_nodes(branch_nodes, [candidate])
+                    branches.extend(branch_continuing)
+                    broken.extend(branch_broken)
+            continuing = branches
+        if not continuing:
+            break
+    return continuing, broken
+
+
+def validate_input_parser() -> None:
+    first = "if (e.isAltDown()) { first(); break; }"
+    second = "if (e.isAltDown()) { unreachable(); break; } second(); break;"
+    initial = [{"conditions": [], "condition_values": {}, "actions": [], "case_chain": []}]
+    continuing, completed = execute_java_nodes(parse_java_sequence(first, 0, len(first)), initial)
+    continuing, second_completed = execute_java_nodes(
+        parse_java_sequence(second, 0, len(second)), continuing
+    )
+    completed.extend(second_completed)
+    statements = [[action["statement"] for action in path["actions"]] for path in completed]
+    if continuing or statements != [["first();"], ["second();"]]:
+        raise ValueError("Input binding parser fall-through self-check failed")
 
 
 def relative_path(path: Path, root: Path) -> str:
@@ -336,6 +509,8 @@ def collect_input_cases(legacy_root: Path) -> dict[str, Any]:
     input_path = legacy_root / "src/main/java/featurecat/lizzie/gui/Input.java"
     source = strip_java_comments(input_path.read_text(encoding="utf-8", errors="replace"))
     cases: list[dict[str, Any]] = []
+    bindings: list[dict[str, Any]] = []
+    post_dispatch_actions: dict[str, list[dict[str, Any]]] = {}
     seen_events: set[str] = set()
     for method_match in INPUT_KEY_METHOD.finditer(source):
         event = method_match.group("event")
@@ -344,21 +519,97 @@ def collect_input_cases(legacy_root: Path) -> dict[str, Any]:
         seen_events.add(event)
         open_brace = method_match.end() - 1
         method_end = closing_brace(source, open_brace)
-        case_matches = list(INPUT_KEY_CASE.finditer(source, open_brace + 1, method_end))
+        switch_match = INPUT_KEY_SWITCH.search(source, open_brace + 1, method_end)
+        if not switch_match:
+            raise ValueError(f"Input.java {event} has no supported key-code switch")
+        switch_open = switch_match.end() - 1
+        switch_end = closing_brace(source, switch_open)
+        case_matches = list(INPUT_KEY_CASE.finditer(source, switch_open + 1, switch_end))
+        default_match = INPUT_DEFAULT_CASE.search(source, switch_open + 1, switch_end)
+        segments: list[dict[str, Any]] = []
         for index, case_match in enumerate(case_matches):
-            segment_end = (
-                case_matches[index + 1].start() if index + 1 < len(case_matches) else method_end
-            )
-            segment = source[case_match.end() : segment_end]
-            cases.append(
+            candidates = [switch_end]
+            if index + 1 < len(case_matches):
+                candidates.append(case_matches[index + 1].start())
+            if default_match and default_match.start() > case_match.start():
+                candidates.append(default_match.start())
+            segment_end = min(candidates)
+            case_id = f'{event}:{case_match.group("key")}'
+            segments.append(
                 {
-                    "case": f'{event}:{case_match.group("key")}',
+                    "case": case_id,
                     "event": event,
                     "key": case_match.group("key"),
                     "line": line_number(source, case_match.start()),
+                    "nodes": parse_java_sequence(source, case_match.end(), segment_end),
+                }
+            )
+
+        event_bindings: list[dict[str, Any]] = []
+        for start_index, segment in enumerate(segments):
+            paths = [
+                {
+                    "conditions": [],
+                    "condition_values": {},
+                    "actions": [],
+                    "case_chain": [],
+                }
+            ]
+            completed: list[dict[str, Any]] = []
+            for current in segments[start_index:]:
+                paths = [
+                    {**path, "case_chain": [*path["case_chain"], current["case"]]} for path in paths
+                ]
+                paths, broken = execute_java_nodes(current["nodes"], paths)
+                completed.extend(broken)
+                if not paths:
+                    break
+            completed.extend(paths)
+            if not completed:
+                raise ValueError(f"Input.java {segment['case']} produced no binding paths")
+            for ordinal, path in enumerate(completed, start=1):
+                event_bindings.append(
+                    {
+                        "binding": f'{segment["case"]}#{ordinal}',
+                        "case": segment["case"],
+                        "event": event,
+                        "key": segment["key"],
+                        "line": segment["line"],
+                        "conditions": path["conditions"],
+                        "case_chain": path["case_chain"],
+                        "statements": path["actions"],
+                    }
+                )
+
+        post_nodes = parse_java_sequence(source, switch_end + 1, method_end)
+        post_paths, post_breaks = execute_java_nodes(
+            post_nodes,
+            [{"conditions": [], "condition_values": {}, "actions": [], "case_chain": []}],
+        )
+        if post_breaks or len(post_paths) != 1 or post_paths[0]["conditions"]:
+            raise ValueError(f"Input.java {event} has unsupported post-switch control flow")
+        post_dispatch_actions[event] = post_paths[0]["actions"]
+        bindings.extend(event_bindings)
+
+        by_case: dict[str, list[dict[str, Any]]] = defaultdict(list)
+        for binding in event_bindings:
+            by_case[binding["case"]].append(binding)
+        for segment in segments:
+            searchable = " ".join(
+                condition["expression"]
+                for binding in by_case[segment["case"]]
+                for condition in binding["conditions"]
+            )
+            cases.append(
+                {
+                    "case": segment["case"],
+                    "event": event,
+                    "key": segment["key"],
+                    "line": segment["line"],
                     "modifier_checks": [
-                        name for name, pattern in INPUT_MODIFIER_CHECKS if pattern.search(segment)
+                        name for name, pattern in INPUT_MODIFIER_CHECKS if pattern.search(searchable)
                     ],
+                    "binding_count": len(by_case[segment["case"]]),
                 }
             )
 
@@ -370,14 +621,20 @@ def collect_input_cases(legacy_root: Path) -> dict[str, Any]:
     case_ids = [entry["case"] for entry in cases]
     if len(case_ids) != len(set(case_ids)):
         raise ValueError("Input.java contains duplicate key cases in an indexed method")
+    binding_ids = [entry["binding"] for entry in bindings]
+    if len(binding_ids) != len(set(binding_ids)):
+        raise ValueError("Input.java produced duplicate normalized key bindings")
     return {
         "source": relative_path(input_path, legacy_root),
         "active_key_cases": len(cases),
+        "active_key_bindings": len(bindings),
         "events": {
             event: sum(entry["event"] == event for entry in cases)
             for event in sorted(expected_events)
         },
+        "post_dispatch_actions": post_dispatch_actions,
         "cases": cases,
+        "bindings": bindings,
     }
 
 
@@ -409,6 +666,7 @@ def validate_matrix(
     menu_labels: set[str],
     menu_shortcuts: set[str],
     input_cases: set[str],
+    input_bindings: dict[str, str],
     fingerprint: str,
 ) -> tuple[
     dict[str, list[str]],
@@ -416,9 +674,10 @@ def validate_matrix(
     dict[str, list[str]],
     dict[str, list[str]],
     dict[str, list[str]],
+    dict[str, list[str]],
 ]:
-    if matrix.get("schema_version") != 3:
-        raise ValueError("Matrix schema_version must be 3")
+    if matrix.get("schema_version") != 4:
+        raise ValueError("Matrix schema_version must be 4")
     allowed_statuses = matrix.get("allowed_statuses")
     if allowed_statuses != list(ALLOWED_STATUSES):
         raise ValueError("Matrix allowed_statuses differ from the repository contract")
@@ -433,6 +692,7 @@ def validate_matrix(
     matrix_ids_by_menu_label: dict[str, list[str]] = defaultdict(list)
     matrix_ids_by_shortcut: dict[str, list[str]] = defaultdict(list)
     matrix_ids_by_input_case: dict[str, list[str]] = defaultdict(list)
+    matrix_ids_by_input_binding: dict[str, list[str]] = defaultdict(list)
     seen_ids: set[str] = set()
     rows = matrix.get("rows")
     if not isinstance(rows, list) or not rows:
@@ -458,6 +718,7 @@ def validate_matrix(
             "legacy_menu_labels",
             "legacy_shortcuts",
             "legacy_input_cases",
+            "legacy_input_bindings",
             "java_evidence",
             "config_keys",
             "external_dependencies",
@@ -471,6 +732,7 @@ def validate_matrix(
             "legacy_menu_labels",
             "legacy_shortcuts",
             "legacy_input_cases",
+            "legacy_input_bindings",
             "java_evidence",
             "config_keys",
             "external_dependencies",
@@ -490,6 +752,7 @@ def validate_matrix(
             "legacy_menu_labels",
             "legacy_shortcuts",
             "legacy_input_cases",
+            "legacy_input_bindings",
             "config_keys",
             "external_dependencies",
             "target_modules",
@@ -516,7 +779,19 @@ def validate_matrix(
             if shortcut not in menu_shortcuts:
                 raise ValueError(f"{row_id}: shortcut is outside the active Menu.java accelerator inventory: {shortcut}")
             matrix_ids_by_shortcut[shortcut].append(row_id)
-        for input_case in row["legacy_input_cases"]:
+        implied_input_cases: set[str] = set()
+        for binding in row["legacy_input_bindings"]:
+            if binding not in input_bindings:
+                raise ValueError(
+                    f"{row_id}: input binding is outside the normalized Input.java inventory: {binding}"
+                )
+            implied_input_cases.add(input_bindings[binding])
+            matrix_ids_by_input_binding[binding].append(row_id)
+        if set(row["legacy_input_cases"]) != implied_input_cases:
+            raise ValueError(
+                f"{row_id}: legacy_input_cases must equal the cases implied by legacy_input_bindings"
+            )
+        for input_case in implied_input_cases:
             if input_case not in input_cases:
                 raise ValueError(
                     f"{row_id}: input case is outside the active Input.java inventory: {input_case}"
@@ -528,11 +803,13 @@ def validate_matrix(
         {label: sorted(ids) for label, ids in matrix_ids_by_menu_label.items()},
         {key: sorted(ids) for key, ids in matrix_ids_by_shortcut.items()},
         {case: sorted(ids) for case, ids in matrix_ids_by_input_case.items()},
+        {binding: sorted(ids) for binding, ids in matrix_ids_by_input_binding.items()},
     )
 
 
 def build_inventory(legacy_root: Path, matrix_path: Path) -> dict[str, Any]:
     validate_comment_stripper()
+    validate_input_parser()
     if not legacy_root.is_dir():
         raise ValueError(f"Legacy root does not exist: {legacy_root}")
     matrix = json.loads(matrix_path.read_text(encoding="utf-8"))
@@ -548,6 +825,7 @@ def build_inventory(legacy_root: Path, matrix_path: Path) -> dict[str, Any]:
         matrix_ids_by_menu_label,
         matrix_ids_by_shortcut,
         matrix_ids_by_input_case,
+        matrix_ids_by_input_binding,
     ) = validate_matrix(
         matrix,
         legacy_root,
@@ -556,6 +834,7 @@ def build_inventory(legacy_root: Path, matrix_path: Path) -> dict[str, Any]:
         {entry["label"] for entry in menu["literal_labels"]},
         {entry["shortcut"] for entry in menu["accelerators"]},
         {entry["case"] for entry in input_inventory["cases"]},
+        {entry["binding"]: entry["case"] for entry in input_inventory["bindings"]},
         fingerprint,
     )
     config_entries = [
@@ -601,13 +880,23 @@ def build_inventory(legacy_root: Path, matrix_path: Path) -> dict[str, Any]:
         }
         for entry in input_inventory["cases"]
     ]
+    input_inventory["bindings"] = [
+        {
+            **entry,
+            "matrix_ids": matrix_ids_by_input_binding.get(entry["binding"], []),
+        }
+        for entry in input_inventory["bindings"]
+    ]
     mapped_menu_keys = sum(bool(entry["matrix_ids"]) for entry in menu["keys"])
     mapped_menu_labels = sum(bool(entry["matrix_ids"]) for entry in menu["literal_labels"])
     mapped_shortcuts = sum(bool(entry["matrix_ids"]) for entry in menu["accelerators"])
     mapped_input_cases = sum(bool(entry["matrix_ids"]) for entry in input_inventory["cases"])
+    mapped_input_bindings = sum(
+        bool(entry["matrix_ids"]) for entry in input_inventory["bindings"]
+    )
 
     return {
-        "schema_version": 3,
+        "schema_version": 4,
         "source": {
             "root": "../lizzieyzy-next-main",
             "version": read_legacy_version(legacy_root),
@@ -625,7 +914,8 @@ def build_inventory(legacy_root: Path, matrix_path: Path) -> dict[str, Any]:
             "Menu keys cover active Menu.java resource lookups with Menu. or menu. prefixes.",
             "Menu literal labels cover active string-literal menu constructors; dynamic labels remain represented by their resource or runtime source.",
             "Menu accelerators cover explicit Menu.java setAccelerator calls and direct OS.isWindows guards; other input bindings remain T-003 work.",
-            "Input key cases cover active Input.java keyPressed/keyReleased VK_* dispatch and local modifier checks; exact fall-through, branch combinations, actions, and mouse bindings remain T-003 work.",
+            "Input key bindings symbolically expand Input.java keyPressed/keyReleased condition evaluations, executed statements, empty-statement paths, and switch fall-through; controlIsPressed means Control on every platform plus Meta on macOS.",
+            "Other key-listener classes and mouse bindings remain T-003 work.",
         ],
         "matrix_summary": {
             "rows": len(matrix["rows"]),
@@ -648,6 +938,10 @@ def build_inventory(legacy_root: Path, matrix_path: Path) -> dict[str, Any]:
             "active_input_key_cases": len(input_inventory["cases"]),
             "mapped_input_key_cases": mapped_input_cases,
             "unmapped_input_key_cases": len(input_inventory["cases"]) - mapped_input_cases,
+            "active_input_key_bindings": len(input_inventory["bindings"]),
+            "mapped_input_key_bindings": mapped_input_bindings,
+            "unmapped_input_key_bindings": len(input_inventory["bindings"])
+            - mapped_input_bindings,
         },
         "config": {
             "active_literal_leaf_keys": len(config_entries),

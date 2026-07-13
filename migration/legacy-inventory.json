@@ -1,5 +1,5 @@
 {
-  "schema_version": 3,
+  "schema_version": 4,
   "source": {
     "root": "../lizzieyzy-next-main",
     "version": "yzy2.5.3",
@@ -17,21 +17,22 @@
     "Menu keys cover active Menu.java resource lookups with Menu. or menu. prefixes.",
     "Menu literal labels cover active string-literal menu constructors; dynamic labels remain represented by their resource or runtime source.",
     "Menu accelerators cover explicit Menu.java setAccelerator calls and direct OS.isWindows guards; other input bindings remain T-003 work.",
-    "Input key cases cover active Input.java keyPressed/keyReleased VK_* dispatch and local modifier checks; exact fall-through, branch combinations, actions, and mouse bindings remain T-003 work."
+    "Input key bindings symbolically expand Input.java keyPressed/keyReleased condition evaluations, executed statements, empty-statement paths, and switch fall-through; controlIsPressed means Control on every platform plus Meta on macOS.",
+    "Other key-listener classes and mouse bindings remain T-003 work."
   ],
   "matrix_summary": {
-    "rows": 20,
+    "rows": 40,
     "statuses": {
       "未盘点": 0,
-      "已盘点": 20,
+      "已盘点": 40,
       "实施中": 0,
       "已实现待验证": 0,
       "已验证": 0,
       "用户批准不迁移": 0
     },
     "active_config_leaf_keys": 596,
-    "mapped_config_leaf_keys": 34,
-    "unmapped_config_leaf_keys": 562,
+    "mapped_config_leaf_keys": 36,
+    "unmapped_config_leaf_keys": 560,
     "active_menu_resource_keys": 383,
     "mapped_menu_resource_keys": 48,
     "unmapped_menu_resource_keys": 335,
@@ -42,8 +43,11 @@
     "mapped_menu_accelerators": 2,
     "unmapped_menu_accelerators": 0,
     "active_input_key_cases": 56,
-    "mapped_input_key_cases": 15,
-    "unmapped_input_key_cases": 41
+    "mapped_input_key_cases": 56,
+    "unmapped_input_key_cases": 0,
+    "active_input_key_bindings": 162,
+    "mapped_input_key_bindings": 162,
+    "unmapped_input_key_bindings": 0
   },
   "config": {
     "active_literal_leaf_keys": 596,
@@ -7738,7 +7742,7 @@
         "key": "new-game-komi",
         "reference_count": 3,
         "matrix_ids": [
-          "BOARD-NEW-001"
+          "GAME-HUMAN-AI-001"
         ],
         "references": [
           {
@@ -10795,7 +10799,9 @@
       {
         "key": "show-new-board-hint",
         "reference_count": 3,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "BOARD-NEW-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -11621,7 +11627,9 @@
       {
         "key": "show-suggestion-variations",
         "reference_count": 5,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "ANALYSIS-DISPLAY-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -17139,9 +17147,19 @@
   "input": {
     "source": "src/main/java/featurecat/lizzie/gui/Input.java",
     "active_key_cases": 56,
+    "active_key_bindings": 162,
     "events": {
       "keyPressed": 54,
       "keyReleased": 2
+    },
+    "post_dispatch_actions": {
+      "keyPressed": [
+        {
+          "line": 793,
+          "statement": "Lizzie.frame.refresh();"
+        }
+      ],
+      "keyReleased": []
     },
     "cases": [
       {
@@ -17154,8 +17172,12 @@
           "ControlOrMetaOnMac",
           "Shift"
         ],
+        "binding_count": 4,
         "matrix_ids": [
-          "ENGINE-GTP-001"
+          "ENGINE-GAME-001",
+          "ENGINE-GTP-001",
+          "KIFU-SHARE-NOOP-001",
+          "TSUMEGO-001"
         ]
       },
       {
@@ -17168,8 +17190,10 @@
           "ControlOrMetaOnMac",
           "Shift"
         ],
+        "binding_count": 4,
         "matrix_ids": [
-          "BOARD-HISTORY-001"
+          "BOARD-HISTORY-001",
+          "BOARD-TRANSFORM-001"
         ]
       },
       {
@@ -17182,8 +17206,10 @@
           "ControlOrMetaOnMac",
           "Shift"
         ],
+        "binding_count": 4,
         "matrix_ids": [
-          "BOARD-HISTORY-001"
+          "BOARD-HISTORY-001",
+          "BOARD-TRANSFORM-001"
         ]
       },
       {
@@ -17192,7 +17218,10 @@
         "key": "VK_U",
         "line": 322,
         "modifier_checks": [],
-        "matrix_ids": []
+        "binding_count": 1,
+        "matrix_ids": [
+          "ANALYSIS-DISPLAY-001"
+        ]
       },
       {
         "case": "keyPressed:VK_UP",
@@ -17204,8 +17233,10 @@
           "ControlOrMetaOnMac",
           "Shift"
         ],
+        "binding_count": 6,
         "matrix_ids": [
-          "BOARD-HISTORY-001"
+          "BOARD-HISTORY-001",
+          "BOARD-TRANSFORM-001"
         ]
       },
       {
@@ -17214,6 +17245,7 @@
         "key": "VK_PAGE_DOWN",
         "line": 346,
         "modifier_checks": [],
+        "binding_count": 2,
         "matrix_ids": [
           "BOARD-HISTORY-001"
         ]
@@ -17228,8 +17260,10 @@
           "ControlOrMetaOnMac",
           "Shift"
         ],
+        "binding_count": 5,
         "matrix_ids": [
-          "BOARD-HISTORY-001"
+          "BOARD-HISTORY-001",
+          "BOARD-TRANSFORM-001"
         ]
       },
       {
@@ -17240,8 +17274,10 @@
         "modifier_checks": [
           "Alt"
         ],
+        "binding_count": 2,
         "matrix_ids": [
-          "BOARD-NEW-001"
+          "ANALYSIS-FULL-001",
+          "GAME-HUMAN-AI-001"
         ]
       },
       {
@@ -17250,7 +17286,10 @@
         "key": "VK_SPACE",
         "line": 383,
         "modifier_checks": [],
-        "matrix_ids": []
+        "binding_count": 1,
+        "matrix_ids": [
+          "ANALYSIS-PONDER-001"
+        ]
       },
       {
         "case": "keyPressed:VK_L",
@@ -17258,7 +17297,10 @@
         "key": "VK_L",
         "line": 387,
         "modifier_checks": [],
-        "matrix_ids": []
+        "binding_count": 1,
+        "matrix_ids": [
+          "BOARD-VARIATION-001"
+        ]
       },
       {
         "case": "keyPressed:VK_P",
@@ -17266,7 +17308,10 @@
         "key": "VK_P",
         "line": 395,
         "modifier_checks": [],
-        "matrix_ids": []
+        "binding_count": 1,
+        "matrix_ids": [
+          "BOARD-EDIT-001"
+        ]
       },
       {
         "case": "keyPressed:VK_COMMA",
@@ -17276,7 +17321,11 @@
         "modifier_checks": [
           "Alt"
         ],
-        "matrix_ids": []
+        "binding_count": 5,
+        "matrix_ids": [
+          "BOARD-VARIATION-001",
+          "ENGINE-GAME-001"
+        ]
       },
       {
         "case": "keyPressed:VK_M",
@@ -17287,7 +17336,10 @@
           "Alt",
           "ControlOrMetaOnMac"
         ],
-        "matrix_ids": []
+        "binding_count": 3,
+        "matrix_ids": [
+          "ANALYSIS-DISPLAY-001"
+        ]
       },
       {
         "case": "keyPressed:VK_J",
@@ -17295,7 +17347,10 @@
         "key": "VK_J",
         "line": 420,
         "modifier_checks": [],
-        "matrix_ids": []
+        "binding_count": 1,
+        "matrix_ids": [
+          "ANALYSIS-DISPLAY-001"
+        ]
       },
       {
         "case": "keyPressed:VK_F",
@@ -17306,7 +17361,10 @@
           "ControlOrMetaOnMac",
           "Shift"
         ],
-        "matrix_ids": []
+        "binding_count": 3,
+        "matrix_ids": [
+          "ANALYSIS-DISPLAY-001"
+        ]
       },
       {
         "case": "keyPressed:VK_H",
@@ -17314,7 +17372,10 @@
         "key": "VK_H",
         "line": 436,
         "modifier_checks": [],
-        "matrix_ids": []
+        "binding_count": 1,
+        "matrix_ids": [
+          "ANALYSIS-DISPLAY-001"
+        ]
       },
       {
         "case": "keyPressed:VK_PAGE_UP",
@@ -17322,6 +17383,7 @@
         "key": "VK_PAGE_UP",
         "line": 447,
         "modifier_checks": [],
+        "binding_count": 2,
         "matrix_ids": [
           "BOARD-HISTORY-001"
         ]
@@ -17334,7 +17396,10 @@
         "modifier_checks": [
           "Control"
         ],
-        "matrix_ids": []
+        "binding_count": 2,
+        "matrix_ids": [
+          "SETTINGS-GAME-001"
+        ]
       },
       {
         "case": "keyPressed:VK_S",
@@ -17346,6 +17411,7 @@
           "Control",
           "Shift"
         ],
+        "binding_count": 7,
         "matrix_ids": [
           "KIFU-SAVE-001",
           "KIFU-SCREENSHOT-001"
@@ -17361,6 +17427,7 @@
           "Control",
           "Shift"
         ],
+        "binding_count": 4,
         "matrix_ids": [
           "KIFU-OPEN-001",
           "ONLINE-SYNC-001",
@@ -17376,7 +17443,10 @@
           "Alt",
           "ControlOrMetaOnMac"
         ],
+        "binding_count": 3,
         "matrix_ids": [
+          "ANALYSIS-DISPLAY-001",
+          "BOARD-VARIATION-001",
           "KIFU-CLIPBOARD-001"
         ]
       },
@@ -17388,7 +17458,9 @@
         "modifier_checks": [
           "ControlOrMetaOnMac"
         ],
+        "binding_count": 3,
         "matrix_ids": [
+          "BOARD-EDIT-001",
           "BOARD-HISTORY-001"
         ]
       },
@@ -17398,6 +17470,7 @@
         "key": "VK_END",
         "line": 535,
         "modifier_checks": [],
+        "binding_count": 1,
         "matrix_ids": [
           "BOARD-HISTORY-001"
         ]
@@ -17411,7 +17484,12 @@
           "Alt",
           "Shift"
         ],
-        "matrix_ids": []
+        "binding_count": 11,
+        "matrix_ids": [
+          "SETTINGS-ENGINE-001",
+          "SETTINGS-GENERAL-001",
+          "UI-CONTROLS-001"
+        ]
       },
       {
         "case": "keyPressed:VK_W",
@@ -17422,7 +17500,10 @@
           "Alt",
           "ControlOrMetaOnMac"
         ],
-        "matrix_ids": []
+        "binding_count": 3,
+        "matrix_ids": [
+          "UI-ANALYSIS-PANELS-001"
+        ]
       },
       {
         "case": "keyPressed:VK_G",
@@ -17433,7 +17514,10 @@
           "Alt",
           "Shift"
         ],
-        "matrix_ids": []
+        "binding_count": 3,
+        "matrix_ids": [
+          "UI-ANALYSIS-PANELS-001"
+        ]
       },
       {
         "case": "keyPressed:VK_T",
@@ -17445,7 +17529,12 @@
           "ControlOrMetaOnMac",
           "Shift"
         ],
-        "matrix_ids": []
+        "binding_count": 4,
+        "matrix_ids": [
+          "ANALYSIS-DISPLAY-001",
+          "TSUMEGO-001",
+          "UI-ANALYSIS-PANELS-001"
+        ]
       },
       {
         "case": "keyPressed:VK_Y",
@@ -17453,7 +17542,10 @@
         "key": "VK_Y",
         "line": 598,
         "modifier_checks": [],
-        "matrix_ids": []
+        "binding_count": 1,
+        "matrix_ids": [
+          "ANALYSIS-DISPLAY-001"
+        ]
       },
       {
         "case": "keyPressed:VK_C",
@@ -17465,6 +17557,7 @@
           "ControlOrMetaOnMac",
           "Shift"
         ],
+        "binding_count": 4,
         "matrix_ids": [
           "KIFU-CLIPBOARD-001",
           "KIFU-SCREENSHOT-001",
@@ -17479,7 +17572,10 @@
         "modifier_checks": [
           "Alt"
         ],
-        "matrix_ids": []
+        "binding_count": 2,
+        "matrix_ids": [
+          "ENGINE-GAME-001"
+        ]
       },
       {
         "case": "keyPressed:VK_B",
@@ -17490,8 +17586,11 @@
           "Alt",
           "Control"
         ],
+        "binding_count": 3,
         "matrix_ids": [
-          "ANALYSIS-FULL-001"
+          "ANALYSIS-FULL-001",
+          "BOARD-HISTORY-001",
+          "KIFU-SHARE-NOOP-001"
         ]
       },
       {
@@ -17499,8 +17598,14 @@
         "event": "keyPressed",
         "key": "VK_DELETE",
         "line": 634,
-        "modifier_checks": [],
-        "matrix_ids": []
+        "modifier_checks": [
+          "Alt",
+          "Shift"
+        ],
+        "binding_count": 3,
+        "matrix_ids": [
+          "BOARD-EDIT-001"
+        ]
       },
       {
         "case": "keyPressed:VK_BACK_SPACE",
@@ -17511,7 +17616,10 @@
           "Alt",
           "Shift"
         ],
-        "matrix_ids": []
+        "binding_count": 3,
+        "matrix_ids": [
+          "BOARD-EDIT-001"
+        ]
       },
       {
         "case": "keyPressed:VK_Z",
@@ -17522,7 +17630,12 @@
           "Alt",
           "Control"
         ],
-        "matrix_ids": []
+        "binding_count": 3,
+        "matrix_ids": [
+          "BOARD-TEMPORARY-001",
+          "UI-ANALYSIS-PANELS-001",
+          "UI-LAYOUT-001"
+        ]
       },
       {
         "case": "keyPressed:VK_Q",
@@ -17533,7 +17646,12 @@
           "Alt",
           "ControlOrMetaOnMac"
         ],
-        "matrix_ids": []
+        "binding_count": 3,
+        "matrix_ids": [
+          "ANALYSIS-COUNTING-001",
+          "ONLINE-HUB-001",
+          "UI-LAYOUT-001"
+        ]
       },
       {
         "case": "keyPressed:VK_A",
@@ -17545,7 +17663,12 @@
           "ControlOrMetaOnMac",
           "Shift"
         ],
-        "matrix_ids": []
+        "binding_count": 6,
+        "matrix_ids": [
+          "ANALYSIS-AUTO-001",
+          "BOARD-EDIT-001",
+          "UI-LAYOUT-001"
+        ]
       },
       {
         "case": "keyPressed:VK_DECIMAL",
@@ -17553,7 +17676,10 @@
         "key": "VK_DECIMAL",
         "line": 684,
         "modifier_checks": [],
-        "matrix_ids": []
+        "binding_count": 2,
+        "matrix_ids": [
+          "ANALYSIS-COUNTING-001"
+        ]
       },
       {
         "case": "keyPressed:VK_SLASH",
@@ -17561,7 +17687,10 @@
         "key": "VK_SLASH",
         "line": 685,
         "modifier_checks": [],
-        "matrix_ids": []
+        "binding_count": 2,
+        "matrix_ids": [
+          "ANALYSIS-COUNTING-001"
+        ]
       },
       {
         "case": "keyPressed:VK_PERIOD",
@@ -17569,7 +17698,10 @@
         "key": "VK_PERIOD",
         "line": 694,
         "modifier_checks": [],
-        "matrix_ids": []
+        "binding_count": 2,
+        "matrix_ids": [
+          "ANALYSIS-COUNTING-001"
+        ]
       },
       {
         "case": "keyPressed:VK_D",
@@ -17580,7 +17712,11 @@
           "Alt",
           "Shift"
         ],
-        "matrix_ids": []
+        "binding_count": 3,
+        "matrix_ids": [
+          "SETTINGS-ENGINE-001",
+          "SETTINGS-GAME-001"
+        ]
       },
       {
         "case": "keyPressed:VK_R",
@@ -17588,7 +17724,11 @@
         "key": "VK_R",
         "line": 711,
         "modifier_checks": [],
-        "matrix_ids": []
+        "binding_count": 1,
+        "matrix_ids": [
+          "BOARD-HISTORY-001",
+          "BOARD-VARIATION-001"
+        ]
       },
       {
         "case": "keyPressed:VK_OPEN_BRACKET",
@@ -17596,7 +17736,10 @@
         "key": "VK_OPEN_BRACKET",
         "line": 718,
         "modifier_checks": [],
-        "matrix_ids": []
+        "binding_count": 2,
+        "matrix_ids": [
+          "UI-LAYOUT-001"
+        ]
       },
       {
         "case": "keyPressed:VK_CLOSE_BRACKET",
@@ -17604,7 +17747,10 @@
         "key": "VK_CLOSE_BRACKET",
         "line": 725,
         "modifier_checks": [],
-        "matrix_ids": []
+        "binding_count": 2,
+        "matrix_ids": [
+          "UI-LAYOUT-001"
+        ]
       },
       {
         "case": "keyPressed:VK_K",
@@ -17614,7 +17760,10 @@
         "modifier_checks": [
           "Alt"
         ],
-        "matrix_ids": []
+        "binding_count": 2,
+        "matrix_ids": [
+          "ANALYSIS-DISPLAY-001"
+        ]
       },
       {
         "case": "keyPressed:VK_1",
@@ -17622,9 +17771,15 @@
         "key": "VK_1",
         "line": 739,
         "modifier_checks": [
-          "Alt"
+          "Alt",
+          "ControlOrMetaOnMac"
         ],
-        "matrix_ids": []
+        "binding_count": 3,
+        "matrix_ids": [
+          "BOARD-VARIATION-001",
+          "ENGINE-SWITCH-001",
+          "UI-LAYOUT-001"
+        ]
       },
       {
         "case": "keyPressed:VK_2",
@@ -17632,9 +17787,15 @@
         "key": "VK_2",
         "line": 744,
         "modifier_checks": [
-          "Alt"
+          "Alt",
+          "ControlOrMetaOnMac"
         ],
-        "matrix_ids": []
+        "binding_count": 3,
+        "matrix_ids": [
+          "BOARD-VARIATION-001",
+          "ENGINE-SWITCH-001",
+          "UI-LAYOUT-001"
+        ]
       },
       {
         "case": "keyPressed:VK_3",
@@ -17642,9 +17803,15 @@
         "key": "VK_3",
         "line": 749,
         "modifier_checks": [
-          "Alt"
+          "Alt",
+          "ControlOrMetaOnMac"
         ],
-        "matrix_ids": []
+        "binding_count": 3,
+        "matrix_ids": [
+          "BOARD-VARIATION-001",
+          "ENGINE-SWITCH-001",
+          "UI-LAYOUT-001"
+        ]
       },
       {
         "case": "keyPressed:VK_4",
@@ -17652,9 +17819,15 @@
         "key": "VK_4",
         "line": 754,
         "modifier_checks": [
-          "Alt"
+          "Alt",
+          "ControlOrMetaOnMac"
         ],
-        "matrix_ids": []
+        "binding_count": 3,
+        "matrix_ids": [
+          "BOARD-VARIATION-001",
+          "ENGINE-SWITCH-001",
+          "UI-LAYOUT-001"
+        ]
       },
       {
         "case": "keyPressed:VK_5",
@@ -17662,9 +17835,15 @@
         "key": "VK_5",
         "line": 759,
         "modifier_checks": [
-          "Alt"
+          "Alt",
+          "ControlOrMetaOnMac"
         ],
-        "matrix_ids": []
+        "binding_count": 3,
+        "matrix_ids": [
+          "BOARD-VARIATION-001",
+          "ENGINE-SWITCH-001",
+          "UI-LAYOUT-001"
+        ]
       },
       {
         "case": "keyPressed:VK_6",
@@ -17672,9 +17851,15 @@
         "key": "VK_6",
         "line": 764,
         "modifier_checks": [
-          "Alt"
+          "Alt",
+          "ControlOrMetaOnMac"
         ],
-        "matrix_ids": []
+        "binding_count": 3,
+        "matrix_ids": [
+          "BOARD-VARIATION-001",
+          "ENGINE-SWITCH-001",
+          "UI-LAYOUT-001"
+        ]
       },
       {
         "case": "keyPressed:VK_7",
@@ -17682,9 +17867,15 @@
         "key": "VK_7",
         "line": 769,
         "modifier_checks": [
-          "Alt"
+          "Alt",
+          "ControlOrMetaOnMac"
         ],
-        "matrix_ids": []
+        "binding_count": 3,
+        "matrix_ids": [
+          "BOARD-VARIATION-001",
+          "ENGINE-SWITCH-001",
+          "UI-LAYOUT-001"
+        ]
       },
       {
         "case": "keyPressed:VK_8",
@@ -17692,9 +17883,15 @@
         "key": "VK_8",
         "line": 774,
         "modifier_checks": [
-          "Alt"
+          "Alt",
+          "ControlOrMetaOnMac"
         ],
-        "matrix_ids": []
+        "binding_count": 3,
+        "matrix_ids": [
+          "BOARD-VARIATION-001",
+          "ENGINE-SWITCH-001",
+          "UI-LAYOUT-001"
+        ]
       },
       {
         "case": "keyPressed:VK_9",
@@ -17705,7 +17902,12 @@
           "Alt",
           "ControlOrMetaOnMac"
         ],
-        "matrix_ids": []
+        "binding_count": 3,
+        "matrix_ids": [
+          "BOARD-VARIATION-001",
+          "ENGINE-SWITCH-001",
+          "UI-LAYOUT-001"
+        ]
       },
       {
         "case": "keyPressed:VK_0",
@@ -17715,7 +17917,10 @@
         "modifier_checks": [
           "ControlOrMetaOnMac"
         ],
-        "matrix_ids": []
+        "binding_count": 2,
+        "matrix_ids": [
+          "ENGINE-SWITCH-001"
+        ]
       },
       {
         "case": "keyReleased:VK_X",
@@ -17723,7 +17928,10 @@
         "key": "VK_X",
         "line": 801,
         "modifier_checks": [],
-        "matrix_ids": []
+        "binding_count": 1,
+        "matrix_ids": [
+          "UI-CONTROLS-001"
+        ]
       },
       {
         "case": "keyReleased:VK_Z",
@@ -17731,7 +17939,4876 @@
         "key": "VK_Z",
         "line": 806,
         "modifier_checks": [],
-        "matrix_ids": []
+        "binding_count": 1,
+        "matrix_ids": [
+          "BOARD-TEMPORARY-001"
+        ]
+      }
+    ],
+    "bindings": [
+      {
+        "binding": "keyPressed:VK_E#1",
+        "case": "keyPressed:VK_E",
+        "event": "keyPressed",
+        "key": "VK_E",
+        "line": 281,
+        "conditions": [
+          {
+            "expression": "controlIsPressed(e)",
+            "expected": true
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_E"
+        ],
+        "statements": [
+          {
+            "line": 283,
+            "statement": "Lizzie.frame.shareSGF();"
+          }
+        ],
+        "matrix_ids": [
+          "KIFU-SHARE-NOOP-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_E#2",
+        "case": "keyPressed:VK_E",
+        "event": "keyPressed",
+        "key": "VK_E",
+        "line": 281,
+        "conditions": [
+          {
+            "expression": "controlIsPressed(e)",
+            "expected": false
+          },
+          {
+            "expression": "e.isAltDown()",
+            "expected": true
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_E"
+        ],
+        "statements": [
+          {
+            "line": 285,
+            "statement": "Lizzie.frame.startEngineGameDialog();"
+          }
+        ],
+        "matrix_ids": [
+          "ENGINE-GAME-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_E#3",
+        "case": "keyPressed:VK_E",
+        "event": "keyPressed",
+        "key": "VK_E",
+        "line": 281,
+        "conditions": [
+          {
+            "expression": "controlIsPressed(e)",
+            "expected": false
+          },
+          {
+            "expression": "e.isAltDown()",
+            "expected": false
+          },
+          {
+            "expression": "e.isShiftDown()",
+            "expected": true
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_E"
+        ],
+        "statements": [
+          {
+            "line": 287,
+            "statement": "Lizzie.frame.openTsumego();"
+          }
+        ],
+        "matrix_ids": [
+          "TSUMEGO-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_E#4",
+        "case": "keyPressed:VK_E",
+        "event": "keyPressed",
+        "key": "VK_E",
+        "line": 281,
+        "conditions": [
+          {
+            "expression": "controlIsPressed(e)",
+            "expected": false
+          },
+          {
+            "expression": "e.isAltDown()",
+            "expected": false
+          },
+          {
+            "expression": "e.isShiftDown()",
+            "expected": false
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_E"
+        ],
+        "statements": [
+          {
+            "line": 288,
+            "statement": "Lizzie.frame.toggleGtpConsole();"
+          }
+        ],
+        "matrix_ids": [
+          "ENGINE-GTP-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_RIGHT#1",
+        "case": "keyPressed:VK_RIGHT",
+        "event": "keyPressed",
+        "key": "VK_RIGHT",
+        "line": 290,
+        "conditions": [
+          {
+            "expression": "e.isShiftDown()",
+            "expected": true
+          },
+          {
+            "expression": "controlIsPressed(e) && e.isAltDown()",
+            "expected": true
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_RIGHT"
+        ],
+        "statements": [
+          {
+            "line": 296,
+            "statement": "Lizzie.board.exchangeBlackWhite();"
+          },
+          {
+            "line": 298,
+            "statement": "moveBranchDown();"
+          }
+        ],
+        "matrix_ids": [
+          "BOARD-HISTORY-001",
+          "BOARD-TRANSFORM-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_RIGHT#2",
+        "case": "keyPressed:VK_RIGHT",
+        "event": "keyPressed",
+        "key": "VK_RIGHT",
+        "line": 290,
+        "conditions": [
+          {
+            "expression": "e.isShiftDown()",
+            "expected": true
+          },
+          {
+            "expression": "controlIsPressed(e) && e.isAltDown()",
+            "expected": false
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_RIGHT"
+        ],
+        "statements": [
+          {
+            "line": 298,
+            "statement": "moveBranchDown();"
+          }
+        ],
+        "matrix_ids": [
+          "BOARD-HISTORY-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_RIGHT#3",
+        "case": "keyPressed:VK_RIGHT",
+        "event": "keyPressed",
+        "key": "VK_RIGHT",
+        "line": 290,
+        "conditions": [
+          {
+            "expression": "e.isShiftDown()",
+            "expected": false
+          },
+          {
+            "expression": "controlIsPressed(e) && e.isAltDown()",
+            "expected": true
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_RIGHT"
+        ],
+        "statements": [
+          {
+            "line": 301,
+            "statement": "Lizzie.board.SpinAndMirror(1);"
+          }
+        ],
+        "matrix_ids": [
+          "BOARD-TRANSFORM-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_RIGHT#4",
+        "case": "keyPressed:VK_RIGHT",
+        "event": "keyPressed",
+        "key": "VK_RIGHT",
+        "line": 290,
+        "conditions": [
+          {
+            "expression": "e.isShiftDown()",
+            "expected": false
+          },
+          {
+            "expression": "controlIsPressed(e) && e.isAltDown()",
+            "expected": false
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_RIGHT"
+        ],
+        "statements": [
+          {
+            "line": 302,
+            "statement": "nextBranch();"
+          }
+        ],
+        "matrix_ids": [
+          "BOARD-HISTORY-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_LEFT#1",
+        "case": "keyPressed:VK_LEFT",
+        "event": "keyPressed",
+        "key": "VK_LEFT",
+        "line": 306,
+        "conditions": [
+          {
+            "expression": "e.isShiftDown()",
+            "expected": true
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_LEFT"
+        ],
+        "statements": [
+          {
+            "line": 312,
+            "statement": "moveBranchUp();"
+          }
+        ],
+        "matrix_ids": [
+          "BOARD-HISTORY-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_LEFT#2",
+        "case": "keyPressed:VK_LEFT",
+        "event": "keyPressed",
+        "key": "VK_LEFT",
+        "line": 306,
+        "conditions": [
+          {
+            "expression": "e.isShiftDown()",
+            "expected": false
+          },
+          {
+            "expression": "controlIsPressed(e)",
+            "expected": true
+          },
+          {
+            "expression": "e.isAltDown()",
+            "expected": true
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_LEFT"
+        ],
+        "statements": [
+          {
+            "line": 315,
+            "statement": "Lizzie.board.SpinAndMirror(2);"
+          }
+        ],
+        "matrix_ids": [
+          "BOARD-TRANSFORM-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_LEFT#3",
+        "case": "keyPressed:VK_LEFT",
+        "event": "keyPressed",
+        "key": "VK_LEFT",
+        "line": 306,
+        "conditions": [
+          {
+            "expression": "e.isShiftDown()",
+            "expected": false
+          },
+          {
+            "expression": "controlIsPressed(e)",
+            "expected": true
+          },
+          {
+            "expression": "e.isAltDown()",
+            "expected": false
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_LEFT"
+        ],
+        "statements": [
+          {
+            "line": 316,
+            "statement": "undoToFirstParentWithVariations();"
+          }
+        ],
+        "matrix_ids": [
+          "BOARD-HISTORY-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_LEFT#4",
+        "case": "keyPressed:VK_LEFT",
+        "event": "keyPressed",
+        "key": "VK_LEFT",
+        "line": 306,
+        "conditions": [
+          {
+            "expression": "e.isShiftDown()",
+            "expected": false
+          },
+          {
+            "expression": "controlIsPressed(e)",
+            "expected": false
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_LEFT"
+        ],
+        "statements": [
+          {
+            "line": 319,
+            "statement": "previousBranch();"
+          }
+        ],
+        "matrix_ids": [
+          "BOARD-HISTORY-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_U#1",
+        "case": "keyPressed:VK_U",
+        "event": "keyPressed",
+        "key": "VK_U",
+        "line": 322,
+        "conditions": [],
+        "case_chain": [
+          "keyPressed:VK_U"
+        ],
+        "statements": [
+          {
+            "line": 323,
+            "statement": "Lizzie.frame.toggleBestMoves();"
+          }
+        ],
+        "matrix_ids": [
+          "ANALYSIS-DISPLAY-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_UP#1",
+        "case": "keyPressed:VK_UP",
+        "event": "keyPressed",
+        "key": "VK_UP",
+        "line": 325,
+        "conditions": [
+          {
+            "expression": "controlIsPressed(e) && e.isShiftDown()",
+            "expected": true
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_UP"
+        ],
+        "statements": [
+          {
+            "line": 330,
+            "statement": "goCommentNode(false);"
+          }
+        ],
+        "matrix_ids": [
+          "BOARD-HISTORY-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_UP#2",
+        "case": "keyPressed:VK_UP",
+        "event": "keyPressed",
+        "key": "VK_UP",
+        "line": 325,
+        "conditions": [
+          {
+            "expression": "controlIsPressed(e) && e.isShiftDown()",
+            "expected": false
+          },
+          {
+            "expression": "e.isShiftDown()",
+            "expected": true
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_UP"
+        ],
+        "statements": [
+          {
+            "line": 332,
+            "statement": "undoToChildOfPreviousWithVariation();"
+          }
+        ],
+        "matrix_ids": [
+          "BOARD-HISTORY-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_UP#3",
+        "case": "keyPressed:VK_UP",
+        "event": "keyPressed",
+        "key": "VK_UP",
+        "line": 325,
+        "conditions": [
+          {
+            "expression": "controlIsPressed(e) && e.isShiftDown()",
+            "expected": false
+          },
+          {
+            "expression": "e.isShiftDown()",
+            "expected": false
+          },
+          {
+            "expression": "controlIsPressed(e)",
+            "expected": true
+          },
+          {
+            "expression": "e.isAltDown()",
+            "expected": true
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_UP"
+        ],
+        "statements": [
+          {
+            "line": 335,
+            "statement": "Lizzie.board.SpinAndMirror(3);"
+          }
+        ],
+        "matrix_ids": [
+          "BOARD-TRANSFORM-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_UP#4",
+        "case": "keyPressed:VK_UP",
+        "event": "keyPressed",
+        "key": "VK_UP",
+        "line": 325,
+        "conditions": [
+          {
+            "expression": "controlIsPressed(e) && e.isShiftDown()",
+            "expected": false
+          },
+          {
+            "expression": "e.isShiftDown()",
+            "expected": false
+          },
+          {
+            "expression": "controlIsPressed(e)",
+            "expected": true
+          },
+          {
+            "expression": "e.isAltDown()",
+            "expected": false
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_UP"
+        ],
+        "statements": [
+          {
+            "line": 336,
+            "statement": "LizzieFrame.undoNoRefresh(10);"
+          }
+        ],
+        "matrix_ids": [
+          "BOARD-HISTORY-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_UP#5",
+        "case": "keyPressed:VK_UP",
+        "event": "keyPressed",
+        "key": "VK_UP",
+        "line": 325,
+        "conditions": [
+          {
+            "expression": "controlIsPressed(e) && e.isShiftDown()",
+            "expected": false
+          },
+          {
+            "expression": "e.isShiftDown()",
+            "expected": false
+          },
+          {
+            "expression": "controlIsPressed(e)",
+            "expected": false
+          },
+          {
+            "expression": "LizzieFrame.boardRenderer.isShowingBranch()",
+            "expected": true
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_UP"
+        ],
+        "statements": [
+          {
+            "line": 339,
+            "statement": "Lizzie.frame.doBranch(-1);"
+          }
+        ],
+        "matrix_ids": [
+          "BOARD-HISTORY-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_UP#6",
+        "case": "keyPressed:VK_UP",
+        "event": "keyPressed",
+        "key": "VK_UP",
+        "line": 325,
+        "conditions": [
+          {
+            "expression": "controlIsPressed(e) && e.isShiftDown()",
+            "expected": false
+          },
+          {
+            "expression": "e.isShiftDown()",
+            "expected": false
+          },
+          {
+            "expression": "controlIsPressed(e)",
+            "expected": false
+          },
+          {
+            "expression": "LizzieFrame.boardRenderer.isShowingBranch()",
+            "expected": false
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_UP"
+        ],
+        "statements": [
+          {
+            "line": 341,
+            "statement": "LizzieFrame.undoNoRefresh(1);"
+          }
+        ],
+        "matrix_ids": [
+          "BOARD-HISTORY-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_PAGE_DOWN#1",
+        "case": "keyPressed:VK_PAGE_DOWN",
+        "event": "keyPressed",
+        "key": "VK_PAGE_DOWN",
+        "line": 346,
+        "conditions": [
+          {
+            "expression": "LizzieFrame.boardRenderer.isShowingBranch()",
+            "expected": true
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_PAGE_DOWN"
+        ],
+        "statements": [
+          {
+            "line": 348,
+            "statement": "Lizzie.frame.doBranch(1);"
+          }
+        ],
+        "matrix_ids": [
+          "BOARD-HISTORY-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_PAGE_DOWN#2",
+        "case": "keyPressed:VK_PAGE_DOWN",
+        "event": "keyPressed",
+        "key": "VK_PAGE_DOWN",
+        "line": 346,
+        "conditions": [
+          {
+            "expression": "LizzieFrame.boardRenderer.isShowingBranch()",
+            "expected": false
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_PAGE_DOWN"
+        ],
+        "statements": [
+          {
+            "line": 351,
+            "statement": "LizzieFrame.redo(10);"
+          }
+        ],
+        "matrix_ids": [
+          "BOARD-HISTORY-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_DOWN#1",
+        "case": "keyPressed:VK_DOWN",
+        "event": "keyPressed",
+        "key": "VK_DOWN",
+        "line": 356,
+        "conditions": [
+          {
+            "expression": "controlIsPressed(e) && e.isShiftDown()",
+            "expected": true
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_DOWN"
+        ],
+        "statements": [
+          {
+            "line": 361,
+            "statement": "goCommentNode(true);"
+          }
+        ],
+        "matrix_ids": [
+          "BOARD-HISTORY-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_DOWN#2",
+        "case": "keyPressed:VK_DOWN",
+        "event": "keyPressed",
+        "key": "VK_DOWN",
+        "line": 356,
+        "conditions": [
+          {
+            "expression": "controlIsPressed(e) && e.isShiftDown()",
+            "expected": false
+          },
+          {
+            "expression": "controlIsPressed(e)",
+            "expected": true
+          },
+          {
+            "expression": "e.isAltDown()",
+            "expected": true
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_DOWN"
+        ],
+        "statements": [
+          {
+            "line": 365,
+            "statement": "Lizzie.board.SpinAndMirror(4);"
+          }
+        ],
+        "matrix_ids": [
+          "BOARD-TRANSFORM-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_DOWN#3",
+        "case": "keyPressed:VK_DOWN",
+        "event": "keyPressed",
+        "key": "VK_DOWN",
+        "line": 356,
+        "conditions": [
+          {
+            "expression": "controlIsPressed(e) && e.isShiftDown()",
+            "expected": false
+          },
+          {
+            "expression": "controlIsPressed(e)",
+            "expected": true
+          },
+          {
+            "expression": "e.isAltDown()",
+            "expected": false
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_DOWN"
+        ],
+        "statements": [
+          {
+            "line": 366,
+            "statement": "LizzieFrame.redoNoRefresh(10);"
+          }
+        ],
+        "matrix_ids": [
+          "BOARD-HISTORY-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_DOWN#4",
+        "case": "keyPressed:VK_DOWN",
+        "event": "keyPressed",
+        "key": "VK_DOWN",
+        "line": 356,
+        "conditions": [
+          {
+            "expression": "controlIsPressed(e) && e.isShiftDown()",
+            "expected": false
+          },
+          {
+            "expression": "controlIsPressed(e)",
+            "expected": false
+          },
+          {
+            "expression": "LizzieFrame.boardRenderer.isShowingBranch()",
+            "expected": true
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_DOWN"
+        ],
+        "statements": [
+          {
+            "line": 369,
+            "statement": "Lizzie.frame.doBranch(1);"
+          }
+        ],
+        "matrix_ids": [
+          "BOARD-HISTORY-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_DOWN#5",
+        "case": "keyPressed:VK_DOWN",
+        "event": "keyPressed",
+        "key": "VK_DOWN",
+        "line": 356,
+        "conditions": [
+          {
+            "expression": "controlIsPressed(e) && e.isShiftDown()",
+            "expected": false
+          },
+          {
+            "expression": "controlIsPressed(e)",
+            "expected": false
+          },
+          {
+            "expression": "LizzieFrame.boardRenderer.isShowingBranch()",
+            "expected": false
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_DOWN"
+        ],
+        "statements": [
+          {
+            "line": 371,
+            "statement": "LizzieFrame.redoNoRefresh(1);"
+          }
+        ],
+        "matrix_ids": [
+          "BOARD-HISTORY-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_N#1",
+        "case": "keyPressed:VK_N",
+        "event": "keyPressed",
+        "key": "VK_N",
+        "line": 376,
+        "conditions": [
+          {
+            "expression": "e.isAltDown() && !Lizzie.leelaz.noAnalyze",
+            "expected": true
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_N"
+        ],
+        "statements": [
+          {
+            "line": 378,
+            "statement": "Lizzie.frame.startAnalyzeGameDialog();"
+          }
+        ],
+        "matrix_ids": [
+          "ANALYSIS-FULL-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_N#2",
+        "case": "keyPressed:VK_N",
+        "event": "keyPressed",
+        "key": "VK_N",
+        "line": 376,
+        "conditions": [
+          {
+            "expression": "e.isAltDown() && !Lizzie.leelaz.noAnalyze",
+            "expected": false
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_N"
+        ],
+        "statements": [
+          {
+            "line": 380,
+            "statement": "Lizzie.frame.startNewGame();"
+          }
+        ],
+        "matrix_ids": [
+          "GAME-HUMAN-AI-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_SPACE#1",
+        "case": "keyPressed:VK_SPACE",
+        "event": "keyPressed",
+        "key": "VK_SPACE",
+        "line": 383,
+        "conditions": [],
+        "case_chain": [
+          "keyPressed:VK_SPACE"
+        ],
+        "statements": [
+          {
+            "line": 384,
+            "statement": "Lizzie.frame.togglePonderMannul();"
+          }
+        ],
+        "matrix_ids": [
+          "ANALYSIS-PONDER-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_L#1",
+        "case": "keyPressed:VK_L",
+        "event": "keyPressed",
+        "key": "VK_L",
+        "line": 387,
+        "conditions": [],
+        "case_chain": [
+          "keyPressed:VK_L"
+        ],
+        "statements": [
+          {
+            "line": 392,
+            "statement": "Lizzie.frame.setAsMain();"
+          }
+        ],
+        "matrix_ids": [
+          "BOARD-VARIATION-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_P#1",
+        "case": "keyPressed:VK_P",
+        "event": "keyPressed",
+        "key": "VK_P",
+        "line": 395,
+        "conditions": [],
+        "case_chain": [
+          "keyPressed:VK_P"
+        ],
+        "statements": [
+          {
+            "line": 396,
+            "statement": "Lizzie.board.pass();"
+          }
+        ],
+        "matrix_ids": [
+          "BOARD-EDIT-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_COMMA#1",
+        "case": "keyPressed:VK_COMMA",
+        "event": "keyPressed",
+        "key": "VK_COMMA",
+        "line": 399,
+        "conditions": [
+          {
+            "expression": "e.isAltDown()",
+            "expected": true
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_COMMA"
+        ],
+        "statements": [
+          {
+            "line": 401,
+            "statement": "Lizzie.frame.genmove();"
+          }
+        ],
+        "matrix_ids": [
+          "ENGINE-GAME-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_COMMA#2",
+        "case": "keyPressed:VK_COMMA",
+        "event": "keyPressed",
+        "key": "VK_COMMA",
+        "line": 399,
+        "conditions": [
+          {
+            "expression": "e.isAltDown()",
+            "expected": false
+          },
+          {
+            "expression": "!Lizzie.config.showSuggestionVariations",
+            "expected": true
+          },
+          {
+            "expression": "Lizzie.frame.isMouseOver",
+            "expected": true
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_COMMA"
+        ],
+        "statements": [
+          {
+            "line": 403,
+            "statement": "Lizzie.frame.playCurrentVariation();"
+          }
+        ],
+        "matrix_ids": [
+          "BOARD-VARIATION-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_COMMA#3",
+        "case": "keyPressed:VK_COMMA",
+        "event": "keyPressed",
+        "key": "VK_COMMA",
+        "line": 399,
+        "conditions": [
+          {
+            "expression": "e.isAltDown()",
+            "expected": false
+          },
+          {
+            "expression": "!Lizzie.config.showSuggestionVariations",
+            "expected": true
+          },
+          {
+            "expression": "Lizzie.frame.isMouseOver",
+            "expected": false
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_COMMA"
+        ],
+        "statements": [
+          {
+            "line": 404,
+            "statement": "Lizzie.frame.playBestMove();"
+          }
+        ],
+        "matrix_ids": [
+          "BOARD-VARIATION-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_COMMA#4",
+        "case": "keyPressed:VK_COMMA",
+        "event": "keyPressed",
+        "key": "VK_COMMA",
+        "line": 399,
+        "conditions": [
+          {
+            "expression": "e.isAltDown()",
+            "expected": false
+          },
+          {
+            "expression": "!Lizzie.config.showSuggestionVariations",
+            "expected": false
+          },
+          {
+            "expression": "!Lizzie.frame.playCurrentVariation()",
+            "expected": true
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_COMMA"
+        ],
+        "statements": [
+          {
+            "line": 406,
+            "statement": "Lizzie.frame.playBestMove();"
+          }
+        ],
+        "matrix_ids": [
+          "BOARD-VARIATION-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_COMMA#5",
+        "case": "keyPressed:VK_COMMA",
+        "event": "keyPressed",
+        "key": "VK_COMMA",
+        "line": 399,
+        "conditions": [
+          {
+            "expression": "e.isAltDown()",
+            "expected": false
+          },
+          {
+            "expression": "!Lizzie.config.showSuggestionVariations",
+            "expected": false
+          },
+          {
+            "expression": "!Lizzie.frame.playCurrentVariation()",
+            "expected": false
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_COMMA"
+        ],
+        "statements": [],
+        "matrix_ids": [
+          "BOARD-VARIATION-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_M#1",
+        "case": "keyPressed:VK_M",
+        "event": "keyPressed",
+        "key": "VK_M",
+        "line": 410,
+        "conditions": [
+          {
+            "expression": "controlIsPressed(e)",
+            "expected": true
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_M"
+        ],
+        "statements": [
+          {
+            "line": 412,
+            "statement": "Lizzie.config.toggleShowMoveAllInBranch();"
+          }
+        ],
+        "matrix_ids": [
+          "ANALYSIS-DISPLAY-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_M#2",
+        "case": "keyPressed:VK_M",
+        "event": "keyPressed",
+        "key": "VK_M",
+        "line": 410,
+        "conditions": [
+          {
+            "expression": "controlIsPressed(e)",
+            "expected": false
+          },
+          {
+            "expression": "e.isAltDown()",
+            "expected": true
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_M"
+        ],
+        "statements": [
+          {
+            "line": 414,
+            "statement": "Lizzie.config.toggleShowMoveRankMark();"
+          }
+        ],
+        "matrix_ids": [
+          "ANALYSIS-DISPLAY-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_M#3",
+        "case": "keyPressed:VK_M",
+        "event": "keyPressed",
+        "key": "VK_M",
+        "line": 410,
+        "conditions": [
+          {
+            "expression": "controlIsPressed(e)",
+            "expected": false
+          },
+          {
+            "expression": "e.isAltDown()",
+            "expected": false
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_M"
+        ],
+        "statements": [
+          {
+            "line": 416,
+            "statement": "Lizzie.config.toggleShowMoveNumber();"
+          }
+        ],
+        "matrix_ids": [
+          "ANALYSIS-DISPLAY-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_J#1",
+        "case": "keyPressed:VK_J",
+        "event": "keyPressed",
+        "key": "VK_J",
+        "line": 420,
+        "conditions": [],
+        "case_chain": [
+          "keyPressed:VK_J"
+        ],
+        "statements": [
+          {
+            "line": 421,
+            "statement": "Lizzie.config.toggleShowNextMoves();"
+          }
+        ],
+        "matrix_ids": [
+          "ANALYSIS-DISPLAY-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_F#1",
+        "case": "keyPressed:VK_F",
+        "event": "keyPressed",
+        "key": "VK_F",
+        "line": 424,
+        "conditions": [
+          {
+            "expression": "e.isShiftDown()",
+            "expected": true
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_F"
+        ],
+        "statements": [
+          {
+            "line": 426,
+            "statement": "Lizzie.config.toggleShowSuggestionVariations();"
+          }
+        ],
+        "matrix_ids": [
+          "ANALYSIS-DISPLAY-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_F#2",
+        "case": "keyPressed:VK_F",
+        "event": "keyPressed",
+        "key": "VK_F",
+        "line": 424,
+        "conditions": [
+          {
+            "expression": "e.isShiftDown()",
+            "expected": false
+          },
+          {
+            "expression": "controlIsPressed(e)",
+            "expected": true
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_F"
+        ],
+        "statements": [
+          {
+            "line": 428,
+            "statement": "Lizzie.config.toggleLargeSubBoard();"
+          }
+        ],
+        "matrix_ids": [
+          "ANALYSIS-DISPLAY-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_F#3",
+        "case": "keyPressed:VK_F",
+        "event": "keyPressed",
+        "key": "VK_F",
+        "line": 424,
+        "conditions": [
+          {
+            "expression": "e.isShiftDown()",
+            "expected": false
+          },
+          {
+            "expression": "controlIsPressed(e)",
+            "expected": false
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_F"
+        ],
+        "statements": [
+          {
+            "line": 430,
+            "statement": "Lizzie.frame.toggleShowCandidates();"
+          }
+        ],
+        "matrix_ids": [
+          "ANALYSIS-DISPLAY-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_H#1",
+        "case": "keyPressed:VK_H",
+        "event": "keyPressed",
+        "key": "VK_H",
+        "line": 436,
+        "conditions": [],
+        "case_chain": [
+          "keyPressed:VK_H"
+        ],
+        "statements": [
+          {
+            "line": 444,
+            "statement": "Lizzie.leelaz.toggleHeatmap(false);"
+          }
+        ],
+        "matrix_ids": [
+          "ANALYSIS-DISPLAY-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_PAGE_UP#1",
+        "case": "keyPressed:VK_PAGE_UP",
+        "event": "keyPressed",
+        "key": "VK_PAGE_UP",
+        "line": 447,
+        "conditions": [
+          {
+            "expression": "LizzieFrame.boardRenderer.isShowingBranch()",
+            "expected": true
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_PAGE_UP"
+        ],
+        "statements": [
+          {
+            "line": 449,
+            "statement": "Lizzie.frame.doBranch(-1);"
+          }
+        ],
+        "matrix_ids": [
+          "BOARD-HISTORY-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_PAGE_UP#2",
+        "case": "keyPressed:VK_PAGE_UP",
+        "event": "keyPressed",
+        "key": "VK_PAGE_UP",
+        "line": 447,
+        "conditions": [
+          {
+            "expression": "LizzieFrame.boardRenderer.isShowingBranch()",
+            "expected": false
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_PAGE_UP"
+        ],
+        "statements": [
+          {
+            "line": 452,
+            "statement": "LizzieFrame.undo(10);"
+          }
+        ],
+        "matrix_ids": [
+          "BOARD-HISTORY-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_I#1",
+        "case": "keyPressed:VK_I",
+        "event": "keyPressed",
+        "key": "VK_I",
+        "line": 457,
+        "conditions": [
+          {
+            "expression": "e.isControlDown()",
+            "expected": true
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_I"
+        ],
+        "statements": [
+          {
+            "line": 461,
+            "statement": "SetBoardSize st = new SetBoardSize();"
+          },
+          {
+            "line": 462,
+            "statement": "st.setVisible(true);"
+          }
+        ],
+        "matrix_ids": [
+          "SETTINGS-GAME-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_I#2",
+        "case": "keyPressed:VK_I",
+        "event": "keyPressed",
+        "key": "VK_I",
+        "line": 457,
+        "conditions": [
+          {
+            "expression": "e.isControlDown()",
+            "expected": false
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_I"
+        ],
+        "statements": [
+          {
+            "line": 463,
+            "statement": "LizzieFrame.editGameInfo();"
+          }
+        ],
+        "matrix_ids": [
+          "SETTINGS-GAME-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_S#1",
+        "case": "keyPressed:VK_S",
+        "event": "keyPressed",
+        "key": "VK_S",
+        "line": 466,
+        "conditions": [
+          {
+            "expression": "e.isControlDown() && e.isShiftDown()",
+            "expected": true
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_S"
+        ],
+        "statements": [
+          {
+            "line": 468,
+            "statement": "LizzieFrame.saveFile(true);"
+          }
+        ],
+        "matrix_ids": [
+          "KIFU-SAVE-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_S#2",
+        "case": "keyPressed:VK_S",
+        "event": "keyPressed",
+        "key": "VK_S",
+        "line": 466,
+        "conditions": [
+          {
+            "expression": "e.isControlDown() && e.isShiftDown()",
+            "expected": false
+          },
+          {
+            "expression": "e.isControlDown() && e.isAltDown()",
+            "expected": true
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_S"
+        ],
+        "statements": [
+          {
+            "line": 470,
+            "statement": "LizzieFrame.saveCurrentBranch();"
+          }
+        ],
+        "matrix_ids": [
+          "KIFU-SAVE-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_S#3",
+        "case": "keyPressed:VK_S",
+        "event": "keyPressed",
+        "key": "VK_S",
+        "line": 466,
+        "conditions": [
+          {
+            "expression": "e.isControlDown() && e.isShiftDown()",
+            "expected": false
+          },
+          {
+            "expression": "e.isControlDown() && e.isAltDown()",
+            "expected": false
+          },
+          {
+            "expression": "e.isShiftDown() && e.isAltDown()",
+            "expected": true
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_S"
+        ],
+        "statements": [
+          {
+            "line": 473,
+            "statement": "Lizzie.frame.saveImage( Lizzie.frame.statx, Lizzie.frame.staty, (int) (Lizzie.frame.grw * 1.03), Lizzie.frame.grh + Lizzie.frame.stath);"
+          }
+        ],
+        "matrix_ids": [
+          "KIFU-SCREENSHOT-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_S#4",
+        "case": "keyPressed:VK_S",
+        "event": "keyPressed",
+        "key": "VK_S",
+        "line": 466,
+        "conditions": [
+          {
+            "expression": "e.isControlDown() && e.isShiftDown()",
+            "expected": false
+          },
+          {
+            "expression": "e.isControlDown() && e.isAltDown()",
+            "expected": false
+          },
+          {
+            "expression": "e.isShiftDown() && e.isAltDown()",
+            "expected": false
+          },
+          {
+            "expression": "e.isShiftDown()",
+            "expected": true
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_S"
+        ],
+        "statements": [
+          {
+            "line": 479,
+            "statement": "Lizzie.frame.saveSubBoardPicture();"
+          }
+        ],
+        "matrix_ids": [
+          "KIFU-SCREENSHOT-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_S#5",
+        "case": "keyPressed:VK_S",
+        "event": "keyPressed",
+        "key": "VK_S",
+        "line": 466,
+        "conditions": [
+          {
+            "expression": "e.isControlDown() && e.isShiftDown()",
+            "expected": false
+          },
+          {
+            "expression": "e.isControlDown() && e.isAltDown()",
+            "expected": false
+          },
+          {
+            "expression": "e.isShiftDown() && e.isAltDown()",
+            "expected": false
+          },
+          {
+            "expression": "e.isShiftDown()",
+            "expected": false
+          },
+          {
+            "expression": "e.isAltDown()",
+            "expected": true
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_S"
+        ],
+        "statements": [
+          {
+            "line": 482,
+            "statement": "Lizzie.frame.saveMainBoardPicture();"
+          }
+        ],
+        "matrix_ids": [
+          "KIFU-SCREENSHOT-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_S#6",
+        "case": "keyPressed:VK_S",
+        "event": "keyPressed",
+        "key": "VK_S",
+        "line": 466,
+        "conditions": [
+          {
+            "expression": "e.isControlDown() && e.isShiftDown()",
+            "expected": false
+          },
+          {
+            "expression": "e.isControlDown() && e.isAltDown()",
+            "expected": false
+          },
+          {
+            "expression": "e.isShiftDown() && e.isAltDown()",
+            "expected": false
+          },
+          {
+            "expression": "e.isShiftDown()",
+            "expected": false
+          },
+          {
+            "expression": "e.isAltDown()",
+            "expected": false
+          },
+          {
+            "expression": "e.isControlDown()",
+            "expected": true
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_S"
+        ],
+        "statements": [
+          {
+            "line": 486,
+            "statement": "Lizzie.frame.saveOriFile();"
+          }
+        ],
+        "matrix_ids": [
+          "KIFU-SAVE-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_S#7",
+        "case": "keyPressed:VK_S",
+        "event": "keyPressed",
+        "key": "VK_S",
+        "line": 466,
+        "conditions": [
+          {
+            "expression": "e.isControlDown() && e.isShiftDown()",
+            "expected": false
+          },
+          {
+            "expression": "e.isControlDown() && e.isAltDown()",
+            "expected": false
+          },
+          {
+            "expression": "e.isShiftDown() && e.isAltDown()",
+            "expected": false
+          },
+          {
+            "expression": "e.isShiftDown()",
+            "expected": false
+          },
+          {
+            "expression": "e.isAltDown()",
+            "expected": false
+          },
+          {
+            "expression": "e.isControlDown()",
+            "expected": false
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_S"
+        ],
+        "statements": [
+          {
+            "line": 487,
+            "statement": "LizzieFrame.saveFile(false);"
+          }
+        ],
+        "matrix_ids": [
+          "KIFU-SAVE-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_O#1",
+        "case": "keyPressed:VK_O",
+        "event": "keyPressed",
+        "key": "VK_O",
+        "line": 492,
+        "conditions": [
+          {
+            "expression": "e.isControlDown()",
+            "expected": true
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_O"
+        ],
+        "statements": [
+          {
+            "line": 494,
+            "statement": "Lizzie.frame.openFileWithAna(false);"
+          }
+        ],
+        "matrix_ids": [
+          "KIFU-OPEN-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_O#2",
+        "case": "keyPressed:VK_O",
+        "event": "keyPressed",
+        "key": "VK_O",
+        "line": 492,
+        "conditions": [
+          {
+            "expression": "e.isControlDown()",
+            "expected": false
+          },
+          {
+            "expression": "e.isAltDown()",
+            "expected": true
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_O"
+        ],
+        "statements": [
+          {
+            "line": 496,
+            "statement": "Lizzie.frame.openBoardSync();"
+          }
+        ],
+        "matrix_ids": [
+          "ONLINE-SYNC-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_O#3",
+        "case": "keyPressed:VK_O",
+        "event": "keyPressed",
+        "key": "VK_O",
+        "line": 492,
+        "conditions": [
+          {
+            "expression": "e.isControlDown()",
+            "expected": false
+          },
+          {
+            "expression": "e.isAltDown()",
+            "expected": false
+          },
+          {
+            "expression": "e.isShiftDown()",
+            "expected": true
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_O"
+        ],
+        "statements": [
+          {
+            "line": 498,
+            "statement": "Lizzie.frame.openYikeLiveDialog();"
+          }
+        ],
+        "matrix_ids": [
+          "ONLINE-YIKE-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_O#4",
+        "case": "keyPressed:VK_O",
+        "event": "keyPressed",
+        "key": "VK_O",
+        "line": 492,
+        "conditions": [
+          {
+            "expression": "e.isControlDown()",
+            "expected": false
+          },
+          {
+            "expression": "e.isAltDown()",
+            "expected": false
+          },
+          {
+            "expression": "e.isShiftDown()",
+            "expected": false
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_O"
+        ],
+        "statements": [
+          {
+            "line": 500,
+            "statement": "Lizzie.frame.openFile();"
+          }
+        ],
+        "matrix_ids": [
+          "KIFU-OPEN-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_V#1",
+        "case": "keyPressed:VK_V",
+        "event": "keyPressed",
+        "key": "VK_V",
+        "line": 504,
+        "conditions": [
+          {
+            "expression": "controlIsPressed(e)",
+            "expected": true
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_V"
+        ],
+        "statements": [
+          {
+            "line": 510,
+            "statement": "Lizzie.frame.pasteSgf();"
+          }
+        ],
+        "matrix_ids": [
+          "KIFU-CLIPBOARD-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_V#2",
+        "case": "keyPressed:VK_V",
+        "event": "keyPressed",
+        "key": "VK_V",
+        "line": 504,
+        "conditions": [
+          {
+            "expression": "controlIsPressed(e)",
+            "expected": false
+          },
+          {
+            "expression": "e.isAltDown()",
+            "expected": true
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_V"
+        ],
+        "statements": [
+          {
+            "line": 512,
+            "statement": "Lizzie.config.showSuggestionVariations = !Lizzie.config.showSuggestionVariations;"
+          },
+          {
+            "line": 513,
+            "statement": "Lizzie.config.uiConfig.put( \"show-suggestion-variations\", Lizzie.config.showSuggestionVariations);"
+          }
+        ],
+        "matrix_ids": [
+          "ANALYSIS-DISPLAY-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_V#3",
+        "case": "keyPressed:VK_V",
+        "event": "keyPressed",
+        "key": "VK_V",
+        "line": 504,
+        "conditions": [
+          {
+            "expression": "controlIsPressed(e)",
+            "expected": false
+          },
+          {
+            "expression": "e.isAltDown()",
+            "expected": false
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_V"
+        ],
+        "statements": [
+          {
+            "line": 516,
+            "statement": "Lizzie.frame.tryPlay(false);"
+          }
+        ],
+        "matrix_ids": [
+          "BOARD-VARIATION-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_HOME#1",
+        "case": "keyPressed:VK_HOME",
+        "event": "keyPressed",
+        "key": "VK_HOME",
+        "line": 520,
+        "conditions": [
+          {
+            "expression": "controlIsPressed(e)",
+            "expected": true
+          },
+          {
+            "expression": "Lizzie.leelaz.isPondering()",
+            "expected": true
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_HOME"
+        ],
+        "statements": [
+          {
+            "line": 526,
+            "statement": "Lizzie.board.clear(false);"
+          },
+          {
+            "line": 528,
+            "statement": "Lizzie.leelaz.ponder();"
+          }
+        ],
+        "matrix_ids": [
+          "BOARD-EDIT-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_HOME#2",
+        "case": "keyPressed:VK_HOME",
+        "event": "keyPressed",
+        "key": "VK_HOME",
+        "line": 520,
+        "conditions": [
+          {
+            "expression": "controlIsPressed(e)",
+            "expected": true
+          },
+          {
+            "expression": "Lizzie.leelaz.isPondering()",
+            "expected": false
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_HOME"
+        ],
+        "statements": [
+          {
+            "line": 526,
+            "statement": "Lizzie.board.clear(false);"
+          }
+        ],
+        "matrix_ids": [
+          "BOARD-EDIT-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_HOME#3",
+        "case": "keyPressed:VK_HOME",
+        "event": "keyPressed",
+        "key": "VK_HOME",
+        "line": 520,
+        "conditions": [
+          {
+            "expression": "controlIsPressed(e)",
+            "expected": false
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_HOME"
+        ],
+        "statements": [
+          {
+            "line": 531,
+            "statement": "Lizzie.frame.firstMove();"
+          }
+        ],
+        "matrix_ids": [
+          "BOARD-HISTORY-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_END#1",
+        "case": "keyPressed:VK_END",
+        "event": "keyPressed",
+        "key": "VK_END",
+        "line": 535,
+        "conditions": [],
+        "case_chain": [
+          "keyPressed:VK_END"
+        ],
+        "statements": [
+          {
+            "line": 540,
+            "statement": "Lizzie.frame.lastMove();"
+          }
+        ],
+        "matrix_ids": [
+          "BOARD-HISTORY-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_X#1",
+        "case": "keyPressed:VK_X",
+        "event": "keyPressed",
+        "key": "VK_X",
+        "line": 543,
+        "conditions": [
+          {
+            "expression": "e.isShiftDown()",
+            "expected": true
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_X"
+        ],
+        "statements": [
+          {
+            "line": 545,
+            "statement": "Lizzie.frame.openConfigDialog2(0);"
+          }
+        ],
+        "matrix_ids": [
+          "SETTINGS-GENERAL-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_X#2",
+        "case": "keyPressed:VK_X",
+        "event": "keyPressed",
+        "key": "VK_X",
+        "line": 543,
+        "conditions": [
+          {
+            "expression": "e.isShiftDown()",
+            "expected": false
+          },
+          {
+            "expression": "e.isAltDown()",
+            "expected": true
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_X"
+        ],
+        "statements": [
+          {
+            "line": 551,
+            "statement": "LizzieFrame.openMoreEngineDialog();"
+          }
+        ],
+        "matrix_ids": [
+          "SETTINGS-ENGINE-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_X#3",
+        "case": "keyPressed:VK_X",
+        "event": "keyPressed",
+        "key": "VK_X",
+        "line": 543,
+        "conditions": [
+          {
+            "expression": "e.isShiftDown()",
+            "expected": false
+          },
+          {
+            "expression": "e.isAltDown()",
+            "expected": false
+          },
+          {
+            "expression": "!Lizzie.frame.showControls",
+            "expected": true
+          },
+          {
+            "expression": "Lizzie.frame.listScrollpane.isVisible()",
+            "expected": true
+          },
+          {
+            "expression": "Lizzie.frame.commentScrollPane.isVisible()",
+            "expected": true
+          },
+          {
+            "expression": "Lizzie.frame.blunderContentPane.isVisible()",
+            "expected": true
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_X"
+        ],
+        "statements": [
+          {
+            "line": 560,
+            "statement": "Lizzie.frame.setVarTreeVisible(false);"
+          },
+          {
+            "line": 562,
+            "statement": "Lizzie.frame.listScrollpane.setVisible(false);"
+          },
+          {
+            "line": 564,
+            "statement": "Lizzie.frame.commentScrollPane.setVisible(false);"
+          },
+          {
+            "line": 566,
+            "statement": "Lizzie.frame.blunderContentPane.setVisible(false);"
+          },
+          {
+            "line": 567,
+            "statement": "Lizzie.frame.drawControls();"
+          }
+        ],
+        "matrix_ids": [
+          "UI-CONTROLS-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_X#4",
+        "case": "keyPressed:VK_X",
+        "event": "keyPressed",
+        "key": "VK_X",
+        "line": 543,
+        "conditions": [
+          {
+            "expression": "e.isShiftDown()",
+            "expected": false
+          },
+          {
+            "expression": "e.isAltDown()",
+            "expected": false
+          },
+          {
+            "expression": "!Lizzie.frame.showControls",
+            "expected": true
+          },
+          {
+            "expression": "Lizzie.frame.listScrollpane.isVisible()",
+            "expected": true
+          },
+          {
+            "expression": "Lizzie.frame.commentScrollPane.isVisible()",
+            "expected": true
+          },
+          {
+            "expression": "Lizzie.frame.blunderContentPane.isVisible()",
+            "expected": false
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_X"
+        ],
+        "statements": [
+          {
+            "line": 560,
+            "statement": "Lizzie.frame.setVarTreeVisible(false);"
+          },
+          {
+            "line": 562,
+            "statement": "Lizzie.frame.listScrollpane.setVisible(false);"
+          },
+          {
+            "line": 564,
+            "statement": "Lizzie.frame.commentScrollPane.setVisible(false);"
+          },
+          {
+            "line": 567,
+            "statement": "Lizzie.frame.drawControls();"
+          }
+        ],
+        "matrix_ids": [
+          "UI-CONTROLS-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_X#5",
+        "case": "keyPressed:VK_X",
+        "event": "keyPressed",
+        "key": "VK_X",
+        "line": 543,
+        "conditions": [
+          {
+            "expression": "e.isShiftDown()",
+            "expected": false
+          },
+          {
+            "expression": "e.isAltDown()",
+            "expected": false
+          },
+          {
+            "expression": "!Lizzie.frame.showControls",
+            "expected": true
+          },
+          {
+            "expression": "Lizzie.frame.listScrollpane.isVisible()",
+            "expected": true
+          },
+          {
+            "expression": "Lizzie.frame.commentScrollPane.isVisible()",
+            "expected": false
+          },
+          {
+            "expression": "Lizzie.frame.blunderContentPane.isVisible()",
+            "expected": true
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_X"
+        ],
+        "statements": [
+          {
+            "line": 560,
+            "statement": "Lizzie.frame.setVarTreeVisible(false);"
+          },
+          {
+            "line": 562,
+            "statement": "Lizzie.frame.listScrollpane.setVisible(false);"
+          },
+          {
+            "line": 566,
+            "statement": "Lizzie.frame.blunderContentPane.setVisible(false);"
+          },
+          {
+            "line": 567,
+            "statement": "Lizzie.frame.drawControls();"
+          }
+        ],
+        "matrix_ids": [
+          "UI-CONTROLS-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_X#6",
+        "case": "keyPressed:VK_X",
+        "event": "keyPressed",
+        "key": "VK_X",
+        "line": 543,
+        "conditions": [
+          {
+            "expression": "e.isShiftDown()",
+            "expected": false
+          },
+          {
+            "expression": "e.isAltDown()",
+            "expected": false
+          },
+          {
+            "expression": "!Lizzie.frame.showControls",
+            "expected": true
+          },
+          {
+            "expression": "Lizzie.frame.listScrollpane.isVisible()",
+            "expected": true
+          },
+          {
+            "expression": "Lizzie.frame.commentScrollPane.isVisible()",
+            "expected": false
+          },
+          {
+            "expression": "Lizzie.frame.blunderContentPane.isVisible()",
+            "expected": false
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_X"
+        ],
+        "statements": [
+          {
+            "line": 560,
+            "statement": "Lizzie.frame.setVarTreeVisible(false);"
+          },
+          {
+            "line": 562,
+            "statement": "Lizzie.frame.listScrollpane.setVisible(false);"
+          },
+          {
+            "line": 567,
+            "statement": "Lizzie.frame.drawControls();"
+          }
+        ],
+        "matrix_ids": [
+          "UI-CONTROLS-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_X#7",
+        "case": "keyPressed:VK_X",
+        "event": "keyPressed",
+        "key": "VK_X",
+        "line": 543,
+        "conditions": [
+          {
+            "expression": "e.isShiftDown()",
+            "expected": false
+          },
+          {
+            "expression": "e.isAltDown()",
+            "expected": false
+          },
+          {
+            "expression": "!Lizzie.frame.showControls",
+            "expected": true
+          },
+          {
+            "expression": "Lizzie.frame.listScrollpane.isVisible()",
+            "expected": false
+          },
+          {
+            "expression": "Lizzie.frame.commentScrollPane.isVisible()",
+            "expected": true
+          },
+          {
+            "expression": "Lizzie.frame.blunderContentPane.isVisible()",
+            "expected": true
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_X"
+        ],
+        "statements": [
+          {
+            "line": 560,
+            "statement": "Lizzie.frame.setVarTreeVisible(false);"
+          },
+          {
+            "line": 564,
+            "statement": "Lizzie.frame.commentScrollPane.setVisible(false);"
+          },
+          {
+            "line": 566,
+            "statement": "Lizzie.frame.blunderContentPane.setVisible(false);"
+          },
+          {
+            "line": 567,
+            "statement": "Lizzie.frame.drawControls();"
+          }
+        ],
+        "matrix_ids": [
+          "UI-CONTROLS-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_X#8",
+        "case": "keyPressed:VK_X",
+        "event": "keyPressed",
+        "key": "VK_X",
+        "line": 543,
+        "conditions": [
+          {
+            "expression": "e.isShiftDown()",
+            "expected": false
+          },
+          {
+            "expression": "e.isAltDown()",
+            "expected": false
+          },
+          {
+            "expression": "!Lizzie.frame.showControls",
+            "expected": true
+          },
+          {
+            "expression": "Lizzie.frame.listScrollpane.isVisible()",
+            "expected": false
+          },
+          {
+            "expression": "Lizzie.frame.commentScrollPane.isVisible()",
+            "expected": true
+          },
+          {
+            "expression": "Lizzie.frame.blunderContentPane.isVisible()",
+            "expected": false
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_X"
+        ],
+        "statements": [
+          {
+            "line": 560,
+            "statement": "Lizzie.frame.setVarTreeVisible(false);"
+          },
+          {
+            "line": 564,
+            "statement": "Lizzie.frame.commentScrollPane.setVisible(false);"
+          },
+          {
+            "line": 567,
+            "statement": "Lizzie.frame.drawControls();"
+          }
+        ],
+        "matrix_ids": [
+          "UI-CONTROLS-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_X#9",
+        "case": "keyPressed:VK_X",
+        "event": "keyPressed",
+        "key": "VK_X",
+        "line": 543,
+        "conditions": [
+          {
+            "expression": "e.isShiftDown()",
+            "expected": false
+          },
+          {
+            "expression": "e.isAltDown()",
+            "expected": false
+          },
+          {
+            "expression": "!Lizzie.frame.showControls",
+            "expected": true
+          },
+          {
+            "expression": "Lizzie.frame.listScrollpane.isVisible()",
+            "expected": false
+          },
+          {
+            "expression": "Lizzie.frame.commentScrollPane.isVisible()",
+            "expected": false
+          },
+          {
+            "expression": "Lizzie.frame.blunderContentPane.isVisible()",
+            "expected": true
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_X"
+        ],
+        "statements": [
+          {
+            "line": 560,
+            "statement": "Lizzie.frame.setVarTreeVisible(false);"
+          },
+          {
+            "line": 566,
+            "statement": "Lizzie.frame.blunderContentPane.setVisible(false);"
+          },
+          {
+            "line": 567,
+            "statement": "Lizzie.frame.drawControls();"
+          }
+        ],
+        "matrix_ids": [
+          "UI-CONTROLS-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_X#10",
+        "case": "keyPressed:VK_X",
+        "event": "keyPressed",
+        "key": "VK_X",
+        "line": 543,
+        "conditions": [
+          {
+            "expression": "e.isShiftDown()",
+            "expected": false
+          },
+          {
+            "expression": "e.isAltDown()",
+            "expected": false
+          },
+          {
+            "expression": "!Lizzie.frame.showControls",
+            "expected": true
+          },
+          {
+            "expression": "Lizzie.frame.listScrollpane.isVisible()",
+            "expected": false
+          },
+          {
+            "expression": "Lizzie.frame.commentScrollPane.isVisible()",
+            "expected": false
+          },
+          {
+            "expression": "Lizzie.frame.blunderContentPane.isVisible()",
+            "expected": false
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_X"
+        ],
+        "statements": [
+          {
+            "line": 560,
+            "statement": "Lizzie.frame.setVarTreeVisible(false);"
+          },
+          {
+            "line": 567,
+            "statement": "Lizzie.frame.drawControls();"
+          }
+        ],
+        "matrix_ids": [
+          "UI-CONTROLS-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_X#11",
+        "case": "keyPressed:VK_X",
+        "event": "keyPressed",
+        "key": "VK_X",
+        "line": 543,
+        "conditions": [
+          {
+            "expression": "e.isShiftDown()",
+            "expected": false
+          },
+          {
+            "expression": "e.isAltDown()",
+            "expected": false
+          },
+          {
+            "expression": "!Lizzie.frame.showControls",
+            "expected": false
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_X"
+        ],
+        "statements": [],
+        "matrix_ids": [
+          "UI-CONTROLS-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_W#1",
+        "case": "keyPressed:VK_W",
+        "event": "keyPressed",
+        "key": "VK_W",
+        "line": 573,
+        "conditions": [
+          {
+            "expression": "controlIsPressed(e)",
+            "expected": true
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_W"
+        ],
+        "statements": [
+          {
+            "line": 575,
+            "statement": "Lizzie.config.toggleLargeWinrate();"
+          }
+        ],
+        "matrix_ids": [
+          "UI-ANALYSIS-PANELS-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_W#2",
+        "case": "keyPressed:VK_W",
+        "event": "keyPressed",
+        "key": "VK_W",
+        "line": 573,
+        "conditions": [
+          {
+            "expression": "controlIsPressed(e)",
+            "expected": false
+          },
+          {
+            "expression": "e.isAltDown()",
+            "expected": true
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_W"
+        ],
+        "statements": [
+          {
+            "line": 576,
+            "statement": "Lizzie.config.toggleShowWinrate();"
+          }
+        ],
+        "matrix_ids": [
+          "UI-ANALYSIS-PANELS-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_W#3",
+        "case": "keyPressed:VK_W",
+        "event": "keyPressed",
+        "key": "VK_W",
+        "line": 573,
+        "conditions": [
+          {
+            "expression": "controlIsPressed(e)",
+            "expected": false
+          },
+          {
+            "expression": "e.isAltDown()",
+            "expected": false
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_W"
+        ],
+        "statements": [],
+        "matrix_ids": [
+          "UI-ANALYSIS-PANELS-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_G#1",
+        "case": "keyPressed:VK_G",
+        "event": "keyPressed",
+        "key": "VK_G",
+        "line": 579,
+        "conditions": [
+          {
+            "expression": "e.isAltDown()",
+            "expected": true
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_G"
+        ],
+        "statements": [
+          {
+            "line": 581,
+            "statement": "Lizzie.config.toggleShowListPane();"
+          }
+        ],
+        "matrix_ids": [
+          "UI-ANALYSIS-PANELS-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_G#2",
+        "case": "keyPressed:VK_G",
+        "event": "keyPressed",
+        "key": "VK_G",
+        "line": 579,
+        "conditions": [
+          {
+            "expression": "e.isAltDown()",
+            "expected": false
+          },
+          {
+            "expression": "e.isShiftDown()",
+            "expected": true
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_G"
+        ],
+        "statements": [
+          {
+            "line": 582,
+            "statement": "Lizzie.config.toggleShowVariationGraph();"
+          }
+        ],
+        "matrix_ids": [
+          "UI-ANALYSIS-PANELS-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_G#3",
+        "case": "keyPressed:VK_G",
+        "event": "keyPressed",
+        "key": "VK_G",
+        "line": 579,
+        "conditions": [
+          {
+            "expression": "e.isAltDown()",
+            "expected": false
+          },
+          {
+            "expression": "e.isShiftDown()",
+            "expected": false
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_G"
+        ],
+        "statements": [
+          {
+            "line": 583,
+            "statement": "Lizzie.frame.tryToRefreshVariation();"
+          }
+        ],
+        "matrix_ids": [
+          "UI-ANALYSIS-PANELS-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_T#1",
+        "case": "keyPressed:VK_T",
+        "event": "keyPressed",
+        "key": "VK_T",
+        "line": 586,
+        "conditions": [
+          {
+            "expression": "controlIsPressed(e)",
+            "expected": true
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_T"
+        ],
+        "statements": [
+          {
+            "line": 588,
+            "statement": "Lizzie.config.toggleShowCommentNodeColor();"
+          }
+        ],
+        "matrix_ids": [
+          "UI-ANALYSIS-PANELS-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_T#2",
+        "case": "keyPressed:VK_T",
+        "event": "keyPressed",
+        "key": "VK_T",
+        "line": 586,
+        "conditions": [
+          {
+            "expression": "controlIsPressed(e)",
+            "expected": false
+          },
+          {
+            "expression": "e.isAltDown()",
+            "expected": true
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_T"
+        ],
+        "statements": [
+          {
+            "line": 590,
+            "statement": "Lizzie.config.toggleShowComment();"
+          }
+        ],
+        "matrix_ids": [
+          "UI-ANALYSIS-PANELS-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_T#3",
+        "case": "keyPressed:VK_T",
+        "event": "keyPressed",
+        "key": "VK_T",
+        "line": 586,
+        "conditions": [
+          {
+            "expression": "controlIsPressed(e)",
+            "expected": false
+          },
+          {
+            "expression": "e.isAltDown()",
+            "expected": false
+          },
+          {
+            "expression": "e.isShiftDown()",
+            "expected": true
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_T"
+        ],
+        "statements": [
+          {
+            "line": 592,
+            "statement": "Lizzie.frame.startCaptureTsumeGo();"
+          }
+        ],
+        "matrix_ids": [
+          "TSUMEGO-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_T#4",
+        "case": "keyPressed:VK_T",
+        "event": "keyPressed",
+        "key": "VK_T",
+        "line": 586,
+        "conditions": [
+          {
+            "expression": "controlIsPressed(e)",
+            "expected": false
+          },
+          {
+            "expression": "e.isAltDown()",
+            "expected": false
+          },
+          {
+            "expression": "e.isShiftDown()",
+            "expected": false
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_T"
+        ],
+        "statements": [
+          {
+            "line": 594,
+            "statement": "Lizzie.frame.togglePolicy();"
+          }
+        ],
+        "matrix_ids": [
+          "ANALYSIS-DISPLAY-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_Y#1",
+        "case": "keyPressed:VK_Y",
+        "event": "keyPressed",
+        "key": "VK_Y",
+        "line": 598,
+        "conditions": [],
+        "case_chain": [
+          "keyPressed:VK_Y"
+        ],
+        "statements": [
+          {
+            "line": 600,
+            "statement": "Lizzie.frame.toggleBadMoves();"
+          }
+        ],
+        "matrix_ids": [
+          "ANALYSIS-DISPLAY-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_C#1",
+        "case": "keyPressed:VK_C",
+        "event": "keyPressed",
+        "key": "VK_C",
+        "line": 603,
+        "conditions": [
+          {
+            "expression": "e.isAltDown()",
+            "expected": true
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_C"
+        ],
+        "statements": [
+          {
+            "line": 605,
+            "statement": "Lizzie.frame.copySubBoard();"
+          }
+        ],
+        "matrix_ids": [
+          "KIFU-SCREENSHOT-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_C#2",
+        "case": "keyPressed:VK_C",
+        "event": "keyPressed",
+        "key": "VK_C",
+        "line": 603,
+        "conditions": [
+          {
+            "expression": "e.isAltDown()",
+            "expected": false
+          },
+          {
+            "expression": "e.isShiftDown()",
+            "expected": true
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_C"
+        ],
+        "statements": [
+          {
+            "line": 607,
+            "statement": "Lizzie.frame.saveMainBoardToClipboard();"
+          }
+        ],
+        "matrix_ids": [
+          "KIFU-SCREENSHOT-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_C#3",
+        "case": "keyPressed:VK_C",
+        "event": "keyPressed",
+        "key": "VK_C",
+        "line": 603,
+        "conditions": [
+          {
+            "expression": "e.isAltDown()",
+            "expected": false
+          },
+          {
+            "expression": "e.isShiftDown()",
+            "expected": false
+          },
+          {
+            "expression": "controlIsPressed(e)",
+            "expected": true
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_C"
+        ],
+        "statements": [
+          {
+            "line": 609,
+            "statement": "Lizzie.frame.copySgf();"
+          }
+        ],
+        "matrix_ids": [
+          "KIFU-CLIPBOARD-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_C#4",
+        "case": "keyPressed:VK_C",
+        "event": "keyPressed",
+        "key": "VK_C",
+        "line": 603,
+        "conditions": [
+          {
+            "expression": "e.isAltDown()",
+            "expected": false
+          },
+          {
+            "expression": "e.isShiftDown()",
+            "expected": false
+          },
+          {
+            "expression": "controlIsPressed(e)",
+            "expected": false
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_C"
+        ],
+        "statements": [
+          {
+            "line": 611,
+            "statement": "Lizzie.config.toggleCoordinates();"
+          }
+        ],
+        "matrix_ids": [
+          "UI-COORDS-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_ENTER#1",
+        "case": "keyPressed:VK_ENTER",
+        "event": "keyPressed",
+        "key": "VK_ENTER",
+        "line": 615,
+        "conditions": [
+          {
+            "expression": "e.isAltDown()",
+            "expected": true
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_ENTER"
+        ],
+        "statements": [
+          {
+            "line": 617,
+            "statement": "Lizzie.frame.continueAiPlaying(false, true, true, true);"
+          }
+        ],
+        "matrix_ids": [
+          "ENGINE-GAME-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_ENTER#2",
+        "case": "keyPressed:VK_ENTER",
+        "event": "keyPressed",
+        "key": "VK_ENTER",
+        "line": 615,
+        "conditions": [
+          {
+            "expression": "e.isAltDown()",
+            "expected": false
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_ENTER"
+        ],
+        "statements": [
+          {
+            "line": 619,
+            "statement": "Lizzie.frame.continueAiPlaying(true, true, true, true);"
+          }
+        ],
+        "matrix_ids": [
+          "ENGINE-GAME-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_B#1",
+        "case": "keyPressed:VK_B",
+        "event": "keyPressed",
+        "key": "VK_B",
+        "line": 623,
+        "conditions": [
+          {
+            "expression": "e.isAltDown()",
+            "expected": true
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_B"
+        ],
+        "statements": [
+          {
+            "line": 625,
+            "statement": "Lizzie.frame.shareSGF();"
+          }
+        ],
+        "matrix_ids": [
+          "KIFU-SHARE-NOOP-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_B#2",
+        "case": "keyPressed:VK_B",
+        "event": "keyPressed",
+        "key": "VK_B",
+        "line": 623,
+        "conditions": [
+          {
+            "expression": "e.isAltDown()",
+            "expected": false
+          },
+          {
+            "expression": "e.isControlDown()",
+            "expected": true
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_B"
+        ],
+        "statements": [
+          {
+            "line": 628,
+            "statement": "Lizzie.frame.flashAnalyzeGame(true, false);"
+          }
+        ],
+        "matrix_ids": [
+          "ANALYSIS-FULL-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_B#3",
+        "case": "keyPressed:VK_B",
+        "event": "keyPressed",
+        "key": "VK_B",
+        "line": 623,
+        "conditions": [
+          {
+            "expression": "e.isAltDown()",
+            "expected": false
+          },
+          {
+            "expression": "e.isControlDown()",
+            "expected": false
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_B"
+        ],
+        "statements": [
+          {
+            "line": 630,
+            "statement": "Lizzie.frame.moveToMainTrunk();"
+          }
+        ],
+        "matrix_ids": [
+          "BOARD-HISTORY-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_DELETE#1",
+        "case": "keyPressed:VK_DELETE",
+        "event": "keyPressed",
+        "key": "VK_DELETE",
+        "line": 634,
+        "conditions": [
+          {
+            "expression": "e.isAltDown()",
+            "expected": true
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_DELETE",
+          "keyPressed:VK_BACK_SPACE"
+        ],
+        "statements": [
+          {
+            "line": 640,
+            "statement": "Lizzie.board.clearBestMovesAfter(Lizzie.board.getHistory().getStart());"
+          }
+        ],
+        "matrix_ids": [
+          "BOARD-EDIT-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_DELETE#2",
+        "case": "keyPressed:VK_DELETE",
+        "event": "keyPressed",
+        "key": "VK_DELETE",
+        "line": 634,
+        "conditions": [
+          {
+            "expression": "e.isAltDown()",
+            "expected": false
+          },
+          {
+            "expression": "e.isShiftDown()",
+            "expected": true
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_DELETE",
+          "keyPressed:VK_BACK_SPACE"
+        ],
+        "statements": [
+          {
+            "line": 642,
+            "statement": "deleteBranch();"
+          }
+        ],
+        "matrix_ids": [
+          "BOARD-EDIT-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_DELETE#3",
+        "case": "keyPressed:VK_DELETE",
+        "event": "keyPressed",
+        "key": "VK_DELETE",
+        "line": 634,
+        "conditions": [
+          {
+            "expression": "e.isAltDown()",
+            "expected": false
+          },
+          {
+            "expression": "e.isShiftDown()",
+            "expected": false
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_DELETE",
+          "keyPressed:VK_BACK_SPACE"
+        ],
+        "statements": [
+          {
+            "line": 644,
+            "statement": "deleteMove();"
+          }
+        ],
+        "matrix_ids": [
+          "BOARD-EDIT-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_BACK_SPACE#1",
+        "case": "keyPressed:VK_BACK_SPACE",
+        "event": "keyPressed",
+        "key": "VK_BACK_SPACE",
+        "line": 635,
+        "conditions": [
+          {
+            "expression": "e.isAltDown()",
+            "expected": true
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_BACK_SPACE"
+        ],
+        "statements": [
+          {
+            "line": 640,
+            "statement": "Lizzie.board.clearBestMovesAfter(Lizzie.board.getHistory().getStart());"
+          }
+        ],
+        "matrix_ids": [
+          "BOARD-EDIT-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_BACK_SPACE#2",
+        "case": "keyPressed:VK_BACK_SPACE",
+        "event": "keyPressed",
+        "key": "VK_BACK_SPACE",
+        "line": 635,
+        "conditions": [
+          {
+            "expression": "e.isAltDown()",
+            "expected": false
+          },
+          {
+            "expression": "e.isShiftDown()",
+            "expected": true
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_BACK_SPACE"
+        ],
+        "statements": [
+          {
+            "line": 642,
+            "statement": "deleteBranch();"
+          }
+        ],
+        "matrix_ids": [
+          "BOARD-EDIT-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_BACK_SPACE#3",
+        "case": "keyPressed:VK_BACK_SPACE",
+        "event": "keyPressed",
+        "key": "VK_BACK_SPACE",
+        "line": 635,
+        "conditions": [
+          {
+            "expression": "e.isAltDown()",
+            "expected": false
+          },
+          {
+            "expression": "e.isShiftDown()",
+            "expected": false
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_BACK_SPACE"
+        ],
+        "statements": [
+          {
+            "line": 644,
+            "statement": "deleteMove();"
+          }
+        ],
+        "matrix_ids": [
+          "BOARD-EDIT-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_Z#1",
+        "case": "keyPressed:VK_Z",
+        "event": "keyPressed",
+        "key": "VK_Z",
+        "line": 648,
+        "conditions": [
+          {
+            "expression": "e.isControlDown()",
+            "expected": true
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_Z"
+        ],
+        "statements": [
+          {
+            "line": 650,
+            "statement": "Lizzie.frame.toggleAlwaysOntop();"
+          }
+        ],
+        "matrix_ids": [
+          "UI-LAYOUT-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_Z#2",
+        "case": "keyPressed:VK_Z",
+        "event": "keyPressed",
+        "key": "VK_Z",
+        "line": 648,
+        "conditions": [
+          {
+            "expression": "e.isControlDown()",
+            "expected": false
+          },
+          {
+            "expression": "e.isAltDown()",
+            "expected": true
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_Z"
+        ],
+        "statements": [
+          {
+            "line": 651,
+            "statement": "Lizzie.config.toggleShowSubBoard();"
+          }
+        ],
+        "matrix_ids": [
+          "UI-ANALYSIS-PANELS-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_Z#3",
+        "case": "keyPressed:VK_Z",
+        "event": "keyPressed",
+        "key": "VK_Z",
+        "line": 648,
+        "conditions": [
+          {
+            "expression": "e.isControlDown()",
+            "expected": false
+          },
+          {
+            "expression": "e.isAltDown()",
+            "expected": false
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_Z"
+        ],
+        "statements": [
+          {
+            "line": 654,
+            "statement": "Lizzie.frame.startTemporaryBoard();"
+          }
+        ],
+        "matrix_ids": [
+          "BOARD-TEMPORARY-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_Q#1",
+        "case": "keyPressed:VK_Q",
+        "event": "keyPressed",
+        "key": "VK_Q",
+        "line": 657,
+        "conditions": [
+          {
+            "expression": "controlIsPressed(e)",
+            "expected": true
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_Q"
+        ],
+        "statements": [
+          {
+            "line": 660,
+            "statement": "Lizzie.frame.toggleScoreMode();"
+          }
+        ],
+        "matrix_ids": [
+          "ANALYSIS-COUNTING-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_Q#2",
+        "case": "keyPressed:VK_Q",
+        "event": "keyPressed",
+        "key": "VK_Q",
+        "line": 657,
+        "conditions": [
+          {
+            "expression": "controlIsPressed(e)",
+            "expected": false
+          },
+          {
+            "expression": "e.isAltDown()",
+            "expected": true
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_Q"
+        ],
+        "statements": [
+          {
+            "line": 662,
+            "statement": "Lizzie.frame.toggleIndependentMainBoard();"
+          }
+        ],
+        "matrix_ids": [
+          "UI-LAYOUT-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_Q#3",
+        "case": "keyPressed:VK_Q",
+        "event": "keyPressed",
+        "key": "VK_Q",
+        "line": 657,
+        "conditions": [
+          {
+            "expression": "controlIsPressed(e)",
+            "expected": false
+          },
+          {
+            "expression": "e.isAltDown()",
+            "expected": false
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_Q"
+        ],
+        "statements": [
+          {
+            "line": 663,
+            "statement": "Lizzie.frame.openOnlineDialog();"
+          }
+        ],
+        "matrix_ids": [
+          "ONLINE-HUB-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_A#1",
+        "case": "keyPressed:VK_A",
+        "event": "keyPressed",
+        "key": "VK_A",
+        "line": 666,
+        "conditions": [
+          {
+            "expression": "controlIsPressed(e)",
+            "expected": true
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_A"
+        ],
+        "statements": [
+          {
+            "line": 668,
+            "statement": "AutoPlay autoPlay = new AutoPlay();"
+          },
+          {
+            "line": 669,
+            "statement": "autoPlay.setVisible(true);"
+          }
+        ],
+        "matrix_ids": [
+          "ANALYSIS-AUTO-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_A#2",
+        "case": "keyPressed:VK_A",
+        "event": "keyPressed",
+        "key": "VK_A",
+        "line": 666,
+        "conditions": [
+          {
+            "expression": "controlIsPressed(e)",
+            "expected": false
+          },
+          {
+            "expression": "e.isAltDown()",
+            "expected": true
+          },
+          {
+            "expression": "!Lizzie.frame.syncBoard",
+            "expected": true
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_A"
+        ],
+        "statements": [
+          {
+            "line": 671,
+            "statement": "Lizzie.frame.toggleIndependentSubBoard();"
+          }
+        ],
+        "matrix_ids": [
+          "UI-LAYOUT-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_A#3",
+        "case": "keyPressed:VK_A",
+        "event": "keyPressed",
+        "key": "VK_A",
+        "line": 666,
+        "conditions": [
+          {
+            "expression": "controlIsPressed(e)",
+            "expected": false
+          },
+          {
+            "expression": "e.isAltDown()",
+            "expected": true
+          },
+          {
+            "expression": "!Lizzie.frame.syncBoard",
+            "expected": false
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_A"
+        ],
+        "statements": [],
+        "matrix_ids": [
+          "UI-LAYOUT-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_A#4",
+        "case": "keyPressed:VK_A",
+        "event": "keyPressed",
+        "key": "VK_A",
+        "line": 666,
+        "conditions": [
+          {
+            "expression": "controlIsPressed(e)",
+            "expected": false
+          },
+          {
+            "expression": "e.isAltDown()",
+            "expected": false
+          },
+          {
+            "expression": "e.isShiftDown()",
+            "expected": true
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_A"
+        ],
+        "statements": [
+          {
+            "line": 674,
+            "statement": "Lizzie.board.clearBoardStat();"
+          }
+        ],
+        "matrix_ids": [
+          "BOARD-EDIT-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_A#5",
+        "case": "keyPressed:VK_A",
+        "event": "keyPressed",
+        "key": "VK_A",
+        "line": 666,
+        "conditions": [
+          {
+            "expression": "controlIsPressed(e)",
+            "expected": false
+          },
+          {
+            "expression": "e.isAltDown()",
+            "expected": false
+          },
+          {
+            "expression": "e.isShiftDown()",
+            "expected": false
+          },
+          {
+            "expression": "newgame.isCancelled()",
+            "expected": true
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_A"
+        ],
+        "statements": [
+          {
+            "line": 676,
+            "statement": "StartAnaDialog newgame = new StartAnaDialog(false, Lizzie.frame);"
+          },
+          {
+            "line": 677,
+            "statement": "newgame.setVisible(true);"
+          },
+          {
+            "line": 679,
+            "statement": "LizzieFrame.toolbar.resetAutoAna();"
+          }
+        ],
+        "matrix_ids": [
+          "ANALYSIS-AUTO-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_A#6",
+        "case": "keyPressed:VK_A",
+        "event": "keyPressed",
+        "key": "VK_A",
+        "line": 666,
+        "conditions": [
+          {
+            "expression": "controlIsPressed(e)",
+            "expected": false
+          },
+          {
+            "expression": "e.isAltDown()",
+            "expected": false
+          },
+          {
+            "expression": "e.isShiftDown()",
+            "expected": false
+          },
+          {
+            "expression": "newgame.isCancelled()",
+            "expected": false
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_A"
+        ],
+        "statements": [
+          {
+            "line": 676,
+            "statement": "StartAnaDialog newgame = new StartAnaDialog(false, Lizzie.frame);"
+          },
+          {
+            "line": 677,
+            "statement": "newgame.setVisible(true);"
+          }
+        ],
+        "matrix_ids": [
+          "ANALYSIS-AUTO-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_DECIMAL#1",
+        "case": "keyPressed:VK_DECIMAL",
+        "event": "keyPressed",
+        "key": "VK_DECIMAL",
+        "line": 684,
+        "conditions": [
+          {
+            "expression": "Lizzie.frame.isCounting",
+            "expected": true
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_DECIMAL",
+          "keyPressed:VK_SLASH"
+        ],
+        "statements": [
+          {
+            "line": 687,
+            "statement": "Lizzie.frame.clearKataEstimate();"
+          },
+          {
+            "line": 688,
+            "statement": "Lizzie.frame.isCounting = false;"
+          },
+          {
+            "line": 689,
+            "statement": "Lizzie.frame.estimateResults.setVisible(false);"
+          }
+        ],
+        "matrix_ids": [
+          "ANALYSIS-COUNTING-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_DECIMAL#2",
+        "case": "keyPressed:VK_DECIMAL",
+        "event": "keyPressed",
+        "key": "VK_DECIMAL",
+        "line": 684,
+        "conditions": [
+          {
+            "expression": "Lizzie.frame.isCounting",
+            "expected": false
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_DECIMAL",
+          "keyPressed:VK_SLASH"
+        ],
+        "statements": [
+          {
+            "line": 691,
+            "statement": "Lizzie.frame.countstones(true);"
+          }
+        ],
+        "matrix_ids": [
+          "ANALYSIS-COUNTING-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_SLASH#1",
+        "case": "keyPressed:VK_SLASH",
+        "event": "keyPressed",
+        "key": "VK_SLASH",
+        "line": 685,
+        "conditions": [
+          {
+            "expression": "Lizzie.frame.isCounting",
+            "expected": true
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_SLASH"
+        ],
+        "statements": [
+          {
+            "line": 687,
+            "statement": "Lizzie.frame.clearKataEstimate();"
+          },
+          {
+            "line": 688,
+            "statement": "Lizzie.frame.isCounting = false;"
+          },
+          {
+            "line": 689,
+            "statement": "Lizzie.frame.estimateResults.setVisible(false);"
+          }
+        ],
+        "matrix_ids": [
+          "ANALYSIS-COUNTING-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_SLASH#2",
+        "case": "keyPressed:VK_SLASH",
+        "event": "keyPressed",
+        "key": "VK_SLASH",
+        "line": 685,
+        "conditions": [
+          {
+            "expression": "Lizzie.frame.isCounting",
+            "expected": false
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_SLASH"
+        ],
+        "statements": [
+          {
+            "line": 691,
+            "statement": "Lizzie.frame.countstones(true);"
+          }
+        ],
+        "matrix_ids": [
+          "ANALYSIS-COUNTING-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_PERIOD#1",
+        "case": "keyPressed:VK_PERIOD",
+        "event": "keyPressed",
+        "key": "VK_PERIOD",
+        "line": 694,
+        "conditions": [
+          {
+            "expression": "Lizzie.config.useShortcutKataEstimate",
+            "expected": true
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_PERIOD"
+        ],
+        "statements": [
+          {
+            "line": 695,
+            "statement": "Lizzie.frame.toggleShowKataEstimate();"
+          }
+        ],
+        "matrix_ids": [
+          "ANALYSIS-COUNTING-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_PERIOD#2",
+        "case": "keyPressed:VK_PERIOD",
+        "event": "keyPressed",
+        "key": "VK_PERIOD",
+        "line": 694,
+        "conditions": [
+          {
+            "expression": "Lizzie.config.useShortcutKataEstimate",
+            "expected": false
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_PERIOD"
+        ],
+        "statements": [],
+        "matrix_ids": [
+          "ANALYSIS-COUNTING-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_D#1",
+        "case": "keyPressed:VK_D",
+        "event": "keyPressed",
+        "key": "VK_D",
+        "line": 701,
+        "conditions": [
+          {
+            "expression": "e.isAltDown()",
+            "expected": true
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_D"
+        ],
+        "statements": [
+          {
+            "line": 703,
+            "statement": "Lizzie.frame.setLzSaiEngine();"
+          }
+        ],
+        "matrix_ids": [
+          "SETTINGS-ENGINE-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_D#2",
+        "case": "keyPressed:VK_D",
+        "event": "keyPressed",
+        "key": "VK_D",
+        "line": 701,
+        "conditions": [
+          {
+            "expression": "e.isAltDown()",
+            "expected": false
+          },
+          {
+            "expression": "e.isShiftDown()",
+            "expected": true
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_D"
+        ],
+        "statements": [
+          {
+            "line": 705,
+            "statement": "Lizzie.frame.setRules();"
+          }
+        ],
+        "matrix_ids": [
+          "SETTINGS-GAME-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_D#3",
+        "case": "keyPressed:VK_D",
+        "event": "keyPressed",
+        "key": "VK_D",
+        "line": 701,
+        "conditions": [
+          {
+            "expression": "e.isAltDown()",
+            "expected": false
+          },
+          {
+            "expression": "e.isShiftDown()",
+            "expected": false
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_D"
+        ],
+        "statements": [],
+        "matrix_ids": [
+          "SETTINGS-GAME-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_R#1",
+        "case": "keyPressed:VK_R",
+        "event": "keyPressed",
+        "key": "VK_R",
+        "line": 711,
+        "conditions": [],
+        "case_chain": [
+          "keyPressed:VK_R"
+        ],
+        "statements": [
+          {
+            "line": 715,
+            "statement": "Lizzie.frame.replayBranch();"
+          }
+        ],
+        "matrix_ids": [
+          "BOARD-HISTORY-001",
+          "BOARD-VARIATION-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_OPEN_BRACKET#1",
+        "case": "keyPressed:VK_OPEN_BRACKET",
+        "event": "keyPressed",
+        "key": "VK_OPEN_BRACKET",
+        "line": 718,
+        "conditions": [
+          {
+            "expression": "Lizzie.frame.BoardPositionProportion > 0",
+            "expected": true
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_OPEN_BRACKET"
+        ],
+        "statements": [
+          {
+            "line": 720,
+            "statement": "Lizzie.frame.BoardPositionProportion--;"
+          },
+          {
+            "line": 721,
+            "statement": "Lizzie.frame.refreshContainer();"
+          }
+        ],
+        "matrix_ids": [
+          "UI-LAYOUT-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_OPEN_BRACKET#2",
+        "case": "keyPressed:VK_OPEN_BRACKET",
+        "event": "keyPressed",
+        "key": "VK_OPEN_BRACKET",
+        "line": 718,
+        "conditions": [
+          {
+            "expression": "Lizzie.frame.BoardPositionProportion > 0",
+            "expected": false
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_OPEN_BRACKET"
+        ],
+        "statements": [],
+        "matrix_ids": [
+          "UI-LAYOUT-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_CLOSE_BRACKET#1",
+        "case": "keyPressed:VK_CLOSE_BRACKET",
+        "event": "keyPressed",
+        "key": "VK_CLOSE_BRACKET",
+        "line": 725,
+        "conditions": [
+          {
+            "expression": "Lizzie.frame.BoardPositionProportion < 8",
+            "expected": true
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_CLOSE_BRACKET"
+        ],
+        "statements": [
+          {
+            "line": 727,
+            "statement": "Lizzie.frame.BoardPositionProportion++;"
+          },
+          {
+            "line": 728,
+            "statement": "Lizzie.frame.refreshContainer();"
+          }
+        ],
+        "matrix_ids": [
+          "UI-LAYOUT-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_CLOSE_BRACKET#2",
+        "case": "keyPressed:VK_CLOSE_BRACKET",
+        "event": "keyPressed",
+        "key": "VK_CLOSE_BRACKET",
+        "line": 725,
+        "conditions": [
+          {
+            "expression": "Lizzie.frame.BoardPositionProportion < 8",
+            "expected": false
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_CLOSE_BRACKET"
+        ],
+        "statements": [],
+        "matrix_ids": [
+          "UI-LAYOUT-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_K#1",
+        "case": "keyPressed:VK_K",
+        "event": "keyPressed",
+        "key": "VK_K",
+        "line": 732,
+        "conditions": [
+          {
+            "expression": "e.isAltDown()",
+            "expected": true
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_K"
+        ],
+        "statements": [
+          {
+            "line": 734,
+            "statement": "Lizzie.config.toggleEvaluationColoring();"
+          }
+        ],
+        "matrix_ids": [
+          "ANALYSIS-DISPLAY-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_K#2",
+        "case": "keyPressed:VK_K",
+        "event": "keyPressed",
+        "key": "VK_K",
+        "line": 732,
+        "conditions": [
+          {
+            "expression": "e.isAltDown()",
+            "expected": false
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_K"
+        ],
+        "statements": [],
+        "matrix_ids": [
+          "ANALYSIS-DISPLAY-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_1#1",
+        "case": "keyPressed:VK_1",
+        "event": "keyPressed",
+        "key": "VK_1",
+        "line": 739,
+        "conditions": [
+          {
+            "expression": "e.isAltDown()",
+            "expected": true
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_1"
+        ],
+        "statements": [
+          {
+            "line": 741,
+            "statement": "Lizzie.frame.defaultMode();"
+          }
+        ],
+        "matrix_ids": [
+          "UI-LAYOUT-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_1#2",
+        "case": "keyPressed:VK_1",
+        "event": "keyPressed",
+        "key": "VK_1",
+        "line": 739,
+        "conditions": [
+          {
+            "expression": "e.isAltDown()",
+            "expected": false
+          },
+          {
+            "expression": "controlIsPressed(e)",
+            "expected": true
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_1",
+          "keyPressed:VK_2",
+          "keyPressed:VK_3",
+          "keyPressed:VK_4",
+          "keyPressed:VK_5",
+          "keyPressed:VK_6",
+          "keyPressed:VK_7",
+          "keyPressed:VK_8",
+          "keyPressed:VK_9"
+        ],
+        "statements": [
+          {
+            "line": 781,
+            "statement": "Lizzie.engineManager.switchEngine(e.getKeyCode() - VK_1, true);"
+          }
+        ],
+        "matrix_ids": [
+          "ENGINE-SWITCH-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_1#3",
+        "case": "keyPressed:VK_1",
+        "event": "keyPressed",
+        "key": "VK_1",
+        "line": 739,
+        "conditions": [
+          {
+            "expression": "e.isAltDown()",
+            "expected": false
+          },
+          {
+            "expression": "controlIsPressed(e)",
+            "expected": false
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_1",
+          "keyPressed:VK_2",
+          "keyPressed:VK_3",
+          "keyPressed:VK_4",
+          "keyPressed:VK_5",
+          "keyPressed:VK_6",
+          "keyPressed:VK_7",
+          "keyPressed:VK_8",
+          "keyPressed:VK_9"
+        ],
+        "statements": [
+          {
+            "line": 784,
+            "statement": "Lizzie.frame.setMouseOverCoords(e.getKeyCode() - VK_1);"
+          }
+        ],
+        "matrix_ids": [
+          "BOARD-VARIATION-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_2#1",
+        "case": "keyPressed:VK_2",
+        "event": "keyPressed",
+        "key": "VK_2",
+        "line": 744,
+        "conditions": [
+          {
+            "expression": "e.isAltDown()",
+            "expected": true
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_2"
+        ],
+        "statements": [
+          {
+            "line": 746,
+            "statement": "Lizzie.frame.classicMode();"
+          }
+        ],
+        "matrix_ids": [
+          "UI-LAYOUT-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_2#2",
+        "case": "keyPressed:VK_2",
+        "event": "keyPressed",
+        "key": "VK_2",
+        "line": 744,
+        "conditions": [
+          {
+            "expression": "e.isAltDown()",
+            "expected": false
+          },
+          {
+            "expression": "controlIsPressed(e)",
+            "expected": true
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_2",
+          "keyPressed:VK_3",
+          "keyPressed:VK_4",
+          "keyPressed:VK_5",
+          "keyPressed:VK_6",
+          "keyPressed:VK_7",
+          "keyPressed:VK_8",
+          "keyPressed:VK_9"
+        ],
+        "statements": [
+          {
+            "line": 781,
+            "statement": "Lizzie.engineManager.switchEngine(e.getKeyCode() - VK_1, true);"
+          }
+        ],
+        "matrix_ids": [
+          "ENGINE-SWITCH-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_2#3",
+        "case": "keyPressed:VK_2",
+        "event": "keyPressed",
+        "key": "VK_2",
+        "line": 744,
+        "conditions": [
+          {
+            "expression": "e.isAltDown()",
+            "expected": false
+          },
+          {
+            "expression": "controlIsPressed(e)",
+            "expected": false
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_2",
+          "keyPressed:VK_3",
+          "keyPressed:VK_4",
+          "keyPressed:VK_5",
+          "keyPressed:VK_6",
+          "keyPressed:VK_7",
+          "keyPressed:VK_8",
+          "keyPressed:VK_9"
+        ],
+        "statements": [
+          {
+            "line": 784,
+            "statement": "Lizzie.frame.setMouseOverCoords(e.getKeyCode() - VK_1);"
+          }
+        ],
+        "matrix_ids": [
+          "BOARD-VARIATION-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_3#1",
+        "case": "keyPressed:VK_3",
+        "event": "keyPressed",
+        "key": "VK_3",
+        "line": 749,
+        "conditions": [
+          {
+            "expression": "e.isAltDown()",
+            "expected": true
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_3"
+        ],
+        "statements": [
+          {
+            "line": 751,
+            "statement": "Lizzie.frame.minMode();"
+          }
+        ],
+        "matrix_ids": [
+          "UI-LAYOUT-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_3#2",
+        "case": "keyPressed:VK_3",
+        "event": "keyPressed",
+        "key": "VK_3",
+        "line": 749,
+        "conditions": [
+          {
+            "expression": "e.isAltDown()",
+            "expected": false
+          },
+          {
+            "expression": "controlIsPressed(e)",
+            "expected": true
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_3",
+          "keyPressed:VK_4",
+          "keyPressed:VK_5",
+          "keyPressed:VK_6",
+          "keyPressed:VK_7",
+          "keyPressed:VK_8",
+          "keyPressed:VK_9"
+        ],
+        "statements": [
+          {
+            "line": 781,
+            "statement": "Lizzie.engineManager.switchEngine(e.getKeyCode() - VK_1, true);"
+          }
+        ],
+        "matrix_ids": [
+          "ENGINE-SWITCH-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_3#3",
+        "case": "keyPressed:VK_3",
+        "event": "keyPressed",
+        "key": "VK_3",
+        "line": 749,
+        "conditions": [
+          {
+            "expression": "e.isAltDown()",
+            "expected": false
+          },
+          {
+            "expression": "controlIsPressed(e)",
+            "expected": false
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_3",
+          "keyPressed:VK_4",
+          "keyPressed:VK_5",
+          "keyPressed:VK_6",
+          "keyPressed:VK_7",
+          "keyPressed:VK_8",
+          "keyPressed:VK_9"
+        ],
+        "statements": [
+          {
+            "line": 784,
+            "statement": "Lizzie.frame.setMouseOverCoords(e.getKeyCode() - VK_1);"
+          }
+        ],
+        "matrix_ids": [
+          "BOARD-VARIATION-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_4#1",
+        "case": "keyPressed:VK_4",
+        "event": "keyPressed",
+        "key": "VK_4",
+        "line": 754,
+        "conditions": [
+          {
+            "expression": "e.isAltDown()",
+            "expected": true
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_4"
+        ],
+        "statements": [
+          {
+            "line": 756,
+            "statement": "Lizzie.config.toggleExtraMode(3);"
+          }
+        ],
+        "matrix_ids": [
+          "UI-LAYOUT-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_4#2",
+        "case": "keyPressed:VK_4",
+        "event": "keyPressed",
+        "key": "VK_4",
+        "line": 754,
+        "conditions": [
+          {
+            "expression": "e.isAltDown()",
+            "expected": false
+          },
+          {
+            "expression": "controlIsPressed(e)",
+            "expected": true
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_4",
+          "keyPressed:VK_5",
+          "keyPressed:VK_6",
+          "keyPressed:VK_7",
+          "keyPressed:VK_8",
+          "keyPressed:VK_9"
+        ],
+        "statements": [
+          {
+            "line": 781,
+            "statement": "Lizzie.engineManager.switchEngine(e.getKeyCode() - VK_1, true);"
+          }
+        ],
+        "matrix_ids": [
+          "ENGINE-SWITCH-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_4#3",
+        "case": "keyPressed:VK_4",
+        "event": "keyPressed",
+        "key": "VK_4",
+        "line": 754,
+        "conditions": [
+          {
+            "expression": "e.isAltDown()",
+            "expected": false
+          },
+          {
+            "expression": "controlIsPressed(e)",
+            "expected": false
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_4",
+          "keyPressed:VK_5",
+          "keyPressed:VK_6",
+          "keyPressed:VK_7",
+          "keyPressed:VK_8",
+          "keyPressed:VK_9"
+        ],
+        "statements": [
+          {
+            "line": 784,
+            "statement": "Lizzie.frame.setMouseOverCoords(e.getKeyCode() - VK_1);"
+          }
+        ],
+        "matrix_ids": [
+          "BOARD-VARIATION-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_5#1",
+        "case": "keyPressed:VK_5",
+        "event": "keyPressed",
+        "key": "VK_5",
+        "line": 759,
+        "conditions": [
+          {
+            "expression": "e.isAltDown()",
+            "expected": true
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_5"
+        ],
+        "statements": [
+          {
+            "line": 761,
+            "statement": "Lizzie.config.toggleExtraMode(1);"
+          }
+        ],
+        "matrix_ids": [
+          "UI-LAYOUT-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_5#2",
+        "case": "keyPressed:VK_5",
+        "event": "keyPressed",
+        "key": "VK_5",
+        "line": 759,
+        "conditions": [
+          {
+            "expression": "e.isAltDown()",
+            "expected": false
+          },
+          {
+            "expression": "controlIsPressed(e)",
+            "expected": true
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_5",
+          "keyPressed:VK_6",
+          "keyPressed:VK_7",
+          "keyPressed:VK_8",
+          "keyPressed:VK_9"
+        ],
+        "statements": [
+          {
+            "line": 781,
+            "statement": "Lizzie.engineManager.switchEngine(e.getKeyCode() - VK_1, true);"
+          }
+        ],
+        "matrix_ids": [
+          "ENGINE-SWITCH-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_5#3",
+        "case": "keyPressed:VK_5",
+        "event": "keyPressed",
+        "key": "VK_5",
+        "line": 759,
+        "conditions": [
+          {
+            "expression": "e.isAltDown()",
+            "expected": false
+          },
+          {
+            "expression": "controlIsPressed(e)",
+            "expected": false
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_5",
+          "keyPressed:VK_6",
+          "keyPressed:VK_7",
+          "keyPressed:VK_8",
+          "keyPressed:VK_9"
+        ],
+        "statements": [
+          {
+            "line": 784,
+            "statement": "Lizzie.frame.setMouseOverCoords(e.getKeyCode() - VK_1);"
+          }
+        ],
+        "matrix_ids": [
+          "BOARD-VARIATION-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_6#1",
+        "case": "keyPressed:VK_6",
+        "event": "keyPressed",
+        "key": "VK_6",
+        "line": 764,
+        "conditions": [
+          {
+            "expression": "e.isAltDown()",
+            "expected": true
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_6"
+        ],
+        "statements": [
+          {
+            "line": 766,
+            "statement": "Lizzie.config.toggleExtraMode(2);"
+          }
+        ],
+        "matrix_ids": [
+          "UI-LAYOUT-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_6#2",
+        "case": "keyPressed:VK_6",
+        "event": "keyPressed",
+        "key": "VK_6",
+        "line": 764,
+        "conditions": [
+          {
+            "expression": "e.isAltDown()",
+            "expected": false
+          },
+          {
+            "expression": "controlIsPressed(e)",
+            "expected": true
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_6",
+          "keyPressed:VK_7",
+          "keyPressed:VK_8",
+          "keyPressed:VK_9"
+        ],
+        "statements": [
+          {
+            "line": 781,
+            "statement": "Lizzie.engineManager.switchEngine(e.getKeyCode() - VK_1, true);"
+          }
+        ],
+        "matrix_ids": [
+          "ENGINE-SWITCH-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_6#3",
+        "case": "keyPressed:VK_6",
+        "event": "keyPressed",
+        "key": "VK_6",
+        "line": 764,
+        "conditions": [
+          {
+            "expression": "e.isAltDown()",
+            "expected": false
+          },
+          {
+            "expression": "controlIsPressed(e)",
+            "expected": false
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_6",
+          "keyPressed:VK_7",
+          "keyPressed:VK_8",
+          "keyPressed:VK_9"
+        ],
+        "statements": [
+          {
+            "line": 784,
+            "statement": "Lizzie.frame.setMouseOverCoords(e.getKeyCode() - VK_1);"
+          }
+        ],
+        "matrix_ids": [
+          "BOARD-VARIATION-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_7#1",
+        "case": "keyPressed:VK_7",
+        "event": "keyPressed",
+        "key": "VK_7",
+        "line": 769,
+        "conditions": [
+          {
+            "expression": "e.isAltDown()",
+            "expected": true
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_7"
+        ],
+        "statements": [
+          {
+            "line": 771,
+            "statement": "Lizzie.frame.independentBoardMode(false);"
+          }
+        ],
+        "matrix_ids": [
+          "UI-LAYOUT-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_7#2",
+        "case": "keyPressed:VK_7",
+        "event": "keyPressed",
+        "key": "VK_7",
+        "line": 769,
+        "conditions": [
+          {
+            "expression": "e.isAltDown()",
+            "expected": false
+          },
+          {
+            "expression": "controlIsPressed(e)",
+            "expected": true
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_7",
+          "keyPressed:VK_8",
+          "keyPressed:VK_9"
+        ],
+        "statements": [
+          {
+            "line": 781,
+            "statement": "Lizzie.engineManager.switchEngine(e.getKeyCode() - VK_1, true);"
+          }
+        ],
+        "matrix_ids": [
+          "ENGINE-SWITCH-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_7#3",
+        "case": "keyPressed:VK_7",
+        "event": "keyPressed",
+        "key": "VK_7",
+        "line": 769,
+        "conditions": [
+          {
+            "expression": "e.isAltDown()",
+            "expected": false
+          },
+          {
+            "expression": "controlIsPressed(e)",
+            "expected": false
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_7",
+          "keyPressed:VK_8",
+          "keyPressed:VK_9"
+        ],
+        "statements": [
+          {
+            "line": 784,
+            "statement": "Lizzie.frame.setMouseOverCoords(e.getKeyCode() - VK_1);"
+          }
+        ],
+        "matrix_ids": [
+          "BOARD-VARIATION-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_8#1",
+        "case": "keyPressed:VK_8",
+        "event": "keyPressed",
+        "key": "VK_8",
+        "line": 774,
+        "conditions": [
+          {
+            "expression": "e.isAltDown()",
+            "expected": true
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_8"
+        ],
+        "statements": [
+          {
+            "line": 776,
+            "statement": "Lizzie.frame.switchToCustomMode(1);"
+          }
+        ],
+        "matrix_ids": [
+          "UI-LAYOUT-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_8#2",
+        "case": "keyPressed:VK_8",
+        "event": "keyPressed",
+        "key": "VK_8",
+        "line": 774,
+        "conditions": [
+          {
+            "expression": "e.isAltDown()",
+            "expected": false
+          },
+          {
+            "expression": "controlIsPressed(e)",
+            "expected": true
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_8",
+          "keyPressed:VK_9"
+        ],
+        "statements": [
+          {
+            "line": 781,
+            "statement": "Lizzie.engineManager.switchEngine(e.getKeyCode() - VK_1, true);"
+          }
+        ],
+        "matrix_ids": [
+          "ENGINE-SWITCH-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_8#3",
+        "case": "keyPressed:VK_8",
+        "event": "keyPressed",
+        "key": "VK_8",
+        "line": 774,
+        "conditions": [
+          {
+            "expression": "e.isAltDown()",
+            "expected": false
+          },
+          {
+            "expression": "controlIsPressed(e)",
+            "expected": false
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_8",
+          "keyPressed:VK_9"
+        ],
+        "statements": [
+          {
+            "line": 784,
+            "statement": "Lizzie.frame.setMouseOverCoords(e.getKeyCode() - VK_1);"
+          }
+        ],
+        "matrix_ids": [
+          "BOARD-VARIATION-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_9#1",
+        "case": "keyPressed:VK_9",
+        "event": "keyPressed",
+        "key": "VK_9",
+        "line": 779,
+        "conditions": [
+          {
+            "expression": "controlIsPressed(e)",
+            "expected": true
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_9"
+        ],
+        "statements": [
+          {
+            "line": 781,
+            "statement": "Lizzie.engineManager.switchEngine(e.getKeyCode() - VK_1, true);"
+          }
+        ],
+        "matrix_ids": [
+          "ENGINE-SWITCH-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_9#2",
+        "case": "keyPressed:VK_9",
+        "event": "keyPressed",
+        "key": "VK_9",
+        "line": 779,
+        "conditions": [
+          {
+            "expression": "controlIsPressed(e)",
+            "expected": false
+          },
+          {
+            "expression": "e.isAltDown()",
+            "expected": true
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_9"
+        ],
+        "statements": [
+          {
+            "line": 783,
+            "statement": "Lizzie.frame.switchToCustomMode(2);"
+          }
+        ],
+        "matrix_ids": [
+          "UI-LAYOUT-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_9#3",
+        "case": "keyPressed:VK_9",
+        "event": "keyPressed",
+        "key": "VK_9",
+        "line": 779,
+        "conditions": [
+          {
+            "expression": "controlIsPressed(e)",
+            "expected": false
+          },
+          {
+            "expression": "e.isAltDown()",
+            "expected": false
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_9"
+        ],
+        "statements": [
+          {
+            "line": 784,
+            "statement": "Lizzie.frame.setMouseOverCoords(e.getKeyCode() - VK_1);"
+          }
+        ],
+        "matrix_ids": [
+          "BOARD-VARIATION-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_0#1",
+        "case": "keyPressed:VK_0",
+        "event": "keyPressed",
+        "key": "VK_0",
+        "line": 786,
+        "conditions": [
+          {
+            "expression": "controlIsPressed(e)",
+            "expected": true
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_0"
+        ],
+        "statements": [
+          {
+            "line": 788,
+            "statement": "Lizzie.engineManager.switchEngine(9, true);"
+          }
+        ],
+        "matrix_ids": [
+          "ENGINE-SWITCH-001"
+        ]
+      },
+      {
+        "binding": "keyPressed:VK_0#2",
+        "case": "keyPressed:VK_0",
+        "event": "keyPressed",
+        "key": "VK_0",
+        "line": 786,
+        "conditions": [
+          {
+            "expression": "controlIsPressed(e)",
+            "expected": false
+          }
+        ],
+        "case_chain": [
+          "keyPressed:VK_0"
+        ],
+        "statements": [],
+        "matrix_ids": [
+          "ENGINE-SWITCH-001"
+        ]
+      },
+      {
+        "binding": "keyReleased:VK_X#1",
+        "case": "keyReleased:VK_X",
+        "event": "keyReleased",
+        "key": "VK_X",
+        "line": 801,
+        "conditions": [],
+        "case_chain": [
+          "keyReleased:VK_X"
+        ],
+        "statements": [
+          {
+            "line": 803,
+            "statement": "Lizzie.frame.stopShowingControl();"
+          }
+        ],
+        "matrix_ids": [
+          "UI-CONTROLS-001"
+        ]
+      },
+      {
+        "binding": "keyReleased:VK_Z#1",
+        "case": "keyReleased:VK_Z",
+        "event": "keyReleased",
+        "key": "VK_Z",
+        "line": 806,
+        "conditions": [],
+        "case_chain": [
+          "keyReleased:VK_Z"
+        ],
+        "statements": [
+          {
+            "line": 807,
+            "statement": "Lizzie.frame.stopTemporaryBoard();"
+          },
+          {
+            "line": 808,
+            "statement": "Lizzie.frame.refresh();"
+          }
+        ],
+        "matrix_ids": [
+          "BOARD-TEMPORARY-001"
+        ]
       }
     ]
   },

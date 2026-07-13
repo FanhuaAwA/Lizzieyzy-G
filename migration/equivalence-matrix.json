@@ -1,5 +1,5 @@
 {
-  "schema_version": 3,
+  "schema_version": 4,
   "allowed_statuses": [
     "未盘点",
     "已盘点",
@@ -37,22 +37,49 @@
       "legacy_menu_keys": ["Menu.newBoard"],
       "legacy_menu_labels": [],
       "legacy_shortcuts": [],
-      "legacy_input_cases": ["keyPressed:VK_N"],
+      "legacy_input_cases": [],
+      "legacy_input_bindings": [],
       "java_evidence": [
         { "path": "src/main/java/featurecat/lizzie/gui/Menu.java", "symbol": "newBoard" },
         { "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "symbol": "newEmptyBoard" }
       ],
-      "config_keys": ["new-game-komi"],
-      "inputs_preconditions": "应用已启动；用户可从文件菜单创建新棋盘。",
-      "success_behavior": "创建空棋盘并按设置初始化新对局贴目。",
-      "failure_cancel_behavior": "用户取消参数输入时保留当前棋盘。",
+      "config_keys": ["show-new-board-hint"],
+      "inputs_preconditions": "应用已启动；非引擎对局状态下，用户可从文件菜单创建空棋盘。",
+      "success_behavior": "必要时确认覆盖已有历史，然后清空当前棋盘历史、复位关联分析状态并刷新界面。",
+      "failure_cancel_behavior": "用户取消覆盖确认时保留当前棋盘；引擎对局中旧版静默无动作，目标版需保持状态一致并给出可理解反馈。",
       "data_io": "内存棋盘状态；无必需磁盘写入。",
       "external_dependencies": [],
       "target_modules": ["Lizzie.Core", "Lizzie.Desktop"],
       "automated_evidence": [],
-      "manual_acceptance": "在旧版与新版分别新建 19x19 棋盘，核对空棋盘、贴目和取消行为。",
+      "manual_acceptance": "分别在空棋盘、有历史棋盘和引擎对局中调用新建棋盘，核对确认、取消、清空、分析状态复位及“以后不再提示”持久化。",
       "status": "已盘点",
       "evidence": "静态入口与配置键已定位；新版实现和新旧动态对照均未开始。"
+    },
+    {
+      "id": "GAME-HUMAN-AI-001",
+      "category": "棋盘与对局",
+      "legacy_entry": "Input.java 的 N 默认分支调用 LizzieFrame.startNewGame，并由 NewGameDialog 配置人机对局；仅 Alt+N 且允许分析时转入整谱分析",
+      "legacy_menu_keys": [],
+      "legacy_menu_labels": [],
+      "legacy_shortcuts": [],
+      "legacy_input_cases": ["keyPressed:VK_N"],
+      "legacy_input_bindings": ["keyPressed:VK_N#2"],
+      "java_evidence": [
+        { "path": "src/main/java/featurecat/lizzie/gui/Input.java", "symbol": "keyPressed" },
+        { "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "symbol": "startNewGame" },
+        { "path": "src/main/java/featurecat/lizzie/gui/NewGameDialog.java", "symbol": "class NewGameDialog" }
+      ],
+      "config_keys": ["new-game-komi"],
+      "inputs_preconditions": "应用已启动且分析引擎可用；用户按下未进入 Alt+N 整谱分析分支的 N 键，打开人机新对局参数窗口。",
+      "success_behavior": "按玩家执色、贴目和让子设置清空棋盘，同步引擎状态；需要时由引擎先行并进入人机对局。",
+      "failure_cancel_behavior": "用户取消时保留当前棋盘并恢复此前的后台分析状态；引擎未就绪或退出时不得无限等待或遗留半初始化对局。",
+      "data_io": "更新内存棋盘和对局信息，并向 GTP 引擎发送贴目、让子、用时和 genmove 命令。",
+      "external_dependencies": ["GTP 引擎进程"],
+      "target_modules": ["Lizzie.Core", "Lizzie.Engine", "Lizzie.Desktop"],
+      "automated_evidence": [],
+      "manual_acceptance": "分别选择黑白执子、让子和取消，核对棋盘清空、引擎先行、对局标题与原分析状态恢复；再注入未就绪和异常退出引擎。",
+      "status": "已盘点",
+      "evidence": "快捷键与完整调用链已定位；旧版用后台线程 sleep 轮询引擎就绪并打印 InterruptedException，新版不得复制该等待和中断处理方式。"
     },
     {
       "id": "BOARD-HISTORY-001",
@@ -69,7 +96,34 @@
         "keyPressed:VK_DOWN",
         "keyPressed:VK_PAGE_UP",
         "keyPressed:VK_HOME",
-        "keyPressed:VK_END"
+        "keyPressed:VK_END",
+        "keyPressed:VK_B",
+        "keyPressed:VK_R"
+      ],
+      "legacy_input_bindings": [
+        "keyPressed:VK_RIGHT#1",
+        "keyPressed:VK_RIGHT#2",
+        "keyPressed:VK_RIGHT#4",
+        "keyPressed:VK_LEFT#1",
+        "keyPressed:VK_LEFT#3",
+        "keyPressed:VK_LEFT#4",
+        "keyPressed:VK_UP#1",
+        "keyPressed:VK_UP#2",
+        "keyPressed:VK_UP#4",
+        "keyPressed:VK_UP#5",
+        "keyPressed:VK_UP#6",
+        "keyPressed:VK_PAGE_DOWN#1",
+        "keyPressed:VK_PAGE_DOWN#2",
+        "keyPressed:VK_DOWN#1",
+        "keyPressed:VK_DOWN#3",
+        "keyPressed:VK_DOWN#4",
+        "keyPressed:VK_DOWN#5",
+        "keyPressed:VK_PAGE_UP#1",
+        "keyPressed:VK_PAGE_UP#2",
+        "keyPressed:VK_HOME#3",
+        "keyPressed:VK_END#1",
+        "keyPressed:VK_B#3",
+        "keyPressed:VK_R#1"
       ],
       "java_evidence": [
         { "path": "src/main/java/featurecat/lizzie/rules/BoardHistoryList.java", "symbol": "class BoardHistoryList" },
@@ -99,6 +153,7 @@
       "legacy_menu_labels": [],
       "legacy_shortcuts": [],
       "legacy_input_cases": ["keyPressed:VK_O"],
+      "legacy_input_bindings": ["keyPressed:VK_O#1", "keyPressed:VK_O#4"],
       "java_evidence": [
         { "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "symbol": "openFile" },
         { "path": "src/main/java/featurecat/lizzie/rules/SGFParser.java", "symbol": "class SGFParser" },
@@ -131,6 +186,12 @@
       "legacy_menu_labels": [],
       "legacy_shortcuts": [],
       "legacy_input_cases": ["keyPressed:VK_S"],
+      "legacy_input_bindings": [
+        "keyPressed:VK_S#1",
+        "keyPressed:VK_S#2",
+        "keyPressed:VK_S#6",
+        "keyPressed:VK_S#7"
+      ],
       "java_evidence": [
         { "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "symbol": "saveOriFile" },
         { "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "symbol": "saveFile" }
@@ -155,6 +216,7 @@
       "legacy_menu_labels": [],
       "legacy_shortcuts": [],
       "legacy_input_cases": ["keyPressed:VK_C", "keyPressed:VK_V"],
+      "legacy_input_bindings": ["keyPressed:VK_C#3", "keyPressed:VK_V#1"],
       "java_evidence": [
         { "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "symbol": "copySgf" },
         { "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "symbol": "pasteSgf" }
@@ -179,6 +241,13 @@
       "legacy_menu_labels": [],
       "legacy_shortcuts": [],
       "legacy_input_cases": ["keyPressed:VK_C", "keyPressed:VK_S"],
+      "legacy_input_bindings": [
+        "keyPressed:VK_C#1",
+        "keyPressed:VK_C#2",
+        "keyPressed:VK_S#3",
+        "keyPressed:VK_S#4",
+        "keyPressed:VK_S#5"
+      ],
       "java_evidence": [
         { "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "symbol": "saveMainBoardPicture" },
         { "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "symbol": "saveSubBoardPicture" }
@@ -210,6 +279,7 @@
       "legacy_menu_labels": [],
       "legacy_shortcuts": [],
       "legacy_input_cases": [],
+      "legacy_input_bindings": [],
       "java_evidence": [
         { "path": "src/main/java/featurecat/lizzie/analysis/EngineManager.java", "symbol": "class EngineManager" },
         { "path": "src/main/java/featurecat/lizzie/gui/Menu.java", "symbol": "restartCurrentEngine" }
@@ -233,28 +303,29 @@
     {
       "id": "ENGINE-GTP-001",
       "category": "引擎",
-      "legacy_entry": "Leelaz 负责 GTP 命令发送、响应绑定、分析流和失败恢复",
+      "legacy_entry": "Leelaz 负责 GTP 命令发送、响应绑定、分析流和失败恢复；Input.java 默认 E 切换 GTP 控制台",
       "legacy_menu_keys": ["Menu.engineParameters", "Menu.engineRules"],
       "legacy_menu_labels": [],
       "legacy_shortcuts": [],
       "legacy_input_cases": ["keyPressed:VK_E"],
+      "legacy_input_bindings": ["keyPressed:VK_E#4"],
       "java_evidence": [
         { "path": "src/main/java/featurecat/lizzie/analysis/Leelaz.java", "symbol": "class Leelaz" },
         { "path": "src/main/java/featurecat/lizzie/analysis/LeelazEngineCommandSink.java", "symbol": "LeelazEngineCommandSink" }
       ],
       "config_keys": ["limit-branch-length", "limit-max-suggestion", "always-gtp"],
       "inputs_preconditions": "引擎进程已启动并提供标准输入、输出和错误流。",
-      "success_behavior": "命令与带编号响应正确绑定，分析建议持续更新并遵守限制设置。",
-      "failure_cancel_behavior": "超时、错误响应、stderr 噪声和进程退出不得错配后续响应；停止分析应及时生效。",
+      "success_behavior": "命令与带编号响应正确绑定，分析建议持续更新并遵守限制设置；默认 E 可切换 GTP 控制台可见性。",
+      "failure_cancel_behavior": "超时、错误响应、stderr 噪声和进程退出不得错配后续响应；停止分析应及时生效，控制台切换不得改变协议状态。",
       "data_io": "GTP 文本协议双向流和引擎 stderr。",
       "external_dependencies": ["GTP 引擎进程"],
-      "target_modules": ["Lizzie.Engine", "Lizzie.Core"],
+      "target_modules": ["Lizzie.Engine", "Lizzie.Core", "Lizzie.Desktop"],
       "automated_evidence": [
         { "path": "src/test/java/featurecat/lizzie/analysis/LeelazLoadSgfResponseBindingTest.java", "symbol": "LeelazLoadSgfResponseBindingTest" },
         { "path": "src/test/java/featurecat/lizzie/analysis/LeelazExclusiveRemoteGtpSessionTest.java", "symbol": "LeelazExclusiveRemoteGtpSessionTest" },
         { "path": "src/test/java/featurecat/lizzie/analysis/LeelazPonderStateTest.java", "symbol": "LeelazPonderStateTest" }
       ],
-      "manual_acceptance": "以可控假 GTP 进程注入成功、错误、延迟和异常退出序列，核对命令绑定与恢复。",
+      "manual_acceptance": "以可控假 GTP 进程注入成功、错误、延迟和异常退出序列，核对命令绑定与恢复；往返切换控制台并确认协议状态不变。",
       "status": "已盘点",
       "evidence": "旧版故障注入测试已通过；协议录制夹具和新版回放器仍待建立。"
     },
@@ -270,7 +341,8 @@
       ],
       "legacy_menu_labels": [],
       "legacy_shortcuts": [],
-      "legacy_input_cases": ["keyPressed:VK_B"],
+      "legacy_input_cases": ["keyPressed:VK_N", "keyPressed:VK_B"],
+      "legacy_input_bindings": ["keyPressed:VK_N#1", "keyPressed:VK_B#2"],
       "java_evidence": [
         { "path": "src/main/java/featurecat/lizzie/gui/BottomToolbar.java", "symbol": "flashAnalyzeAllGame" },
         { "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "symbol": "flashAnalyzeGame" }
@@ -298,6 +370,7 @@
       "legacy_menu_labels": [],
       "legacy_shortcuts": [],
       "legacy_input_cases": [],
+      "legacy_input_bindings": [],
       "java_evidence": [
         { "path": "src/main/java/featurecat/lizzie/gui/FoxKifuDownload.java", "symbol": "class FoxKifuDownload" }
       ],
@@ -325,6 +398,7 @@
       "legacy_menu_labels": [],
       "legacy_shortcuts": [],
       "legacy_input_cases": [],
+      "legacy_input_bindings": [],
       "java_evidence": [
         { "path": "src/main/java/featurecat/lizzie/gui/TencentKifuDownload.java", "symbol": "class TencentKifuDownload" }
       ],
@@ -351,6 +425,7 @@
       "legacy_menu_labels": [],
       "legacy_shortcuts": ["Shift+O"],
       "legacy_input_cases": ["keyPressed:VK_O"],
+      "legacy_input_bindings": ["keyPressed:VK_O#3"],
       "java_evidence": [
         { "path": "src/main/java/featurecat/lizzie/gui/YikeApiClient.java", "symbol": "class YikeApiClient" },
         { "path": "src/main/java/featurecat/lizzie/gui/YikeUrlParser.java", "symbol": "class YikeUrlParser" },
@@ -387,6 +462,7 @@
       "legacy_menu_labels": [],
       "legacy_shortcuts": ["Alt+O"],
       "legacy_input_cases": ["keyPressed:VK_O"],
+      "legacy_input_bindings": ["keyPressed:VK_O#2"],
       "java_evidence": [
         { "path": "src/main/java/featurecat/lizzie/analysis/ReadBoard.java", "symbol": "class ReadBoard" },
         { "path": "src/main/java/featurecat/lizzie/analysis/ReadBoardStream.java", "symbol": "class ReadBoardStream" }
@@ -416,6 +492,7 @@
       "legacy_menu_labels": ["English", "日本語", "한국어", "ไทย", "简体中文", "繁體中文"],
       "legacy_shortcuts": [],
       "legacy_input_cases": [],
+      "legacy_input_bindings": [],
       "java_evidence": [
         { "path": "src/main/java/featurecat/lizzie/gui/Menu.java", "symbol": "selectLanguage" },
         { "path": "src/main/java/featurecat/lizzie/AppLocale.java", "symbol": "enum AppLocale" }
@@ -448,6 +525,7 @@
       "legacy_menu_labels": [],
       "legacy_shortcuts": [],
       "legacy_input_cases": [],
+      "legacy_input_bindings": [],
       "java_evidence": [
         { "path": "src/main/java/featurecat/lizzie/theme/Theme.java", "symbol": "class Theme" },
         { "path": "src/main/java/featurecat/lizzie/gui/ConfigDialog2.java", "symbol": "class ConfigDialog2" }
@@ -476,6 +554,7 @@
       "legacy_menu_labels": [],
       "legacy_shortcuts": [],
       "legacy_input_cases": ["keyPressed:VK_C"],
+      "legacy_input_bindings": ["keyPressed:VK_C#4"],
       "java_evidence": [
         { "path": "src/main/java/featurecat/lizzie/Config.java", "symbol": "toggleCoordinates" },
         { "path": "src/main/java/featurecat/lizzie/gui/Menu.java", "symbol": "toggleCoordinates" }
@@ -500,6 +579,7 @@
       "legacy_menu_labels": [],
       "legacy_shortcuts": [],
       "legacy_input_cases": [],
+      "legacy_input_bindings": [],
       "java_evidence": [
         { "path": "src/main/java/featurecat/lizzie/analysis/remote/RemoteComputeConfig.java", "symbol": "class RemoteComputeConfig" },
         { "path": "src/main/java/featurecat/lizzie/util/Utils.java", "symbol": "analysis-engine-ssh-info" }
@@ -533,6 +613,7 @@
       ],
       "legacy_shortcuts": [],
       "legacy_input_cases": [],
+      "legacy_input_bindings": [],
       "java_evidence": [
         { "path": "src/main/java/featurecat/lizzie/gui/Menu.java", "symbol": "showDetailedBar" },
         { "path": "src/main/java/featurecat/lizzie/gui/Menu.java", "symbol": "showDetailedMenu" },
@@ -559,6 +640,7 @@
       "legacy_menu_labels": ["检查更新"],
       "legacy_shortcuts": [],
       "legacy_input_cases": [],
+      "legacy_input_bindings": [],
       "java_evidence": [
         { "path": "src/main/java/featurecat/lizzie/gui/Menu.java", "symbol": "checkUpdate" },
         { "path": "src/main/java/featurecat/lizzie/update/WindowsUpdateController.java", "symbol": "checkForUpdate" },
@@ -591,6 +673,7 @@
       "legacy_menu_labels": ["清除所有个人数据"],
       "legacy_shortcuts": [],
       "legacy_input_cases": [],
+      "legacy_input_bindings": [],
       "java_evidence": [
         { "path": "src/main/java/featurecat/lizzie/gui/Menu.java", "symbol": "clearUserData" },
         { "path": "src/main/java/featurecat/lizzie/gui/FoxKifuDownload.java", "symbol": "fox-recent-searches" },
@@ -607,6 +690,665 @@
       "manual_acceptance": "在临时配置中分别放入四类历史和无关设置，验证取消零变化、确认只删目标项、成功后重读一致、保存失败不报成功且原文件可恢复。",
       "status": "已盘点",
       "evidence": "确认文案、四个 remove 和 Config.save 已静态定位；recent-files、batch-analysis-history、share-history 没有活跃读写方，且旧版保存异常后仍显示成功，均需在迁移前裁决并补回归测试。"
+    },
+    {
+      "id": "KIFU-SHARE-NOOP-001",
+      "category": "棋谱文件",
+      "legacy_entry": "Input.java 的 Primary+E 与 Alt+B 调用 LizzieFrame.shareSGF",
+      "legacy_menu_keys": [],
+      "legacy_menu_labels": [],
+      "legacy_shortcuts": [],
+      "legacy_input_cases": ["keyPressed:VK_E", "keyPressed:VK_B"],
+      "legacy_input_bindings": ["keyPressed:VK_E#1", "keyPressed:VK_B#1"],
+      "java_evidence": [
+        { "path": "src/main/java/featurecat/lizzie/gui/Input.java", "symbol": "Lizzie.frame.shareSGF()" },
+        { "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "symbol": "public void shareSGF()" }
+      ],
+      "config_keys": [],
+      "inputs_preconditions": "主窗口接收 Primary+E（Control，macOS 也接受 Meta）或 Alt+B。",
+      "success_behavior": "旧版当前无可观察成功行为：shareSGF 方法体只有注释。目标版不得暴露未接线分享入口；若迁移，需先定义真实分享目的地和隐私确认。",
+      "failure_cancel_behavior": "旧版静默无动作且无错误提示；这是已登记空实现，不得以相同行为宣称分享功能完成。",
+      "data_io": "当前不读写棋谱、剪贴板、网络或配置。",
+      "external_dependencies": [],
+      "target_modules": ["Lizzie.Desktop"],
+      "automated_evidence": [],
+      "manual_acceptance": "旧版按两组快捷键确认无界面、网络或文件变化；目标版在真实分享功能存在前不得展示入口。",
+      "status": "已盘点",
+      "evidence": "精确绑定和空方法已静态确认；是否实现分享、实现到何种目标仍需后续产品裁决。"
+    },
+    {
+      "id": "ENGINE-GAME-001",
+      "category": "引擎对局",
+      "legacy_entry": "Alt+E 打开引擎对局，Alt+逗号请求引擎落子，Enter/Alt+Enter 继续 AI 对局",
+      "legacy_menu_keys": [],
+      "legacy_menu_labels": [],
+      "legacy_shortcuts": [],
+      "legacy_input_cases": ["keyPressed:VK_E", "keyPressed:VK_COMMA", "keyPressed:VK_ENTER"],
+      "legacy_input_bindings": [
+        "keyPressed:VK_E#2",
+        "keyPressed:VK_COMMA#1",
+        "keyPressed:VK_ENTER#1",
+        "keyPressed:VK_ENTER#2"
+      ],
+      "java_evidence": [
+        { "path": "src/main/java/featurecat/lizzie/gui/Input.java", "symbol": "startEngineGameDialog" },
+        { "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "symbol": "public void startEngineGameDialog()" }
+      ],
+      "config_keys": [],
+      "inputs_preconditions": "至少一个可用引擎已加载；开始新引擎对局时不得已有引擎对局运行。",
+      "success_behavior": "打开并确认引擎对局参数后开始对局；请求或继续落子时按快捷键分支推进对应一方。",
+      "failure_cancel_behavior": "已有对局时提示先停止；取消参数对话框恢复工具栏状态；引擎不可用时不得伪造落子。",
+      "data_io": "读取当前棋盘和对局参数，通过 GTP 驱动引擎并更新棋盘历史。",
+      "external_dependencies": ["GTP 引擎进程"],
+      "target_modules": ["Lizzie.Core", "Lizzie.Engine", "Lizzie.Desktop"],
+      "automated_evidence": [],
+      "manual_acceptance": "以确定性 GTP 引擎覆盖开始、取消、继续双方、单次 genmove、已有对局拒绝和引擎失败。",
+      "status": "已盘点",
+      "evidence": "四条快捷条件路径和入口方法已定位；完整对局状态机、取消和崩溃恢复仍待纵切实现。"
+    },
+    {
+      "id": "TSUMEGO-001",
+      "category": "死活题",
+      "legacy_entry": "Shift+E 打开死活题窗口，Shift+T 启动屏幕取题",
+      "legacy_menu_keys": [],
+      "legacy_menu_labels": [],
+      "legacy_shortcuts": [],
+      "legacy_input_cases": ["keyPressed:VK_E", "keyPressed:VK_T"],
+      "legacy_input_bindings": ["keyPressed:VK_E#3", "keyPressed:VK_T#3"],
+      "java_evidence": [
+        { "path": "src/main/java/featurecat/lizzie/gui/Input.java", "symbol": "openTsumego" },
+        { "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "symbol": "public void openTsumego()" }
+      ],
+      "config_keys": [],
+      "inputs_preconditions": "死活题窗口可创建；屏幕取题还要求目标平台支持捕获。",
+      "success_behavior": "打开死活题工作区，或最小化主窗口并启动受控屏幕取题流程。",
+      "failure_cancel_behavior": "重复打开先释放旧窗口；捕获失败恢复主窗口并报告，不得仅打印异常。",
+      "data_io": "读取或生成死活题棋盘；屏幕取题读取用户明确选择的屏幕区域。",
+      "external_dependencies": ["目标平台屏幕捕获"],
+      "target_modules": ["Lizzie.Core", "Lizzie.Desktop"],
+      "automated_evidence": [],
+      "manual_acceptance": "覆盖打开/重复打开、取题成功、取消、权限拒绝和捕获异常后的窗口恢复。",
+      "status": "已盘点",
+      "evidence": "两条精确输入路径与窗口入口已定位；旧版捕获异常只打印堆栈的恢复缺口需在目标实现修正。"
+    },
+    {
+      "id": "BOARD-TRANSFORM-001",
+      "category": "棋盘与对局",
+      "legacy_entry": "Primary+Alt 与方向键执行交换黑白、旋转和镜像；Primary 在 macOS 也接受 Meta",
+      "legacy_menu_keys": [],
+      "legacy_menu_labels": [],
+      "legacy_shortcuts": [],
+      "legacy_input_cases": [
+        "keyPressed:VK_RIGHT",
+        "keyPressed:VK_LEFT",
+        "keyPressed:VK_UP",
+        "keyPressed:VK_DOWN"
+      ],
+      "legacy_input_bindings": [
+        "keyPressed:VK_RIGHT#1",
+        "keyPressed:VK_RIGHT#3",
+        "keyPressed:VK_LEFT#2",
+        "keyPressed:VK_UP#3",
+        "keyPressed:VK_DOWN#2"
+      ],
+      "java_evidence": [
+        { "path": "src/main/java/featurecat/lizzie/gui/Input.java", "symbol": "SpinAndMirror" },
+        { "path": "src/main/java/featurecat/lizzie/rules/Board.java", "symbol": "SpinAndMirror" }
+      ],
+      "config_keys": [],
+      "inputs_preconditions": "棋盘历史非空；主窗口焦点位于接收 Input.java 的组件。",
+      "success_behavior": "按方向应用确定的旋转/镜像，Primary+Alt+Shift+Right 还交换黑白并向下移动分支。",
+      "failure_cancel_behavior": "无有效棋盘时不崩溃；变换必须保持落子、提子、分支和元数据一致，失败不得留下部分转换。",
+      "data_io": "原地变换内存棋盘历史；不直接写文件。",
+      "external_dependencies": [],
+      "target_modules": ["Lizzie.Core", "Lizzie.Desktop"],
+      "automated_evidence": [],
+      "manual_acceptance": "用非对称含分支棋谱逐一执行五条路径，核对坐标、颜色、提子、分支和撤销后的语义。",
+      "status": "已盘点",
+      "evidence": "五条条件路径已从 switch 控制流展开；跨实现变换夹具尚未建立。"
+    },
+    {
+      "id": "BOARD-EDIT-001",
+      "category": "棋盘与对局",
+      "legacy_entry": "P、Primary+Home、Delete/Backspace 与 Shift+A 执行过手、清空、删除和清除统计",
+      "legacy_menu_keys": [],
+      "legacy_menu_labels": [],
+      "legacy_shortcuts": [],
+      "legacy_input_cases": [
+        "keyPressed:VK_P",
+        "keyPressed:VK_HOME",
+        "keyPressed:VK_DELETE",
+        "keyPressed:VK_BACK_SPACE",
+        "keyPressed:VK_A"
+      ],
+      "legacy_input_bindings": [
+        "keyPressed:VK_P#1",
+        "keyPressed:VK_HOME#1",
+        "keyPressed:VK_HOME#2",
+        "keyPressed:VK_DELETE#1",
+        "keyPressed:VK_DELETE#2",
+        "keyPressed:VK_DELETE#3",
+        "keyPressed:VK_BACK_SPACE#1",
+        "keyPressed:VK_BACK_SPACE#2",
+        "keyPressed:VK_BACK_SPACE#3",
+        "keyPressed:VK_A#4"
+      ],
+      "java_evidence": [
+        { "path": "src/main/java/featurecat/lizzie/gui/Input.java", "symbol": "deleteBranch" },
+        { "path": "src/main/java/featurecat/lizzie/rules/Board.java", "symbol": "deleteMove" }
+      ],
+      "config_keys": [],
+      "inputs_preconditions": "棋盘可编辑；删除分支或着手时当前节点存在相应目标。",
+      "success_behavior": "按精确分支执行过手、清空棋盘、清除后续建议、删除当前分支/着手或清除棋盘统计。",
+      "failure_cancel_behavior": "无目标时保持历史不变；破坏性编辑在目标版必须可撤销或确认，失败不得损坏历史树。",
+      "data_io": "修改内存棋盘、历史树和节点分析统计。",
+      "external_dependencies": [],
+      "target_modules": ["Lizzie.Core", "Lizzie.Desktop"],
+      "automated_evidence": [],
+      "manual_acceptance": "用含主线与分支棋谱覆盖两种删除键的 Alt/Shift/无修饰路径、清空、过手与统计清除，并验证撤销/边界。",
+      "status": "已盘点",
+      "evidence": "Delete 无代码后落入 Backspace 的 fall-through 已显式生成；破坏性编辑的目标交互与回滚测试仍待实现。"
+    },
+    {
+      "id": "ANALYSIS-PONDER-001",
+      "category": "分析",
+      "legacy_entry": "Space 调用 LizzieFrame.togglePonderMannul 切换前台持续分析",
+      "legacy_menu_keys": [],
+      "legacy_menu_labels": [],
+      "legacy_shortcuts": [],
+      "legacy_input_cases": ["keyPressed:VK_SPACE"],
+      "legacy_input_bindings": ["keyPressed:VK_SPACE#1"],
+      "java_evidence": [
+        { "path": "src/main/java/featurecat/lizzie/gui/Input.java", "symbol": "togglePonderMannul" },
+        { "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "symbol": "togglePonderMannul" }
+      ],
+      "config_keys": [],
+      "inputs_preconditions": "主分析引擎已加载且当前模式允许开始或停止持续分析。",
+      "success_behavior": "Space 在分析与停止状态间切换，并使 UI 与引擎真实状态一致。",
+      "failure_cancel_behavior": "引擎未加载、忙碌或退出时显示真实不可用状态；停止需有界完成且不得遗留请求。",
+      "data_io": "发送或停止 GTP 分析请求并更新内存分析状态。",
+      "external_dependencies": ["GTP 引擎进程"],
+      "target_modules": ["Lizzie.Engine", "Lizzie.Desktop"],
+      "automated_evidence": [],
+      "manual_acceptance": "用确定性与真实引擎分别反复开始/停止，核对请求停止、UI 状态、迟到响应和进程退出。",
+      "status": "已盘点",
+      "evidence": "无修饰 Space 的唯一动作路径已定位；目标取消时序和真实引擎实测待建立。"
+    },
+    {
+      "id": "BOARD-VARIATION-001",
+      "category": "棋盘与对局",
+      "legacy_entry": "逗号、L、V、R 和无修饰数字键选择、试下、设为主线、重放或预览变化",
+      "legacy_menu_keys": [],
+      "legacy_menu_labels": [],
+      "legacy_shortcuts": [],
+      "legacy_input_cases": [
+        "keyPressed:VK_COMMA",
+        "keyPressed:VK_L",
+        "keyPressed:VK_V",
+        "keyPressed:VK_R",
+        "keyPressed:VK_1",
+        "keyPressed:VK_2",
+        "keyPressed:VK_3",
+        "keyPressed:VK_4",
+        "keyPressed:VK_5",
+        "keyPressed:VK_6",
+        "keyPressed:VK_7",
+        "keyPressed:VK_8",
+        "keyPressed:VK_9"
+      ],
+      "legacy_input_bindings": [
+        "keyPressed:VK_COMMA#2",
+        "keyPressed:VK_COMMA#3",
+        "keyPressed:VK_COMMA#4",
+        "keyPressed:VK_COMMA#5",
+        "keyPressed:VK_L#1",
+        "keyPressed:VK_V#3",
+        "keyPressed:VK_R#1",
+        "keyPressed:VK_1#3",
+        "keyPressed:VK_2#3",
+        "keyPressed:VK_3#3",
+        "keyPressed:VK_4#3",
+        "keyPressed:VK_5#3",
+        "keyPressed:VK_6#3",
+        "keyPressed:VK_7#3",
+        "keyPressed:VK_8#3",
+        "keyPressed:VK_9#3"
+      ],
+      "java_evidence": [
+        { "path": "src/main/java/featurecat/lizzie/gui/Input.java", "symbol": "playCurrentVariation" },
+        { "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "symbol": "public void replayBranch()" }
+      ],
+      "config_keys": [],
+      "inputs_preconditions": "当前节点存在引擎建议或可见分支；数字键对应 1–9 号建议。",
+      "success_behavior": "按指针位置与显示设置播放当前/最佳变化，进入试下、设为主线、重放分支或预览指定建议。",
+      "failure_cancel_behavior": "无建议、无分支或已处于不兼容模式时保持棋盘一致；重放可停止且不得阻塞 UI。",
+      "data_io": "读取并临时或持久修改棋盘分支与建议选择状态。",
+      "external_dependencies": [],
+      "target_modules": ["Lizzie.Core", "Lizzie.Desktop"],
+      "automated_evidence": [],
+      "manual_acceptance": "用至少九个候选和两个分支覆盖鼠标内外、变化开关、试下、主线、重放及无目标路径。",
+      "status": "已盘点",
+      "evidence": "数字 1–8 的无 Alt 路径经连续 case fall-through 到 VK_9，现已展开为各自候选索引；动态分支语义待对照。"
+    },
+    {
+      "id": "ANALYSIS-DISPLAY-001",
+      "category": "分析",
+      "legacy_entry": "U/M/J/F/H/V/T/Y/K 快捷分支控制候选、变化、手数、热力图、策略和问题手显示",
+      "legacy_menu_keys": [],
+      "legacy_menu_labels": [],
+      "legacy_shortcuts": [],
+      "legacy_input_cases": [
+        "keyPressed:VK_U",
+        "keyPressed:VK_M",
+        "keyPressed:VK_J",
+        "keyPressed:VK_F",
+        "keyPressed:VK_H",
+        "keyPressed:VK_V",
+        "keyPressed:VK_T",
+        "keyPressed:VK_Y",
+        "keyPressed:VK_K"
+      ],
+      "legacy_input_bindings": [
+        "keyPressed:VK_U#1",
+        "keyPressed:VK_M#1",
+        "keyPressed:VK_M#2",
+        "keyPressed:VK_M#3",
+        "keyPressed:VK_J#1",
+        "keyPressed:VK_F#1",
+        "keyPressed:VK_F#2",
+        "keyPressed:VK_F#3",
+        "keyPressed:VK_H#1",
+        "keyPressed:VK_V#2",
+        "keyPressed:VK_T#4",
+        "keyPressed:VK_Y#1",
+        "keyPressed:VK_K#1",
+        "keyPressed:VK_K#2"
+      ],
+      "java_evidence": [
+        { "path": "src/main/java/featurecat/lizzie/gui/Input.java", "symbol": "toggleBestMoves" },
+        { "path": "src/main/java/featurecat/lizzie/Config.java", "symbol": "toggleShowMoveNumber" }
+      ],
+      "config_keys": ["show-suggestion-variations"],
+      "inputs_preconditions": "主棋盘已显示；需要引擎数据的覆盖层只在相应数据存在时可见。",
+      "success_behavior": "各修饰键分支切换对应候选、变化、手数、次选、热力图、策略、问题手或评估着色，并立即刷新。",
+      "failure_cancel_behavior": "数据不存在或 Alt+K 条件不满足时允许无动作；持久化失败不得与可见状态静默分叉。",
+      "data_io": "读取分析结果并更新显示状态；Alt+V 直接写 show-suggestion-variations。",
+      "external_dependencies": ["显示热力图或策略时的引擎分析结果"],
+      "target_modules": ["Lizzie.Core", "Lizzie.Desktop"],
+      "automated_evidence": [],
+      "manual_acceptance": "逐一执行 14 条路径，核对覆盖层、组合优先级、无数据/无修饰 K 的无动作和重启持久化。",
+      "status": "已盘点",
+      "evidence": "14 条动作/无动作条件路径已静态展开；各 toggle 的完整配置键与视觉基线仍待后续关联。"
+    },
+    {
+      "id": "ANALYSIS-COUNTING-001",
+      "category": "分析",
+      "legacy_entry": "Primary+Q、Decimal/Slash 与 Period 切换终局数目、形势判断和 Kata 估算",
+      "legacy_menu_keys": [],
+      "legacy_menu_labels": [],
+      "legacy_shortcuts": [],
+      "legacy_input_cases": [
+        "keyPressed:VK_Q",
+        "keyPressed:VK_DECIMAL",
+        "keyPressed:VK_SLASH",
+        "keyPressed:VK_PERIOD"
+      ],
+      "legacy_input_bindings": [
+        "keyPressed:VK_Q#1",
+        "keyPressed:VK_DECIMAL#1",
+        "keyPressed:VK_DECIMAL#2",
+        "keyPressed:VK_SLASH#1",
+        "keyPressed:VK_SLASH#2",
+        "keyPressed:VK_PERIOD#1",
+        "keyPressed:VK_PERIOD#2"
+      ],
+      "java_evidence": [
+        { "path": "src/main/java/featurecat/lizzie/gui/Input.java", "symbol": "countstones(true)" },
+        { "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "symbol": "public void toggleScoreMode()" }
+      ],
+      "config_keys": [],
+      "inputs_preconditions": "棋盘可计分；Kata 估算需要兼容引擎与启用快捷键设置。",
+      "success_behavior": "切换终局死活标记、启动/清除形势判断，或在设置允许时切换 Kata 估算。",
+      "failure_cancel_behavior": "引擎或数据不可用时报告真实状态；未启用 Period 快捷键时明确无动作且不改状态。",
+      "data_io": "读取棋盘、引擎估算并更新计分/估算覆盖层。",
+      "external_dependencies": ["KataGo 形势判断能力"],
+      "target_modules": ["Lizzie.Core", "Lizzie.Engine", "Lizzie.Desktop"],
+      "automated_evidence": [],
+      "manual_acceptance": "覆盖两种计分状态、两种键位、Period 启用/禁用、引擎不可用及退出后状态恢复。",
+      "status": "已盘点",
+      "evidence": "Decimal 无代码后落入 Slash 的 fall-through、Period 禁用无动作路径和计分状态分支已精确生成。"
+    },
+    {
+      "id": "UI-ANALYSIS-PANELS-001",
+      "category": "界面显示",
+      "legacy_entry": "W/G/T/Alt+Z 快捷分支控制胜率、变化图、列表、注释、节点颜色和副棋盘面板",
+      "legacy_menu_keys": [],
+      "legacy_menu_labels": [],
+      "legacy_shortcuts": [],
+      "legacy_input_cases": ["keyPressed:VK_W", "keyPressed:VK_G", "keyPressed:VK_T", "keyPressed:VK_Z"],
+      "legacy_input_bindings": [
+        "keyPressed:VK_W#1",
+        "keyPressed:VK_W#2",
+        "keyPressed:VK_W#3",
+        "keyPressed:VK_G#1",
+        "keyPressed:VK_G#2",
+        "keyPressed:VK_G#3",
+        "keyPressed:VK_T#1",
+        "keyPressed:VK_T#2",
+        "keyPressed:VK_Z#2"
+      ],
+      "java_evidence": [
+        { "path": "src/main/java/featurecat/lizzie/gui/Input.java", "symbol": "toggleShowWinrate" },
+        { "path": "src/main/java/featurecat/lizzie/Config.java", "symbol": "toggleShowVariationGraph" }
+      ],
+      "config_keys": [],
+      "inputs_preconditions": "主窗口已完成布局；相应分析数据存在时面板显示内容。",
+      "success_behavior": "Primary/Alt/Shift 优先级选择并切换面板大小、可见性或节点颜色；无修饰 W 保持无动作，无修饰 G 刷新变化。",
+      "failure_cancel_behavior": "面板缺失或数据为空时不崩溃；布局与持久化失败不得静默分叉。",
+      "data_io": "更新窗口面板可见性、尺寸和显示配置。",
+      "external_dependencies": [],
+      "target_modules": ["Lizzie.Desktop"],
+      "automated_evidence": [],
+      "manual_acceptance": "逐一执行九条路径，核对优先级、无修饰 W 无动作、窗口缩放、重启恢复和焦点可达性。",
+      "status": "已盘点",
+      "evidence": "九条条件路径已生成；具体配置键、DPI、键盘焦点与无障碍验证待 UI 阶段完成。"
+    },
+    {
+      "id": "SETTINGS-GAME-001",
+      "category": "设置与对局",
+      "legacy_entry": "Control+I 设置棋盘尺寸，I 编辑棋局信息，Shift+D 设置规则；无修饰 D 无动作",
+      "legacy_menu_keys": [],
+      "legacy_menu_labels": [],
+      "legacy_shortcuts": [],
+      "legacy_input_cases": ["keyPressed:VK_I", "keyPressed:VK_D"],
+      "legacy_input_bindings": [
+        "keyPressed:VK_I#1",
+        "keyPressed:VK_I#2",
+        "keyPressed:VK_D#2",
+        "keyPressed:VK_D#3"
+      ],
+      "java_evidence": [
+        { "path": "src/main/java/featurecat/lizzie/gui/Input.java", "symbol": "SetBoardSize st" },
+        { "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "symbol": "public void setRules()" }
+      ],
+      "config_keys": [],
+      "inputs_preconditions": "当前棋盘允许修改尺寸、元数据或 KataGo 规则；规则设置需要可用引擎。",
+      "success_behavior": "打开对应设置并在确认后更新棋盘尺寸、棋局信息或引擎规则；无修饰 D 保持无动作。",
+      "failure_cancel_behavior": "取消保持原状态；引擎不响应规则查询时报告失败并停止等待，不得只打印异常或无限轮询。",
+      "data_io": "更新内存棋局信息和规则；后续保存棋谱时写入相应元数据。",
+      "external_dependencies": ["设置引擎规则时的 GTP 引擎"],
+      "target_modules": ["Lizzie.Core", "Lizzie.Engine", "Lizzie.Desktop"],
+      "automated_evidence": [],
+      "manual_acceptance": "覆盖三种设置确认/取消、无修饰 D、无引擎、规则响应成功/超时和元数据保存重读。",
+      "status": "已盘点",
+      "evidence": "四条路径已展开；旧版 setRules 使用后台 sleep 轮询并打印 InterruptedException，目标实现不得照搬。"
+    },
+    {
+      "id": "SETTINGS-ENGINE-001",
+      "category": "设置与引擎",
+      "legacy_entry": "Alt+X 打开多引擎设置，Alt+D 打开当前 KataGo/Leela 参数设置",
+      "legacy_menu_keys": [],
+      "legacy_menu_labels": [],
+      "legacy_shortcuts": [],
+      "legacy_input_cases": ["keyPressed:VK_X", "keyPressed:VK_D"],
+      "legacy_input_bindings": ["keyPressed:VK_X#2", "keyPressed:VK_D#1"],
+      "java_evidence": [
+        { "path": "src/main/java/featurecat/lizzie/gui/Input.java", "symbol": "openMoreEngineDialog" },
+        { "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "symbol": "public void setLzSaiEngine()" }
+      ],
+      "config_keys": [],
+      "inputs_preconditions": "多引擎设置可随时打开；当前引擎参数要求已加载引擎。",
+      "success_behavior": "打开多引擎或匹配当前引擎类型的参数对话框，确认后保存并应用有效设置。",
+      "failure_cancel_behavior": "无引擎时提示；取消保持原设置并恢复此前分析状态；错误参数不得启动新进程。",
+      "data_io": "读取和更新引擎配置，可能暂停并恢复持续分析。",
+      "external_dependencies": ["已配置的 GTP 引擎"],
+      "target_modules": ["Lizzie.Engine", "Lizzie.Desktop"],
+      "automated_evidence": [],
+      "manual_acceptance": "覆盖无引擎、KataGo、Leela、多引擎确认/取消及分析暂停恢复。",
+      "status": "已盘点",
+      "evidence": "两条 Alt 分支及目标方法已定位；完整配置键和安全进程应用路径待后续关联。"
+    },
+    {
+      "id": "SETTINGS-GENERAL-001",
+      "category": "设置",
+      "legacy_entry": "Shift+X 调用 LizzieFrame.openConfigDialog2(0) 打开常规设置首个页签",
+      "legacy_menu_keys": [],
+      "legacy_menu_labels": [],
+      "legacy_shortcuts": [],
+      "legacy_input_cases": ["keyPressed:VK_X"],
+      "legacy_input_bindings": ["keyPressed:VK_X#1"],
+      "java_evidence": [
+        { "path": "src/main/java/featurecat/lizzie/gui/Input.java", "symbol": "openConfigDialog2(0)" },
+        { "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "symbol": "public void openConfigDialog2(int index)" }
+      ],
+      "config_keys": [],
+      "inputs_preconditions": "主引擎对象和设置窗口可用。",
+      "success_behavior": "暂停需要暂停的分析，打开常规设置页；关闭后恢复此前持续分析状态。",
+      "failure_cancel_behavior": "取消不保存修改；窗口创建或保存失败需报告并恢复此前分析状态。",
+      "data_io": "读取和按用户确认写入各设置；具体配置键由后续配置矩阵逐项关联。",
+      "external_dependencies": [],
+      "target_modules": ["Lizzie.Core", "Lizzie.Engine", "Lizzie.Desktop"],
+      "automated_evidence": [],
+      "manual_acceptance": "在分析开/关两种状态打开并取消/保存，核对页签、配置变化和分析恢复。",
+      "status": "已盘点",
+      "evidence": "Shift+X 的唯一分支已定位；该对话框覆盖的大量设置仍需按配置键拆分，不以本行宣称设置全部完成。"
+    },
+    {
+      "id": "UI-CONTROLS-001",
+      "category": "界面显示",
+      "legacy_entry": "按住无修饰 X 临时显示快捷键帮助层，释放 X 时停止显示",
+      "legacy_menu_keys": [],
+      "legacy_menu_labels": [],
+      "legacy_shortcuts": [],
+      "legacy_input_cases": ["keyPressed:VK_X", "keyReleased:VK_X"],
+      "legacy_input_bindings": [
+        "keyPressed:VK_X#3",
+        "keyPressed:VK_X#4",
+        "keyPressed:VK_X#5",
+        "keyPressed:VK_X#6",
+        "keyPressed:VK_X#7",
+        "keyPressed:VK_X#8",
+        "keyPressed:VK_X#9",
+        "keyPressed:VK_X#10",
+        "keyPressed:VK_X#11",
+        "keyReleased:VK_X#1"
+      ],
+      "java_evidence": [
+        { "path": "src/main/java/featurecat/lizzie/gui/Input.java", "symbol": "drawControls" },
+        { "path": "src/main/java/featurecat/lizzie/gui/Input.java", "symbol": "stopShowingControl" }
+      ],
+      "config_keys": [],
+      "inputs_preconditions": "主窗口接收 X 的按下与释放事件；Shift/Alt 未按下。",
+      "success_behavior": "首次按下隐藏冲突面板并显示帮助层；释放无条件关闭帮助层，原来已显示时按下保持无动作。",
+      "failure_cancel_behavior": "焦点丢失或缺失释放事件时不得永久遮挡主界面；面板恢复策略需明确。",
+      "data_io": "仅更新窗口可见状态，不持久化。",
+      "external_dependencies": [],
+      "target_modules": ["Lizzie.Desktop"],
+      "automated_evidence": [],
+      "manual_acceptance": "覆盖三个面板可见性的八种组合、帮助层已显示、按住/释放、焦点切出和键盘导航。",
+      "status": "已盘点",
+      "evidence": "八个面板组合、一条按下无动作和一条释放路径已展开；焦点丢失恢复是待验证可靠性边界。"
+    },
+    {
+      "id": "UI-LAYOUT-001",
+      "category": "界面显示",
+      "legacy_entry": "Control+Z、Primary+Alt+Q/A、方括号与 Alt+1–9 调整置顶、独立棋盘、棋盘占比和窗口布局模式",
+      "legacy_menu_keys": [],
+      "legacy_menu_labels": [],
+      "legacy_shortcuts": [],
+      "legacy_input_cases": [
+        "keyPressed:VK_Z",
+        "keyPressed:VK_Q",
+        "keyPressed:VK_A",
+        "keyPressed:VK_OPEN_BRACKET",
+        "keyPressed:VK_CLOSE_BRACKET",
+        "keyPressed:VK_1",
+        "keyPressed:VK_2",
+        "keyPressed:VK_3",
+        "keyPressed:VK_4",
+        "keyPressed:VK_5",
+        "keyPressed:VK_6",
+        "keyPressed:VK_7",
+        "keyPressed:VK_8",
+        "keyPressed:VK_9"
+      ],
+      "legacy_input_bindings": [
+        "keyPressed:VK_Z#1",
+        "keyPressed:VK_Q#2",
+        "keyPressed:VK_A#2",
+        "keyPressed:VK_A#3",
+        "keyPressed:VK_OPEN_BRACKET#1",
+        "keyPressed:VK_OPEN_BRACKET#2",
+        "keyPressed:VK_CLOSE_BRACKET#1",
+        "keyPressed:VK_CLOSE_BRACKET#2",
+        "keyPressed:VK_1#1",
+        "keyPressed:VK_2#1",
+        "keyPressed:VK_3#1",
+        "keyPressed:VK_4#1",
+        "keyPressed:VK_5#1",
+        "keyPressed:VK_6#1",
+        "keyPressed:VK_7#1",
+        "keyPressed:VK_8#1",
+        "keyPressed:VK_9#2"
+      ],
+      "java_evidence": [
+        { "path": "src/main/java/featurecat/lizzie/gui/Input.java", "symbol": "defaultMode" },
+        { "path": "src/main/java/featurecat/lizzie/gui/Input.java", "symbol": "BoardPositionProportion" }
+      ],
+      "config_keys": [],
+      "inputs_preconditions": "主窗口已布局；独立副棋盘只在未同步外部棋盘时可切换。",
+      "success_behavior": "按分支切换置顶、独立棋盘、预设/自定义布局或在 0–8 边界内调整棋盘占比。",
+      "failure_cancel_behavior": "占比到边界或同步棋盘禁止切换时保持无动作；布局切换失败不得丢失可见面板或窗口位置。",
+      "data_io": "更新窗口布局、置顶和独立棋盘状态；具体持久化键仍待配置矩阵关联。",
+      "external_dependencies": ["操作系统窗口管理"],
+      "target_modules": ["Lizzie.Desktop"],
+      "automated_evidence": [],
+      "manual_acceptance": "覆盖九种布局键、占比两端无动作、置顶、主/副独立窗口、同步禁用、重启和多 DPI。",
+      "status": "已盘点",
+      "evidence": "17 条动作/边界无动作路径已生成；Control+Z 是严格 Control，而 Q/A 的 Primary 在 macOS 也接受 Meta，差异已保留。"
+    },
+    {
+      "id": "BOARD-TEMPORARY-001",
+      "category": "棋盘与对局",
+      "legacy_entry": "按住无修饰 Z 进入临时棋盘，释放 Z 恢复候选显示并退出临时状态",
+      "legacy_menu_keys": [],
+      "legacy_menu_labels": [],
+      "legacy_shortcuts": [],
+      "legacy_input_cases": ["keyPressed:VK_Z", "keyReleased:VK_Z"],
+      "legacy_input_bindings": ["keyPressed:VK_Z#3", "keyReleased:VK_Z#1"],
+      "java_evidence": [
+        { "path": "src/main/java/featurecat/lizzie/gui/Input.java", "symbol": "startTemporaryBoard" },
+        { "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "symbol": "public void stopTemporaryBoard()" }
+      ],
+      "config_keys": [],
+      "inputs_preconditions": "主窗口接收 Z 的按下与释放，Control/Alt 未按下。",
+      "success_behavior": "按下保存黑白候选显示、清除后续提示并进入临时棋盘；释放恢复保存的候选状态并刷新。",
+      "failure_cancel_behavior": "重复按下不重置保存值；焦点丢失或缺失释放事件时必须自动恢复，不得永久留在临时状态。",
+      "data_io": "仅修改内存临时棋盘与候选显示状态。",
+      "external_dependencies": [],
+      "target_modules": ["Lizzie.Core", "Lizzie.Desktop"],
+      "automated_evidence": [],
+      "manual_acceptance": "覆盖按住/释放、重复按下、焦点切出、黑白候选四种初始组合和独立棋盘同步刷新。",
+      "status": "已盘点",
+      "evidence": "按下/释放绑定和状态保存入口已定位；旧版 stopTemporaryBoard 给两个菜单复选框都写 tempShowWhite 的疑似恢复缺陷已登记，目标版不得照搬。"
+    },
+    {
+      "id": "ENGINE-SWITCH-001",
+      "category": "引擎",
+      "legacy_entry": "Primary+1–9 选择索引 0–8 的引擎，Primary+0 选择索引 9；Primary 在 macOS 也接受 Meta",
+      "legacy_menu_keys": [],
+      "legacy_menu_labels": [],
+      "legacy_shortcuts": [],
+      "legacy_input_cases": [
+        "keyPressed:VK_1",
+        "keyPressed:VK_2",
+        "keyPressed:VK_3",
+        "keyPressed:VK_4",
+        "keyPressed:VK_5",
+        "keyPressed:VK_6",
+        "keyPressed:VK_7",
+        "keyPressed:VK_8",
+        "keyPressed:VK_9",
+        "keyPressed:VK_0"
+      ],
+      "legacy_input_bindings": [
+        "keyPressed:VK_1#2",
+        "keyPressed:VK_2#2",
+        "keyPressed:VK_3#2",
+        "keyPressed:VK_4#2",
+        "keyPressed:VK_5#2",
+        "keyPressed:VK_6#2",
+        "keyPressed:VK_7#2",
+        "keyPressed:VK_8#2",
+        "keyPressed:VK_9#1",
+        "keyPressed:VK_0#1",
+        "keyPressed:VK_0#2"
+      ],
+      "java_evidence": [
+        { "path": "src/main/java/featurecat/lizzie/gui/Input.java", "symbol": "switchEngine(e.getKeyCode() - VK_1, true)" },
+        { "path": "src/main/java/featurecat/lizzie/analysis/EngineManager.java", "symbol": "switchEngine" }
+      ],
+      "config_keys": [],
+      "inputs_preconditions": "目标索引已配置可选引擎；主窗口接收数字键。",
+      "success_behavior": "Primary+1–0 选择对应十个索引并安全切换引擎；无修饰 0 明确无动作。",
+      "failure_cancel_behavior": "索引未配置、进程启动失败或当前任务不可切换时报告并保持原引擎；不得遗留旧进程。",
+      "data_io": "读取引擎列表并切换外部 GTP 进程与当前会话。",
+      "external_dependencies": ["GTP 引擎可执行文件", "操作系统进程管理"],
+      "target_modules": ["Lizzie.Engine", "Lizzie.Desktop"],
+      "automated_evidence": [],
+      "manual_acceptance": "配置十个确定性测试引擎，逐键核对索引、未配置索引、启动失败、连续切换、macOS Meta 和无修饰 0。",
+      "status": "已盘点",
+      "evidence": "1–8 的非 Alt 路径通过 switch fall-through 到 VK_9，0 为独立分支；十个选择与 0 无动作路径均已生成。"
+    },
+    {
+      "id": "ONLINE-HUB-001",
+      "category": "在线功能",
+      "legacy_entry": "无修饰 Q 调用 LizzieFrame.openOnlineDialog 打开或复用在线对话框",
+      "legacy_menu_keys": [],
+      "legacy_menu_labels": [],
+      "legacy_shortcuts": [],
+      "legacy_input_cases": ["keyPressed:VK_Q"],
+      "legacy_input_bindings": ["keyPressed:VK_Q#3"],
+      "java_evidence": [
+        { "path": "src/main/java/featurecat/lizzie/gui/Input.java", "symbol": "openOnlineDialog" },
+        { "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "symbol": "public void openOnlineDialog()" }
+      ],
+      "config_keys": [],
+      "inputs_preconditions": "主窗口接收无 Primary/Alt 的 Q；在线对话框可创建。",
+      "success_behavior": "首次创建并显示在线对话框；复用时停止旧同步、刷新粘贴内容并显示窗口。",
+      "failure_cancel_behavior": "创建、停止同步或粘贴失败需报告可诊断错误并保持主窗口可用；不得吞异常。",
+      "data_io": "管理在线对话框状态，后续可能读取剪贴板和网络内容。",
+      "external_dependencies": ["在线功能使用时的网络与剪贴板"],
+      "target_modules": ["Lizzie.Core", "Lizzie.Desktop"],
+      "automated_evidence": [],
+      "manual_acceptance": "覆盖首次打开、复用、同步中复用、无效剪贴板、网络失败和关闭重开。",
+      "status": "已盘点",
+      "evidence": "Q 的精确默认分支已定位；旧版复用路径 catch Exception 后完全忽略，是禁止迁移的吞异常缺陷。"
+    },
+    {
+      "id": "ANALYSIS-AUTO-001",
+      "category": "分析",
+      "legacy_entry": "Primary+A 打开自动落子，A 打开自动分析并在取消时重置工具栏",
+      "legacy_menu_keys": [],
+      "legacy_menu_labels": [],
+      "legacy_shortcuts": [],
+      "legacy_input_cases": ["keyPressed:VK_A"],
+      "legacy_input_bindings": ["keyPressed:VK_A#1", "keyPressed:VK_A#5", "keyPressed:VK_A#6"],
+      "java_evidence": [
+        { "path": "src/main/java/featurecat/lizzie/gui/Input.java", "symbol": "AutoPlay autoPlay" },
+        { "path": "src/main/java/featurecat/lizzie/gui/StartAnaDialog.java", "symbol": "class StartAnaDialog" }
+      ],
+      "config_keys": [],
+      "inputs_preconditions": "分析引擎可用；主窗口接收无 Alt/Shift 的 A 或 Primary+A。",
+      "success_behavior": "Primary+A 打开自动落子参数；无修饰 A 打开自动分析参数并在确认后启动任务。",
+      "failure_cancel_behavior": "取消自动分析重置工具栏且不启动任务；引擎失败或停止需恢复可交互状态并保留已完成结果。",
+      "data_io": "读取自动分析/落子参数，驱动棋盘与 GTP 分析任务。",
+      "external_dependencies": ["GTP 引擎进程"],
+      "target_modules": ["Lizzie.Core", "Lizzie.Engine", "Lizzie.Desktop"],
+      "automated_evidence": [],
+      "manual_acceptance": "覆盖两个对话框确认/取消、任务开始/停止、引擎失败、进度和工具栏恢复。",
+      "status": "已盘点",
+      "evidence": "Primary+A 与无修饰 A 的确认/取消条件路径已展开；任务生命周期和进度语义待纵切验证。"
     }
   ]
 }
