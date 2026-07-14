@@ -1,5 +1,5 @@
 {
-  "schema_version": 35,
+  "schema_version": 36,
   "source": {
     "root": "../lizzieyzy-next-main",
     "version": "yzy2.5.3",
@@ -17,7 +17,7 @@
     "Menu keys cover active Menu.java resource lookups with Menu. or menu. prefixes.",
     "Menu literal labels cover active string-literal menu constructors; dynamic labels remain represented by their resource or runtime source.",
     "Menu accelerators cover explicit Menu.java setAccelerator calls and direct OS.isWindows guards; other input bindings remain T-003 work.",
-    "Input key bindings symbolically expand Input.java, InputIndependentMainBoard.java, InputIndependentSubboard.java, InputSubboard.java, FloatBoard.java, AnalysisFrame table/window, DrawPainting.java, ChooseMoreEngine.java, LoadEngine.java, OtherPrograms.java, TencentKifuDownload.java, FoxKifuDownload.java, BrowserFrame.java, and CaptureTsumeGoFrame.java key dispatch, condition evaluations, executed statements, empty-listener and empty-statement paths, and switch fall-through; controlIsPressed means Control on every platform plus Meta on macOS, and BrowserFrame dispatches Enter through getKeyChar.",
+    "Input key bindings symbolically expand Input.java, InputIndependentMainBoard.java, InputIndependentSubboard.java, InputSubboard.java, FloatBoard.java, AnalysisFrame table/window, DrawPainting.java, ChooseMoreEngine.java, LoadEngine.java, OtherPrograms.java, TencentKifuDownload.java, FoxKifuDownload.java, BrowserFrame.java, CaptureTsumeGoFrame.java, and the BottomToolbar move-number field key dispatch, condition evaluations, executed statements, empty-listener and empty-statement paths, and switch fall-through; controlIsPressed means Control on every platform plus Meta on macOS, BrowserFrame dispatches Enter through getKeyChar, and BottomToolbar compares a local getKeyCode alias with the newline character.",
     "Pointer bindings symbolically expand the main Input listener, the two indexed subboard listeners, FloatBoard, AnalysisFrame, DrawPainting, ChooseMoreEngine, LoadEngine, OtherPrograms, TencentKifuDownload, FoxKifuDownload, BrowserFrame load/stop/label listeners, JFontTextArea, JFontTextField, JIMSendTextPane, the two DemoScrollBarUI2 arrow-button listeners, JPaintTextPane, WindowMenuStrip, YikeLiveDialog, IndependentSubBoard and IndependentMainBoard lock/close/top-button plus window listeners, BlunderListPanel, SidebarHeaderPanel, BottomToolbar, ConfigDialog2 sidebar-nav/toggle-row/color-label listeners, MoreEngines, the 33 indexed LizzieFrame listeners, the 5 indexed Menu komi text/hold/hover listeners, the 7 indexed MoveListFrame table/match-panel/header groups, and RightClickMenu's explicit no-op mouse exit across mouse, motion, drag, wheel, and release condition evaluations, early returns, executed statements, and explicit no-action paths; data-dependent loops and click try/catch handlers are preserved as normalized atomic statements, local boolean tracking retains a known value across loops that can only assign the same literal, and direct variable-to-integer comparisons prune contradictory paths.",
     "Other key-listener classes remain T-003 work; all active public pointer handlers in the legacy Java sources are inventoried."
   ],
@@ -43,11 +43,11 @@
     "active_menu_accelerators": 2,
     "mapped_menu_accelerators": 2,
     "unmapped_menu_accelerators": 0,
-    "active_input_key_cases": 143,
-    "mapped_input_key_cases": 143,
+    "active_input_key_cases": 144,
+    "mapped_input_key_cases": 144,
     "unmapped_input_key_cases": 0,
-    "active_input_key_bindings": 365,
-    "mapped_input_key_bindings": 365,
+    "active_input_key_bindings": 367,
+    "mapped_input_key_bindings": 367,
     "unmapped_input_key_bindings": 0,
     "active_input_pointer_events": 180,
     "mapped_input_pointer_events": 180,
@@ -8078,6 +8078,7 @@
         "key": "norefresh-onmouse-move",
         "reference_count": 2,
         "matrix_ids": [
+          "BOARD-HISTORY-001",
           "BOARD-MAIN-INPUT-001"
         ],
         "references": [
@@ -13649,6 +13650,7 @@
         "reference_count": 3,
         "matrix_ids": [
           "ANALYSIS-PLAYER-STRENGTH-001",
+          "BOARD-HISTORY-001",
           "UI-BLUNDER-SCROLLBAR-001",
           "UI-TEXT-EDIT-001",
           "UI-WINDOW-MENU-STRIP-001"
@@ -17890,12 +17892,24 @@
         "post_dispatch_actions": {
           "keyPressed": []
         }
+      },
+      {
+        "id": "BottomToolbarMoveNumber",
+        "source": "src/main/java/featurecat/lizzie/gui/BottomToolbar.java",
+        "active_key_cases": 1,
+        "active_key_bindings": 2,
+        "events": {
+          "keyPressed": 1
+        },
+        "post_dispatch_actions": {
+          "keyPressed": []
+        }
       }
     ],
-    "active_key_cases": 143,
-    "active_key_bindings": 365,
+    "active_key_cases": 144,
+    "active_key_bindings": 367,
     "events": {
-      "keyPressed": 139,
+      "keyPressed": 140,
       "keyReleased": 4
     },
     "cases": [
@@ -19953,6 +19967,18 @@
         "binding_count": 2,
         "matrix_ids": [
           "TSUMEGO-001"
+        ]
+      },
+      {
+        "case": "BottomToolbarMoveNumber:keyPressed:VK_ENTER",
+        "source_id": "BottomToolbarMoveNumber",
+        "event": "keyPressed",
+        "key": "VK_ENTER",
+        "line": 883,
+        "modifier_checks": [],
+        "binding_count": 2,
+        "matrix_ids": [
+          "BOARD-HISTORY-001"
         ]
       }
     ],
@@ -30975,6 +31001,94 @@
         "statements": [],
         "matrix_ids": [
           "TSUMEGO-001"
+        ]
+      },
+      {
+        "binding": "BottomToolbarMoveNumber:keyPressed:VK_ENTER#1",
+        "case": "BottomToolbarMoveNumber:keyPressed:VK_ENTER",
+        "source_id": "BottomToolbarMoveNumber",
+        "event": "keyPressed",
+        "key": "VK_ENTER",
+        "line": 883,
+        "conditions": [
+          {
+            "expression": "changeMoveNumber != 0",
+            "expected": true
+          }
+        ],
+        "case_chain": [
+          "BottomToolbarMoveNumber:keyPressed:VK_ENTER"
+        ],
+        "statements": [
+          {
+            "line": 884,
+            "statement": "checkMove();"
+          },
+          {
+            "line": 885,
+            "statement": "txtMoveNumber.setFocusable(false);"
+          },
+          {
+            "line": 886,
+            "statement": "txtMoveNumber.setFocusable(true);"
+          },
+          {
+            "line": 887,
+            "statement": "txtMoveNumber.setBackground( Lizzie.config.useMorandiColors ? MorandiPalette.TOOLBAR_TEXT : Color.WHITE);"
+          },
+          {
+            "line": 889,
+            "statement": "txtMoveNumber.setText(\"\");"
+          },
+          {
+            "line": 890,
+            "statement": "Lizzie.board.goToMoveNumberBeyondBranch(changeMoveNumber);"
+          }
+        ],
+        "matrix_ids": [
+          "BOARD-HISTORY-001"
+        ]
+      },
+      {
+        "binding": "BottomToolbarMoveNumber:keyPressed:VK_ENTER#2",
+        "case": "BottomToolbarMoveNumber:keyPressed:VK_ENTER",
+        "source_id": "BottomToolbarMoveNumber",
+        "event": "keyPressed",
+        "key": "VK_ENTER",
+        "line": 883,
+        "conditions": [
+          {
+            "expression": "changeMoveNumber != 0",
+            "expected": false
+          }
+        ],
+        "case_chain": [
+          "BottomToolbarMoveNumber:keyPressed:VK_ENTER"
+        ],
+        "statements": [
+          {
+            "line": 884,
+            "statement": "checkMove();"
+          },
+          {
+            "line": 885,
+            "statement": "txtMoveNumber.setFocusable(false);"
+          },
+          {
+            "line": 886,
+            "statement": "txtMoveNumber.setFocusable(true);"
+          },
+          {
+            "line": 887,
+            "statement": "txtMoveNumber.setBackground( Lizzie.config.useMorandiColors ? MorandiPalette.TOOLBAR_TEXT : Color.WHITE);"
+          },
+          {
+            "line": 889,
+            "statement": "txtMoveNumber.setText(\"\");"
+          }
+        ],
+        "matrix_ids": [
+          "BOARD-HISTORY-001"
         ]
       }
     ],

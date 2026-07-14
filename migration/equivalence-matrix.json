@@ -1,5 +1,5 @@
 {
-  "schema_version": 35,
+  "schema_version": 36,
   "allowed_statuses": [
     "未盘点",
     "已盘点",
@@ -90,7 +90,7 @@
     {
       "id": "BOARD-HISTORY-001",
       "category": "棋盘与对局",
-      "legacy_entry": "BoardHistoryList 与 BoardHistoryNode 管理主线、分支和前后导航；Input、InputIndependentMainBoard 与 AnalysisFrame 候选表提供键盘入口",
+      "legacy_entry": "BoardHistoryList 与 BoardHistoryNode 管理主线、分支和前后导航；Input、InputIndependentMainBoard、AnalysisFrame 候选表与 BottomToolbar 走子编号输入框提供键盘入口",
       "legacy_menu_keys": ["Menu.backToMainBranch", "Menu.deleteBranch", "Menu.setAsMain"],
       "legacy_menu_labels": [],
       "legacy_shortcuts": [],
@@ -116,7 +116,8 @@
         "InputIndependentMainBoard:keyPressed:VK_B",
         "InputIndependentMainBoard:keyPressed:VK_R",
         "AnalysisFrameTable:keyPressed:VK_UP",
-        "AnalysisFrameTable:keyPressed:VK_DOWN"
+        "AnalysisFrameTable:keyPressed:VK_DOWN",
+        "BottomToolbarMoveNumber:keyPressed:VK_ENTER"
       ],
       "legacy_input_bindings": [
         "keyPressed:VK_RIGHT#1",
@@ -166,19 +167,23 @@
         "InputIndependentMainBoard:keyPressed:VK_B#3",
         "InputIndependentMainBoard:keyPressed:VK_R#1",
         "AnalysisFrameTable:keyPressed:VK_UP#1",
-        "AnalysisFrameTable:keyPressed:VK_DOWN#1"
+        "AnalysisFrameTable:keyPressed:VK_DOWN#1",
+        "BottomToolbarMoveNumber:keyPressed:VK_ENTER#1",
+        "BottomToolbarMoveNumber:keyPressed:VK_ENTER#2"
       ],
       "java_evidence": [
         { "path": "src/main/java/featurecat/lizzie/rules/BoardHistoryList.java", "symbol": "class BoardHistoryList" },
         { "path": "src/main/java/featurecat/lizzie/rules/BoardHistoryNode.java", "symbol": "class BoardHistoryNode" },
         { "path": "src/main/java/featurecat/lizzie/gui/InputIndependentMainBoard.java", "symbol": "independentMainBoard.boardRenderer.isShowingBranch()" },
-        { "path": "src/main/java/featurecat/lizzie/gui/AnalysisFrame.java", "symbol": "Lizzie.board.previousMove(true)" }
+        { "path": "src/main/java/featurecat/lizzie/gui/AnalysisFrame.java", "symbol": "Lizzie.board.previousMove(true)" },
+        { "path": "src/main/java/featurecat/lizzie/gui/BottomToolbar.java", "symbol": "txtMoveNumber.addKeyListener" },
+        { "path": "src/main/java/featurecat/lizzie/rules/Board.java", "symbol": "goToMoveNumberBeyondBranch" }
       ],
-      "config_keys": ["show-leelaz-variation", "new-move-number-in-branch"],
-      "inputs_preconditions": "棋谱包含至少一个落子；分支场景需要同一节点存在多个后继。",
-      "success_behavior": "导航保持棋盘、提子、着手身份和分支结构一致；独立主棋盘获得焦点时，方向键使用其 renderer 预览和移动分支；AnalysisFrame 候选表的 Up/Down 直接导航全局主棋盘前后一步。",
-      "failure_cancel_behavior": "到达首尾节点时不得越界或破坏历史树；目标版不得把独立窗口或 AnalysisFrame 的导航静默发送到错误棋盘上下文。",
-      "data_io": "内存棋盘历史树。",
+      "config_keys": ["show-leelaz-variation", "new-move-number-in-branch", "use-morandi-colors", "norefresh-onmouse-move"],
+      "inputs_preconditions": "棋谱包含至少一个落子；分支场景需要同一节点存在多个后继。BottomToolbar 走子编号输入框只在 keyPressed 收到 Enter 时处理文本，且按原样交给 Integer.parseInt，不去除空白。",
+      "success_behavior": "导航保持棋盘、提子、着手身份和分支结构一致；独立主棋盘获得焦点时，方向键使用其 renderer 预览和移动分支；AnalysisFrame 候选表的 Up/Down 直接导航全局主棋盘前后一步。BottomToolbar Enter 对非零整数先切换输入框 focusable 状态、按 Morandi 配置恢复背景并清空文本，再调用 goToMoveNumberBeyondBranch；目标超过当前短分支且不超过主线长度时先回主线起点再前进。",
+      "failure_cancel_behavior": "到达首尾节点时不得越界或破坏历史树；目标版不得把独立窗口或 AnalysisFrame 的导航静默发送到错误棋盘上下文。BottomToolbar 的空串、带空白、非整数和 int 溢出会被 NumberFormatException 静默折为 0，字面 0 同样不导航，但两者都会清空输入并切换 focusable；普通负数和超出首尾的目标只移动到可达边界。引擎对局时 Board 拒绝导航，但 Enter 仍先产生输入框副作用；与 gotomove 按钮相比，Enter 不先结束评论编辑、不调用 setTxtUnfocuse，且 checkMove 通过全局 LizzieFrame.toolbar 而非当前实例取值。极端整数还会让 delta 溢出、Math.abs(Integer.MIN_VALUE) 为负或选错方向。目标版须给出可访问校验/错误反馈、限制目标范围、统一按钮与键盘事务，并避免在 UI 线程做无界同步穿行。",
+      "data_io": "内存棋盘历史树与 BottomToolbar 文本框；读取 use-morandi-colors 选择清空后的背景色，Board 导航读取 norefresh-onmouse-move 决定是否先清除候选分支，不持久化走子目标。",
       "external_dependencies": [],
       "target_modules": ["Lizzie.Core", "Lizzie.Desktop"],
       "automated_evidence": [
@@ -186,9 +191,9 @@
         { "path": "src/test/java/featurecat/lizzie/rules/BoardHistoryListSyncSnapshotTest.java", "symbol": "BoardHistoryListSyncSnapshotTest" },
         { "path": "src/test/java/featurecat/lizzie/rules/BoardHistoryNodeRemovedStoneReplayTest.java", "symbol": "BoardHistoryNodeRemovedStoneReplayTest" }
       ],
-      "manual_acceptance": "在主窗口和独立主棋盘分别用方向键及 PageUp/PageDown 穿行主线与两个分支，再让 AnalysisFrame 候选表获得焦点测试 Up/Down，核对焦点目标、落子、提子和分支编号。",
+      "manual_acceptance": "在主窗口和独立主棋盘分别用方向键及 PageUp/PageDown 穿行主线与两个分支，再让 AnalysisFrame 候选表获得焦点测试 Up/Down，核对焦点目标、落子、提子和分支编号。随后在 BottomToolbar 输入当前分支内编号、主线较远编号、空串、带空白数字、0、负数、超尾值及 int 最大/最小值并按 Enter，分别在普通/引擎对局、评论编辑、Morandi 开关、200% DPI 与大字号下核对导航边界、输入清空/裁切、焦点、背景、错误反馈、响应性及棋谱不变性，并与走子按钮行为比较。",
       "status": "已盘点",
-      "evidence": "主窗口与独立主棋盘的 46 条本行路径及 AnalysisFrame 表格的两条直接导航路径已反向关联；独立源的 Up/Down 使用 independentMainBoard renderer，但 PageUp/PageDown 仍引用主 renderer，而 AnalysisFrame 固定导航全局主棋盘，焦点差异不得盲目照搬。"
+      "evidence": "主窗口与独立主棋盘的 46 条本行路径、AnalysisFrame 表格的两条直接导航路径，以及 BottomToolbar Enter 在 changeMoveNumber 非零/为零时的两条路径均已反向关联；同一 KeyListener 的 keyReleased/keyTyped 是显式空回调，不伪装成活跃 case。BottomToolbar 没有入口级自动化测试：BottomToolbarPassDetectionTest 只测自动播放停机，WinrateGraph*HitTest 只从图表路径覆写或调用跳转；现有三个 BoardHistory 测试也只间接覆盖历史节点身份、同步快照和提子重放，均不能证明文本解析、焦点/主题副作用、分支跳转、评论编辑、引擎对局拒绝或整数边界。独立源的 Up/Down 使用 independentMainBoard renderer，但 PageUp/PageDown 仍引用主 renderer，而 AnalysisFrame 固定导航全局主棋盘，焦点差异不得盲目照搬。"
     },
     {
       "id": "KIFU-OPEN-001",

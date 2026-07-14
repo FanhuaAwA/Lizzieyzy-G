@@ -139,6 +139,12 @@ INPUT_CONDITIONAL_KEY_SOURCES = (
         "keyPressed",
         1,
     ),
+    (
+        "BottomToolbarMoveNumber",
+        "src/main/java/featurecat/lizzie/gui/BottomToolbar.java",
+        "keyPressed",
+        1,
+    ),
 )
 INPUT_POINTER_METHOD = re.compile(
     r"public\s+void\s+(?P<event>mouseClicked|mousePressed|mouseWheelMoved|mouseReleased|"
@@ -1267,7 +1273,32 @@ def execute_java_nodes(
     return continuing, broken
 
 
+def normalize_conditional_key_dispatch(
+    condition: str, parameter: str, key_code_alias: str | None = None
+) -> list[str] | None:
+    direct_check = re.compile(
+        rf"{re.escape(parameter)}\.(?:getKeyCode|getKeyChar)\s*\(\s*\)\s*==\s*"
+        r"KeyEvent\.(VK_[A-Z0-9_]+)"
+    )
+    keys: list[str] = []
+    for term in re.split(r"\s*\|\|\s*", condition):
+        direct = direct_check.fullmatch(term)
+        if direct:
+            keys.append(direct.group(1))
+        elif key_code_alias and re.fullmatch(
+            rf"{re.escape(key_code_alias)}\s*==\s*'\\n'", term
+        ):
+            keys.append("VK_ENTER")
+        else:
+            return None
+    return keys or None
+
+
 def validate_input_parser() -> None:
+    if normalize_conditional_key_dispatch("key == '\\n'", "event", "key") != [
+        "VK_ENTER"
+    ]:
+        raise ValueError("Input binding parser local key-code alias self-check failed")
     first = "if (e.isAltDown()) { first(); break; }"
     second = "if (e.isAltDown()) { unreachable(); break; } second(); break;"
     initial = [{"conditions": [], "condition_values": {}, "actions": [], "case_chain": []}]
@@ -1713,17 +1744,24 @@ def collect_conditional_key_source(
     open_brace = method_match.end() - 1
     method_end = closing_brace(source, open_brace)
     nodes = parse_java_sequence(source, open_brace + 1, method_end)
-    parameter = re.escape(method_match.group("parameter"))
-    key_check = re.compile(
-        rf"{parameter}\.(?:getKeyCode|getKeyChar)\s*\(\s*\)\s*==\s*"
-        r"KeyEvent\.(VK_[A-Z0-9_]+)"
-    )
+    parameter = method_match.group("parameter")
+    key_code_alias: str | None = None
+    if nodes and nodes[0]["kind"] == "action":
+        alias = re.fullmatch(
+            rf"int\s+([A-Za-z_$][\w$]*)\s*=\s*{re.escape(parameter)}\.getKeyCode\s*\(\s*\)\s*;",
+            nodes[0]["statement"],
+        )
+        if not alias:
+            raise ValueError(f"{input_path.name} {expected_event} has unsupported key dispatch")
+        key_code_alias = alias.group(1)
+        nodes = nodes[1:]
     for node in nodes:
         if node["kind"] != "if" or node["else"]:
             raise ValueError(f"{input_path.name} {expected_event} has unsupported key dispatch")
-        keys = key_check.findall(node["condition"])
-        reduced = key_check.sub("KEY", node["condition"])
-        if not keys or not re.fullmatch(r"KEY(?:\s*\|\|\s*KEY)*", reduced):
+        keys = normalize_conditional_key_dispatch(
+            node["condition"], parameter, key_code_alias
+        )
+        if not keys:
             raise ValueError(f"{input_path.name} {expected_event} has unsupported key condition")
         for key in keys:
             case_id = f"{source_id}:{expected_event}:{key}"
@@ -1768,9 +1806,17 @@ def collect_conditional_key_source(
             )
             indexed_keys.append(key)
 
-    if indexed_keys != re.findall(
-        r"\bKeyEvent\.(VK_[A-Z0-9_]+)", source[open_brace + 1 : method_end]
-    ):
+    method_body = source[open_brace + 1 : method_end]
+    referenced_keys = re.findall(r"\bKeyEvent\.(VK_[A-Z0-9_]+)", method_body)
+    if key_code_alias:
+        alias_checks = re.findall(
+            rf"\b{re.escape(key_code_alias)}\s*==\s*'\\n'", method_body
+        )
+        if referenced_keys or indexed_keys != ["VK_ENTER"] * len(alias_checks):
+            raise ValueError(
+                f"{input_path.name} contains a key constant outside the indexed dispatch"
+            )
+    elif indexed_keys != referenced_keys:
         raise ValueError(f"{input_path.name} contains a key constant outside the indexed dispatch")
     case_ids = [entry["case"] for entry in cases]
     binding_ids = [entry["binding"] for entry in bindings]
@@ -1997,8 +2043,8 @@ def validate_matrix(
     dict[str, list[str]],
     dict[str, list[str]],
 ]:
-    if matrix.get("schema_version") != 35:
-        raise ValueError("Matrix schema_version must be 35")
+    if matrix.get("schema_version") != 36:
+        raise ValueError("Matrix schema_version must be 36")
     allowed_statuses = matrix.get("allowed_statuses")
     if allowed_statuses != list(ALLOWED_STATUSES):
         raise ValueError("Matrix allowed_statuses differ from the repository contract")
@@ -2249,7 +2295,7 @@ def build_inventory(legacy_root: Path, matrix_path: Path) -> dict[str, Any]:
         raise ValueError("Every normalized legacy input path must map to the matrix")
 
     return {
-        "schema_version": 35,
+        "schema_version": 36,
         "source": {
             "root": "../lizzieyzy-next-main",
             "version": read_legacy_version(legacy_root),
@@ -2267,7 +2313,7 @@ def build_inventory(legacy_root: Path, matrix_path: Path) -> dict[str, Any]:
             "Menu keys cover active Menu.java resource lookups with Menu. or menu. prefixes.",
             "Menu literal labels cover active string-literal menu constructors; dynamic labels remain represented by their resource or runtime source.",
             "Menu accelerators cover explicit Menu.java setAccelerator calls and direct OS.isWindows guards; other input bindings remain T-003 work.",
-            "Input key bindings symbolically expand Input.java, InputIndependentMainBoard.java, InputIndependentSubboard.java, InputSubboard.java, FloatBoard.java, AnalysisFrame table/window, DrawPainting.java, ChooseMoreEngine.java, LoadEngine.java, OtherPrograms.java, TencentKifuDownload.java, FoxKifuDownload.java, BrowserFrame.java, and CaptureTsumeGoFrame.java key dispatch, condition evaluations, executed statements, empty-listener and empty-statement paths, and switch fall-through; controlIsPressed means Control on every platform plus Meta on macOS, and BrowserFrame dispatches Enter through getKeyChar.",
+            "Input key bindings symbolically expand Input.java, InputIndependentMainBoard.java, InputIndependentSubboard.java, InputSubboard.java, FloatBoard.java, AnalysisFrame table/window, DrawPainting.java, ChooseMoreEngine.java, LoadEngine.java, OtherPrograms.java, TencentKifuDownload.java, FoxKifuDownload.java, BrowserFrame.java, CaptureTsumeGoFrame.java, and the BottomToolbar move-number field key dispatch, condition evaluations, executed statements, empty-listener and empty-statement paths, and switch fall-through; controlIsPressed means Control on every platform plus Meta on macOS, BrowserFrame dispatches Enter through getKeyChar, and BottomToolbar compares a local getKeyCode alias with the newline character.",
             "Pointer bindings symbolically expand the main Input listener, the two indexed subboard listeners, FloatBoard, AnalysisFrame, DrawPainting, ChooseMoreEngine, LoadEngine, OtherPrograms, TencentKifuDownload, FoxKifuDownload, BrowserFrame load/stop/label listeners, JFontTextArea, JFontTextField, JIMSendTextPane, the two DemoScrollBarUI2 arrow-button listeners, JPaintTextPane, WindowMenuStrip, YikeLiveDialog, IndependentSubBoard and IndependentMainBoard lock/close/top-button plus window listeners, BlunderListPanel, SidebarHeaderPanel, BottomToolbar, ConfigDialog2 sidebar-nav/toggle-row/color-label listeners, MoreEngines, the 33 indexed LizzieFrame listeners, the 5 indexed Menu komi text/hold/hover listeners, the 7 indexed MoveListFrame table/match-panel/header groups, and RightClickMenu's explicit no-op mouse exit across mouse, motion, drag, wheel, and release condition evaluations, early returns, executed statements, and explicit no-action paths; data-dependent loops and click try/catch handlers are preserved as normalized atomic statements, local boolean tracking retains a known value across loops that can only assign the same literal, and direct variable-to-integer comparisons prune contradictory paths.",
             "Other key-listener classes remain T-003 work; all active public pointer handlers in the legacy Java sources are inventoried.",
         ],
