@@ -1,5 +1,5 @@
 {
-  "schema_version": 36,
+  "schema_version": 37,
   "allowed_statuses": [
     "未盘点",
     "已盘点",
@@ -436,37 +436,50 @@
     {
       "id": "ENGINE-GTP-001",
       "category": "引擎",
-      "legacy_entry": "Leelaz 负责 GTP 命令发送、响应绑定、分析流和失败恢复；Input.java 默认 E 切换 GTP 控制台",
-      "legacy_menu_keys": ["Menu.engineParameters", "Menu.engineRules"],
+      "legacy_entry": "Leelaz 负责 GTP 命令发送、响应绑定、分析流和失败恢复；Input、GtpConsolePane、菜单与启动配置切换控制台，GtpConsolePane/FastCommands 提供原始命令、分类命令和引擎命令列表入口",
+      "legacy_menu_keys": ["Menu.engineParameters", "Menu.engineRules", "Menu.gtpPanel"],
       "legacy_menu_labels": [],
       "legacy_shortcuts": [],
       "legacy_input_cases": [
         "keyPressed:VK_E",
-        "InputIndependentMainBoard:keyPressed:VK_E"
+        "InputIndependentMainBoard:keyPressed:VK_E",
+        "GtpConsolePaneContent:keyPressed:VK_E",
+        "GtpConsolePaneConsole:keyPressed:VK_E"
       ],
       "legacy_input_bindings": [
         "keyPressed:VK_E#4",
-        "InputIndependentMainBoard:keyPressed:VK_E#4"
+        "InputIndependentMainBoard:keyPressed:VK_E#4",
+        "GtpConsolePaneContent:keyPressed:VK_E#1",
+        "GtpConsolePaneConsole:keyPressed:VK_E#1"
       ],
       "java_evidence": [
         { "path": "src/main/java/featurecat/lizzie/analysis/Leelaz.java", "symbol": "class Leelaz" },
-        { "path": "src/main/java/featurecat/lizzie/analysis/LeelazEngineCommandSink.java", "symbol": "LeelazEngineCommandSink" }
+        { "path": "src/main/java/featurecat/lizzie/analysis/LeelazEngineCommandSink.java", "symbol": "LeelazEngineCommandSink" },
+        { "path": "src/main/java/featurecat/lizzie/gui/GtpConsolePane.java", "symbol": "postCommand" },
+        { "path": "src/main/java/featurecat/lizzie/gui/GtpConsolePane.java", "symbol": "read" },
+        { "path": "src/main/java/featurecat/lizzie/gui/FastCommands.java", "symbol": "class FastCommands" },
+        { "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "symbol": "toggleGtpConsole" },
+        { "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "symbol": "appendComment" },
+        { "path": "src/main/java/featurecat/lizzie/Lizzie.java", "symbol": "new GtpConsolePane" },
+        { "path": "src/main/java/featurecat/lizzie/gui/Menu.java", "symbol": "Menu.gtpPanel" },
+        { "path": "src/main/java/featurecat/lizzie/analysis/Leelaz.java", "symbol": "resolveDefaultCommandMirrorEngine" },
+        { "path": "src/main/java/featurecat/lizzie/Config.java", "symbol": "gtp-console-position" }
       ],
-      "config_keys": ["limit-branch-length", "limit-max-suggestion", "always-gtp"],
-      "inputs_preconditions": "引擎进程已启动并提供标准输入、输出和错误流。",
-      "success_behavior": "命令与带编号响应正确绑定，分析建议持续更新并遵守限制设置；默认 E 可切换 GTP 控制台可见性。",
-      "failure_cancel_behavior": "超时、错误响应、stderr 噪声和进程退出不得错配后续响应；停止分析应及时生效，控制台切换不得改变协议状态。",
-      "data_io": "GTP 文本协议双向流和引擎 stderr。",
-      "external_dependencies": ["GTP 引擎进程"],
+      "config_keys": ["limit-branch-length", "limit-max-suggestion", "always-gtp", "gtp-console-position", "gtp-console-opened", "log-gtp-to-file", "fast-commands-width", "fast-commands-height", "frame-font-size", "ui-font-name"],
+      "inputs_preconditions": "引擎进程已启动并提供标准输入、输出和错误流。主窗口或独立主棋盘获得焦点时 E 可打开控制台；控制台 content pane 和只读输出各自注册 E 监听器，但 content pane 未显式设为 focusable 且可见区域由子控件覆盖，其焦点可达性尚未验证。命令输入框不继承这些监听器，Enter 由 ActionListener 发送命令，因此输入框中的字母 E 必须保留为文本。",
+      "success_behavior": "命令与带编号响应正确绑定，分析建议持续更新并遵守限制设置；菜单、主棋盘 E、已保存启动状态和只读输出 E 可切换可见性，content pane 监听器只在它真实成为事件目标时执行，不把注册等同于用户可达入口。Enter 与发送按钮提交同一条去除首尾空白的命令；原始 GTP 直接发送，genmove/play/showboard/clear_board/heatmap/kata-raw/boardsize/komi/undo/PDA 分类命令按各自语义更新棋盘、贴目、轮次、候选或 pondering。双引擎模式下主引擎的默认 sendCommand 还镜像到副引擎，副引擎按 KataGo/Leela 类型转换 lz-/kata-/heatmap/ownership 命令。FastCommands 展示引擎 list_commands 并可复制或发送；stdout/stderr 按类型着色、跟随末尾，显示文档保持有界。",
+      "failure_cancel_behavior": "超时、错误响应、stderr 噪声和进程退出不得错配后续响应；停止分析应及时生效，控制台切换不得改变协议状态。旧版使用默认 locale 小写、宽泛前缀和 split(\" \")，部分分支又按原命令大小写比较；boardsize/komi 数字异常未捕获，NaN/Infinity、超长/越界尺寸、重复空白与缺参可导致崩溃、资源失控、静默丢输入或棋盘/引擎半更新，undo 大小写差异还可造成历史失步。任意 raw GTP 虽不是 shell，却可 quit 或改变引擎状态并与本地棋盘脱节；内部 CR/LF/NUL 未拒绝时，一次粘贴还能写入多条协议行、绕过编号并污染响应绑定。目标版须保留明确警告的高级模式，只接受一条无控制字符的命令，按精确 verb 和通用空白解析、使用 invariant culture、限制命令/数字/棋盘尺寸，在验证和发送成功前不提交本地状态，并为拒绝、写失败和引擎对局/双引擎路由给出可访问反馈。双引擎必须显式定义每条命令的镜像/转换和失败原子性；旧 PDA 分支先把副引擎内存 pda 置 0、随后又镜像原命令，可能让属性与进程状态分裂。旧输出 ArrayDeque 的生产者未同步且无界，消费者异常时还会在旧锁内替换队列对象；Clear 只清文档，排队消息可重新出现。后台 read 线程直接改 Swing 文档并在引擎未加载时每 100ms 强制结束评论编辑、调用 appendComment，可能竞态写错当前节点；它还忽略中断，executor 和日志流不关闭。目标版须把输出展示与棋谱副作用解耦，使用有界线程安全通道、UI 调度、取消/释放、UTF-8 安全路径与日志轮换/脱敏。窗口几何须校正到当前多显示器工作区，字号、DPI、键盘和读屏状态不得裁切或丢失。",
+      "data_io": "GTP stdin/stdout/stderr、控制台内存队列与有界显示文档；read 状态检查还可结束评论编辑并通过 appendComment 修改当前 SGF 节点评论；可选 LastGtpLogs 文件；持久化控制台可见性/位置和快捷命令窗口尺寸；快捷命令可写系统剪贴板。",
+      "external_dependencies": ["GTP 引擎进程", "可选本地日志文件系统", "系统剪贴板"],
       "target_modules": ["Lizzie.Engine", "Lizzie.Core", "Lizzie.Desktop"],
       "automated_evidence": [
         { "path": "src/test/java/featurecat/lizzie/analysis/LeelazLoadSgfResponseBindingTest.java", "symbol": "LeelazLoadSgfResponseBindingTest" },
         { "path": "src/test/java/featurecat/lizzie/analysis/LeelazExclusiveRemoteGtpSessionTest.java", "symbol": "LeelazExclusiveRemoteGtpSessionTest" },
         { "path": "src/test/java/featurecat/lizzie/analysis/LeelazPonderStateTest.java", "symbol": "LeelazPonderStateTest" }
       ],
-      "manual_acceptance": "以可控假 GTP 进程注入成功、错误、延迟和异常退出序列，核对命令绑定与恢复；往返切换控制台并确认协议状态不变。",
+      "manual_acceptance": "以可控假 GTP 进程注入成功、错误、延迟和异常退出序列，核对命令绑定与恢复。焦点依次位于主棋盘、只读输出和命令输入框时按 E，确认前两处切换窗口而输入框正常录入；另单独点击 content pane 可见背景并记录真实 focus owner，若不能聚焦则登记旧版键盘可达性缺口，不伪装成 E 切换成功。比较 Enter 与发送按钮对空白、原始 GTP、全部分类命令、大小写、重复空白/Tab、缺参、非法数、NaN/Infinity、超长命令和越界棋盘尺寸的行为，合法单行输入须让目标假引擎录到恰好一条带编号命令。任何含 CR/LF/NUL 的输入须显示拒绝，主/副假引擎均记录 0 条且棋盘、UI 和命令队列不变。在含主线/分支的隔离棋谱核对 play/undo/clear_board/boardsize/komi 成败前后棋盘与引擎事务；引擎未加载时保留未保存评论并快速切换当前节点，确认控制台输出循环不能结束编辑或写错节点。普通、引擎对局和双引擎分别核对拒绝与路由；双引擎逐一录制主/副 stdin，验证旧版要求的镜像与 Kata/Leela 转换，并对 PDA 属性/进程不一致建立失败样本。注入 Unicode、超长行和高频 stdout/stderr，验证颜色、截断、滚动和内存上限；关闭重开、引擎崩溃、日志写失败及多显示器/DPI/大字号/键盘/读屏场景验证线程、文件句柄、几何和状态恢复。",
       "status": "已盘点",
-      "evidence": "旧版故障注入测试已通过；协议录制夹具和新版回放器仍待建立。"
+      "evidence": "已静态贯通 Lizzie 启动、Menu.gtpPanel、Input/独立主棋盘、LizzieFrame.toggleGtpConsole、GtpConsolePane 两个 E 监听器、命令框 Enter/发送按钮、postCommand 分类、FastCommands、Leelaz.sendCommand/主到副镜像转换、输出队列、引擎未加载时的 setCommentEditable/appendComment 与配置保存。新增两个监听器各只有一条无条件 VK_E 路径；命令框不在监听器层级中，keyReleased/keyTyped 仅为 KeyAdapter 空实现，不伪装成活跃 case。现有 LeelazLoadSgfResponseBindingTest、LeelazExclusiveRemoteGtpSessionTest 与 LeelazPonderStateTest 只提供底层间接证据；测试用绕过构造的 SilentGtpConsole 空实现输出方法，不能证明控制台 UI、命令分类、CR/LF 注入拒绝、焦点、评论/棋谱副作用、输出线程/日志生命周期或双引擎镜像/拦截。协议录制夹具、新版回放器及上述入口级动态验证仍待建立。"
     },
     {
       "id": "ANALYSIS-FULL-001",
