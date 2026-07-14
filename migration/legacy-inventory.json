@@ -1,5 +1,5 @@
 {
-  "schema_version": 39,
+  "schema_version": 40,
   "source": {
     "root": "../lizzieyzy-next-main",
     "version": "yzy2.5.3",
@@ -17,7 +17,7 @@
     "Menu keys cover active Menu.java resource lookups with Menu. or menu. prefixes.",
     "Menu literal labels cover active string-literal menu constructors; dynamic labels remain represented by their resource or runtime source.",
     "Menu accelerators cover explicit Menu.java setAccelerator calls and direct OS.isWindows guards; other input bindings remain T-003 work.",
-    "Input key bindings symbolically expand Input.java, InputIndependentMainBoard.java, InputIndependentSubboard.java, InputSubboard.java, FloatBoard.java, AnalysisFrame table/window, DrawPainting.java, ChooseMoreEngine.java, LoadEngine.java, OtherPrograms.java, TencentKifuDownload.java, FoxKifuDownload.java, BrowserFrame.java, CaptureTsumeGoFrame.java, the BottomToolbar move-number field, the GtpConsolePane content/output listeners, the LizzieFrame engine-game GTP shortcut, and Menu's komi/PDA ANY_KEY release listeners across key dispatch, condition evaluations, executed statements, empty-listener and empty-statement paths, and switch fall-through; controlIsPressed means Control on every platform plus Meta on macOS, BrowserFrame dispatches Enter through getKeyChar, and BottomToolbar compares a local getKeyCode alias with the newline character.",
+    "Input key bindings symbolically expand Input.java, InputIndependentMainBoard.java, InputIndependentSubboard.java, InputSubboard.java, FloatBoard.java, AnalysisFrame table/window, DrawPainting.java, ChooseMoreEngine.java, LoadEngine.java, OtherPrograms.java, TencentKifuDownload.java, FoxKifuDownload.java, BrowserFrame.java, CaptureTsumeGoFrame.java, the BottomToolbar move-number field, the GtpConsolePane content/output listeners, the LizzieFrame engine-game GTP shortcut, Menu's komi/PDA ANY_KEY release listeners, and MoveListFrame's tab/table/window listeners across key dispatch, condition evaluations, executed statements, empty-listener and empty-statement paths, and switch fall-through; controlIsPressed means Control on every platform plus Meta on macOS, BrowserFrame dispatches Enter through getKeyChar, and BottomToolbar compares a local getKeyCode alias with the newline character.",
     "Pointer bindings symbolically expand the main Input listener, the two indexed subboard listeners, FloatBoard, AnalysisFrame, DrawPainting, ChooseMoreEngine, LoadEngine, OtherPrograms, TencentKifuDownload, FoxKifuDownload, BrowserFrame load/stop/label listeners, JFontTextArea, JFontTextField, JIMSendTextPane, the two DemoScrollBarUI2 arrow-button listeners, JPaintTextPane, WindowMenuStrip, YikeLiveDialog, IndependentSubBoard and IndependentMainBoard lock/close/top-button plus window listeners, BlunderListPanel, SidebarHeaderPanel, BottomToolbar, ConfigDialog2 sidebar-nav/toggle-row/color-label listeners, MoreEngines, the 33 indexed LizzieFrame listeners, the 5 indexed Menu komi text/hold/hover listeners, the 7 indexed MoveListFrame table/match-panel/header groups, and RightClickMenu's explicit no-op mouse exit across mouse, motion, drag, wheel, and release condition evaluations, early returns, executed statements, and explicit no-action paths; data-dependent loops and click try/catch handlers are preserved as normalized atomic statements, local boolean tracking retains a known value across loops that can only assign the same literal, and direct variable-to-integer comparisons prune contradictory paths.",
     "Other key-listener classes remain T-003 work; all active public pointer handlers in the legacy Java sources are inventoried."
   ],
@@ -43,11 +43,11 @@
     "active_menu_accelerators": 2,
     "mapped_menu_accelerators": 2,
     "unmapped_menu_accelerators": 0,
-    "active_input_key_cases": 149,
-    "mapped_input_key_cases": 149,
+    "active_input_key_cases": 170,
+    "mapped_input_key_cases": 170,
     "unmapped_input_key_cases": 0,
-    "active_input_key_bindings": 373,
-    "mapped_input_key_bindings": 373,
+    "active_input_key_bindings": 395,
+    "mapped_input_key_bindings": 395,
     "unmapped_input_key_bindings": 0,
     "active_input_pointer_events": 180,
     "mapped_input_pointer_events": 180,
@@ -17978,12 +17978,72 @@
         "post_dispatch_actions": {
           "keyReleased": []
         }
+      },
+      {
+        "id": "MoveListTabsKey",
+        "source": "src/main/java/featurecat/lizzie/gui/MoveListFrame.java",
+        "active_key_cases": 4,
+        "active_key_bindings": 4,
+        "events": {
+          "keyPressed": 4
+        },
+        "post_dispatch_actions": {
+          "keyPressed": []
+        }
+      },
+      {
+        "id": "MoveListFullTableKey",
+        "source": "src/main/java/featurecat/lizzie/gui/MoveListFrame.java",
+        "active_key_cases": 4,
+        "active_key_bindings": 4,
+        "events": {
+          "keyPressed": 4
+        },
+        "post_dispatch_actions": {
+          "keyPressed": []
+        }
+      },
+      {
+        "id": "MoveListMinTable1Key",
+        "source": "src/main/java/featurecat/lizzie/gui/MoveListFrame.java",
+        "active_key_cases": 4,
+        "active_key_bindings": 4,
+        "events": {
+          "keyPressed": 4
+        },
+        "post_dispatch_actions": {
+          "keyPressed": []
+        }
+      },
+      {
+        "id": "MoveListMinTable2Key",
+        "source": "src/main/java/featurecat/lizzie/gui/MoveListFrame.java",
+        "active_key_cases": 4,
+        "active_key_bindings": 4,
+        "events": {
+          "keyPressed": 4
+        },
+        "post_dispatch_actions": {
+          "keyPressed": []
+        }
+      },
+      {
+        "id": "MoveListWindowKey",
+        "source": "src/main/java/featurecat/lizzie/gui/MoveListFrame.java",
+        "active_key_cases": 5,
+        "active_key_bindings": 6,
+        "events": {
+          "keyPressed": 5
+        },
+        "post_dispatch_actions": {
+          "keyPressed": []
+        }
       }
     ],
-    "active_key_cases": 149,
-    "active_key_bindings": 373,
+    "active_key_cases": 170,
+    "active_key_bindings": 395,
     "events": {
-      "keyPressed": 143,
+      "keyPressed": 164,
       "keyReleased": 6
     },
     "cases": [
@@ -20113,6 +20173,258 @@
         "binding_count": 2,
         "matrix_ids": [
           "ENGINE-GTP-001"
+        ]
+      },
+      {
+        "case": "MoveListTabsKey:keyPressed:VK_Y",
+        "source_id": "MoveListTabsKey",
+        "event": "keyPressed",
+        "key": "VK_Y",
+        "line": 1558,
+        "modifier_checks": [],
+        "binding_count": 1,
+        "matrix_ids": [
+          "ANALYSIS-HAWKEYE-001"
+        ]
+      },
+      {
+        "case": "MoveListTabsKey:keyPressed:VK_U",
+        "source_id": "MoveListTabsKey",
+        "event": "keyPressed",
+        "key": "VK_U",
+        "line": 1561,
+        "modifier_checks": [],
+        "binding_count": 1,
+        "matrix_ids": [
+          "ANALYSIS-DISPLAY-001"
+        ]
+      },
+      {
+        "case": "MoveListTabsKey:keyPressed:VK_SPACE",
+        "source_id": "MoveListTabsKey",
+        "event": "keyPressed",
+        "key": "VK_SPACE",
+        "line": 1564,
+        "modifier_checks": [],
+        "binding_count": 1,
+        "matrix_ids": [
+          "ANALYSIS-PONDER-001"
+        ]
+      },
+      {
+        "case": "MoveListTabsKey:keyPressed:VK_Q",
+        "source_id": "MoveListTabsKey",
+        "event": "keyPressed",
+        "key": "VK_Q",
+        "line": 1568,
+        "modifier_checks": [],
+        "binding_count": 1,
+        "matrix_ids": [
+          "ANALYSIS-HAWKEYE-001"
+        ]
+      },
+      {
+        "case": "MoveListFullTableKey:keyPressed:VK_Y",
+        "source_id": "MoveListFullTableKey",
+        "event": "keyPressed",
+        "key": "VK_Y",
+        "line": 1577,
+        "modifier_checks": [],
+        "binding_count": 1,
+        "matrix_ids": [
+          "ANALYSIS-HAWKEYE-001"
+        ]
+      },
+      {
+        "case": "MoveListFullTableKey:keyPressed:VK_U",
+        "source_id": "MoveListFullTableKey",
+        "event": "keyPressed",
+        "key": "VK_U",
+        "line": 1580,
+        "modifier_checks": [],
+        "binding_count": 1,
+        "matrix_ids": [
+          "ANALYSIS-DISPLAY-001"
+        ]
+      },
+      {
+        "case": "MoveListFullTableKey:keyPressed:VK_SPACE",
+        "source_id": "MoveListFullTableKey",
+        "event": "keyPressed",
+        "key": "VK_SPACE",
+        "line": 1583,
+        "modifier_checks": [],
+        "binding_count": 1,
+        "matrix_ids": [
+          "ANALYSIS-PONDER-001"
+        ]
+      },
+      {
+        "case": "MoveListFullTableKey:keyPressed:VK_Q",
+        "source_id": "MoveListFullTableKey",
+        "event": "keyPressed",
+        "key": "VK_Q",
+        "line": 1586,
+        "modifier_checks": [],
+        "binding_count": 1,
+        "matrix_ids": [
+          "ANALYSIS-HAWKEYE-001"
+        ]
+      },
+      {
+        "case": "MoveListMinTable1Key:keyPressed:VK_Y",
+        "source_id": "MoveListMinTable1Key",
+        "event": "keyPressed",
+        "key": "VK_Y",
+        "line": 1613,
+        "modifier_checks": [],
+        "binding_count": 1,
+        "matrix_ids": [
+          "ANALYSIS-HAWKEYE-001"
+        ]
+      },
+      {
+        "case": "MoveListMinTable1Key:keyPressed:VK_U",
+        "source_id": "MoveListMinTable1Key",
+        "event": "keyPressed",
+        "key": "VK_U",
+        "line": 1616,
+        "modifier_checks": [],
+        "binding_count": 1,
+        "matrix_ids": [
+          "ANALYSIS-DISPLAY-001"
+        ]
+      },
+      {
+        "case": "MoveListMinTable1Key:keyPressed:VK_SPACE",
+        "source_id": "MoveListMinTable1Key",
+        "event": "keyPressed",
+        "key": "VK_SPACE",
+        "line": 1619,
+        "modifier_checks": [],
+        "binding_count": 1,
+        "matrix_ids": [
+          "ANALYSIS-PONDER-001"
+        ]
+      },
+      {
+        "case": "MoveListMinTable1Key:keyPressed:VK_Q",
+        "source_id": "MoveListMinTable1Key",
+        "event": "keyPressed",
+        "key": "VK_Q",
+        "line": 1622,
+        "modifier_checks": [],
+        "binding_count": 1,
+        "matrix_ids": [
+          "ANALYSIS-HAWKEYE-001"
+        ]
+      },
+      {
+        "case": "MoveListMinTable2Key:keyPressed:VK_Y",
+        "source_id": "MoveListMinTable2Key",
+        "event": "keyPressed",
+        "key": "VK_Y",
+        "line": 1649,
+        "modifier_checks": [],
+        "binding_count": 1,
+        "matrix_ids": [
+          "ANALYSIS-HAWKEYE-001"
+        ]
+      },
+      {
+        "case": "MoveListMinTable2Key:keyPressed:VK_U",
+        "source_id": "MoveListMinTable2Key",
+        "event": "keyPressed",
+        "key": "VK_U",
+        "line": 1652,
+        "modifier_checks": [],
+        "binding_count": 1,
+        "matrix_ids": [
+          "ANALYSIS-DISPLAY-001"
+        ]
+      },
+      {
+        "case": "MoveListMinTable2Key:keyPressed:VK_SPACE",
+        "source_id": "MoveListMinTable2Key",
+        "event": "keyPressed",
+        "key": "VK_SPACE",
+        "line": 1655,
+        "modifier_checks": [],
+        "binding_count": 1,
+        "matrix_ids": [
+          "ANALYSIS-PONDER-001"
+        ]
+      },
+      {
+        "case": "MoveListMinTable2Key:keyPressed:VK_Q",
+        "source_id": "MoveListMinTable2Key",
+        "event": "keyPressed",
+        "key": "VK_Q",
+        "line": 1658,
+        "modifier_checks": [],
+        "binding_count": 1,
+        "matrix_ids": [
+          "ANALYSIS-HAWKEYE-001"
+        ]
+      },
+      {
+        "case": "MoveListWindowKey:keyPressed:VK_Y",
+        "source_id": "MoveListWindowKey",
+        "event": "keyPressed",
+        "key": "VK_Y",
+        "line": 1668,
+        "modifier_checks": [],
+        "binding_count": 1,
+        "matrix_ids": [
+          "ANALYSIS-HAWKEYE-001"
+        ]
+      },
+      {
+        "case": "MoveListWindowKey:keyPressed:VK_O",
+        "source_id": "MoveListWindowKey",
+        "event": "keyPressed",
+        "key": "VK_O",
+        "line": 1671,
+        "modifier_checks": [],
+        "binding_count": 1,
+        "matrix_ids": [
+          "KIFU-OPEN-001"
+        ]
+      },
+      {
+        "case": "MoveListWindowKey:keyPressed:VK_U",
+        "source_id": "MoveListWindowKey",
+        "event": "keyPressed",
+        "key": "VK_U",
+        "line": 1674,
+        "modifier_checks": [],
+        "binding_count": 1,
+        "matrix_ids": [
+          "ANALYSIS-DISPLAY-001"
+        ]
+      },
+      {
+        "case": "MoveListWindowKey:keyPressed:VK_SPACE",
+        "source_id": "MoveListWindowKey",
+        "event": "keyPressed",
+        "key": "VK_SPACE",
+        "line": 1677,
+        "modifier_checks": [],
+        "binding_count": 2,
+        "matrix_ids": [
+          "ANALYSIS-PONDER-001"
+        ]
+      },
+      {
+        "case": "MoveListWindowKey:keyPressed:VK_Q",
+        "source_id": "MoveListWindowKey",
+        "event": "keyPressed",
+        "key": "VK_Q",
+        "line": 1684,
+        "modifier_checks": [],
+        "binding_count": 1,
+        "matrix_ids": [
+          "ANALYSIS-HAWKEYE-001"
         ]
       }
     ],
@@ -31367,6 +31679,486 @@
         ],
         "matrix_ids": [
           "ENGINE-GTP-001"
+        ]
+      },
+      {
+        "binding": "MoveListTabsKey:keyPressed:VK_Y#1",
+        "case": "MoveListTabsKey:keyPressed:VK_Y",
+        "source_id": "MoveListTabsKey",
+        "event": "keyPressed",
+        "key": "VK_Y",
+        "line": 1558,
+        "conditions": [],
+        "case_chain": [
+          "MoveListTabsKey:keyPressed:VK_Y"
+        ],
+        "statements": [
+          {
+            "line": 1559,
+            "statement": "Lizzie.frame.toggleBadMoves();"
+          }
+        ],
+        "matrix_ids": [
+          "ANALYSIS-HAWKEYE-001"
+        ]
+      },
+      {
+        "binding": "MoveListTabsKey:keyPressed:VK_U#1",
+        "case": "MoveListTabsKey:keyPressed:VK_U",
+        "source_id": "MoveListTabsKey",
+        "event": "keyPressed",
+        "key": "VK_U",
+        "line": 1561,
+        "conditions": [],
+        "case_chain": [
+          "MoveListTabsKey:keyPressed:VK_U"
+        ],
+        "statements": [
+          {
+            "line": 1562,
+            "statement": "Lizzie.frame.toggleBestMoves();"
+          }
+        ],
+        "matrix_ids": [
+          "ANALYSIS-DISPLAY-001"
+        ]
+      },
+      {
+        "binding": "MoveListTabsKey:keyPressed:VK_SPACE#1",
+        "case": "MoveListTabsKey:keyPressed:VK_SPACE",
+        "source_id": "MoveListTabsKey",
+        "event": "keyPressed",
+        "key": "VK_SPACE",
+        "line": 1564,
+        "conditions": [],
+        "case_chain": [
+          "MoveListTabsKey:keyPressed:VK_SPACE"
+        ],
+        "statements": [
+          {
+            "line": 1566,
+            "statement": "Lizzie.frame.togglePonderMannul();"
+          }
+        ],
+        "matrix_ids": [
+          "ANALYSIS-PONDER-001"
+        ]
+      },
+      {
+        "binding": "MoveListTabsKey:keyPressed:VK_Q#1",
+        "case": "MoveListTabsKey:keyPressed:VK_Q",
+        "source_id": "MoveListTabsKey",
+        "event": "keyPressed",
+        "key": "VK_Q",
+        "line": 1568,
+        "conditions": [],
+        "case_chain": [
+          "MoveListTabsKey:keyPressed:VK_Q"
+        ],
+        "statements": [
+          {
+            "line": 1569,
+            "statement": "togglealwaysontop();"
+          }
+        ],
+        "matrix_ids": [
+          "ANALYSIS-HAWKEYE-001"
+        ]
+      },
+      {
+        "binding": "MoveListFullTableKey:keyPressed:VK_Y#1",
+        "case": "MoveListFullTableKey:keyPressed:VK_Y",
+        "source_id": "MoveListFullTableKey",
+        "event": "keyPressed",
+        "key": "VK_Y",
+        "line": 1577,
+        "conditions": [],
+        "case_chain": [
+          "MoveListFullTableKey:keyPressed:VK_Y"
+        ],
+        "statements": [
+          {
+            "line": 1578,
+            "statement": "Lizzie.frame.toggleBadMoves();"
+          }
+        ],
+        "matrix_ids": [
+          "ANALYSIS-HAWKEYE-001"
+        ]
+      },
+      {
+        "binding": "MoveListFullTableKey:keyPressed:VK_U#1",
+        "case": "MoveListFullTableKey:keyPressed:VK_U",
+        "source_id": "MoveListFullTableKey",
+        "event": "keyPressed",
+        "key": "VK_U",
+        "line": 1580,
+        "conditions": [],
+        "case_chain": [
+          "MoveListFullTableKey:keyPressed:VK_U"
+        ],
+        "statements": [
+          {
+            "line": 1581,
+            "statement": "Lizzie.frame.toggleBestMoves();"
+          }
+        ],
+        "matrix_ids": [
+          "ANALYSIS-DISPLAY-001"
+        ]
+      },
+      {
+        "binding": "MoveListFullTableKey:keyPressed:VK_SPACE#1",
+        "case": "MoveListFullTableKey:keyPressed:VK_SPACE",
+        "source_id": "MoveListFullTableKey",
+        "event": "keyPressed",
+        "key": "VK_SPACE",
+        "line": 1583,
+        "conditions": [],
+        "case_chain": [
+          "MoveListFullTableKey:keyPressed:VK_SPACE"
+        ],
+        "statements": [
+          {
+            "line": 1584,
+            "statement": "Lizzie.frame.togglePonderMannul();"
+          }
+        ],
+        "matrix_ids": [
+          "ANALYSIS-PONDER-001"
+        ]
+      },
+      {
+        "binding": "MoveListFullTableKey:keyPressed:VK_Q#1",
+        "case": "MoveListFullTableKey:keyPressed:VK_Q",
+        "source_id": "MoveListFullTableKey",
+        "event": "keyPressed",
+        "key": "VK_Q",
+        "line": 1586,
+        "conditions": [],
+        "case_chain": [
+          "MoveListFullTableKey:keyPressed:VK_Q"
+        ],
+        "statements": [
+          {
+            "line": 1587,
+            "statement": "togglealwaysontop();"
+          }
+        ],
+        "matrix_ids": [
+          "ANALYSIS-HAWKEYE-001"
+        ]
+      },
+      {
+        "binding": "MoveListMinTable1Key:keyPressed:VK_Y#1",
+        "case": "MoveListMinTable1Key:keyPressed:VK_Y",
+        "source_id": "MoveListMinTable1Key",
+        "event": "keyPressed",
+        "key": "VK_Y",
+        "line": 1613,
+        "conditions": [],
+        "case_chain": [
+          "MoveListMinTable1Key:keyPressed:VK_Y"
+        ],
+        "statements": [
+          {
+            "line": 1614,
+            "statement": "Lizzie.frame.toggleBadMoves();"
+          }
+        ],
+        "matrix_ids": [
+          "ANALYSIS-HAWKEYE-001"
+        ]
+      },
+      {
+        "binding": "MoveListMinTable1Key:keyPressed:VK_U#1",
+        "case": "MoveListMinTable1Key:keyPressed:VK_U",
+        "source_id": "MoveListMinTable1Key",
+        "event": "keyPressed",
+        "key": "VK_U",
+        "line": 1616,
+        "conditions": [],
+        "case_chain": [
+          "MoveListMinTable1Key:keyPressed:VK_U"
+        ],
+        "statements": [
+          {
+            "line": 1617,
+            "statement": "Lizzie.frame.toggleBestMoves();"
+          }
+        ],
+        "matrix_ids": [
+          "ANALYSIS-DISPLAY-001"
+        ]
+      },
+      {
+        "binding": "MoveListMinTable1Key:keyPressed:VK_SPACE#1",
+        "case": "MoveListMinTable1Key:keyPressed:VK_SPACE",
+        "source_id": "MoveListMinTable1Key",
+        "event": "keyPressed",
+        "key": "VK_SPACE",
+        "line": 1619,
+        "conditions": [],
+        "case_chain": [
+          "MoveListMinTable1Key:keyPressed:VK_SPACE"
+        ],
+        "statements": [
+          {
+            "line": 1620,
+            "statement": "Lizzie.frame.togglePonderMannul();"
+          }
+        ],
+        "matrix_ids": [
+          "ANALYSIS-PONDER-001"
+        ]
+      },
+      {
+        "binding": "MoveListMinTable1Key:keyPressed:VK_Q#1",
+        "case": "MoveListMinTable1Key:keyPressed:VK_Q",
+        "source_id": "MoveListMinTable1Key",
+        "event": "keyPressed",
+        "key": "VK_Q",
+        "line": 1622,
+        "conditions": [],
+        "case_chain": [
+          "MoveListMinTable1Key:keyPressed:VK_Q"
+        ],
+        "statements": [
+          {
+            "line": 1623,
+            "statement": "togglealwaysontop();"
+          }
+        ],
+        "matrix_ids": [
+          "ANALYSIS-HAWKEYE-001"
+        ]
+      },
+      {
+        "binding": "MoveListMinTable2Key:keyPressed:VK_Y#1",
+        "case": "MoveListMinTable2Key:keyPressed:VK_Y",
+        "source_id": "MoveListMinTable2Key",
+        "event": "keyPressed",
+        "key": "VK_Y",
+        "line": 1649,
+        "conditions": [],
+        "case_chain": [
+          "MoveListMinTable2Key:keyPressed:VK_Y"
+        ],
+        "statements": [
+          {
+            "line": 1650,
+            "statement": "Lizzie.frame.toggleBadMoves();"
+          }
+        ],
+        "matrix_ids": [
+          "ANALYSIS-HAWKEYE-001"
+        ]
+      },
+      {
+        "binding": "MoveListMinTable2Key:keyPressed:VK_U#1",
+        "case": "MoveListMinTable2Key:keyPressed:VK_U",
+        "source_id": "MoveListMinTable2Key",
+        "event": "keyPressed",
+        "key": "VK_U",
+        "line": 1652,
+        "conditions": [],
+        "case_chain": [
+          "MoveListMinTable2Key:keyPressed:VK_U"
+        ],
+        "statements": [
+          {
+            "line": 1653,
+            "statement": "Lizzie.frame.toggleBestMoves();"
+          }
+        ],
+        "matrix_ids": [
+          "ANALYSIS-DISPLAY-001"
+        ]
+      },
+      {
+        "binding": "MoveListMinTable2Key:keyPressed:VK_SPACE#1",
+        "case": "MoveListMinTable2Key:keyPressed:VK_SPACE",
+        "source_id": "MoveListMinTable2Key",
+        "event": "keyPressed",
+        "key": "VK_SPACE",
+        "line": 1655,
+        "conditions": [],
+        "case_chain": [
+          "MoveListMinTable2Key:keyPressed:VK_SPACE"
+        ],
+        "statements": [
+          {
+            "line": 1656,
+            "statement": "Lizzie.frame.togglePonderMannul();"
+          }
+        ],
+        "matrix_ids": [
+          "ANALYSIS-PONDER-001"
+        ]
+      },
+      {
+        "binding": "MoveListMinTable2Key:keyPressed:VK_Q#1",
+        "case": "MoveListMinTable2Key:keyPressed:VK_Q",
+        "source_id": "MoveListMinTable2Key",
+        "event": "keyPressed",
+        "key": "VK_Q",
+        "line": 1658,
+        "conditions": [],
+        "case_chain": [
+          "MoveListMinTable2Key:keyPressed:VK_Q"
+        ],
+        "statements": [
+          {
+            "line": 1659,
+            "statement": "togglealwaysontop();"
+          }
+        ],
+        "matrix_ids": [
+          "ANALYSIS-HAWKEYE-001"
+        ]
+      },
+      {
+        "binding": "MoveListWindowKey:keyPressed:VK_Y#1",
+        "case": "MoveListWindowKey:keyPressed:VK_Y",
+        "source_id": "MoveListWindowKey",
+        "event": "keyPressed",
+        "key": "VK_Y",
+        "line": 1668,
+        "conditions": [],
+        "case_chain": [
+          "MoveListWindowKey:keyPressed:VK_Y"
+        ],
+        "statements": [
+          {
+            "line": 1669,
+            "statement": "Lizzie.frame.toggleBadMoves();"
+          }
+        ],
+        "matrix_ids": [
+          "ANALYSIS-HAWKEYE-001"
+        ]
+      },
+      {
+        "binding": "MoveListWindowKey:keyPressed:VK_O#1",
+        "case": "MoveListWindowKey:keyPressed:VK_O",
+        "source_id": "MoveListWindowKey",
+        "event": "keyPressed",
+        "key": "VK_O",
+        "line": 1671,
+        "conditions": [],
+        "case_chain": [
+          "MoveListWindowKey:keyPressed:VK_O"
+        ],
+        "statements": [
+          {
+            "line": 1672,
+            "statement": "Lizzie.frame.openFile();"
+          }
+        ],
+        "matrix_ids": [
+          "KIFU-OPEN-001"
+        ]
+      },
+      {
+        "binding": "MoveListWindowKey:keyPressed:VK_U#1",
+        "case": "MoveListWindowKey:keyPressed:VK_U",
+        "source_id": "MoveListWindowKey",
+        "event": "keyPressed",
+        "key": "VK_U",
+        "line": 1674,
+        "conditions": [],
+        "case_chain": [
+          "MoveListWindowKey:keyPressed:VK_U"
+        ],
+        "statements": [
+          {
+            "line": 1675,
+            "statement": "Lizzie.frame.toggleBestMoves();"
+          }
+        ],
+        "matrix_ids": [
+          "ANALYSIS-DISPLAY-001"
+        ]
+      },
+      {
+        "binding": "MoveListWindowKey:keyPressed:VK_SPACE#1",
+        "case": "MoveListWindowKey:keyPressed:VK_SPACE",
+        "source_id": "MoveListWindowKey",
+        "event": "keyPressed",
+        "key": "VK_SPACE",
+        "line": 1677,
+        "conditions": [
+          {
+            "expression": "Lizzie.frame.isPlayingAgainstLeelaz",
+            "expected": true
+          }
+        ],
+        "case_chain": [
+          "MoveListWindowKey:keyPressed:VK_SPACE"
+        ],
+        "statements": [
+          {
+            "line": 1679,
+            "statement": "Lizzie.frame.isPlayingAgainstLeelaz = false;"
+          },
+          {
+            "line": 1680,
+            "statement": "Lizzie.leelaz.isThinking = false;"
+          },
+          {
+            "line": 1682,
+            "statement": "Lizzie.leelaz.togglePonder();"
+          }
+        ],
+        "matrix_ids": [
+          "ANALYSIS-PONDER-001"
+        ]
+      },
+      {
+        "binding": "MoveListWindowKey:keyPressed:VK_SPACE#2",
+        "case": "MoveListWindowKey:keyPressed:VK_SPACE",
+        "source_id": "MoveListWindowKey",
+        "event": "keyPressed",
+        "key": "VK_SPACE",
+        "line": 1677,
+        "conditions": [
+          {
+            "expression": "Lizzie.frame.isPlayingAgainstLeelaz",
+            "expected": false
+          }
+        ],
+        "case_chain": [
+          "MoveListWindowKey:keyPressed:VK_SPACE"
+        ],
+        "statements": [
+          {
+            "line": 1682,
+            "statement": "Lizzie.leelaz.togglePonder();"
+          }
+        ],
+        "matrix_ids": [
+          "ANALYSIS-PONDER-001"
+        ]
+      },
+      {
+        "binding": "MoveListWindowKey:keyPressed:VK_Q#1",
+        "case": "MoveListWindowKey:keyPressed:VK_Q",
+        "source_id": "MoveListWindowKey",
+        "event": "keyPressed",
+        "key": "VK_Q",
+        "line": 1684,
+        "conditions": [],
+        "case_chain": [
+          "MoveListWindowKey:keyPressed:VK_Q"
+        ],
+        "statements": [
+          {
+            "line": 1685,
+            "statement": "togglealwaysontop();"
+          }
+        ],
+        "matrix_ids": [
+          "ANALYSIS-HAWKEYE-001"
         ]
       }
     ],

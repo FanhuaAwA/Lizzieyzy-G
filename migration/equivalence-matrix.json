@@ -1,5 +1,5 @@
 {
-  "schema_version": 39,
+  "schema_version": 40,
   "allowed_statuses": [
     "未盘点",
     "已盘点",
@@ -198,7 +198,7 @@
     {
       "id": "KIFU-OPEN-001",
       "category": "棋谱文件",
-      "legacy_entry": "菜单 Menu.open 调用 LizzieFrame.openFile，并分派 SGFParser 或 GIBParser",
+      "legacy_entry": "菜单 Menu.open、主/独立棋盘 O 与 MoveListFrame 窗口自身 O 调用 LizzieFrame.openFile，并分派 SGFParser 或 GIBParser",
       "legacy_menu_keys": ["Menu.open", "Menu.openRecent"],
       "legacy_menu_labels": [],
       "legacy_shortcuts": [],
@@ -206,7 +206,8 @@
         "keyPressed:VK_O",
         "InputIndependentMainBoard:keyPressed:VK_O",
         "LizzieFrameKifuLoadGlassPaneMotion:mouseDragged",
-        "LizzieFrameKifuLoadGlassPaneMotion:mouseMoved"
+        "LizzieFrameKifuLoadGlassPaneMotion:mouseMoved",
+        "MoveListWindowKey:keyPressed:VK_O"
       ],
       "legacy_input_bindings": [
         "keyPressed:VK_O#1",
@@ -214,18 +215,20 @@
         "InputIndependentMainBoard:keyPressed:VK_O#1",
         "InputIndependentMainBoard:keyPressed:VK_O#4",
         "LizzieFrameKifuLoadGlassPaneMotion:mouseDragged#1",
-        "LizzieFrameKifuLoadGlassPaneMotion:mouseMoved#1"
+        "LizzieFrameKifuLoadGlassPaneMotion:mouseMoved#1",
+        "MoveListWindowKey:keyPressed:VK_O#1"
       ],
       "java_evidence": [
         { "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "symbol": "openFile" },
         { "path": "src/main/java/featurecat/lizzie/rules/SGFParser.java", "symbol": "class SGFParser" },
         { "path": "src/main/java/featurecat/lizzie/rules/GIBParser.java", "symbol": "class GIBParser" },
-        { "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "symbol": "ensureKifuLoadGlassPane" }
+        { "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "symbol": "ensureKifuLoadGlassPane" },
+        { "path": "src/main/java/featurecat/lizzie/gui/MoveListFrame.java", "symbol": "this.addKeyListener" }
       ],
       "config_keys": ["read-komi", "load-sgf-last", "recent-file-paths"],
-      "inputs_preconditions": "用户选择可读的 SGF 或 GIB 文件。",
+      "inputs_preconditions": "用户选择可读的 SGF 或 GIB 文件。MoveListFrame 的 O 仅注册在 JFrame 自身 listener；子表格、页签、文本框或复选框持焦点时不冒泡，窗口自身焦点是否可达尚未动态验证。",
       "success_behavior": "解析元数据、主线和分支，并按设置处理贴目与上次目录。",
-      "failure_cancel_behavior": "取消文件选择不改变当前棋盘；无效或不可读文件给出错误且不损坏当前状态。",
+      "failure_cancel_behavior": "取消文件选择不得改变当前棋盘；无效或不可读文件须给出错误且不损坏当前状态。旧 openFile 在显示选择器前会按“正在 ponder 或引擎未加载”切换分析并取消主窗口置顶，成功、取消后再恢复；没有 finally，选择器、加载或引擎异常可遗留分析/置顶半状态，未加载时直接 togglePonder 也可能无效或抛错。MoveList O 不检查 modifier 或 consume，长按及 Plain/Ctrl/Meta/Alt/Shift+O 可重复打开入口。目标版须以单实例文件选择事务在取消/失败时原子恢复引擎、主窗和 MoveList 焦点。",
       "data_io": "读取 SGF/GIB 文件并更新最近文件路径。",
       "external_dependencies": ["本地文件系统"],
       "target_modules": ["Lizzie.Core", "Lizzie.Desktop"],
@@ -236,9 +239,9 @@
         { "path": "src/test/java/featurecat/lizzie/rules/BoardNodeKindHistoryPipelineTest.java", "symbol": "loadFromStringEntriesMatchParseSgfStandaloneSetupSnapshotBoundary" },
         { "path": "src/test/java/featurecat/lizzie/analysis/ReadBoardResumeLifecycleTest.java", "symbol": "loadFromStringClearsResumeState" }
       ],
-      "manual_acceptance": "用含主线、分支、注释和提子的 SGF 及一份 GIB 做新旧对照；另测取消和损坏文件。",
+      "manual_acceptance": "用含主线、分支、注释和提子的 SGF 及一份 GIB 做新旧对照；另测取消、损坏/超大/不可读文件。让 MoveList 窗口裸区域与各子控件分别成为真实 focus owner，覆盖 Plain/Ctrl/Meta/Alt/Shift+O 和长按，确认最多一个选择器，取消/异常后棋盘、ponder、主窗置顶及焦点恢复一致；窗口 listener 不可聚焦则登记旧版不可达缺口。",
       "status": "已盘点",
-      "evidence": "解析入口已定位；加载遮罩的显式 mouseDragged 与 mouseMoved 均各一条空路径，另有无 override 的空 MouseAdapter 用于吞掉其他 pointer 输入，不计为声明事件。遮罩没有 pointer cancel；完成或失败必须在 UI 线程确定恢复交互。KifuLoadFinisherTest、KifuLoadResourceTest 与 LizzieFrameRegressionTest 覆盖完成回调、资源键和遮罩隐藏但不 dispatch 这些 listener；BoardNodeKindHistoryPipelineTest 与 ReadBoardResumeLifecycleTest 已直接覆盖若干 SGFParser.loadFromString/loadFromStringforedit 语义。仍缺 openFile→磁盘 SGF/GIB 的统一端到端回归，尤其 GIB。"
+      "evidence": "解析入口及加载遮罩已定位；MoveListWindowKey 的 O 生成一条 openFile 路径，但只证明 listener 注册和动作，不证明 JFrame 自身焦点可达。现有 KifuLoadFinisherTest、KifuLoadResourceTest、LizzieFrameRegressionTest、BoardNodeKindHistoryPipelineTest 与 ReadBoardResumeLifecycleTest 覆盖下游完成/资源/若干 SGF 字符串语义，不构造 MoveList、dispatch O、打开真实文件选择器或证明取消时引擎/窗口事务；仍缺 openFile→磁盘 SGF/GIB 的统一端到端回归，尤其 GIB。"
     },
     {
       "id": "KIFU-SAVE-001",
@@ -1322,7 +1325,7 @@
     {
       "id": "ANALYSIS-PONDER-001",
       "category": "分析",
-      "legacy_entry": "主窗口、独立棋盘、外部读盘浮动棋盘或 AnalysisFrame 表格/窗口的 Space 调用 LizzieFrame.togglePonderMannul 切换前台持续分析",
+      "legacy_entry": "主窗口、独立棋盘、外部读盘浮动棋盘、AnalysisFrame 表格/窗口及 MoveListFrame 页签/三表的 Space 调用 LizzieFrame.togglePonderMannul；MoveListFrame 窗口自身 Space 则直接修改对弈标志并调用 Leelaz.togglePonder",
       "legacy_menu_keys": [],
       "legacy_menu_labels": [],
       "legacy_shortcuts": [],
@@ -1332,7 +1335,12 @@
         "InputIndependentSubboard:keyPressed:VK_SPACE",
         "FloatBoard:keyPressed:VK_SPACE",
         "AnalysisFrameTable:keyPressed:VK_SPACE",
-        "AnalysisFrameWindow:keyPressed:VK_SPACE"
+        "AnalysisFrameWindow:keyPressed:VK_SPACE",
+        "MoveListTabsKey:keyPressed:VK_SPACE",
+        "MoveListFullTableKey:keyPressed:VK_SPACE",
+        "MoveListMinTable1Key:keyPressed:VK_SPACE",
+        "MoveListMinTable2Key:keyPressed:VK_SPACE",
+        "MoveListWindowKey:keyPressed:VK_SPACE"
       ],
       "legacy_input_bindings": [
         "keyPressed:VK_SPACE#1",
@@ -1340,26 +1348,39 @@
         "InputIndependentSubboard:keyPressed:VK_SPACE#1",
         "FloatBoard:keyPressed:VK_SPACE#1",
         "AnalysisFrameTable:keyPressed:VK_SPACE#1",
-        "AnalysisFrameWindow:keyPressed:VK_SPACE#1"
+        "AnalysisFrameWindow:keyPressed:VK_SPACE#1",
+        "MoveListTabsKey:keyPressed:VK_SPACE#1",
+        "MoveListFullTableKey:keyPressed:VK_SPACE#1",
+        "MoveListMinTable1Key:keyPressed:VK_SPACE#1",
+        "MoveListMinTable2Key:keyPressed:VK_SPACE#1",
+        "MoveListWindowKey:keyPressed:VK_SPACE#1",
+        "MoveListWindowKey:keyPressed:VK_SPACE#2"
       ],
       "java_evidence": [
         { "path": "src/main/java/featurecat/lizzie/gui/Input.java", "symbol": "togglePonderMannul" },
         { "path": "src/main/java/featurecat/lizzie/gui/InputIndependentSubboard.java", "symbol": "Lizzie.frame.togglePonderMannul()" },
         { "path": "src/main/java/featurecat/lizzie/gui/FloatBoard.java", "symbol": "Lizzie.frame.togglePonderMannul()" },
         { "path": "src/main/java/featurecat/lizzie/gui/AnalysisFrame.java", "symbol": "Lizzie.frame.togglePonderMannul()" },
-        { "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "symbol": "togglePonderMannul" }
+        { "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "symbol": "togglePonderMannul" },
+        { "path": "src/main/java/featurecat/lizzie/gui/MoveListFrame.java", "symbol": "bottomPanel.addKeyListener" },
+        { "path": "src/main/java/featurecat/lizzie/gui/MoveListFrame.java", "symbol": "this.addKeyListener" },
+        { "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "symbol": "public void togglePonderMannul()" },
+        { "path": "src/main/java/featurecat/lizzie/analysis/Leelaz.java", "symbol": "public void togglePonder()" }
       ],
       "config_keys": [],
-      "inputs_preconditions": "主分析引擎已加载且当前模式允许开始或停止持续分析。",
-      "success_behavior": "Space 在分析与停止状态间切换，并使 UI 与引擎真实状态一致。",
-      "failure_cancel_behavior": "引擎未加载、忙碌或退出时显示真实不可用状态；停止需有界完成且不得遗留请求。",
-      "data_io": "发送或停止 GTP 分析请求并更新内存分析状态。",
+      "inputs_preconditions": "主分析引擎已加载且当前模式允许开始或停止持续分析。MoveListFrame 的 Space 仅在对应页签、表格或窗口自身真实持焦点时触发；四个子组件走 guarded helper，窗口自身走不同的直接路径。",
+      "success_behavior": "普通入口与 MoveList 页签/三表的 Space 先停止 AI 对弈/策略状态，需要开始分析时把当前棋谱位置同步到主引擎，再切换 ponder。MoveList 窗口自身的旧路径若正在人机对弈只把 isPlayingAgainstLeelaz/isThinking 置 false，随后直接 togglePonder；目标版不得保留该分叉，所有焦点入口必须路由同一个可取消命令并让棋盘、计时器、UI 与引擎状态一致。",
+      "failure_cancel_behavior": "引擎未加载、忙碌或退出时显示真实不可用状态；停止需有界完成且不得遗留请求。MoveList 窗口自身路径绕过 null/empty guard、stopAiPlayingAndPolicy、倒计时/计时器清理、WRN/棋盘块恢复、自动保存、当前位置同步和失败返回，可能空指针、分析错误位置或只清两个标志后半提交；四个子组件则走完整 helper。所有 listener 都忽略 modifier 且不 consume，Plain/Ctrl/Meta/Alt/Shift+Space、长按与 JTable/JTabbedPane 默认 Space 动作可能叠加。",
+      "data_io": "发送或停止 GTP 分析请求并更新内存分析状态；guarded helper 还可停止 AI 对弈/策略、清理计时与棋盘块、自动保存对弈棋谱并重放当前局面，MoveList 窗口直接路径只写两个全局标志后操作主引擎。",
       "external_dependencies": ["GTP 引擎进程"],
       "target_modules": ["Lizzie.Engine", "Lizzie.Desktop"],
-      "automated_evidence": [],
-      "manual_acceptance": "用确定性与真实引擎分别反复开始/停止，核对请求停止、UI 状态、迟到响应和进程退出。",
+      "automated_evidence": [
+        { "path": "src/test/java/featurecat/lizzie/gui/LizzieFrameRegressionTest.java", "symbol": "manualPonderStartSyncsCurrentKifuBeforeAnalysis" },
+        { "path": "src/test/java/featurecat/lizzie/analysis/ReadBoardEngineResumeTest.java", "symbol": "resumeponderUsesManualToggleOnceAndReportsRunningState" }
+      ],
+      "manual_acceptance": "用确定性与真实引擎分别反复开始/停止，核对请求停止、当前位置同步、UI 状态、迟到响应和进程退出。让 MoveList 页签、三表与窗口自身逐一持焦点，覆盖 Plain/Ctrl/Meta/Alt/Shift+Space、长按和组件默认动作；在普通分析、停止、人机/分析对弈、自动分析、引擎 null/未加载/崩溃下比较四个 helper 入口与窗口直接入口，记录计时器、倒计时、playing/thinking、WRN、棋盘块、自动保存、命令及 ponder 状态，不允许半更新。",
       "status": "已盘点",
-      "evidence": "六个已盘点输入源的无修饰 Space 均落到同一动作；AnalysisFrame 的表格和窗口监听器分别保留独立焦点入口，目标取消时序和真实引擎实测待建立。"
+      "evidence": "既有六个输入源及 MoveList 页签/三表的 Space 各一条 guarded-helper 路径；MoveList 窗口 Space 按 isPlayingAgainstLeelaz 真/假生成两条路径并直接调用 Leelaz.togglePonder，明确不等价。manualPonderStartSyncsCurrentKifuBeforeAnalysis 直接证明 helper 开始分析前重放当前局面，resumeponderUsesManualToggleOnceAndReportsRunningState 证明读盘下游只调用一次 helper；两者均未构造或 dispatch MoveList，不能证明其焦点、modifier、动作次数或窗口直接路径。"
     },
     {
       "id": "BOARD-VARIATION-001",
@@ -2262,7 +2283,7 @@
     {
       "id": "ANALYSIS-DISPLAY-001",
       "category": "分析",
-      "legacy_entry": "主窗口与独立主棋盘的 U/M/J/F/H/V/T/Y/K、FloatBoard 的 F/H/T，以及 AnalysisFrame 表格/窗口的 U/Y 快捷分支控制候选、变化、手数、热力图、策略和问题手显示",
+      "legacy_entry": "主窗口与独立主棋盘的 U/M/J/F/H/V/T/Y/K、FloatBoard 的 F/H/T、AnalysisFrame 表格/窗口的 U/Y，以及 MoveListFrame 页签/三表/窗口的 U 快捷分支控制候选、变化、手数、热力图、策略和问题手显示",
       "legacy_menu_keys": ["Menu.listPane"],
       "legacy_menu_labels": [],
       "legacy_shortcuts": [],
@@ -2295,7 +2316,12 @@
         "LizzieFrameMoveListScrollPaneMotion:mouseMoved",
         "LizzieFrameMoveListScrollPaneClick:mouseClicked",
         "LizzieFrameMoveListTableWheel:mouseWheelMoved",
-        "LizzieFrameMoveListTableClick:mouseClicked"
+        "LizzieFrameMoveListTableClick:mouseClicked",
+        "MoveListTabsKey:keyPressed:VK_U",
+        "MoveListFullTableKey:keyPressed:VK_U",
+        "MoveListMinTable1Key:keyPressed:VK_U",
+        "MoveListMinTable2Key:keyPressed:VK_U",
+        "MoveListWindowKey:keyPressed:VK_U"
       ],
       "legacy_input_bindings": [
         "keyPressed:VK_U#1",
@@ -2342,26 +2368,34 @@
         "LizzieFrameMoveListTableWheel:mouseWheelMoved#4",
         "LizzieFrameMoveListTableClick:mouseClicked#1",
         "LizzieFrameMoveListTableClick:mouseClicked#2",
-        "LizzieFrameMoveListTableClick:mouseClicked#3"
+        "LizzieFrameMoveListTableClick:mouseClicked#3",
+        "MoveListTabsKey:keyPressed:VK_U#1",
+        "MoveListFullTableKey:keyPressed:VK_U#1",
+        "MoveListMinTable1Key:keyPressed:VK_U#1",
+        "MoveListMinTable2Key:keyPressed:VK_U#1",
+        "MoveListWindowKey:keyPressed:VK_U#1"
       ],
       "java_evidence": [
         { "path": "src/main/java/featurecat/lizzie/gui/Input.java", "symbol": "toggleBestMoves" },
         { "path": "src/main/java/featurecat/lizzie/Config.java", "symbol": "toggleShowMoveNumber" },
         { "path": "src/main/java/featurecat/lizzie/gui/FloatBoard.java", "symbol": "toggleHide" },
         { "path": "src/main/java/featurecat/lizzie/gui/AnalysisFrame.java", "symbol": "Lizzie.frame.toggleBadMoves()" },
-        { "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "symbol": "listTable.addMouseListener" }
+        { "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "symbol": "listTable.addMouseListener" },
+        { "path": "src/main/java/featurecat/lizzie/gui/MoveListFrame.java", "symbol": "table.addKeyListener" },
+        { "path": "src/main/java/featurecat/lizzie/gui/MoveListFrame.java", "symbol": "minTable1.addKeyListener" },
+        { "path": "src/main/java/featurecat/lizzie/gui/MoveListFrame.java", "symbol": "minTable2.addKeyListener" }
       ],
       "config_keys": ["show-suggestion-variations", "show-list-pane"],
-      "inputs_preconditions": "主棋盘已显示；需要引擎数据的覆盖层只在相应数据存在时可见。",
-      "success_behavior": "各修饰键分支切换对应候选、变化、手数、次选、热力图、策略、问题手或评估着色，并立即刷新。",
-      "failure_cancel_behavior": "数据不存在或 Alt+K 条件不满足时允许无动作；持久化失败不得与可见状态静默分叉。",
+      "inputs_preconditions": "主棋盘已显示；需要引擎数据的覆盖层只在相应数据存在时可见。MoveListFrame 的 U 仅在 JTabbedPane、三张表或窗口自身真实成为 focus owner 时到达对应 listener；子文本框、复选框和其他控件的事件不会向父级冒泡。",
+      "success_behavior": "各修饰键分支切换对应候选、变化、手数、次选、热力图、策略、问题手或评估着色，并立即刷新；MoveListFrame 五个来源收到 U 时都调用主窗口 toggleBestMoves 打开或隐藏候选窗口。",
+      "failure_cancel_behavior": "数据不存在或 Alt+K 条件不满足时允许无动作；持久化失败不得与可见状态静默分叉。MoveListFrame 的 U 不检查或 consume modifier，Plain/Ctrl/Meta/Alt/Shift+U 都会切换另一窗口，且组件默认按键动作仍可能同时执行；目标版必须用唯一命令绑定明确焦点、修饰键优先级和焦点恢复。",
       "data_io": "读取分析结果并更新显示状态；Alt+V 直接写 show-suggestion-variations。",
       "external_dependencies": ["显示热力图或策略时的引擎分析结果"],
       "target_modules": ["Lizzie.Core", "Lizzie.Desktop"],
       "automated_evidence": [],
-      "manual_acceptance": "逐一执行主窗口 14 条路径、FloatBoard 的 F/H/T 及 AnalysisFrame 表格/窗口的 U/Y，核对焦点入口、覆盖层、组合优先级、无数据/无修饰 K 的无动作和重启持久化。",
+      "manual_acceptance": "逐一执行主窗口 14 条路径、FloatBoard 的 F/H/T、AnalysisFrame 表格/窗口的 U/Y，以及 MoveListFrame 页签/三表/窗口自身的 U；核对真实 focus owner、Plain/Ctrl/Meta/Alt/Shift、长按重复、候选窗口状态、焦点恢复、组合优先级、无数据/无修饰 K 的无动作和重启持久化。",
       "status": "已盘点",
-      "evidence": "主窗口 14 条动作/无动作条件路径、FloatBoard 的隐藏候选/热力图/策略入口，以及 AnalysisFrame 表格和窗口各自的 U/Y 入口已静态展开。LizzieFrame 主候选列表新增 scrollpane motion/click 与 table wheel/click 4 个事件、10 条路径：hover 可抢回主棋盘焦点，click 隐式提交评论；固定候选时正负/零滚轮分别调整/仅刷新分支，未固定时转发原事件；有效格右键切换固定候选，其他按钮预览，越界只完成评论提交。try/catch 作为原子动作保留，异常仅打印且可能留下部分全局坐标状态；目标版必须原子更新预览并绑定明确焦点、滚动和评论事务。"
+      "evidence": "主窗口 14 条动作/无动作条件路径、FloatBoard 的隐藏候选/热力图/策略入口、AnalysisFrame 表格/窗口的 U/Y，以及 MoveListFrame 五个 U 入口已静态展开。MoveListFrame 的四个子组件和窗口监听器都只看 keyCode，不检查 modifier 或 consume；窗口自身是否能在子控件之外成为 focus owner 仍需动态验证。LizzieFrame 主候选列表的既有 pointer 路径保持不变。旧测试未构造或 dispatch MoveListFrame，U 入口、动作次数、修饰键和焦点均无专项自动化。"
     },
     {
       "id": "ANALYSIS-COUNTING-001",
@@ -3699,7 +3733,7 @@
     {
       "id": "ANALYSIS-HAWKEYE-001",
       "category": "分析",
-      "legacy_entry": "Menu.hawkEye、双层顶部图标工具栏 Menu.btnHawkeye.toolTipText、BottomToolbar.badMoves 与 Y 打开或关闭独立超级鹰眼窗口；窗口提供统计、简表、详表、九类图表、筛选阈值、排序、棋步跳转、右键导出及单双引擎视图",
+      "legacy_entry": "Menu.hawkEye、双层顶部图标工具栏 Menu.btnHawkeye.toolTipText、BottomToolbar.badMoves 与主窗口 Y 打开或关闭独立超级鹰眼窗口；窗口内页签、三表和窗口自身的 Y 再次切换窗口，Q 切换当前实例置顶；窗口还提供统计、简表、详表、九类图表、筛选阈值、排序、棋步跳转、右键导出及单双引擎视图",
       "legacy_menu_keys": ["Menu.hawkEye", "Menu.btnHawkeye.toolTipText"],
       "legacy_menu_labels": [],
       "legacy_shortcuts": [],
@@ -3714,7 +3748,17 @@
         "MoveListMatchPanelPointer:mouseWheelMoved",
         "MoveListFullHeaderRelease:mouseReleased",
         "MoveListMin1HeaderRelease:mouseReleased",
-        "MoveListMin2HeaderRelease:mouseReleased"
+        "MoveListMin2HeaderRelease:mouseReleased",
+        "MoveListTabsKey:keyPressed:VK_Y",
+        "MoveListFullTableKey:keyPressed:VK_Y",
+        "MoveListMinTable1Key:keyPressed:VK_Y",
+        "MoveListMinTable2Key:keyPressed:VK_Y",
+        "MoveListWindowKey:keyPressed:VK_Y",
+        "MoveListTabsKey:keyPressed:VK_Q",
+        "MoveListFullTableKey:keyPressed:VK_Q",
+        "MoveListMinTable1Key:keyPressed:VK_Q",
+        "MoveListMinTable2Key:keyPressed:VK_Q",
+        "MoveListWindowKey:keyPressed:VK_Q"
       ],
       "legacy_input_bindings": [
         "MoveListFullTableClick:mouseClicked#1",
@@ -3757,7 +3801,17 @@
         "MoveListMin2HeaderRelease:mouseReleased#1",
         "MoveListMin2HeaderRelease:mouseReleased#2",
         "MoveListMin2HeaderRelease:mouseReleased#3",
-        "MoveListMin2HeaderRelease:mouseReleased#4"
+        "MoveListMin2HeaderRelease:mouseReleased#4",
+        "MoveListTabsKey:keyPressed:VK_Y#1",
+        "MoveListFullTableKey:keyPressed:VK_Y#1",
+        "MoveListMinTable1Key:keyPressed:VK_Y#1",
+        "MoveListMinTable2Key:keyPressed:VK_Y#1",
+        "MoveListWindowKey:keyPressed:VK_Y#1",
+        "MoveListTabsKey:keyPressed:VK_Q#1",
+        "MoveListFullTableKey:keyPressed:VK_Q#1",
+        "MoveListMinTable1Key:keyPressed:VK_Q#1",
+        "MoveListMinTable2Key:keyPressed:VK_Q#1",
+        "MoveListWindowKey:keyPressed:VK_Q#1"
       ],
       "java_evidence": [
         { "path": "src/main/java/featurecat/lizzie/gui/Menu.java", "symbol": "final JFontCheckBoxMenuItem hawkEye" },
@@ -3775,7 +3829,13 @@
         { "path": "src/main/java/featurecat/lizzie/gui/MoveListFrame.java", "symbol": "public AbstractTableModel getTableModel()" },
         { "path": "src/main/java/featurecat/lizzie/rules/Board.java", "symbol": "public void updateMovelist(BoardHistoryNode node)" },
         { "path": "src/main/java/featurecat/lizzie/Config.java", "symbol": "public void persist() throws IOException" },
-        { "path": "src/main/java/featurecat/lizzie/util/Utils.java", "symbol": "public static void exportTable(JTable table, String file) throws IOException" }
+        { "path": "src/main/java/featurecat/lizzie/util/Utils.java", "symbol": "public static void exportTable(JTable table, String file) throws IOException" },
+        { "path": "src/main/java/featurecat/lizzie/gui/MoveListFrame.java", "symbol": "bottomPanel.addKeyListener" },
+        { "path": "src/main/java/featurecat/lizzie/gui/MoveListFrame.java", "symbol": "table.addKeyListener" },
+        { "path": "src/main/java/featurecat/lizzie/gui/MoveListFrame.java", "symbol": "minTable1.addKeyListener" },
+        { "path": "src/main/java/featurecat/lizzie/gui/MoveListFrame.java", "symbol": "minTable2.addKeyListener" },
+        { "path": "src/main/java/featurecat/lizzie/gui/MoveListFrame.java", "symbol": "this.addKeyListener" },
+        { "path": "src/main/java/featurecat/lizzie/gui/MoveListFrame.java", "symbol": "private void togglealwaysontop()" }
       ],
       "config_keys": [
         "show-badmoves-frame",
@@ -3825,16 +3885,16 @@
         "score-loss-threshold-4",
         "score-loss-threshold-5"
       ],
-      "inputs_preconditions": "当前棋盘及历史树已存在；菜单、可选底部 badMoves 按钮或尚未纳入本轮 key 索引的 Y 可打开窗口；双层顶部图标入口仅在 show-double-menu、show-top-tool-bar 与 show-basic-btn 同时开启时可见。单引擎创建主窗口，Double_Engine 创建主/副两个窗口。三表 click 仅区分 BUTTON3 与其他按钮，不检查 clickCount；matchPanel press/drag 和三表头 release 不检查按钮或修饰键。图表行为随 selectedIndex 0–8、PK/自动分析状态、KataGo 数据、主线/分支选择和当前绘制参数变化。",
-      "success_behavior": "窗口按筛选范围、访问量、胜率/目差阈值和引擎数据展示统计、简表、详表及图表；右键表格弹出导出菜单，其他按钮仅在命中有效格且非自动分析时导航。图表 press 在 selectedIndex>=7 时只选大错点，否则仅非 PK 且 selectedIndex<4 时导航；drag 也仅非 PK 且 selectedIndex<4 时导航，wheel 不受这些门限制；move/exit 更新 hover。三个表头在 release 时切换排序，特殊列按绝对值降序→带符号降序→带符号升序循环。目标版使用虚拟化原生表格、可聚焦排序头和 typed hit-test，把主按钮导航、上下文菜单、键盘命令与可取消图表导航分离，并以稳定节点身份和一致快照更新当前棋盘。",
-      "failure_cancel_behavior": "旧版任意非右键单击都会调用名为 DoubleClick 的导航，异常仅打印；图表 press/drag 可把图外 -1 传给棋步导航，任意按钮均可触发，表头空白 release 可把共享 sortnum 设为 -1。mouseMoved 每像素沿历史链线性遍历，三表模型在逐格渲染和导出时反复重建并排序整条历史。构造即启动 Swing Timer，普通 Y/菜单/工具栏隐藏不停止它，重开会覆盖引用并遗留旧窗口/Timer；双引擎只关闭一窗也可能留下另一计时器，且不 dispose。刷新间隔乘 20 未校验，0 可令 EDT 紧循环，负值可使构造失败。目标版必须以窗口拥有的单实例生命周期在 hide/close/dispose/cancel 停止刷新，限制刷新频率与历史规模，丢弃旧代次，导航/排序/导出失败保持棋盘、选择和文件原状并给出可访问错误。",
-      "data_io": "读取当前 BoardHistory 主线/分支、NodeInfo、主副引擎分析与上述 46 个配置键；筛选、页签、阈值、置顶和显示相关动作更新内存 uiConfig。sortnum/issorted/isOriginOrder 只在单个窗口实例内由三表共享；隐藏时 Config.persist 虽把 sortnum 写入 badmoves-list-position[0]，构造却不读取该项且不保存方向/原始标志，所以重启恢复默认排序；其余数组项保存主窗口位置和详表列宽。`badMoves` 只控制底部工具栏入口可见性；show-badmoves-frame 恢复窗口，extra-mode 决定单双视图。右键导出在 EDT 同步把表格写成本地 `.xls` 名称的 UTF-16LE 制表文本，直接覆盖且非原子；`.xlsx` 文件名反而不写，IOException 只打印，可能留下截断文件。该窗口不联网；周期刷新可请求 Board 更新当前分析列表，但不直接启动引擎。",
+      "inputs_preconditions": "当前棋盘及历史树已存在；菜单、可选底部 badMoves 按钮或主窗口 Y 可打开窗口；双层顶部图标入口仅在 show-double-menu、show-top-tool-bar 与 show-basic-btn 同时开启时可见。单引擎创建主窗口，Double_Engine 创建主/副两个窗口。窗口内 Y/Q 仅在 JTabbedPane、三表或 JFrame 自身真实持焦点时触发，子文本框/复选框不冒泡；listener 不检查 modifier。既有 pointer 行为仍随 selectedIndex、PK/自动分析和数据变化。",
+      "success_behavior": "窗口按筛选范围、访问量、胜率/目差阈值和引擎数据展示统计、简表、详表及图表；窗口内五个 Y 入口调用全局 toggleBadMoves 隐藏/重开主副窗口，五个 Q 入口只切换当前 MoveListFrame 的 always-on-top、共享 badmoves-always-ontop 配置与标题。既有表格、图表和排序 pointer 行为保持登记。目标版使用虚拟化原生表格、可聚焦排序头和单一命令路由，以稳定节点身份和一致快照更新。",
+      "failure_cancel_behavior": "旧版任意非右键表格单击、图外导航、表头空白排序、线性 hover、重复建模/导出与 Timer 生命周期缺陷保持既有登记。新增键 listener 不检查 modifier 或 consume，Plain/Ctrl/Meta/Alt/Shift+Y/Q、长按及组件默认动作可重复或叠加；Y 隐藏窗口仍不停止 Timer。双引擎时 Q 只改收到事件的当前实例，却写共享 badmoves-always-ontop，主副窗口可立即分裂且重开行为依赖最后写值；setAlwaysOnTop 或配置访问异常可逃出 EDT。JFrame 自身 listener 的焦点可达性尚未证明。目标版须用幂等窗口命令、明确修饰键、同步主副置顶与有所有者的单实例刷新生命周期。",
+      "data_io": "读取当前 BoardHistory 主线/分支、NodeInfo、主副引擎分析与既有配置键；筛选、页签、阈值、置顶和显示相关动作更新内存 uiConfig。Y 写 show-badmoves-frame 并隐藏/创建主副窗口，Q 调用操作系统置顶后写 badmoves-always-ontop 和标题；两者均不立即保存文件。既有排序、位置/列宽、导出和周期刷新语义保持登记。",
       "external_dependencies": ["当前棋盘历史与一个或两个 GTP 引擎的分析快照", "Swing JTable/Timer/JFileChooser、AWT pointer/键盘焦点、操作系统窗口与多屏 DPI", "本地文件系统导出目标与 classpath logo 资源"],
       "target_modules": ["Lizzie.Core", "Lizzie.Engine", "Lizzie.Desktop"],
       "automated_evidence": [],
-      "manual_acceptance": "在空表、长棋谱、主线/分支、自动分析、PK、KataGo、单双引擎及 selectedIndex 0–8 下覆盖三表左/中/右单击、图表 press/move/exit/drag/wheel、图外与边界坐标；明确验证自动分析时表格非右键无导航、PK 或 selectedIndex 4–6 时 press/drag 无导航、selectedIndex>=7 的 press 只选大错点，以及 wheel 仍前后步进。覆盖三表头任意按钮和空白区，验证绝对值降序→带符号降序→带符号升序循环、三表实例内共享，并确认重启不恢复该排序。验证导出取消、已有文件、只读、磁盘满、超长名称、大表、扩展名和失败后原文件完整。分别让窗口、表格、文本框、复选框和页签获焦，验证 Y/U/Q/O/Space、Tab、Enter、菜单键、键盘排序和图表导航；触控与 Narrator/VoiceOver/Orca 应读出表格、排序、图表、筛选和当前选择。穷举 show-double-menu/show-top-tool-bar/show-basic-btn 组合确认图标入口仅三者全开时可见；通过菜单、工具栏、Y 与关闭按钮反复开关主/副窗口，确认每个可见窗至多一个刷新源，隐藏/关闭/退出后 Timer、窗口与任务均为零。覆盖畸形/越界/屏外持久化位置、负/零刷新间隔、多屏、100%/150%/200% DPI、长本地化和大规模历史，测 CPU、分配、帧时间与响应性。",
+      "manual_acceptance": "在空表、长棋谱、主线/分支、自动分析、PK、KataGo、单双引擎及 selectedIndex 0–8 下执行既有三表、图表、表头和导出场景。分别让页签、主表、两个简表、窗口裸区域、文本框与复选框成为真实 focus owner，覆盖 Plain/Ctrl/Meta/Alt/Shift+Y/Q、长按、Tab 和组件默认动作；Y 核对主副窗口隐藏/重开、焦点恢复和 Timer 数，Q 核对当前/另一实例置顶、标题、共享配置及重启恢复，窗口 listener 不可聚焦则登记缺口。再覆盖 U/O/Space 的关联行场景以及触控、三平台置顶、多 DPI、长本地化和读屏。",
       "status": "已盘点",
-      "evidence": "MoveListFrame.java 的 7 个逻辑来源组完整覆盖 11 个 public pointer handler：三表 click 9 条、matchPanel press/exit/move/drag/wheel 20 条、三表头 release 12 条，共 11 个事件/41 条可达路径。共享解析器只对来源元数据声明、源码证实为 int 且 handler 内不改写的 selectedIndex 做区间一致性检查，剪除同时要求 selectedIndex>=7 与 selectedIndex==0 的 7 条不可能路径；既有局部布尔跟踪与通用 !/&&/|| 短路求值再剪除 noRefresh=false 却要求 !(sameNode&&noRefresh)=false 的 1 条路径，for 与 try/catch 继续按既有规则保留为原子语句。旧测试没有构造或 dispatch MoveListFrame，也没有覆盖导出、Timer、窗口生命周期、配置恢复、键盘或无障碍；Board 导航、movelist-refresh 线程和其他 WinrateGraph hit-test 仅为间接概念证据，未冒充本窗口自动测试。本轮未运行旧 GUI、修改配置/棋谱、导出文件、联网或启动引擎。"
+      "evidence": "MoveListFrame 的 5 个 keyPressed 来源已精确生成 21 个 case/22 条路径：四个组件各 Y/U/Space/Q 一条，窗口自身 Y/O/U/Q 各一条、Space 按人机对弈标志分两条；本行反向关联五个 Y 与五个 Q。所有 listener 只比较 keyCode，不检查 modifier 或 consume；KeyAdapter 未覆写的 keyReleased/keyTyped 为空实现。既有 7 个 pointer 逻辑来源、11 个事件/41 条路径逐对象不变。旧测试没有构造或 dispatch MoveListFrame，也不覆盖 Y/Q、焦点、置顶主副一致性、Timer 或无障碍；空棋盘 smoke 不能证明本窗口。"
     }
   ]
 }
