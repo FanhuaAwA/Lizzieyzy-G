@@ -1,5 +1,5 @@
 {
-  "schema_version": 38,
+  "schema_version": 39,
   "allowed_statuses": [
     "未盘点",
     "已盘点",
@@ -436,7 +436,7 @@
     {
       "id": "ENGINE-GTP-001",
       "category": "引擎",
-      "legacy_entry": "Leelaz 负责 GTP 命令发送、响应绑定、分析流和失败恢复；Input、引擎对局专用 LizzieFrame gtpShortKey、GtpConsolePane、菜单与启动配置切换控制台，GtpConsolePane/FastCommands 提供原始命令、分类命令和引擎命令列表入口",
+      "legacy_entry": "Leelaz 负责 GTP 命令发送、响应绑定、分析流和失败恢复；Input、引擎对局专用 LizzieFrame gtpShortKey、GtpConsolePane、菜单与启动配置切换控制台，GtpConsolePane/FastCommands 提供原始命令、分类命令和引擎命令列表入口，Menu 顶部 PDA 文本框以任意键释放即时发送 playoutDoublingAdvantage",
       "legacy_menu_keys": ["Menu.engineParameters", "Menu.engineRules", "Menu.gtpPanel"],
       "legacy_menu_labels": [],
       "legacy_shortcuts": [],
@@ -445,14 +445,17 @@
         "InputIndependentMainBoard:keyPressed:VK_E",
         "GtpConsolePaneContent:keyPressed:VK_E",
         "GtpConsolePaneConsole:keyPressed:VK_E",
-        "LizzieFrameGtpShortKey:keyPressed:VK_E"
+        "LizzieFrameGtpShortKey:keyPressed:VK_E",
+        "MenuPdaText:keyReleased:ANY_KEY"
       ],
       "legacy_input_bindings": [
         "keyPressed:VK_E#4",
         "InputIndependentMainBoard:keyPressed:VK_E#4",
         "GtpConsolePaneContent:keyPressed:VK_E#1",
         "GtpConsolePaneConsole:keyPressed:VK_E#1",
-        "LizzieFrameGtpShortKey:keyPressed:VK_E#1"
+        "LizzieFrameGtpShortKey:keyPressed:VK_E#1",
+        "MenuPdaText:keyReleased:ANY_KEY#1",
+        "MenuPdaText:keyReleased:ANY_KEY#2"
       ],
       "java_evidence": [
         { "path": "src/main/java/featurecat/lizzie/analysis/Leelaz.java", "symbol": "class Leelaz" },
@@ -467,17 +470,23 @@
         { "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "symbol": "appendComment" },
         { "path": "src/main/java/featurecat/lizzie/Lizzie.java", "symbol": "new GtpConsolePane" },
         { "path": "src/main/java/featurecat/lizzie/gui/Menu.java", "symbol": "Menu.gtpPanel" },
+        { "path": "src/main/java/featurecat/lizzie/gui/Menu.java", "symbol": "txtPDA.addKeyListener" },
+        { "path": "src/main/java/featurecat/lizzie/gui/Menu.java", "symbol": "public void showPda(boolean show)" },
+        { "path": "src/main/java/featurecat/lizzie/gui/DoubleDocument.java", "symbol": "public class DoubleDocument extends PlainDocument" },
         { "path": "src/main/java/featurecat/lizzie/analysis/EngineManager.java", "symbol": "Lizzie.frame.removeInput(true)" },
         { "path": "src/main/java/featurecat/lizzie/analysis/EngineManager.java", "symbol": "Lizzie.frame.addInput(true)" },
         { "path": "src/main/java/featurecat/lizzie/gui/Manual.java", "symbol": "manualOne.addActionListener" },
         { "path": "src/main/java/featurecat/lizzie/analysis/Leelaz.java", "symbol": "resolveDefaultCommandMirrorEngine" },
+        { "path": "src/main/java/featurecat/lizzie/analysis/Leelaz.java", "symbol": "private void parsePDALine(String line)" },
+        { "path": "src/main/java/featurecat/lizzie/analysis/Leelaz.java", "symbol": "public void setPda(String pda)" },
+        { "path": "src/main/java/featurecat/lizzie/analysis/Leelaz.java", "symbol": "public void getParameterScadule(boolean sendCommand)" },
         { "path": "src/main/java/featurecat/lizzie/Config.java", "symbol": "gtp-console-position" }
       ],
       "config_keys": ["limit-branch-length", "limit-max-suggestion", "always-gtp", "gtp-console-position", "gtp-console-opened", "log-gtp-to-file", "fast-commands-width", "fast-commands-height", "frame-font-size", "ui-font-name"],
-      "inputs_preconditions": "引擎进程已启动并提供标准输入、输出和错误流。主窗口或独立主棋盘获得焦点时 E 可打开控制台；开始引擎对局时 EngineManager 调用 removeInput(true)，主面板改挂 InputSubboard 与 LizzieFrame gtpShortKey，后者在 mainPanel 真正持焦点时接受任意修饰状态的 E。控制台 content pane 和只读输出各自注册 E 监听器，但 content pane 未显式设为 focusable 且可见区域由子控件覆盖，其焦点可达性尚未验证。命令输入框不继承这些监听器，Enter 由 ActionListener 发送命令，因此输入框中的字母 E 必须保留为文本。",
-      "success_behavior": "命令与带编号响应正确绑定，分析建议持续更新并遵守限制设置；菜单、常态主棋盘 Plain E、引擎对局主面板 Plain E、已保存启动状态和只读输出 E 可切换可见性，content pane 监听器只在它真实成为事件目标时执行，不把注册等同于用户可达入口。引擎对局开始只挂一次 gtpShortKey，停止、清理或失败恢复时移除它并恢复常态 Input。Enter 与发送按钮提交同一条去除首尾空白的命令；原始 GTP 直接发送，genmove/play/showboard/clear_board/heatmap/kata-raw/boardsize/komi/undo/PDA 分类命令按各自语义更新棋盘、贴目、轮次、候选或 pondering。双引擎模式下主引擎的默认 sendCommand 还镜像到副引擎，副引擎按 KataGo/Leela 类型转换 lz-/kata-/heatmap/ownership 命令。FastCommands 展示引擎 list_commands 并可复制或发送；stdout/stderr 按类型着色、跟随末尾，显示文档保持有界。",
-      "failure_cancel_behavior": "超时、错误响应、stderr 噪声和进程退出不得错配后续响应；停止分析应及时生效，控制台切换不得改变协议状态。引擎对局 gtpShortKey 不检查或 consume modifier，故 Plain/Ctrl/Meta/Alt/Shift+E 全部切换控制台，而常态 Input 的相同组合分属控制台、棋谱分享、引擎对局或死活入口；它也只在 mainPanel 获得焦点时有效。removeInput(true) 在 noInput guard 外重复 add 同一 listener，addInput(true) 每次只 remove 一次，普通 boolean noInput 又无同步；重复/竞态调用可遗留重复或缺失 listener，使一次 E 多次 toggle。Manual 人工落子用 addInput(false) 恢复常态 Input 却不移除 gtpShortKey，两者可同时处理 Plain E 并连续切换两次，看似无动作；目标版须用有唯一 owner 的幂等 command/key binding 明确修饰键优先级和焦点范围。旧版使用默认 locale 小写、宽泛前缀和 split(\" \")，部分分支又按原命令大小写比较；boardsize/komi 数字异常未捕获，NaN/Infinity、超长/越界尺寸、重复空白与缺参可导致崩溃、资源失控、静默丢输入或棋盘/引擎半更新，undo 大小写差异还可造成历史失步。任意 raw GTP 虽不是 shell，却可 quit 或改变引擎状态并与本地棋盘脱节；内部 CR/LF/NUL 未拒绝时，一次粘贴还能写入多条协议行、绕过编号并污染响应绑定。目标版须保留明确警告的高级模式，只接受一条无控制字符的命令，按精确 verb 和通用空白解析、使用 invariant culture、限制命令/数字/棋盘尺寸，在验证和发送成功前不提交本地状态，并为拒绝、写失败和引擎对局/双引擎路由给出可访问反馈。双引擎必须显式定义每条命令的镜像/转换和失败原子性；旧 PDA 分支先把副引擎内存 pda 置 0、随后又镜像原命令，可能让属性与进程状态分裂。旧输出 ArrayDeque 的生产者未同步且无界，消费者异常时还会在旧锁内替换队列对象；Clear 只清文档，排队消息可重新出现。后台 read 线程直接改 Swing 文档并在引擎未加载时每 100ms 强制结束评论编辑、调用 appendComment，可能竞态写错当前节点；它还忽略中断，executor 和日志流不关闭。目标版须把输出展示与棋谱副作用解耦，使用有界线程安全通道、UI 调度、取消/释放、UTF-8 安全路径与日志轮换/脱敏。窗口几何须校正到当前多显示器工作区，字号、DPI、键盘和读屏状态不得裁切或丢失。",
-      "data_io": "GTP stdin/stdout/stderr、控制台内存队列与有界显示文档；read 状态检查还可结束评论编辑并通过 appendComment 修改当前 SGF 节点评论；可选 LastGtpLogs 文件；持久化控制台可见性/位置和快捷命令窗口尺寸；快捷命令可写系统剪贴板。",
+      "inputs_preconditions": "引擎进程已启动并提供标准输入、输出和错误流。主窗口或独立主棋盘获得焦点时 E 可打开控制台；开始引擎对局时 EngineManager 调用 removeInput(true)，主面板改挂 InputSubboard 与 LizzieFrame gtpShortKey，后者在 mainPanel 真正持焦点时接受任意修饰状态的 E。控制台 content pane 和只读输出各自注册 E 监听器，但 content pane 未显式设为 focusable 且可见区域由子控件覆盖，其焦点可达性尚未验证。命令输入框不继承这些监听器，Enter 由 ActionListener 发送命令，因此输入框中的字母 E 必须保留为文本。顶部 txtPDA 仅在当前自定义 PDA 引擎，或引擎对局双方至少一方标记 isKataGoPda 时显示；字段持焦点后，凡已投递给该 listener 的 keyReleased 都不读取 KeyEvent，字符、编辑、导航、修饰或 Enter 的已投递事件会处理当前完整文本；Tab 可能先被 Swing 焦点遍历消费，实际顺序尚需动态验证。空串、单独负号或单独小数点会进入返回 guard，但 DoubleDocument 通常拒绝后两种单字符插入。",
+      "success_behavior": "命令与带编号响应正确绑定，分析建议持续更新并遵守限制设置；菜单、常态主棋盘 Plain E、引擎对局主面板 Plain E、已保存启动状态和只读输出 E 可切换可见性，content pane 监听器只在它真实成为事件目标时执行，不把注册等同于用户可达入口。引擎对局开始只挂一次 gtpShortKey，停止、清理或失败恢复时移除它并恢复常态 Input。Enter 与发送按钮提交同一条去除首尾空白的命令；原始 GTP 直接发送，genmove/play/showboard/clear_board/heatmap/kata-raw/boardsize/komi/undo/PDA 分类命令按各自语义更新棋盘、贴目、轮次、候选或 pondering。txtPDA 除返回 guard 外的可解析文本转为 double 后向 Lizzie.leelaz 发送 kata-set-param playoutDoublingAdvantage，若正在分析则重新 ponder；普通双引擎模式由默认 sendCommand 镜像规则路由副引擎。目标版只在完整、有限且受支持的值确认后向明确目标引擎提交一次，并同步参数模型与可见字段。双引擎模式下主引擎的默认 sendCommand 还镜像到副引擎，副引擎按 KataGo/Leela 类型转换 lz-/kata-/heatmap/ownership 命令。FastCommands 展示引擎 list_commands 并可复制或发送；stdout/stderr 按类型着色、跟随末尾，显示文档保持有界。",
+      "failure_cancel_behavior": "超时、错误响应、stderr 噪声和进程退出不得错配后续响应；停止分析应及时生效，控制台切换不得改变协议状态。引擎对局 gtpShortKey 不检查或 consume modifier，故 Plain/Ctrl/Meta/Alt/Shift+E 全部切换控制台，而常态 Input 的相同组合分属控制台、棋谱分享、引擎对局或死活入口；它也只在 mainPanel 获得焦点时有效。removeInput(true) 在 noInput guard 外重复 add 同一 listener，addInput(true) 每次只 remove 一次，普通 boolean noInput 又无同步；重复/竞态调用可遗留重复或缺失 listener，使一次 E 多次 toggle。Manual 人工落子用 addInput(false) 恢复常态 Input 却不移除 gtpShortKey，两者可同时处理 Plain E 并连续切换两次，看似无动作；目标版须用有唯一 owner 的幂等 command/key binding 明确修饰键优先级和焦点范围。txtPDA 对每次已投递的键释放都重复发送，包括方向键、修饰键、Enter 和同值；Tab 是否先被焦点遍历消费尚未验证。逐字输入会把每个可解析中间值依次提交并反复 ponder。DoubleDocument 无长度或业务范围上限，指数可经 BigDecimal 后由 Double.parseDouble 溢出为 Infinity；handler 不校验引擎能力或命令结果，只吞 NumberFormatException 且无反馈，null/写入/ponder 等运行时错误可逃出 EDT。它直接 sendCommand 而不更新 Leelaz.pda/pdaBeforeGame，UI、进程和内存恢复值可分裂；引擎对局因任一参赛引擎支持 PDA 即显示字段，但提交仍走全局 Lizzie.leelaz/普通双引擎镜像，不保证命中参赛引擎，Kata 命令向非 Kata 副引擎转换为 lz- 前缀也可能无效。引擎响应解析还可从后台线程直接 setText Swing 字段。目标版须以 capability-gated、有限、可取消的单次命令绑定明确每个目标引擎，成功后原子更新模型，拒绝或发送失败提供可访问反馈。旧版使用默认 locale 小写、宽泛前缀和 split(\" \")，部分分支又按原命令大小写比较；boardsize/komi 数字异常未捕获，NaN/Infinity、超长/越界尺寸、重复空白与缺参可导致崩溃、资源失控、静默丢输入或棋盘/引擎半更新，undo 大小写差异还可造成历史失步。任意 raw GTP 虽不是 shell，却可 quit 或改变引擎状态并与本地棋盘脱节；内部 CR/LF/NUL 未拒绝时，一次粘贴还能写入多条协议行、绕过编号并污染响应绑定。目标版须保留明确警告的高级模式，只接受一条无控制字符的命令，按精确 verb 和通用空白解析、使用 invariant culture、限制命令/数字/棋盘尺寸，在验证和发送成功前不提交本地状态，并为拒绝、写失败和引擎对局/双引擎路由给出可访问反馈。双引擎必须显式定义每条命令的镜像/转换和失败原子性；旧 PDA 分类分支先把副引擎内存 pda 置 0、随后又镜像原命令，可能让属性与进程状态分裂。旧输出 ArrayDeque 的生产者未同步且无界，消费者异常时还会在旧锁内替换队列对象；Clear 只清文档，排队消息可重新出现。后台 read 线程直接改 Swing 文档并在引擎未加载时每 100ms 强制结束评论编辑、调用 appendComment，可能竞态写错当前节点；它还忽略中断，executor 和日志流不关闭。目标版须把输出展示与棋谱副作用解耦，使用有界线程安全通道、UI 调度、取消/释放、UTF-8 安全路径与日志轮换/脱敏。窗口几何须校正到当前多显示器工作区，字号、DPI、键盘和读屏状态不得裁切或丢失。",
+      "data_io": "GTP stdin/stdout/stderr、控制台内存队列与有界显示文档；txtPDA 读取控件文本并写 kata-set-param 命令，响应解析可改写 Leelaz.pda 与字段显示，但该 key listener 本身不更新 pda、配置或文件。read 状态检查还可结束评论编辑并通过 appendComment 修改当前 SGF 节点评论；可选 LastGtpLogs 文件；持久化控制台可见性/位置和快捷命令窗口尺寸；快捷命令可写系统剪贴板。",
       "external_dependencies": ["GTP 引擎进程", "可选本地日志文件系统", "系统剪贴板"],
       "target_modules": ["Lizzie.Engine", "Lizzie.Core", "Lizzie.Desktop"],
       "automated_evidence": [
@@ -485,9 +494,9 @@
         { "path": "src/test/java/featurecat/lizzie/analysis/LeelazExclusiveRemoteGtpSessionTest.java", "symbol": "LeelazExclusiveRemoteGtpSessionTest" },
         { "path": "src/test/java/featurecat/lizzie/analysis/LeelazPonderStateTest.java", "symbol": "LeelazPonderStateTest" }
       ],
-      "manual_acceptance": "以可控假 GTP 进程注入成功、错误、延迟和异常退出序列，核对命令绑定与恢复。常态主棋盘以 Plain E 只切换一次控制台，Ctrl/Meta/Alt/Shift+E 只执行各自已登记命令且不额外切换；引擎对局主面板以 Plain E 保留控制台入口，并逐一记录旧版 Ctrl/Meta/Alt/Shift+E 均被 gtpShortKey 截为控制台切换的冲突，目标版按明确映射只执行一个命令。只读输出的 E 切换窗口，命令输入框正常录入。引擎对局开始、启动失败、停止、清理、批量换局和重复恢复前后检查 mainPanel listener 数量恒定；打开 Manual 并反复启用/关闭人工落子，确认 Input 与 gtpShortKey 不会双重处理 E。焦点移到工具栏、输入框和其他窗口时不得误触发。另单独点击 content pane 可见背景并记录真实 focus owner，若不能聚焦则登记旧版键盘可达性缺口，不伪装成 E 切换成功。比较 Enter 与发送按钮对空白、原始 GTP、全部分类命令、大小写、重复空白/Tab、缺参、非法数、NaN/Infinity、超长命令和越界棋盘尺寸的行为，合法单行输入须让目标假引擎录到恰好一条带编号命令。任何含 CR/LF/NUL 的输入须显示拒绝，主/副假引擎均记录 0 条且棋盘、UI 和命令队列不变。在含主线/分支的隔离棋谱核对 play/undo/clear_board/boardsize/komi 成败前后棋盘与引擎事务；引擎未加载时保留未保存评论并快速切换当前节点，确认控制台输出循环不能结束编辑或写错节点。普通、引擎对局和双引擎分别核对拒绝与路由；双引擎逐一录制主/副 stdin，验证旧版要求的镜像与 Kata/Leela 转换，并对 PDA 属性/进程不一致建立失败样本。注入 Unicode、超长行和高频 stdout/stderr，验证颜色、截断、滚动和内存上限；关闭重开、引擎崩溃、日志写失败及多显示器/DPI/大字号/键盘/读屏场景验证线程、文件句柄、几何和状态恢复。",
+      "manual_acceptance": "以可控假 GTP 进程注入成功、错误、延迟和异常退出序列，核对命令绑定与恢复。常态主棋盘以 Plain E 只切换一次控制台，Ctrl/Meta/Alt/Shift+E 只执行各自已登记命令且不额外切换；引擎对局主面板以 Plain E 保留控制台入口，并逐一记录旧版 Ctrl/Meta/Alt/Shift+E 均被 gtpShortKey 截为控制台切换的冲突，目标版按明确映射只执行一个命令。只读输出的 E 切换窗口，命令输入框正常录入。引擎对局开始、启动失败、停止、清理、批量换局和重复恢复前后检查 mainPanel listener 数量恒定；打开 Manual 并反复启用/关闭人工落子，确认 Input 与 gtpShortKey 不会双重处理 E。焦点移到工具栏、输入框和其他窗口时不得误触发。顶部 txtPDA 覆盖逐字输入、选择替换、粘贴、Backspace/Delete、方向键、Shift/Ctrl/Alt/Meta、Enter、同值重复释放、空/负号/小数点、-0.0、指数、超大值和 Infinity；对 Tab 记录 listener 与 focusLost 的实际先后，并验证 DoubleDocument 对单独负号/小数点的正常拒绝及 guard 被程序化设置时的行为；逐一录制单引擎、普通双引擎和 engine-game first/second stdin、命令次数、ponder 次数及 Leelaz.pda/pdaBeforeGame，确认 capability、路由和模型一致。注入未加载/null/不支持引擎、首目标成功次目标失败、异步拒绝、写失败和 ponder 失败，拒绝不得伪装成功或遗留静默半提交；响应更新字段必须经 UI 调度，并在大字号/DPI、Tab、焦点视觉和读屏下提供状态/错误反馈。另单独点击 content pane 可见背景并记录真实 focus owner，若不能聚焦则登记旧版键盘可达性缺口，不伪装成 E 切换成功。比较 Enter 与发送按钮对空白、原始 GTP、全部分类命令、大小写、重复空白/Tab、缺参、非法数、NaN/Infinity、超长命令和越界棋盘尺寸的行为，合法单行输入须让目标假引擎录到恰好一条带编号命令。任何含 CR/LF/NUL 的输入须显示拒绝，主/副假引擎均记录 0 条且棋盘、UI 和命令队列不变。在含主线/分支的隔离棋谱核对 play/undo/clear_board/boardsize/komi 成败前后棋盘与引擎事务；引擎未加载时保留未保存评论并快速切换当前节点，确认控制台输出循环不能结束编辑或写错节点。普通、引擎对局和双引擎分别核对拒绝与路由；双引擎逐一录制主/副 stdin，验证旧版要求的镜像与 Kata/Leela 转换，并对 PDA 属性/进程不一致建立失败样本。注入 Unicode、超长行和高频 stdout/stderr，验证颜色、截断、滚动和内存上限；关闭重开、引擎崩溃、日志写失败及多显示器/DPI/大字号/键盘/读屏场景验证线程、文件句柄、几何和状态恢复。",
       "status": "已盘点",
-      "evidence": "已静态贯通 Lizzie 启动、Menu.gtpPanel、常态 Input/独立主棋盘、EngineManager 引擎对局开始/停止/清理、LizzieFrame addInput/removeInput/gtpShortKey/toggleGtpConsole、Manual 人工落子切换、GtpConsolePane 两个 E 监听器、命令框 Enter/发送按钮、postCommand 分类、FastCommands、Leelaz.sendCommand/主到副镜像转换、输出队列、引擎未加载时的 setCommentEditable/appendComment 与配置保存。新增 LizzieFrame listener 只有一条无条件 VK_E 路径；GtpConsolePane 两个 listener 也各一条，命令框不在其层级中，所有 KeyAdapter 的 keyReleased/keyTyped 仅为空实现，不伪装成活跃 case。现有 LeelazLoadSgfResponseBindingTest、LeelazExclusiveRemoteGtpSessionTest 与 LeelazPonderStateTest 只提供底层间接证据；旧测试没有触发 gtpShortKey 挂卸/dispatch、mainPanel 焦点、修饰键冲突、重复 listener 或 Manual 双处理，且 SilentGtpConsole 绕过构造并空实现输出方法，不能证明控制台 UI、命令分类、CR/LF 注入拒绝、评论/棋谱副作用、输出线程/日志生命周期或双引擎镜像/拦截。协议录制夹具、新版回放器及上述入口级动态验证仍待建立。"
+      "evidence": "已静态贯通 Lizzie 启动、Menu.gtpPanel、常态 Input/独立主棋盘、EngineManager 引擎对局开始/停止/清理、LizzieFrame addInput/removeInput/gtpShortKey/toggleGtpConsole、Manual 人工落子切换、GtpConsolePane 两个 E 监听器、Menu txtPDA 已投递键释放、showPda 能力可见性、Leelaz PDA 查询/解析/setPda/默认镜像、命令框 Enter/发送按钮、postCommand 分类、FastCommands、输出队列、引擎未加载时的 setCommentEditable/appendComment 与配置保存。MenuPdaText 显式 ANY_KEY 来源生成 1 个 case/2 条路径：空/负号/小数点 guard 返回，其他文本进入原子 try；静态路径存在不等于 DoubleDocument 可正常录入单独负号/小数点，也不证明 Tab 一定投递。KeyAdapter 未覆写的 keyPressed/keyTyped 只是继承空实现。ANY_KEY 只能由来源 tuple 显式启用，生成器断言方法体不引用事件参数或 VK 常量，不会把其他解析失败自动降级。现有 LeelazLoadSgfResponseBindingTest、LeelazExclusiveRemoteGtpSessionTest 与 LeelazPonderStateTest 只提供底层间接证据；旧测试没有构造 Menu、dispatch txtPDA listener、发送 playoutDoublingAdvantage 或断言命令/ponder 次数、capability、engine-game 路由、有限值、错误反馈和焦点，也没有触发 gtpShortKey 挂卸或 GtpConsolePane UI。SilentGtpConsole 绕过构造并空实现输出方法，不能证明控制台 UI、命令分类、CR/LF 注入拒绝、评论/棋谱副作用、输出线程/日志生命周期或双引擎镜像/拦截。协议录制夹具、新版回放器及上述入口级动态验证仍待建立。"
     },
     {
       "id": "ANALYSIS-FULL-001",
@@ -3627,11 +3636,12 @@
     {
       "id": "GAME-KOMI-001",
       "category": "棋盘与对局",
-      "legacy_entry": "顶部双层菜单中的 Menu.komi 文本框与增减按钮修改当前对局贴目；文本编辑可在按键或移出时提交，按钮单击步进 0.5，按住则连续步进",
+      "legacy_entry": "顶部双层菜单中的 Menu.komi 文本框与增减按钮修改当前对局贴目；文本框在任意键释放或指针移出时提交，按钮单击步进 0.5，按住则连续步进",
       "legacy_menu_keys": ["Menu.komi"],
       "legacy_menu_labels": [],
       "legacy_shortcuts": [],
       "legacy_input_cases": [
+        "MenuKomiText:keyReleased:ANY_KEY",
         "MenuKomiTextExit:mouseExited",
         "MenuKomiUpHold:mousePressed",
         "MenuKomiUpHold:mouseReleased",
@@ -3643,6 +3653,7 @@
         "MenuKomiDownHover:mouseExited"
       ],
       "legacy_input_bindings": [
+        "MenuKomiText:keyReleased:ANY_KEY#1",
         "MenuKomiTextExit:mouseExited#1",
         "MenuKomiUpHold:mousePressed#1",
         "MenuKomiUpHold:mouseReleased#1",
@@ -3670,9 +3681,9 @@
         { "path": "src/main/java/featurecat/lizzie/analysis/Leelaz.java", "symbol": "public void komi(double komi)" }
       ],
       "config_keys": ["show-top-tool-bar", "show-double-menu", "frame-font-size", "use-java-looks"],
-      "inputs_preconditions": "Menu 由 LizzieFrame 构造；show-top-tool-bar 与 show-double-menu 均为 true 时顶部贴目面板才可见，任一为 false 都会隐藏该控件。文本移出监听不区分鼠标按键，增减按钮的 press/release 监听也不检查按钮或修饰键。长按在 press 后约 400 ms 开始、随后约每 150 ms 重复；hover 几何监听只在高 DPI 缩放且未因 use-java-looks/Windows 桌面主题扩大控件时安装。按钮单击 ActionListener、文本 keyReleased 与 focusLost 是同一控件的必要兄弟行为，但不冒充本轮 pointer binding。",
-      "success_behavior": "有效文本与按钮步进更新 GameInfo 当前贴目并刷新界面；普通引擎对局向当前 GTP 引擎发送 komi、清除既有分析并在需要时恢复 ponder，双引擎对局向双方引擎发送相同贴目。文本路径使用 setKomiNoMenu，按钮路径使用 setKomi，后者还会在数子模式重算结果；文本值未变化时移出不重复提交，无效文本恢复当前值。目标版使用有类型且有合理边界的贴目控件，把单击、键盘步进和可取消的连续步进归一为一个命令，在 UI 调度器上原子更新棋局、引擎、计分和分析状态。",
-      "failure_cancel_behavior": "旧版每次 press 都创建非 daemon Thread，以非 volatile 的共享 pressed/start 跨线程通信；正常停止依赖 release，丢失捕获、重复 press、关闭窗口或中断均可能留下竞态、迟到更新或常驻线程，且后台线程直接读取 Swing 文本并修改棋局、引擎和 UI 状态。任意鼠标键都能启动重复，左键 release 后还可能由 ActionListener 再增加一步；按钮默认 setFocusable(false)，不在普通 Tab 顺序，F6 动态焦点路径理论可达但没有专项验证。AccessibilitySupport.applyToTree(topPanel) 可能早于 doubleMenu 把贴目按钮加入 topPanel，tooltip 转 accessible name 未必应用到实际按钮。KomiDocument 没有长度、finite 或业务范围上限，整段粘贴可绕过半目限制，指数文本可解析为 Infinity；按钮线程对单独负号的解析异常未捕获。双引擎命令依次发送，第二次失败时外部引擎、内存与显示可能部分提交，文本移出异常也可能只回滚显示。目标版必须拥有并取消 repeat 生命周期、限定指针按钮与数值、在失败时保持原状态或明确报告部分失败，并在引擎退出、索引失效、窗口关闭和失去捕获时安全停止。",
+      "inputs_preconditions": "Menu 由 LizzieFrame 构造；show-top-tool-bar 与 show-double-menu 均为 true 时顶部贴目面板才可见，任一为 false 都会隐藏该控件。txtKomi 获得焦点后，凡已投递给 listener 的 keyReleased 都不读取 KeyEvent，字符、Backspace/Delete、方向键、修饰键或 Enter 的已投递事件会尝试提交当前完整文本；Tab 可能先被 Swing 焦点遍历消费并触发 focusLost，实际顺序尚需动态验证。空串、单独负号或与现值相同则返回，focusLost 又把显示恢复为当前 GameInfo。文本移出监听不区分鼠标按键，增减按钮的 press/release 监听也不检查按钮或修饰键。长按在 press 后约 400 ms 开始、随后约每 150 ms 重复；hover 几何监听只在高 DPI 缩放且未因 use-java-looks/Windows 桌面主题扩大控件时安装。",
+      "success_behavior": "有效且变化的文本与按钮步进更新 GameInfo 当前贴目并刷新界面；普通引擎对局向当前 GTP 引擎发送 komi、清除既有分析并在需要时恢复 ponder，双引擎对局向双方引擎发送相同贴目。文本路径使用 setKomiNoMenu，按钮路径使用 setKomi，后者还会在数子模式重算结果；空/中间态或未变化文本不重复提交，无效文本恢复当前值。目标版使用有类型且有合理边界的贴目控件，只在完整值通过校验后提交一次，把单击、键盘步进和可取消的连续步进归一为一个命令，在 UI 调度器上原子更新棋局、引擎、计分和分析状态。",
+      "failure_cancel_behavior": "旧版每次 press 都创建非 daemon Thread，以非 volatile 的共享 pressed/start 跨线程通信；正常停止依赖 release，丢失捕获、重复 press、关闭窗口或中断均可能留下竞态、迟到更新或常驻线程，且后台线程直接读取 Swing 文本并修改棋局、引擎和 UI 状态。任意鼠标键都能启动重复，左键 release 后还可能由 ActionListener 再增加一步；keyReleased 对已投递的导航、修饰、Enter 和粘贴快捷键也提交；Tab 是否先被焦点遍历消费尚未验证，逐字输入会反复发送中间有效值，且没有消费事件或向用户说明提交时机。外层 catch 捕获任意异常后只把文本恢复为当前贴目，不报告失败也不回滚已成功的引擎命令。按钮默认 setFocusable(false)，不在普通 Tab 顺序，F6 动态焦点路径理论可达但没有专项验证。AccessibilitySupport.applyToTree(topPanel) 可能早于 doubleMenu 把贴目按钮加入 topPanel，tooltip 转 accessible name 未必应用到实际按钮。KomiDocument 没有长度、finite 或业务范围上限，整段粘贴可绕过半目限制，指数文本可解析为 Infinity；按钮线程对单独负号的解析异常未捕获。双引擎命令依次发送，第二次失败时外部引擎、内存与显示可能部分提交，文本按键或移出异常也可能只回滚显示。engine-game 分支发送给 first/second 后却用全局 Lizzie.leelaz 判断并恢复 ponder，该对象不保证是参赛目标；sendCommand 主要入队且不等待 GTP 成功响应，即使 listener 正常返回，异步拒绝或静默写失败也可让 UI、GameInfo 与一个或两个引擎分裂。目标版必须拥有并取消 repeat 生命周期、限定指针按钮与有限数值、定义唯一提交事件，在失败时保持原状态或明确报告部分失败，并在引擎退出、索引失效、窗口关闭和失去捕获时安全停止。",
       "data_io": "读写进程内 GameInfo.KM 与 changedKomi；普通路径通过 Leelaz 向当前 GTP 进程写 komi 命令、清除缓存候选并可恢复 ponder，双引擎路径向 first/second engine 各写一条命令。该入口本身不写配置、文件或网络；show-top-tool-bar、show-double-menu、frame-font-size、use-java-looks 仅决定可见性、布局、尺寸或 hover 监听安装。后续保存 SGF 时当前 KM 可被持久化，Yike 直播刷新依赖 changedKomi 保留手工覆盖。",
       "external_dependencies": ["当前一个或两个 GTP 引擎进程", "Swing 事件顺序、窗口指针捕获、操作系统 DPI 与桌面主题"],
       "target_modules": ["Lizzie.Core", "Lizzie.Engine", "Lizzie.Desktop"],
@@ -3681,9 +3692,9 @@
         { "path": "src/test/java/featurecat/lizzie/gui/AccessibilitySupportTest.java", "symbol": "labelsAreAssociatedWithTheirInput" },
         { "path": "src/test/java/featurecat/lizzie/gui/OnlineDialogYikeSessionStateTest.java", "symbol": "yikeLiveKomiKeepsManualOverrideOnRefresh" }
       ],
-      "manual_acceptance": "覆盖文本有效值、相同值、空、单独负号、非法字符、整段粘贴、指数/Infinity、极大值及 key/focus/mouse-exit 顺序；左右按钮的左/中/右键、单击、双击、左键 release 后 ActionListener 额外步进、400/150 ms 边界、移出、失去捕获、切窗和关闭时取消。分别验证单引擎、双引擎、引擎退出、索引失效、第二引擎失败、分析清除/ponder 与 changedKomi/Yike 手工覆盖；逐一切换 show-top-tool-bar/show-double-menu，确认任一关闭时控件隐藏、二者恢复时控件可用，并在不同字号、100%/150%/200% DPI、原生/Java 主题、键盘、IME、触控和屏幕阅读器下确认可达、可读且无残留线程。",
+      "manual_acceptance": "覆盖文本逐字输入、选择替换、有效值、相同值、空、单独负号、非法字符、整段粘贴、指数/Infinity、极大值及 key/focus/mouse-exit 顺序；逐一释放字符、Backspace/Delete、方向键、Shift/Ctrl/Alt/Meta 和 Enter，并单独记录 Tab 是否到达 listener 及其与 focusLost 的先后；录制每次 first/second/global 引擎命令、ponder 目标、本地 GameInfo、刷新次数和 focusLost 结果，目标版每个完整编辑只产生一次原子提交。左右按钮覆盖左/中/右键、单击、双击、左键 release 后 ActionListener 额外步进、400/150 ms 边界、移出、失去捕获、切窗和关闭时取消。分别验证单引擎、双引擎、引擎退出、索引失效、第一引擎成功第二引擎失败、无 Java 异常的 GTP 异步拒绝/静默写失败、全局 ponder 错目标、分析清除/ponder 与 changedKomi/Yike 手工覆盖；逐一切换 show-top-tool-bar/show-double-menu，确认任一关闭时控件隐藏、二者恢复时控件可用，并在不同字号、100%/150%/200% DPI、原生/Java 主题、键盘、IME、触控和屏幕阅读器下确认可达、可读、错误可感知且无残留线程。",
       "status": "已盘点",
-      "evidence": "Menu.java 的 5 个贴目 listener 来源精确登记为 9 个 public pointer 事件与 9 条无条件路径：文本移出 1、上调 press/release 2、下调 press/release 2、两个按钮 hover enter/exit 4。现有解析器保持文本 try/catch 与长按 Runnable/Thread 为原子语句，无需语法扩展；Menu.java 被加入完整 pointer 覆盖约束。AccessibilitySupportTest 只间接证明 icon-only 控件可沿用 tooltip 作为 accessible name、标签可关联输入框，OnlineDialogYikeSessionStateTest 直接证明 changeKomi 的直播手工覆盖语义；旧测试没有构造 Menu 或 dispatch 这些监听器，也未验证连续步进、线程取消、双引擎原子性、数值边界、DPI 或键盘可达。本轮未运行旧 GUI、发送引擎命令、修改用户配置或棋谱。"
+      "evidence": "Menu.java 的 txtKomi keyReleased 参数在去注释方法体中未使用，显式 ANY_KEY 来源登记为 1 个 case/1 条路径并把完整 try/catch 保留为原子语句；KeyAdapter 未覆写的 keyPressed/keyTyped 只是继承空实现。既有 5 个贴目 pointer 来源仍精确保持 9 个 public 事件/9 条路径：文本移出 1、上调 press/release 2、下调 press/release 2、两个按钮 hover enter/exit 4。ANY_KEY 只能由来源 tuple 显式启用，生成器同时断言方法体不引用事件参数或 VK 常量，不会把其他解析失败自动降级。AccessibilitySupportTest 只间接证明 icon-only 控件可沿用 tooltip 作为 accessible name、标签可关联输入框；OnlineDialogYikeSessionStateTest 只证明 changeKomi 的直播手工覆盖语义。旧测试没有构造 Menu 或 dispatch 这些监听器，也未验证任意键提交、命令次数、连续步进、线程取消、双引擎原子性、数值边界、DPI 或键盘可达。本轮未运行旧 GUI、发送引擎命令、修改用户配置或棋谱。"
     },
     {
       "id": "ANALYSIS-HAWKEYE-001",

@@ -1,5 +1,5 @@
 {
-  "schema_version": 38,
+  "schema_version": 39,
   "source": {
     "root": "../lizzieyzy-next-main",
     "version": "yzy2.5.3",
@@ -17,7 +17,7 @@
     "Menu keys cover active Menu.java resource lookups with Menu. or menu. prefixes.",
     "Menu literal labels cover active string-literal menu constructors; dynamic labels remain represented by their resource or runtime source.",
     "Menu accelerators cover explicit Menu.java setAccelerator calls and direct OS.isWindows guards; other input bindings remain T-003 work.",
-    "Input key bindings symbolically expand Input.java, InputIndependentMainBoard.java, InputIndependentSubboard.java, InputSubboard.java, FloatBoard.java, AnalysisFrame table/window, DrawPainting.java, ChooseMoreEngine.java, LoadEngine.java, OtherPrograms.java, TencentKifuDownload.java, FoxKifuDownload.java, BrowserFrame.java, CaptureTsumeGoFrame.java, the BottomToolbar move-number field, the GtpConsolePane content/output listeners, and the LizzieFrame engine-game GTP shortcut across key dispatch, condition evaluations, executed statements, empty-listener and empty-statement paths, and switch fall-through; controlIsPressed means Control on every platform plus Meta on macOS, BrowserFrame dispatches Enter through getKeyChar, and BottomToolbar compares a local getKeyCode alias with the newline character.",
+    "Input key bindings symbolically expand Input.java, InputIndependentMainBoard.java, InputIndependentSubboard.java, InputSubboard.java, FloatBoard.java, AnalysisFrame table/window, DrawPainting.java, ChooseMoreEngine.java, LoadEngine.java, OtherPrograms.java, TencentKifuDownload.java, FoxKifuDownload.java, BrowserFrame.java, CaptureTsumeGoFrame.java, the BottomToolbar move-number field, the GtpConsolePane content/output listeners, the LizzieFrame engine-game GTP shortcut, and Menu's komi/PDA ANY_KEY release listeners across key dispatch, condition evaluations, executed statements, empty-listener and empty-statement paths, and switch fall-through; controlIsPressed means Control on every platform plus Meta on macOS, BrowserFrame dispatches Enter through getKeyChar, and BottomToolbar compares a local getKeyCode alias with the newline character.",
     "Pointer bindings symbolically expand the main Input listener, the two indexed subboard listeners, FloatBoard, AnalysisFrame, DrawPainting, ChooseMoreEngine, LoadEngine, OtherPrograms, TencentKifuDownload, FoxKifuDownload, BrowserFrame load/stop/label listeners, JFontTextArea, JFontTextField, JIMSendTextPane, the two DemoScrollBarUI2 arrow-button listeners, JPaintTextPane, WindowMenuStrip, YikeLiveDialog, IndependentSubBoard and IndependentMainBoard lock/close/top-button plus window listeners, BlunderListPanel, SidebarHeaderPanel, BottomToolbar, ConfigDialog2 sidebar-nav/toggle-row/color-label listeners, MoreEngines, the 33 indexed LizzieFrame listeners, the 5 indexed Menu komi text/hold/hover listeners, the 7 indexed MoveListFrame table/match-panel/header groups, and RightClickMenu's explicit no-op mouse exit across mouse, motion, drag, wheel, and release condition evaluations, early returns, executed statements, and explicit no-action paths; data-dependent loops and click try/catch handlers are preserved as normalized atomic statements, local boolean tracking retains a known value across loops that can only assign the same literal, and direct variable-to-integer comparisons prune contradictory paths.",
     "Other key-listener classes remain T-003 work; all active public pointer handlers in the legacy Java sources are inventoried."
   ],
@@ -43,11 +43,11 @@
     "active_menu_accelerators": 2,
     "mapped_menu_accelerators": 2,
     "unmapped_menu_accelerators": 0,
-    "active_input_key_cases": 147,
-    "mapped_input_key_cases": 147,
+    "active_input_key_cases": 149,
+    "mapped_input_key_cases": 149,
     "unmapped_input_key_cases": 0,
-    "active_input_key_bindings": 370,
-    "mapped_input_key_bindings": 370,
+    "active_input_key_bindings": 373,
+    "mapped_input_key_bindings": 373,
     "unmapped_input_key_bindings": 0,
     "active_input_pointer_events": 180,
     "mapped_input_pointer_events": 180,
@@ -17954,13 +17954,37 @@
         "post_dispatch_actions": {
           "keyPressed": []
         }
+      },
+      {
+        "id": "MenuKomiText",
+        "source": "src/main/java/featurecat/lizzie/gui/Menu.java",
+        "active_key_cases": 1,
+        "active_key_bindings": 1,
+        "events": {
+          "keyReleased": 1
+        },
+        "post_dispatch_actions": {
+          "keyReleased": []
+        }
+      },
+      {
+        "id": "MenuPdaText",
+        "source": "src/main/java/featurecat/lizzie/gui/Menu.java",
+        "active_key_cases": 1,
+        "active_key_bindings": 2,
+        "events": {
+          "keyReleased": 1
+        },
+        "post_dispatch_actions": {
+          "keyReleased": []
+        }
       }
     ],
-    "active_key_cases": 147,
-    "active_key_bindings": 370,
+    "active_key_cases": 149,
+    "active_key_bindings": 373,
     "events": {
       "keyPressed": 143,
-      "keyReleased": 4
+      "keyReleased": 6
     },
     "cases": [
       {
@@ -20063,6 +20087,30 @@
         "line": 625,
         "modifier_checks": [],
         "binding_count": 1,
+        "matrix_ids": [
+          "ENGINE-GTP-001"
+        ]
+      },
+      {
+        "case": "MenuKomiText:keyReleased:ANY_KEY",
+        "source_id": "MenuKomiText",
+        "event": "keyReleased",
+        "key": "ANY_KEY",
+        "line": 5648,
+        "modifier_checks": [],
+        "binding_count": 1,
+        "matrix_ids": [
+          "GAME-KOMI-001"
+        ]
+      },
+      {
+        "case": "MenuPdaText:keyReleased:ANY_KEY",
+        "source_id": "MenuPdaText",
+        "event": "keyReleased",
+        "key": "ANY_KEY",
+        "line": 5735,
+        "modifier_checks": [],
+        "binding_count": 2,
         "matrix_ids": [
           "ENGINE-GTP-001"
         ]
@@ -31234,6 +31282,87 @@
           {
             "line": 626,
             "statement": "Lizzie.frame.toggleGtpConsole();"
+          }
+        ],
+        "matrix_ids": [
+          "ENGINE-GTP-001"
+        ]
+      },
+      {
+        "binding": "MenuKomiText:keyReleased:ANY_KEY#1",
+        "case": "MenuKomiText:keyReleased:ANY_KEY",
+        "source_id": "MenuKomiText",
+        "event": "keyReleased",
+        "key": "ANY_KEY",
+        "line": 5648,
+        "conditions": [],
+        "case_chain": [
+          "MenuKomiText:keyReleased:ANY_KEY"
+        ],
+        "statements": [
+          {
+            "line": 5651,
+            "statement": "try { if (txtKomi.getText().trim().equals(\"-\") || txtKomi.getText().trim().equals(\"\")) return; double oriKomi = Lizzie.board.getHistory().getGameInfo().getKomi(); double newKomi = Double.parseDouble(txtKomi.getText()); if (newKomi == oriKomi) return; if (EngineManager.isEngineGame) { Lizzie.engineManager .engineList .get(EngineManager.engineGameInfo.firstEngineIndex) .sendCommand(\"komi \" + (newKomi == 0.0 ? \"0\" : newKomi)); Lizzie.engineManager .engineList .get(EngineManager.engineGameInfo.secondEngineIndex) .sendCommand(\"komi \" + (newKomi == 0.0 ? \"0\" : newKomi)); if (Lizzie.leelaz.isPondering()) Lizzie.leelaz.ponder(); Lizzie.board.getHistory().getGameInfo().setKomiNoMenu(newKomi); } else Lizzie.leelaz.komiNoMenu(newKomi); Lizzie.board.getHistory().getGameInfo().changeKomi(); Lizzie.frame.refresh(); } catch (Exception es) { txtKomi.setText(String.valueOf(Lizzie.board.getHistory().getGameInfo().getKomi())); }"
+          }
+        ],
+        "matrix_ids": [
+          "GAME-KOMI-001"
+        ]
+      },
+      {
+        "binding": "MenuPdaText:keyReleased:ANY_KEY#1",
+        "case": "MenuPdaText:keyReleased:ANY_KEY",
+        "source_id": "MenuPdaText",
+        "event": "keyReleased",
+        "key": "ANY_KEY",
+        "line": 5735,
+        "conditions": [
+          {
+            "expression": "text.isEmpty() || text.equals(\"-\") || text.equals(\".\")",
+            "expected": true
+          }
+        ],
+        "case_chain": [
+          "MenuPdaText:keyReleased:ANY_KEY"
+        ],
+        "statements": [
+          {
+            "line": 5736,
+            "statement": "String text = txtPDA.getText().trim();"
+          },
+          {
+            "line": 5737,
+            "statement": "return;"
+          }
+        ],
+        "matrix_ids": [
+          "ENGINE-GTP-001"
+        ]
+      },
+      {
+        "binding": "MenuPdaText:keyReleased:ANY_KEY#2",
+        "case": "MenuPdaText:keyReleased:ANY_KEY",
+        "source_id": "MenuPdaText",
+        "event": "keyReleased",
+        "key": "ANY_KEY",
+        "line": 5735,
+        "conditions": [
+          {
+            "expression": "text.isEmpty() || text.equals(\"-\") || text.equals(\".\")",
+            "expected": false
+          }
+        ],
+        "case_chain": [
+          "MenuPdaText:keyReleased:ANY_KEY"
+        ],
+        "statements": [
+          {
+            "line": 5736,
+            "statement": "String text = txtPDA.getText().trim();"
+          },
+          {
+            "line": 5738,
+            "statement": "try { double value = Double.parseDouble(text); Lizzie.leelaz.sendCommand(\"kata-set-param playoutDoublingAdvantage \" + value); if (Lizzie.leelaz.isPondering()) Lizzie.leelaz.ponder(); } catch (NumberFormatException ignored) { }"
           }
         ],
         "matrix_ids": [

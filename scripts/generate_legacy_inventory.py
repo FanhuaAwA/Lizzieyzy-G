@@ -163,6 +163,20 @@ INPUT_CONDITIONAL_KEY_SOURCES = (
         "keyPressed",
         1,
     ),
+    (
+        "MenuKomiText",
+        "src/main/java/featurecat/lizzie/gui/Menu.java",
+        "keyReleased",
+        1,
+        True,
+    ),
+    (
+        "MenuPdaText",
+        "src/main/java/featurecat/lizzie/gui/Menu.java",
+        "keyReleased",
+        2,
+        True,
+    ),
 )
 INPUT_POINTER_METHOD = re.compile(
     r"public\s+void\s+(?P<event>mouseClicked|mousePressed|mouseWheelMoved|mouseReleased|"
@@ -1312,7 +1326,15 @@ def normalize_conditional_key_dispatch(
     return keys or None
 
 
+def is_any_key_dispatch(method_body: str, parameter: str) -> bool:
+    return not re.search(rf"\b{re.escape(parameter)}\b|\bKeyEvent\.VK_", method_body)
+
+
 def validate_input_parser() -> None:
+    if not is_any_key_dispatch("commit();", "event") or is_any_key_dispatch(
+        "commit(event.getKeyCode());", "event"
+    ):
+        raise ValueError("Input binding parser ANY_KEY self-check failed")
     if normalize_conditional_key_dispatch("key == '\\n'", "event", "key") != [
         "VK_ENTER"
     ]:
@@ -1743,6 +1765,7 @@ def collect_conditional_key_source(
     source_path: str,
     expected_event: str,
     method_ordinal: int,
+    any_key: bool = False,
 ) -> dict[str, Any]:
     input_path = legacy_root / source_path
     source = strip_java_comments(input_path.read_text(encoding="utf-8", errors="replace"))
@@ -1763,6 +1786,60 @@ def collect_conditional_key_source(
     method_end = closing_brace(source, open_brace)
     nodes = parse_java_sequence(source, open_brace + 1, method_end)
     parameter = method_match.group("parameter")
+    method_body = source[open_brace + 1 : method_end]
+    if any_key:
+        if not is_any_key_dispatch(method_body, parameter):
+            raise ValueError(f"{input_path.name} {expected_event} is not an ANY_KEY dispatch")
+        case_id = f"{source_id}:{expected_event}:ANY_KEY"
+        continuing, completed = execute_java_nodes(
+            nodes,
+            [
+                {
+                    "conditions": [],
+                    "condition_values": {},
+                    "actions": [],
+                    "case_chain": [case_id],
+                }
+            ],
+        )
+        completed.extend(continuing)
+        if not completed:
+            raise ValueError(f"{input_path.name} {case_id} produced no binding paths")
+        line = line_number(source, method_match.start())
+        bindings = [
+            {
+                "binding": f"{case_id}#{ordinal}",
+                "case": case_id,
+                "source_id": source_id,
+                "event": expected_event,
+                "key": "ANY_KEY",
+                "line": line,
+                "conditions": path["conditions"],
+                "case_chain": path["case_chain"],
+                "statements": path["actions"],
+            }
+            for ordinal, path in enumerate(completed, start=1)
+        ]
+        return {
+            "id": source_id,
+            "source": relative_path(input_path, legacy_root),
+            "active_key_cases": 1,
+            "active_key_bindings": len(bindings),
+            "events": {expected_event: 1},
+            "post_dispatch_actions": {expected_event: []},
+            "cases": [
+                {
+                    "case": case_id,
+                    "source_id": source_id,
+                    "event": expected_event,
+                    "key": "ANY_KEY",
+                    "line": line,
+                    "modifier_checks": [],
+                    "binding_count": len(bindings),
+                }
+            ],
+            "bindings": bindings,
+        }
     key_code_alias: str | None = None
     if nodes and nodes[0]["kind"] == "action":
         alias = re.fullmatch(
@@ -1824,7 +1901,6 @@ def collect_conditional_key_source(
             )
             indexed_keys.append(key)
 
-    method_body = source[open_brace + 1 : method_end]
     referenced_keys = re.findall(r"\bKeyEvent\.(VK_[A-Z0-9_]+)", method_body)
     if key_code_alias:
         alias_checks = re.findall(
@@ -1954,10 +2030,8 @@ def collect_input_cases(legacy_root: Path) -> dict[str, Any]:
         for source_id, source_path in INPUT_KEY_SOURCES
     ]
     sources.extend(
-        collect_conditional_key_source(
-            legacy_root, source_id, source_path, expected_event, method_ordinal
-        )
-        for source_id, source_path, expected_event, method_ordinal in INPUT_CONDITIONAL_KEY_SOURCES
+        collect_conditional_key_source(legacy_root, *source)
+        for source in INPUT_CONDITIONAL_KEY_SOURCES
     )
     cases = [entry for source in sources for entry in source["cases"]]
     bindings = [entry for source in sources for entry in source["bindings"]]
@@ -2061,8 +2135,8 @@ def validate_matrix(
     dict[str, list[str]],
     dict[str, list[str]],
 ]:
-    if matrix.get("schema_version") != 38:
-        raise ValueError("Matrix schema_version must be 38")
+    if matrix.get("schema_version") != 39:
+        raise ValueError("Matrix schema_version must be 39")
     allowed_statuses = matrix.get("allowed_statuses")
     if allowed_statuses != list(ALLOWED_STATUSES):
         raise ValueError("Matrix allowed_statuses differ from the repository contract")
@@ -2313,7 +2387,7 @@ def build_inventory(legacy_root: Path, matrix_path: Path) -> dict[str, Any]:
         raise ValueError("Every normalized legacy input path must map to the matrix")
 
     return {
-        "schema_version": 38,
+        "schema_version": 39,
         "source": {
             "root": "../lizzieyzy-next-main",
             "version": read_legacy_version(legacy_root),
@@ -2331,7 +2405,7 @@ def build_inventory(legacy_root: Path, matrix_path: Path) -> dict[str, Any]:
             "Menu keys cover active Menu.java resource lookups with Menu. or menu. prefixes.",
             "Menu literal labels cover active string-literal menu constructors; dynamic labels remain represented by their resource or runtime source.",
             "Menu accelerators cover explicit Menu.java setAccelerator calls and direct OS.isWindows guards; other input bindings remain T-003 work.",
-            "Input key bindings symbolically expand Input.java, InputIndependentMainBoard.java, InputIndependentSubboard.java, InputSubboard.java, FloatBoard.java, AnalysisFrame table/window, DrawPainting.java, ChooseMoreEngine.java, LoadEngine.java, OtherPrograms.java, TencentKifuDownload.java, FoxKifuDownload.java, BrowserFrame.java, CaptureTsumeGoFrame.java, the BottomToolbar move-number field, the GtpConsolePane content/output listeners, and the LizzieFrame engine-game GTP shortcut across key dispatch, condition evaluations, executed statements, empty-listener and empty-statement paths, and switch fall-through; controlIsPressed means Control on every platform plus Meta on macOS, BrowserFrame dispatches Enter through getKeyChar, and BottomToolbar compares a local getKeyCode alias with the newline character.",
+            "Input key bindings symbolically expand Input.java, InputIndependentMainBoard.java, InputIndependentSubboard.java, InputSubboard.java, FloatBoard.java, AnalysisFrame table/window, DrawPainting.java, ChooseMoreEngine.java, LoadEngine.java, OtherPrograms.java, TencentKifuDownload.java, FoxKifuDownload.java, BrowserFrame.java, CaptureTsumeGoFrame.java, the BottomToolbar move-number field, the GtpConsolePane content/output listeners, the LizzieFrame engine-game GTP shortcut, and Menu's komi/PDA ANY_KEY release listeners across key dispatch, condition evaluations, executed statements, empty-listener and empty-statement paths, and switch fall-through; controlIsPressed means Control on every platform plus Meta on macOS, BrowserFrame dispatches Enter through getKeyChar, and BottomToolbar compares a local getKeyCode alias with the newline character.",
             "Pointer bindings symbolically expand the main Input listener, the two indexed subboard listeners, FloatBoard, AnalysisFrame, DrawPainting, ChooseMoreEngine, LoadEngine, OtherPrograms, TencentKifuDownload, FoxKifuDownload, BrowserFrame load/stop/label listeners, JFontTextArea, JFontTextField, JIMSendTextPane, the two DemoScrollBarUI2 arrow-button listeners, JPaintTextPane, WindowMenuStrip, YikeLiveDialog, IndependentSubBoard and IndependentMainBoard lock/close/top-button plus window listeners, BlunderListPanel, SidebarHeaderPanel, BottomToolbar, ConfigDialog2 sidebar-nav/toggle-row/color-label listeners, MoreEngines, the 33 indexed LizzieFrame listeners, the 5 indexed Menu komi text/hold/hover listeners, the 7 indexed MoveListFrame table/match-panel/header groups, and RightClickMenu's explicit no-op mouse exit across mouse, motion, drag, wheel, and release condition evaluations, early returns, executed statements, and explicit no-action paths; data-dependent loops and click try/catch handlers are preserved as normalized atomic statements, local boolean tracking retains a known value across loops that can only assign the same literal, and direct variable-to-integer comparisons prune contradictory paths.",
             "Other key-listener classes remain T-003 work; all active public pointer handlers in the legacy Java sources are inventoried.",
         ],
