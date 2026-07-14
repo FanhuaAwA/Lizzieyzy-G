@@ -1,5 +1,5 @@
 {
-  "schema_version": 40,
+  "schema_version": 41,
   "source": {
     "root": "../lizzieyzy-next-main",
     "version": "yzy2.5.3",
@@ -17,9 +17,9 @@
     "Menu keys cover active Menu.java resource lookups with Menu. or menu. prefixes.",
     "Menu literal labels cover active string-literal menu constructors; dynamic labels remain represented by their resource or runtime source.",
     "Menu accelerators cover explicit Menu.java setAccelerator calls and direct OS.isWindows guards; other input bindings remain T-003 work.",
-    "Input key bindings symbolically expand Input.java, InputIndependentMainBoard.java, InputIndependentSubboard.java, InputSubboard.java, FloatBoard.java, AnalysisFrame table/window, DrawPainting.java, ChooseMoreEngine.java, LoadEngine.java, OtherPrograms.java, TencentKifuDownload.java, FoxKifuDownload.java, BrowserFrame.java, CaptureTsumeGoFrame.java, the BottomToolbar move-number field, the GtpConsolePane content/output listeners, the LizzieFrame engine-game GTP shortcut, Menu's komi/PDA ANY_KEY release listeners, and MoveListFrame's tab/table/window listeners across key dispatch, condition evaluations, executed statements, empty-listener and empty-statement paths, and switch fall-through; controlIsPressed means Control on every platform plus Meta on macOS, BrowserFrame dispatches Enter through getKeyChar, and BottomToolbar compares a local getKeyCode alias with the newline character.",
+    "Input key bindings symbolically expand Input.java, InputIndependentMainBoard.java, InputIndependentSubboard.java, InputSubboard.java, FloatBoard.java, AnalysisFrame table/window, DrawPainting.java, ChooseMoreEngine.java, LoadEngine.java, OtherPrograms.java, TencentKifuDownload.java, FoxKifuDownload.java, BrowserFrame.java, CaptureTsumeGoFrame.java, TsumeGoFrame.java, the BottomToolbar move-number field, the GtpConsolePane content/output listeners, the LizzieFrame engine-game GTP shortcut, Menu's komi/PDA ANY_KEY release listeners, and MoveListFrame's tab/table/window listeners across key dispatch, condition evaluations, executed statements, empty-listener and empty-statement paths, and switch fall-through; controlIsPressed means Control on every platform plus Meta on macOS, BrowserFrame dispatches Enter through getKeyChar, and BottomToolbar compares a local getKeyCode alias with the newline character.",
     "Pointer bindings symbolically expand the main Input listener, the two indexed subboard listeners, FloatBoard, AnalysisFrame, DrawPainting, ChooseMoreEngine, LoadEngine, OtherPrograms, TencentKifuDownload, FoxKifuDownload, BrowserFrame load/stop/label listeners, JFontTextArea, JFontTextField, JIMSendTextPane, the two DemoScrollBarUI2 arrow-button listeners, JPaintTextPane, WindowMenuStrip, YikeLiveDialog, IndependentSubBoard and IndependentMainBoard lock/close/top-button plus window listeners, BlunderListPanel, SidebarHeaderPanel, BottomToolbar, ConfigDialog2 sidebar-nav/toggle-row/color-label listeners, MoreEngines, the 33 indexed LizzieFrame listeners, the 5 indexed Menu komi text/hold/hover listeners, the 7 indexed MoveListFrame table/match-panel/header groups, and RightClickMenu's explicit no-op mouse exit across mouse, motion, drag, wheel, and release condition evaluations, early returns, executed statements, and explicit no-action paths; data-dependent loops and click try/catch handlers are preserved as normalized atomic statements, local boolean tracking retains a known value across loops that can only assign the same literal, and direct variable-to-integer comparisons prune contradictory paths.",
-    "Other key-listener classes remain T-003 work; all active public pointer handlers in the legacy Java sources are inventoried."
+    "All active public key and pointer handlers in the legacy Java sources are inventoried; inherited no-op callbacks and explicitly empty listener methods do not become active cases."
   ],
   "matrix_summary": {
     "rows": 54,
@@ -43,11 +43,11 @@
     "active_menu_accelerators": 2,
     "mapped_menu_accelerators": 2,
     "unmapped_menu_accelerators": 0,
-    "active_input_key_cases": 170,
-    "mapped_input_key_cases": 170,
+    "active_input_key_cases": 171,
+    "mapped_input_key_cases": 171,
     "unmapped_input_key_cases": 0,
-    "active_input_key_bindings": 395,
-    "mapped_input_key_bindings": 395,
+    "active_input_key_bindings": 397,
+    "mapped_input_key_bindings": 397,
     "unmapped_input_key_bindings": 0,
     "active_input_pointer_events": 180,
     "mapped_input_pointer_events": 180,
@@ -18038,12 +18038,24 @@
         "post_dispatch_actions": {
           "keyPressed": []
         }
+      },
+      {
+        "id": "TsumeGoFrame",
+        "source": "src/main/java/featurecat/lizzie/gui/TsumeGoFrame.java",
+        "active_key_cases": 1,
+        "active_key_bindings": 2,
+        "events": {
+          "keyPressed": 1
+        },
+        "post_dispatch_actions": {
+          "keyPressed": []
+        }
       }
     ],
-    "active_key_cases": 170,
-    "active_key_bindings": 395,
+    "active_key_cases": 171,
+    "active_key_bindings": 397,
     "events": {
-      "keyPressed": 164,
+      "keyPressed": 165,
       "keyReleased": 6
     },
     "cases": [
@@ -20425,6 +20437,18 @@
         "binding_count": 1,
         "matrix_ids": [
           "ANALYSIS-HAWKEYE-001"
+        ]
+      },
+      {
+        "case": "TsumeGoFrame:keyPressed:VK_T",
+        "source_id": "TsumeGoFrame",
+        "event": "keyPressed",
+        "key": "VK_T",
+        "line": 268,
+        "modifier_checks": [],
+        "binding_count": 2,
+        "matrix_ids": [
+          "TSUMEGO-001"
         ]
       }
     ],
@@ -32159,6 +32183,57 @@
         ],
         "matrix_ids": [
           "ANALYSIS-HAWKEYE-001"
+        ]
+      },
+      {
+        "binding": "TsumeGoFrame:keyPressed:VK_T#1",
+        "case": "TsumeGoFrame:keyPressed:VK_T",
+        "source_id": "TsumeGoFrame",
+        "event": "keyPressed",
+        "key": "VK_T",
+        "line": 268,
+        "conditions": [
+          {
+            "expression": "e.isShiftDown()",
+            "expected": true
+          }
+        ],
+        "case_chain": [
+          "TsumeGoFrame:keyPressed:VK_T"
+        ],
+        "statements": [
+          {
+            "line": 270,
+            "statement": "setVisible(false);"
+          },
+          {
+            "line": 271,
+            "statement": "Lizzie.frame.startCaptureTsumeGo();"
+          }
+        ],
+        "matrix_ids": [
+          "TSUMEGO-001"
+        ]
+      },
+      {
+        "binding": "TsumeGoFrame:keyPressed:VK_T#2",
+        "case": "TsumeGoFrame:keyPressed:VK_T",
+        "source_id": "TsumeGoFrame",
+        "event": "keyPressed",
+        "key": "VK_T",
+        "line": 268,
+        "conditions": [
+          {
+            "expression": "e.isShiftDown()",
+            "expected": false
+          }
+        ],
+        "case_chain": [
+          "TsumeGoFrame:keyPressed:VK_T"
+        ],
+        "statements": [],
+        "matrix_ids": [
+          "TSUMEGO-001"
         ]
       }
     ],

@@ -63,6 +63,10 @@ INPUT_KEY_METHOD = re.compile(
     r"public\s+void\s+(?P<event>keyPressed|keyReleased)\s*"
     r"\(\s*KeyEvent\s+(?P<parameter>[A-Za-z_$][\w$]*)\s*\)\s*\{"
 )
+PUBLIC_KEY_METHOD = re.compile(
+    r"public\s+void\s+(?P<event>keyPressed|keyReleased|keyTyped)\s*"
+    r"\(\s*KeyEvent\s+(?P<parameter>[A-Za-z_$][\w$]*)\s*\)\s*\{"
+)
 INPUT_KEY_CASE = re.compile(r"\bcase\s+(?P<key>VK_[A-Z0-9_]+)\s*:")
 INPUT_DEFAULT_CASE = re.compile(r"\bdefault\s*:")
 INPUT_KEY_SOURCES = (
@@ -206,6 +210,12 @@ INPUT_CONDITIONAL_KEY_SOURCES = (
         "src/main/java/featurecat/lizzie/gui/MoveListFrame.java",
         "keyPressed",
         5,
+    ),
+    (
+        "TsumeGoFrame",
+        "src/main/java/featurecat/lizzie/gui/TsumeGoFrame.java",
+        "keyPressed",
+        1,
     ),
 )
 INPUT_POINTER_METHOD = re.compile(
@@ -2054,7 +2064,46 @@ def collect_pointer_source(
     }
 
 
+def active_public_key_methods(source: str) -> set[tuple[str, int]]:
+    counts: dict[str, int] = {}
+    active: set[tuple[str, int]] = set()
+    for method_match in PUBLIC_KEY_METHOD.finditer(source):
+        event = method_match.group("event")
+        counts[event] = counts.get(event, 0) + 1
+        open_brace = method_match.end() - 1
+        if normalize_java(source[open_brace + 1 : closing_brace(source, open_brace)]):
+            active.add((event, counts[event]))
+    return active
+
+
+def validate_full_key_coverage(legacy_root: Path) -> None:
+    selected: dict[str, set[tuple[str, int]]] = defaultdict(set)
+    for _, source_path in INPUT_KEY_SOURCES:
+        source = strip_java_comments(
+            (legacy_root / source_path).read_text(encoding="utf-8", errors="replace")
+        )
+        selected[source_path].update(
+            pair for pair in active_public_key_methods(source) if pair[0] != "keyTyped"
+        )
+    for source in INPUT_CONDITIONAL_KEY_SOURCES:
+        _, source_path, event, ordinal, *_ = source
+        selected[source_path].add((event, ordinal))
+
+    actual: dict[str, set[tuple[str, int]]] = defaultdict(set)
+    for input_path in sorted((legacy_root / "src/main/java").rglob("*.java")):
+        source = strip_java_comments(input_path.read_text(encoding="utf-8", errors="replace"))
+        methods = active_public_key_methods(source)
+        if methods:
+            actual[relative_path(input_path, legacy_root)].update(methods)
+
+    paths = set(selected) | set(actual)
+    missing = sorted((path, *pair) for path in paths for pair in actual[path] - selected[path])
+    if missing:
+        raise ValueError(f"Active public key method coverage differs: missing={missing}")
+
+
 def collect_input_cases(legacy_root: Path) -> dict[str, Any]:
+    validate_full_key_coverage(legacy_root)
     sources = [
         collect_switch_key_source(legacy_root, source_id, source_path)
         for source_id, source_path in INPUT_KEY_SOURCES
@@ -2165,8 +2214,8 @@ def validate_matrix(
     dict[str, list[str]],
     dict[str, list[str]],
 ]:
-    if matrix.get("schema_version") != 40:
-        raise ValueError("Matrix schema_version must be 40")
+    if matrix.get("schema_version") != 41:
+        raise ValueError("Matrix schema_version must be 41")
     allowed_statuses = matrix.get("allowed_statuses")
     if allowed_statuses != list(ALLOWED_STATUSES):
         raise ValueError("Matrix allowed_statuses differ from the repository contract")
@@ -2417,7 +2466,7 @@ def build_inventory(legacy_root: Path, matrix_path: Path) -> dict[str, Any]:
         raise ValueError("Every normalized legacy input path must map to the matrix")
 
     return {
-        "schema_version": 40,
+        "schema_version": 41,
         "source": {
             "root": "../lizzieyzy-next-main",
             "version": read_legacy_version(legacy_root),
@@ -2435,9 +2484,9 @@ def build_inventory(legacy_root: Path, matrix_path: Path) -> dict[str, Any]:
             "Menu keys cover active Menu.java resource lookups with Menu. or menu. prefixes.",
             "Menu literal labels cover active string-literal menu constructors; dynamic labels remain represented by their resource or runtime source.",
             "Menu accelerators cover explicit Menu.java setAccelerator calls and direct OS.isWindows guards; other input bindings remain T-003 work.",
-            "Input key bindings symbolically expand Input.java, InputIndependentMainBoard.java, InputIndependentSubboard.java, InputSubboard.java, FloatBoard.java, AnalysisFrame table/window, DrawPainting.java, ChooseMoreEngine.java, LoadEngine.java, OtherPrograms.java, TencentKifuDownload.java, FoxKifuDownload.java, BrowserFrame.java, CaptureTsumeGoFrame.java, the BottomToolbar move-number field, the GtpConsolePane content/output listeners, the LizzieFrame engine-game GTP shortcut, Menu's komi/PDA ANY_KEY release listeners, and MoveListFrame's tab/table/window listeners across key dispatch, condition evaluations, executed statements, empty-listener and empty-statement paths, and switch fall-through; controlIsPressed means Control on every platform plus Meta on macOS, BrowserFrame dispatches Enter through getKeyChar, and BottomToolbar compares a local getKeyCode alias with the newline character.",
+            "Input key bindings symbolically expand Input.java, InputIndependentMainBoard.java, InputIndependentSubboard.java, InputSubboard.java, FloatBoard.java, AnalysisFrame table/window, DrawPainting.java, ChooseMoreEngine.java, LoadEngine.java, OtherPrograms.java, TencentKifuDownload.java, FoxKifuDownload.java, BrowserFrame.java, CaptureTsumeGoFrame.java, TsumeGoFrame.java, the BottomToolbar move-number field, the GtpConsolePane content/output listeners, the LizzieFrame engine-game GTP shortcut, Menu's komi/PDA ANY_KEY release listeners, and MoveListFrame's tab/table/window listeners across key dispatch, condition evaluations, executed statements, empty-listener and empty-statement paths, and switch fall-through; controlIsPressed means Control on every platform plus Meta on macOS, BrowserFrame dispatches Enter through getKeyChar, and BottomToolbar compares a local getKeyCode alias with the newline character.",
             "Pointer bindings symbolically expand the main Input listener, the two indexed subboard listeners, FloatBoard, AnalysisFrame, DrawPainting, ChooseMoreEngine, LoadEngine, OtherPrograms, TencentKifuDownload, FoxKifuDownload, BrowserFrame load/stop/label listeners, JFontTextArea, JFontTextField, JIMSendTextPane, the two DemoScrollBarUI2 arrow-button listeners, JPaintTextPane, WindowMenuStrip, YikeLiveDialog, IndependentSubBoard and IndependentMainBoard lock/close/top-button plus window listeners, BlunderListPanel, SidebarHeaderPanel, BottomToolbar, ConfigDialog2 sidebar-nav/toggle-row/color-label listeners, MoreEngines, the 33 indexed LizzieFrame listeners, the 5 indexed Menu komi text/hold/hover listeners, the 7 indexed MoveListFrame table/match-panel/header groups, and RightClickMenu's explicit no-op mouse exit across mouse, motion, drag, wheel, and release condition evaluations, early returns, executed statements, and explicit no-action paths; data-dependent loops and click try/catch handlers are preserved as normalized atomic statements, local boolean tracking retains a known value across loops that can only assign the same literal, and direct variable-to-integer comparisons prune contradictory paths.",
-            "Other key-listener classes remain T-003 work; all active public pointer handlers in the legacy Java sources are inventoried.",
+            "All active public key and pointer handlers in the legacy Java sources are inventoried; inherited no-op callbacks and explicitly empty listener methods do not become active cases.",
         ],
         "matrix_summary": {
             "rows": len(matrix["rows"]),
