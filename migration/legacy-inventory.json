@@ -1,5 +1,5 @@
 {
-  "schema_version": 48,
+  "schema_version": 49,
   "source": {
     "root": "../lizzieyzy-next-main",
     "version": "yzy2.5.3",
@@ -32,11 +32,11 @@
       "用户批准不迁移": 0
     },
     "active_config_leaf_keys": 596,
-    "mapped_config_leaf_keys": 307,
-    "unmapped_config_leaf_keys": 289,
+    "mapped_config_leaf_keys": 311,
+    "unmapped_config_leaf_keys": 285,
     "active_menu_resource_keys": 383,
-    "mapped_menu_resource_keys": 115,
-    "unmapped_menu_resource_keys": 268,
+    "mapped_menu_resource_keys": 118,
+    "unmapped_menu_resource_keys": 265,
     "active_menu_literal_labels": 12,
     "mapped_menu_literal_labels": 12,
     "unmapped_menu_literal_labels": 0,
@@ -591,7 +591,9 @@
       {
         "key": "analysis-always-override",
         "reference_count": 2,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "ANALYSIS-FULL-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -610,7 +612,9 @@
       {
         "key": "analysis-auto-quit",
         "reference_count": 2,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "ANALYSIS-FULL-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -707,6 +711,7 @@
         "key": "analysis-engine-command-customized",
         "reference_count": 4,
         "matrix_ids": [
+          "ANALYSIS-FULL-001",
           "UI-TEXT-EDIT-001"
         ],
         "references": [
@@ -761,6 +766,7 @@
         "key": "analysis-engine-ssh-info",
         "reference_count": 2,
         "matrix_ids": [
+          "ANALYSIS-FULL-001",
           "REMOTE-COMPUTE-001"
         ],
         "references": [
@@ -781,7 +787,9 @@
       {
         "key": "analysis-max-visits",
         "reference_count": 2,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "ANALYSIS-FULL-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -838,7 +846,9 @@
       {
         "key": "analysis-use-current-rules",
         "reference_count": 2,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "ANALYSIS-FULL-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -15478,7 +15488,7 @@
       {
         "key": "Menu.batchAnalyze",
         "matrix_ids": [
-          "ANALYSIS-FULL-001"
+          "ANALYSIS-AUTO-001"
         ],
         "lines": [
           3242,
@@ -15487,7 +15497,10 @@
       },
       {
         "key": "Menu.batchAnalyzeTable",
-        "matrix_ids": [],
+        "matrix_ids": [
+          "ANALYSIS-AUTO-001",
+          "ANALYSIS-FULL-001"
+        ],
         "lines": [
           3275,
           7974
@@ -16064,7 +16077,9 @@
       },
       {
         "key": "Menu.flashAnalyzeAllBranches",
-        "matrix_ids": [],
+        "matrix_ids": [
+          "ANALYSIS-FULL-001"
+        ],
         "lines": [
           3307,
           7867
@@ -16082,7 +16097,9 @@
       },
       {
         "key": "Menu.flashAnalyzePartGame",
-        "matrix_ids": [],
+        "matrix_ids": [
+          "ANALYSIS-FULL-001"
+        ],
         "lines": [
           3297,
           7857
@@ -18717,7 +18734,6 @@
         ],
         "binding_count": 2,
         "matrix_ids": [
-          "ANALYSIS-FULL-001",
           "GAME-HUMAN-AI-001"
         ]
       },
@@ -19556,7 +19572,6 @@
         ],
         "binding_count": 2,
         "matrix_ids": [
-          "ANALYSIS-FULL-001",
           "GAME-HUMAN-AI-001"
         ]
       },
@@ -21830,7 +21845,7 @@
           }
         ],
         "matrix_ids": [
-          "ANALYSIS-FULL-001"
+          "GAME-HUMAN-AI-001"
         ]
       },
       {
@@ -26856,7 +26871,7 @@
           }
         ],
         "matrix_ids": [
-          "ANALYSIS-FULL-001"
+          "GAME-HUMAN-AI-001"
         ]
       },
       {

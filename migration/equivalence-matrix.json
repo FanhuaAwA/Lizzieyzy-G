@@ -1,5 +1,5 @@
 {
-  "schema_version": 48,
+  "schema_version": 49,
   "allowed_statuses": [
     "未盘点",
     "已盘点",
@@ -58,7 +58,7 @@
     {
       "id": "GAME-HUMAN-AI-001",
       "category": "棋盘与对局",
-      "legacy_entry": "菜单 Menu.newGenmoveGame、Input/InputIndependentMainBoard 的 N 默认分支，或 Menu.newAnalyzeModeGame 调用 startAnalyzeGameDialog 后在 noAnalyze 时回退到 LizzieFrame.startNewGame，并由 NewGameDialog 配置人机对局；主/独立棋盘 Enter 与 Alt+Enter 及人机续弈菜单的四个子项调用 continueAiPlaying；菜单文字虽写 Alt+N，但仅 Alt+N 且允许分析时实际转入整谱分析，禁用分析时 Alt+N 以及 Ctrl/Meta/Shift+N 仍落入人机对局",
+      "legacy_entry": "菜单 Menu.newGenmoveGame、Input/InputIndependentMainBoard 的 N 默认分支，或 Menu.newAnalyzeModeGame 调用 startAnalyzeGameDialog 后在 noAnalyze 时回退到 LizzieFrame.startNewGame，并由 NewGameDialog 配置人机对局；主/独立棋盘 Enter 与 Alt+Enter 及人机续弈菜单的四个子项调用 continueAiPlaying；Alt+N 且允许分析时打开分析对局设置，禁用分析时 Alt+N 以及 Ctrl/Meta/Shift+N 落入普通人机新对局，均不属于闪电整谱分析",
       "legacy_menu_keys": [
         "Menu.newGenmoveGame",
         "Menu.newAnalyzeModeGame",
@@ -77,9 +77,11 @@
         "InputIndependentMainBoard:keyPressed:VK_ENTER"
       ],
       "legacy_input_bindings": [
+        "keyPressed:VK_N#1",
         "keyPressed:VK_N#2",
         "keyPressed:VK_ENTER#1",
         "keyPressed:VK_ENTER#2",
+        "InputIndependentMainBoard:keyPressed:VK_N#1",
         "InputIndependentMainBoard:keyPressed:VK_N#2",
         "InputIndependentMainBoard:keyPressed:VK_ENTER#1",
         "InputIndependentMainBoard:keyPressed:VK_ENTER#2"
@@ -563,45 +565,88 @@
     {
       "id": "ANALYSIS-FULL-001",
       "category": "分析",
-      "legacy_entry": "BottomToolbar.flashAnalyzeAllGame 调用 LizzieFrame.flashAnalyzeGame 执行整谱或批量分析",
+      "legacy_entry": "主/独立棋盘 Ctrl+B、菜单/顶部/底部工具栏的整谱、局部、全分支和设置入口调用 LizzieFrame.flashAnalyzeGame/flashAnalyzePart；Menu.batchAnalysisMode 以 openFileWithAna(true) 进入多棋谱闪电批量，AnalysisSettings 三个构造入口分别覆盖普通设置、显式 Context.BATCH 和引擎失败后保存并重算，WaitForAnalysis 展示加载、逐节点进度、隐藏、取消、完成与批量续接",
       "legacy_menu_keys": [
         "Menu.flashAnalyzeAllGame",
+        "Menu.flashAnalyzePartGame",
+        "Menu.flashAnalyzeAllBranches",
         "Menu.flashAnalyzeSettings",
-        "Menu.batchAnalyze",
-        "Menu.batchAnalysisMode"
+        "Menu.batchAnalysisMode",
+        "Menu.batchAnalyzeTable"
       ],
       "legacy_menu_labels": [],
       "legacy_shortcuts": [],
       "legacy_input_cases": [
-        "keyPressed:VK_N",
         "keyPressed:VK_B",
-        "InputIndependentMainBoard:keyPressed:VK_N",
         "InputIndependentMainBoard:keyPressed:VK_B"
       ],
       "legacy_input_bindings": [
-        "keyPressed:VK_N#1",
         "keyPressed:VK_B#2",
-        "InputIndependentMainBoard:keyPressed:VK_N#1",
         "InputIndependentMainBoard:keyPressed:VK_B#2"
       ],
       "java_evidence": [
+        { "path": "src/main/java/featurecat/lizzie/gui/Input.java", "symbol": "Lizzie.frame.flashAnalyzeGame(true, false);" },
+        { "path": "src/main/java/featurecat/lizzie/gui/InputIndependentMainBoard.java", "symbol": "Lizzie.frame.flashAnalyzeGame(true, false);" },
+        { "path": "src/main/java/featurecat/lizzie/gui/Menu.java", "symbol": "Menu.flashAnalyzePartGame" },
+        { "path": "src/main/java/featurecat/lizzie/gui/Menu.java", "symbol": "Menu.flashAnalyzeAllBranches" },
+        { "path": "src/main/java/featurecat/lizzie/gui/Menu.java", "symbol": "Menu.batchAnalysisMode" },
         { "path": "src/main/java/featurecat/lizzie/gui/BottomToolbar.java", "symbol": "flashAnalyzeAllGame" },
-        { "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "symbol": "flashAnalyzeGame" }
+        { "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "symbol": "public void flashAnalyzeGame(boolean isAllGame, boolean isAllBranches, boolean silentAnalyze)" },
+        { "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "symbol": "private void startFlashAnalyzeRequestsInBackground(" },
+        { "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "symbol": "public void openFileWithAna(boolean isFlashMode)" },
+        { "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "symbol": "public void destroyAnalysisEngine()" },
+        { "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "symbol": "private boolean isAnalysisEngineReusable(AnalysisEngine engine)" },
+        { "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "symbol": "public void flashAutoAnaSaveAndLoad()" },
+        { "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "symbol": "public void flashAnalyzeSettings()" },
+        { "path": "src/main/java/featurecat/lizzie/gui/StartAnaDialog.java", "symbol": "new AnalysisSettings(false, false, AnalysisSettings.Context.BATCH)" },
+        { "path": "src/main/java/featurecat/lizzie/gui/AnalysisSettings.java", "symbol": "public AnalysisSettings(boolean isDuringAnalyze, boolean fromError, Context context)" },
+        { "path": "src/main/java/featurecat/lizzie/gui/AnalysisSettings.java", "symbol": "public void saveConfig()" },
+        { "path": "src/main/java/featurecat/lizzie/gui/AnalysisPartGame.java", "symbol": "public class AnalysisPartGame extends JDialog" },
+        { "path": "src/main/java/featurecat/lizzie/gui/SetAnalysisRules.java", "symbol": "public void getRules()" },
+        { "path": "src/main/java/featurecat/lizzie/gui/SetAnalysisRules.java", "symbol": "btnApply.addActionListener" },
+        { "path": "src/main/java/featurecat/lizzie/gui/RemoteEngineSettings.java", "symbol": "public RemoteEngineSettings(JDialog owner, boolean isAnalysisEngine, boolean isContributeEngine)" },
+        { "path": "src/main/java/featurecat/lizzie/gui/RemoteEngineSettings.java", "symbol": "remoteEngineData.password = Utils.doEncrypt(new String(txtPassword.getPassword()));" },
+        { "path": "src/main/java/featurecat/lizzie/gui/WaitForAnalysis.java", "symbol": "public void setVisible(boolean visible)" },
+        { "path": "src/main/java/featurecat/lizzie/gui/WaitForAnalysis.java", "symbol": "public void setProgress(int curMove, int allMove)" },
+        { "path": "src/main/java/featurecat/lizzie/analysis/AnalysisEngine.java", "symbol": "private void applyAnalysisPayload(" },
+        { "path": "src/main/java/featurecat/lizzie/analysis/AnalysisEngine.java", "symbol": "private void showRequestProgressOrContinueBatch(boolean showProgressDialog)" },
+        { "path": "src/main/java/featurecat/lizzie/analysis/AnalysisEngine.java", "symbol": "private static boolean shouldAnalyzeNode(BoardHistoryNode node, int targetVisits)" },
+        { "path": "src/main/java/featurecat/lizzie/analysis/AnalysisEngine.java", "symbol": "public static int targetAnalysisVisits()" },
+        { "path": "src/main/java/featurecat/lizzie/analysis/AnalysisEngine.java", "symbol": "public boolean sendRequest(BoardHistoryNode analyzeNode)" },
+        { "path": "src/main/java/featurecat/lizzie/analysis/AnalysisEngine.java", "symbol": "private String remoteGtpRules()" },
+        { "path": "src/main/java/featurecat/lizzie/analysis/AnalysisEngine.java", "symbol": "private void releaseSharedRemoteSession()" },
+        { "path": "src/main/java/featurecat/lizzie/analysis/AnalysisRequestBuilder.java", "symbol": "static void addRules(JSONObject request)" },
+        { "path": "src/main/java/featurecat/lizzie/rules/BoardData.java", "symbol": "public void tryToSetBestMoves(" },
+        { "path": "src/main/java/featurecat/lizzie/util/Utils.java", "symbol": "public static void saveAnalysisEngineRemoteEngineData(RemoteEngineData remoteEngineData)" },
+        { "path": "src/main/java/featurecat/lizzie/Config.java", "symbol": "analysisMaxVisits = uiConfig.optInt(\"analysis-max-visits\", 1);" },
+        { "path": "src/main/java/featurecat/lizzie/Config.java", "symbol": "analysisAutoQuit = uiConfig.optBoolean(\"analysis-auto-quit\", true);" },
+        { "path": "src/main/java/featurecat/lizzie/Config.java", "symbol": "private void writeConfig(JSONObject config, File file)" }
       ],
-      "config_keys": ["batch-analysis-playouts", "analysis-engine-command", "analysis-engine-preload"],
-      "inputs_preconditions": "棋谱已载入；分析引擎配置有效且可启动。",
-      "success_behavior": "按设定访问量分析目标节点，写回分析结果并可批量处理。",
-      "failure_cancel_behavior": "用户停止或引擎失败时停止后续任务，保留已完成结果并恢复可交互状态。",
-      "data_io": "读取棋谱历史、调用引擎、更新节点分析数据；批量模式读取多个文件。",
-      "external_dependencies": ["分析引擎", "批量模式下的本地文件系统"],
+      "config_keys": [
+        "batch-analysis-playouts",
+        "analysis-engine-command",
+        "analysis-engine-command-customized",
+        "analysis-engine-ssh-info",
+        "analysis-engine-preload",
+        "analysis-max-visits",
+        "analysis-auto-quit",
+        "analysis-always-override",
+        "analysis-use-current-rules"
+      ],
+      "inputs_preconditions": "棋谱已载入且分析引擎命令可启动。主/独立棋盘只有 Alt=false 且原始 e.isControlDown()=true 的 B 进入闪电整谱；macOS Meta+B 不等价于此路径。两参 AnalysisSettings 在 isBatchAnalysisMode=false 时用 NORMAL：数值初值来自 analysis-max-visits，默认 1；flag=true 时普通/失败入口也推断为 BATCH。StartAnaDialog 在批量尚未启动前显式传 Context.BATCH，数值改用 batch-analysis-playouts，默认 100。analysis-use-current-rules 默认 true，analysis-auto-quit 默认 true，analysis-engine-preload 与 analysis-always-override 默认 false。设置窗为 modal/fixed/null layout，X 使用默认 HIDE 且不调用 saveConfig；没有 Cancel/Escape。",
+      "success_behavior": "整谱/局部/全分支请求在后台 daemon 线程发出：普通目标访问量为 analysis-max-visits+1，批量为 max(2,batch-analysis-playouts)，远端静默快速分析固定 16；节点已有访问量达到目标时跳过，analysis-always-override=true 时仍排队，并允许较低 visits 的新结果覆盖旧分析，缺失主线专项请求不受该覆盖开关影响。每个成功结果写 BoardData best moves、comment 与 movelist，更新进度；完成后刷新棋盘/问题表，analysis-auto-quit=true 且非多文件批量、非 preload、非 keepAlive 时对本地/独立后端执行 normalQuit，共享远端主引擎只释放独占会话；多文件批量只在末项后走同一逻辑。RemoteEngineSettings 子窗确认时已把 host/port/user、固定内置 key/IV 可逆加密的 password、key path 等立即保存；AnalysisSettings 每次确认再把当前 SSH 记录的 useJavaSSH 更新后调用 Config.save，此时其余 analysis 字段仍是旧值，随后才在内存/uiConfig 更新命令、预算和四个布尔。普通确认隐藏窗口，若命令改变且引擎未在分析还调用 destroyAnalysisEngine。错误入口或“确定并重算”隐藏 Wait、调用旧 destroy 后按 recent flags 再发起分析，但不保证远端真正关闭或创建新实例。BATCH 数值框写 batch-analysis-playouts，命令/SSH 与 autoQuit、preload、alwaysOverride、useCurrentRules 四个布尔仍走共同路径；旧代码还无条件把内存 analysisMaxVisits<=1 钳为1，却不在 BATCH 分支同步其 uiConfig。使用当前规则时，本地 JSON 请求按 currentKataGoRules→auto-load kataRules→tromp-taylor 回退；不用当前规则时使用 analysis-specific-rules JSON 或 tromp-taylor，共享 AnalysisRequestBuilder 也影响 Tracking/HumanSL 请求。",
+      "failure_cancel_behavior": "旧版 WaitForAnalysis 非 modal 却在显示时手动禁用主窗口；Hide 只隐藏并恢复主窗口，分析继续；Cancel 只清 isBatchAnalysisMode、destroyAnalysisEngine 并隐藏，不清 isBatchAna/文件队列、不恢复 ponder，destroyAnalysisEngine 也不完整关闭 remote compute、executor 或清空引用。完成时改 HIDE_ON_CLOSE，普通分析延时 1 秒隐藏，批量先隐藏再延时 300ms 保存/载入下一项；窗口从不 dispose 且由 engine 持有，复用时标题和 close operation 不复位。若所有目标已达预算且 override=false，analyzeMap=0 的非 batch 前台路径既不隐藏 Wait、恢复 ponder也不报完成，主窗口可永久禁用。请求发送失败会清 pending 并退出 batch mode；前台路径还隐藏 Wait 并提示，silent 且无 waitFrame 时没有提示。规则 JSON/substring、结果解析或请求线程中的其他异常不保证进入该收尾，可能永久挂起。analysis-max-visits 输入先把原始 int 写 uiConfig，再仅把内存 <=1 钳为 1，负值可进入后续保存候选，Integer.MAX_VALUE+1 溢出为负；目标版须用有限正数、无溢出预算和一次任务不可变快照。远端 GTP 完全忽略 analysis-use-current-rules/current rules，只接受 analysis-specific-rules 恰为 chinese/japanese/tromp-taylor，否则强制 chinese；本地与远端规则会分裂，非法 JSON 可在线程中抛错。SetAnalysisRules.getRules 只有定义而无调用，打开不会回显已保存规则；不操作选择直接 Apply 可写空 {}，且 Apply 立即改全局，即使父窗 X 关闭也不回滚。RemoteEngineSettings 子窗确认立即持久化，随后关闭父 AnalysisSettings 也不回滚；password 虽经固定内置 key/IV 的 AES 可逆加密而非明文，仍可由任何取得应用常量和配置文件者恢复，不是系统安全存储。saveConfig 的早期 Config.save 直接截断写盘且 IOException 只打印，失败不阻止后续内存提交、隐藏或重算。旧 destroy 对 remote compute 不处理、不清引用，本地 destroyForcibly 也不 await，随后 flashAnalyzeGame 可能复用旧对象或与退出竞态。多文件选择在确认前已载入首个棋谱；取消不恢复原棋盘。批量输出对无扩展名文件 substring(-1) 可崩溃，同秒同名可覆盖，SGF 保存非原子且 IOException 只打印后仍继续下一文件并最终提示完成。目标版必须提供真正可取消任务、状态/资源 finally 收尾、规则 capability 与校验、父子草稿事务、原子配置和 SGF 保存、系统凭据安全存储、确定关闭/重启、失败停止/重试及可访问进度，不照搬旧缺陷。",
+      "data_io": "读取棋谱主线/分支、当前贴目/棋盘尺寸和分析配置；向本地 KataGo JSON analysis、远端 GTP 或 Java SSH 发送请求，把候选、胜率、目差、访问量、ownership、评论和 movelist 写回内存节点。多文件闪电批量读取本地文件，在原目录以“原名_<本地化 Leelaz.analyzed>_yyyyMMddHHmmss.sgf”写新文件并载入下一项。RemoteEngineSettings 子窗先把 host/port/user、可逆密文 password、key path 等写入 analysis-engine-ssh-info 并立即 Config.save；AnalysisSettings 的 saveConfig 再由 Utils.saveAnalysisEngineRemoteEngineData 更新 useJavaSSH，连同其余旧配置直接截断写 config.txt，随后才更新 analysis 命令、预算和布尔内存/uiConfig；这些后写字段通常等后续保存或退出才持久化，形成可观察的拆分提交。旧保存无临时文件、备份或原子替换，固定内置 key/IV 的可逆密文也不是安全凭据库。analysis-specific-rules、analysis-start-move/end-move、auto-load-kata-rules/kata-rules 仍由后续专门纵切补齐，不因本轮四键和 SSH 交叉映射宣称完整。",
+      "external_dependencies": ["本地/远端 GTP 或 Java SSH 分析引擎", "多文件批量模式下的本地文件系统"],
       "target_modules": ["Lizzie.Core", "Lizzie.Engine", "Lizzie.Desktop"],
       "automated_evidence": [
         { "path": "src/test/java/featurecat/lizzie/analysis/AnalysisEngineRequestTest.java", "symbol": "AnalysisEngineRequestTest" },
-        { "path": "src/test/java/featurecat/lizzie/util/AnalysisEngineCommandHelperTest.java", "symbol": "AnalysisEngineCommandHelperTest" }
+        { "path": "src/test/java/featurecat/lizzie/util/AnalysisEngineCommandHelperTest.java", "symbol": "AnalysisEngineCommandHelperTest" },
+        { "path": "src/test/java/featurecat/lizzie/gui/AnalysisSettingsLayoutTest.java", "symbol": "AnalysisSettingsLayoutTest" }
       ],
-      "manual_acceptance": "对一份短棋谱执行整谱分析并中途取消，再用两份文件执行批量分析，核对进度和结果保留。",
+      "manual_acceptance": "用本地 JSON 与远端 GTP 可控引擎分别覆盖整谱、局部排他 end、全分支忽略范围、已分析节点跳过/强制覆盖、普通/BATCH 预算 0/1/2/Integer.MAX_VALUE、当前/特定/损坏规则、preload/keepAlive/auto-quit、发送失败、解析失败、引擎崩溃和零待分析节点；逐项核对 transcript、节点写回、缓存、进度、ponder、退出与主窗口 enabled 状态。打开普通、批量和错误后的 AnalysisSettings，验证确认、确定并重算、X、已有规则回显/不操作 round-trip/空选择、规则子窗及重启 round-trip；目标版要求取消零提交、设置原子保存/失败回滚、任务期间配置变化不改变快照。用有扩展名/无扩展名/只读目录/同秒同名/磁盘满的两份以上棋谱执行闪电批量，验证失败不丢结果、不覆盖、不继续假成功并可重试。Windows/macOS/Linux 实测 Hide/Cancel/X、键盘焦点、Escape、读屏状态、大字体、多 DPI，并以重复启动/隐藏/取消/完成检查窗口、线程、进程、连接、timer 与订阅无泄漏。",
       "status": "已盘点",
-      "evidence": "入口、配置和底层请求测试已定位；端到端任务状态仍待动态捕获。"
+      "evidence": "已静态纠正 Alt+N 分析对局与 Menu.batchAnalyze 传统批量的错误归属，并贯通 Ctrl+B、四类闪电菜单、AnalysisSettings 三个构造入口、四个新增配置键、WaitForAnalysis owner/进度/隐藏/取消/完成、请求预算/筛选/覆盖写回、规则分流、自动退出和批量保存续接。AnalysisEngineRequestTest 直接覆盖 override、较低 visits 强制替换、auto-quit/preload/keepAlive、发送失败、远端静默 16、批量 64、范围/真实动作/快照/pass、预算跳过、全分支及远端默认 Chinese 规则，但全部 showProgress=false 且使用替身；AnalysisSettingsLayoutTest 只覆盖四个工具栏控件不重叠，命令 helper 只覆盖命令转换/校验。旧测试没有构造 Wait/AnalysisSettings，也未覆盖提交/取消/落盘、analysis-use-current-rules true/false、current/auto-load/specific/非法规则与本地远端一致性、无效/溢出预算、真实批量 SGF、资源恢复、DPI 或无障碍；本轮不把这些静态事实伪称动态等价。"
     },
     {
       "id": "ONLINE-FOX-001",
@@ -3246,7 +3291,7 @@
       "id": "ANALYSIS-AUTO-001",
       "category": "分析",
       "legacy_entry": "主/独立棋盘不满足 controlIsPressed 且无 Alt/Shift 的 A（即 Ctrl+A 全平台及 macOS Meta+A 优先进入 AutoPlay，而 Windows/Linux Meta+A 仍进入本流程）、Menu.autoAnalyze、顶部/底部传统分析入口、AnalysisTable 传统分支、openFileWithAna(false)，以及主面板一次拖入多个棋谱的批量路径打开 StartAnaDialog(false)；AnalysisTable 闪电分支为 true，文件流程以 isFlashMode 选择，差异设置只在 false 模式出现。Menu.stopAutoAnalyze 调用 stopAutoAna(true,true)；传统模式可启用 SetDiffAnalyze 二阶段大波动加强分析",
-      "legacy_menu_keys": ["Menu.autoAnalyze", "Menu.stopAutoAnalyze"],
+      "legacy_menu_keys": ["Menu.autoAnalyze", "Menu.batchAnalyze", "Menu.batchAnalyzeTable", "Menu.stopAutoAnalyze"],
       "legacy_menu_labels": [],
       "legacy_shortcuts": [],
       "legacy_input_cases": [
@@ -3268,6 +3313,8 @@
         { "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "symbol": "new StartAnaDialog(false, Lizzie.frame)" },
         { "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "symbol": "new StartAnaDialog(isFlashMode, Lizzie.frame)" },
         { "path": "src/main/java/featurecat/lizzie/gui/Menu.java", "symbol": "resourceBundle.getString(\"Menu.autoAnalyze\")" },
+        { "path": "src/main/java/featurecat/lizzie/gui/Menu.java", "symbol": "resourceBundle.getString(\"Menu.batchAnalyze\")" },
+        { "path": "src/main/java/featurecat/lizzie/gui/Menu.java", "symbol": "resourceBundle.getString(\"Menu.batchAnalyzeTable\")" },
         { "path": "src/main/java/featurecat/lizzie/gui/Menu.java", "symbol": "resourceBundle.getString(\"Menu.stopAutoAnalyze\")" },
         { "path": "src/main/java/featurecat/lizzie/gui/Menu.java", "symbol": "LizzieFrame.toolbar.stopAutoAna(true, true);" },
         { "path": "src/main/java/featurecat/lizzie/gui/StartAnaDialog.java", "symbol": "public StartAnaDialog(boolean isAnalysisMode, Window owner)" },

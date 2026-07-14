@@ -2221,8 +2221,8 @@ def validate_matrix(
     dict[str, list[str]],
     dict[str, list[str]],
 ]:
-    if matrix.get("schema_version") != 48:
-        raise ValueError("Matrix schema_version must be 48")
+    if matrix.get("schema_version") != 49:
+        raise ValueError("Matrix schema_version must be 49")
     allowed_statuses = matrix.get("allowed_statuses")
     if allowed_statuses != list(ALLOWED_STATUSES):
         raise ValueError("Matrix allowed_statuses differ from the repository contract")
@@ -2447,6 +2447,129 @@ def build_inventory(legacy_root: Path, matrix_path: Path) -> dict[str, Any]:
         config_entries,
         matrix_ids_by_config_key,
         matrix_ids_by_menu_key,
+        row_id="ANALYSIS-FULL-001",
+        source_path="src/main/java/featurecat/lizzie/gui/AnalysisSettings.java",
+        expected_config_keys={
+            "analysis-always-override",
+            "analysis-auto-quit",
+            "analysis-engine-command",
+            "analysis-engine-command-customized",
+            "analysis-engine-preload",
+            "analysis-max-visits",
+            "analysis-use-current-rules",
+            "batch-analysis-playouts",
+        },
+        expected_menu_keys={
+            "Menu.batchAnalysisMode",
+            "Menu.batchAnalyzeTable",
+            "Menu.flashAnalyzeAllBranches",
+            "Menu.flashAnalyzeAllGame",
+            "Menu.flashAnalyzePartGame",
+            "Menu.flashAnalyzeSettings",
+        },
+        expected_input_cases={
+            "keyPressed:VK_B",
+            "InputIndependentMainBoard:keyPressed:VK_B",
+        },
+        expected_input_bindings={
+            "keyPressed:VK_B#2",
+            "InputIndependentMainBoard:keyPressed:VK_B#2",
+        },
+        required_evidence={
+            (
+                "src/main/java/featurecat/lizzie/gui/AnalysisSettings.java",
+                "public void saveConfig()",
+            ),
+            (
+                "src/main/java/featurecat/lizzie/gui/WaitForAnalysis.java",
+                "public void setProgress(int curMove, int allMove)",
+            ),
+            (
+                "src/main/java/featurecat/lizzie/analysis/AnalysisEngine.java",
+                "public static int targetAnalysisVisits()",
+            ),
+            (
+                "src/main/java/featurecat/lizzie/analysis/AnalysisEngine.java",
+                "private String remoteGtpRules()",
+            ),
+            (
+                "src/main/java/featurecat/lizzie/gui/LizzieFrame.java",
+                "public void flashAutoAnaSaveAndLoad()",
+            ),
+            (
+                "src/main/java/featurecat/lizzie/gui/LizzieFrame.java",
+                "public void openFileWithAna(boolean isFlashMode)",
+            ),
+            (
+                "src/main/java/featurecat/lizzie/gui/LizzieFrame.java",
+                "public void destroyAnalysisEngine()",
+            ),
+            (
+                "src/main/java/featurecat/lizzie/gui/StartAnaDialog.java",
+                "new AnalysisSettings(false, false, AnalysisSettings.Context.BATCH)",
+            ),
+            (
+                "src/main/java/featurecat/lizzie/gui/AnalysisPartGame.java",
+                "public class AnalysisPartGame extends JDialog",
+            ),
+            (
+                "src/main/java/featurecat/lizzie/gui/SetAnalysisRules.java",
+                "public void getRules()",
+            ),
+            (
+                "src/main/java/featurecat/lizzie/gui/RemoteEngineSettings.java",
+                "remoteEngineData.password = Utils.doEncrypt(new String(txtPassword.getPassword()));",
+            ),
+            (
+                "src/main/java/featurecat/lizzie/util/Utils.java",
+                "public static void saveAnalysisEngineRemoteEngineData(RemoteEngineData remoteEngineData)",
+            ),
+        },
+    )
+    analysis_full_row = next(
+        row for row in matrix["rows"] if row["id"] == "ANALYSIS-FULL-001"
+    )
+    expected_analysis_full_menu_keys = {
+        "Menu.batchAnalysisMode",
+        "Menu.batchAnalyzeTable",
+        "Menu.flashAnalyzeAllBranches",
+        "Menu.flashAnalyzeAllGame",
+        "Menu.flashAnalyzePartGame",
+        "Menu.flashAnalyzeSettings",
+    }
+    if set(analysis_full_row["legacy_menu_keys"]) != expected_analysis_full_menu_keys:
+        raise ValueError("ANALYSIS-FULL-001 menu keys changed")
+    expected_analysis_full_config_keys = {
+        "analysis-always-override",
+        "analysis-auto-quit",
+        "analysis-engine-command",
+        "analysis-engine-command-customized",
+        "analysis-engine-preload",
+        "analysis-engine-ssh-info",
+        "analysis-max-visits",
+        "analysis-use-current-rules",
+        "batch-analysis-playouts",
+    }
+    if set(analysis_full_row["config_keys"]) != expected_analysis_full_config_keys:
+        raise ValueError("ANALYSIS-FULL-001 config keys changed")
+    if matrix_ids_by_menu_key.get("Menu.batchAnalyze") != ["ANALYSIS-AUTO-001"]:
+        raise ValueError("Menu.batchAnalyze must map only to ANALYSIS-AUTO-001")
+    if matrix_ids_by_menu_key.get("Menu.batchAnalyzeTable") != [
+        "ANALYSIS-AUTO-001",
+        "ANALYSIS-FULL-001",
+    ]:
+        raise ValueError("Menu.batchAnalyzeTable must map to both analysis workflows")
+    for binding in (
+        "keyPressed:VK_N#1",
+        "InputIndependentMainBoard:keyPressed:VK_N#1",
+    ):
+        if matrix_ids_by_input_binding.get(binding) != ["GAME-HUMAN-AI-001"]:
+            raise ValueError(f"{binding} must map only to GAME-HUMAN-AI-001")
+    validate_workflow_guard(
+        matrix,
+        config_entries,
+        matrix_ids_by_config_key,
+        matrix_ids_by_menu_key,
         row_id="BOARD-AUTO-REPLAY-001",
         source_path="src/main/java/featurecat/lizzie/gui/AutoPlay.java",
         expected_config_keys={
@@ -2571,9 +2694,11 @@ def build_inventory(legacy_root: Path, matrix_path: Path) -> dict[str, Any]:
             "InputIndependentMainBoard:keyPressed:VK_ENTER",
         },
         expected_input_bindings={
+            "keyPressed:VK_N#1",
             "keyPressed:VK_N#2",
             "keyPressed:VK_ENTER#1",
             "keyPressed:VK_ENTER#2",
+            "InputIndependentMainBoard:keyPressed:VK_N#1",
             "InputIndependentMainBoard:keyPressed:VK_N#2",
             "InputIndependentMainBoard:keyPressed:VK_ENTER#1",
             "InputIndependentMainBoard:keyPressed:VK_ENTER#2",
@@ -2613,7 +2738,12 @@ def build_inventory(legacy_root: Path, matrix_path: Path) -> dict[str, Any]:
             "auto-ana-diff-white",
             "auto-ana-diff-win-threshold",
         },
-        expected_menu_keys={"Menu.autoAnalyze", "Menu.stopAutoAnalyze"},
+        expected_menu_keys={
+            "Menu.autoAnalyze",
+            "Menu.batchAnalyze",
+            "Menu.batchAnalyzeTable",
+            "Menu.stopAutoAnalyze",
+        },
         expected_input_cases={
             "keyPressed:VK_A",
             "InputIndependentMainBoard:keyPressed:VK_A",
@@ -3237,9 +3367,14 @@ def build_inventory(legacy_root: Path, matrix_path: Path) -> dict[str, Any]:
     actual_set_diff_analyze_calls: dict[str, int] = {}
     actual_set_diff_entry_calls: dict[str, int] = {}
     actual_stop_auto_analysis_calls: dict[str, int] = {}
+    actual_analysis_settings_calls: dict[str, int] = {}
+    actual_wait_for_analysis_calls: dict[str, int] = {}
     for path in main_java_files:
         source_path = path.relative_to(legacy_root).as_posix()
         source = strip_java_comments(path.read_text(encoding="utf-8", errors="replace"))
+        source_without_literals = re.sub(
+            r'"(?:\\.|[^"\\])*"|\'(?:\\.|[^\'\\])*\'', "", source
+        )
         set_parameter_count = source.count("setLzSaiEngine();")
         if set_parameter_count:
             actual_engine_parameter_calls[source_path] = set_parameter_count
@@ -3281,6 +3416,16 @@ def build_inventory(legacy_root: Path, matrix_path: Path) -> dict[str, Any]:
         stop_auto_analysis_count = source.count("stopAutoAna(true, true);")
         if stop_auto_analysis_count:
             actual_stop_auto_analysis_calls[source_path] = stop_auto_analysis_count
+        analysis_settings_count = len(
+            re.findall(r"\bnew\s+AnalysisSettings\s*\(", source_without_literals)
+        )
+        if analysis_settings_count:
+            actual_analysis_settings_calls[source_path] = analysis_settings_count
+        wait_for_analysis_count = len(
+            re.findall(r"\bnew\s+WaitForAnalysis\s*\(", source_without_literals)
+        )
+        if wait_for_analysis_count:
+            actual_wait_for_analysis_calls[source_path] = wait_for_analysis_count
     if actual_engine_parameter_calls != expected_engine_parameter_calls:
         raise ValueError(f"setLzSaiEngine call sites changed: {actual_engine_parameter_calls}")
     expected_set_kata_engine_calls = {
@@ -3395,6 +3540,67 @@ def build_inventory(legacy_root: Path, matrix_path: Path) -> dict[str, Any]:
             "stopAutoAna(true, true) call sites changed: "
             f"{actual_stop_auto_analysis_calls}"
         )
+    expected_analysis_settings_calls = {
+        "src/main/java/featurecat/lizzie/analysis/AnalysisEngine.java": 1,
+        "src/main/java/featurecat/lizzie/gui/LizzieFrame.java": 1,
+        "src/main/java/featurecat/lizzie/gui/StartAnaDialog.java": 1,
+    }
+    if actual_analysis_settings_calls != expected_analysis_settings_calls:
+        raise ValueError(
+            "AnalysisSettings constructor call sites changed: "
+            f"{actual_analysis_settings_calls}"
+        )
+    expected_analysis_settings_modes = {
+        "src/main/java/featurecat/lizzie/analysis/AnalysisEngine.java": (
+            r"\bnew\s+AnalysisSettings\s*\(\s*true\s*,\s*true\s*\)",
+            "error redo",
+        ),
+        "src/main/java/featurecat/lizzie/gui/LizzieFrame.java": (
+            r"\bnew\s+AnalysisSettings\s*\(\s*false\s*,\s*false\s*\)",
+            "normal settings",
+        ),
+        "src/main/java/featurecat/lizzie/gui/StartAnaDialog.java": (
+            r"\bnew\s+AnalysisSettings\s*\(\s*false\s*,\s*false\s*,\s*"
+            r"AnalysisSettings\.Context\.BATCH\s*\)",
+            "explicit batch settings",
+        ),
+    }
+    for source_path, (pattern, mode) in expected_analysis_settings_modes.items():
+        source = strip_java_comments(
+            (legacy_root / source_path).read_text(encoding="utf-8", errors="replace")
+        )
+        source_without_literals = re.sub(
+            r'"(?:\\.|[^"\\])*"|\'(?:\\.|[^\'\\])*\'', "", source
+        )
+        if len(re.findall(pattern, source_without_literals)) != 1:
+            raise ValueError(f"AnalysisSettings {mode} call changed in {source_path}")
+    expected_wait_for_analysis_calls = {
+        "src/main/java/featurecat/lizzie/analysis/AnalysisEngine.java": 1,
+        "src/main/java/featurecat/lizzie/gui/LizzieFrame.java": 1,
+    }
+    if actual_wait_for_analysis_calls != expected_wait_for_analysis_calls:
+        raise ValueError(
+            "WaitForAnalysis constructor call sites changed: "
+            f"{actual_wait_for_analysis_calls}"
+        )
+    config_source = strip_java_comments(
+        (legacy_root / "src/main/java/featurecat/lizzie/Config.java").read_text(
+            encoding="utf-8", errors="replace"
+        )
+    )
+    expected_analysis_defaults = {
+        "analysis-max-visits": r'optInt\(\s*"analysis-max-visits"\s*,\s*1\s*\)',
+        "analysis-use-current-rules": (
+            r'optBoolean\(\s*"analysis-use-current-rules"\s*,\s*true\s*\)'
+        ),
+        "analysis-always-override": (
+            r'optBoolean\(\s*"analysis-always-override"\s*,\s*false\s*\)'
+        ),
+        "analysis-auto-quit": r'optBoolean\(\s*"analysis-auto-quit"\s*,\s*true\s*\)',
+    }
+    for key, pattern in expected_analysis_defaults.items():
+        if len(re.findall(pattern, config_source)) != 1:
+            raise ValueError(f"{key} default changed")
     mapped_keys = sum(bool(entry["matrix_ids"]) for entry in config_entries)
     menu["keys"] = [
         {
@@ -3472,7 +3678,7 @@ def build_inventory(legacy_root: Path, matrix_path: Path) -> dict[str, Any]:
         raise ValueError("Every normalized legacy input path must map to the matrix")
 
     return {
-        "schema_version": 48,
+        "schema_version": 49,
         "source": {
             "root": "../lizzieyzy-next-main",
             "version": read_legacy_version(legacy_root),
