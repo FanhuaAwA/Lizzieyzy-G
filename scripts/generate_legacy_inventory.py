@@ -401,7 +401,208 @@ INPUT_POINTER_SOURCES = (
         "src/main/java/featurecat/lizzie/gui/MoreEngines.java",
         {"mouseClicked"},
     ),
+    (
+        "LizzieFrameMainPanel",
+        "src/main/java/featurecat/lizzie/gui/LizzieFrame.java",
+        {"mouseEntered"},
+        {"mouseEntered": 1},
+    ),
+    (
+        "LizzieFrameVariationTreeClick",
+        "src/main/java/featurecat/lizzie/gui/LizzieFrame.java",
+        {"mouseClicked"},
+        {"mouseClicked": 1},
+    ),
+    (
+        "LizzieFrameVariationTreeWheel",
+        "src/main/java/featurecat/lizzie/gui/LizzieFrame.java",
+        {"mouseWheelMoved"},
+        {"mouseWheelMoved": 1},
+    ),
+    (
+        "LizzieFrameVariationTreeMotion",
+        "src/main/java/featurecat/lizzie/gui/LizzieFrame.java",
+        {"mouseMoved"},
+        {"mouseMoved": 1},
+    ),
+    (
+        "LizzieFrameMoveListScrollPaneMotion",
+        "src/main/java/featurecat/lizzie/gui/LizzieFrame.java",
+        {"mouseMoved"},
+        {"mouseMoved": 2},
+    ),
+    (
+        "LizzieFrameMoveListScrollPaneClick",
+        "src/main/java/featurecat/lizzie/gui/LizzieFrame.java",
+        {"mouseClicked"},
+        {"mouseClicked": 2},
+    ),
+    (
+        "LizzieFrameMoveListTableWheel",
+        "src/main/java/featurecat/lizzie/gui/LizzieFrame.java",
+        {"mouseWheelMoved"},
+        {"mouseWheelMoved": 2},
+    ),
+    (
+        "LizzieFrameMoveListTableClick",
+        "src/main/java/featurecat/lizzie/gui/LizzieFrame.java",
+        {"mouseClicked"},
+        {"mouseClicked": 3},
+    ),
+    (
+        "LizzieFrameBlunderContentHover",
+        "src/main/java/featurecat/lizzie/gui/LizzieFrame.java",
+        {"mouseExited", "mouseEntered"},
+        {"mouseExited": 1, "mouseEntered": 2},
+    ),
+    (
+        "LizzieFrameBlunderBlackClick",
+        "src/main/java/featurecat/lizzie/gui/LizzieFrame.java",
+        {"mouseClicked"},
+        {"mouseClicked": 4},
+    ),
+    (
+        "LizzieFrameBlunderWhiteClick",
+        "src/main/java/featurecat/lizzie/gui/LizzieFrame.java",
+        {"mouseClicked"},
+        {"mouseClicked": 5},
+    ),
+    (
+        "LizzieFrameBlunderBlackHeaderRelease",
+        "src/main/java/featurecat/lizzie/gui/LizzieFrame.java",
+        {"mouseReleased"},
+        {"mouseReleased": 1},
+    ),
+    (
+        "LizzieFrameBlunderBlackHeaderHover",
+        "src/main/java/featurecat/lizzie/gui/LizzieFrame.java",
+        {"mouseExited", "mouseEntered"},
+        {"mouseExited": 2, "mouseEntered": 3},
+    ),
+    (
+        "LizzieFrameBlunderBlackHover",
+        "src/main/java/featurecat/lizzie/gui/LizzieFrame.java",
+        {"mouseExited", "mouseEntered"},
+        {"mouseExited": 3, "mouseEntered": 4},
+    ),
+    (
+        "LizzieFrameBlunderWhiteHeaderRelease",
+        "src/main/java/featurecat/lizzie/gui/LizzieFrame.java",
+        {"mouseReleased"},
+        {"mouseReleased": 2},
+    ),
+    (
+        "LizzieFrameBlunderWhiteHeaderExit",
+        "src/main/java/featurecat/lizzie/gui/LizzieFrame.java",
+        {"mouseExited"},
+        {"mouseExited": 4},
+    ),
+    (
+        "LizzieFrameBlunderWhiteHover",
+        "src/main/java/featurecat/lizzie/gui/LizzieFrame.java",
+        {"mouseExited", "mouseEntered"},
+        {"mouseExited": 5, "mouseEntered": 5},
+    ),
+    (
+        "LizzieFrameBlunderMinBlackHover",
+        "src/main/java/featurecat/lizzie/gui/LizzieFrame.java",
+        {"mouseExited", "mouseEntered"},
+        {"mouseExited": 6, "mouseEntered": 6},
+    ),
+    (
+        "LizzieFrameBlunderMinWhiteHover",
+        "src/main/java/featurecat/lizzie/gui/LizzieFrame.java",
+        {"mouseExited", "mouseEntered"},
+        {"mouseExited": 7, "mouseEntered": 7},
+    ),
+    (
+        "LizzieFrameBlunderMinBlackScrollbarHover",
+        "src/main/java/featurecat/lizzie/gui/LizzieFrame.java",
+        {"mouseExited", "mouseEntered"},
+        {"mouseExited": 8, "mouseEntered": 8},
+    ),
+    (
+        "LizzieFrameBlunderMinWhiteScrollbarHover",
+        "src/main/java/featurecat/lizzie/gui/LizzieFrame.java",
+        {"mouseExited", "mouseEntered"},
+        {"mouseExited": 9, "mouseEntered": 9},
+    ),
+    (
+        "LizzieFrameCommentBlunderControlHover",
+        "src/main/java/featurecat/lizzie/gui/LizzieFrame.java",
+        {"mouseExited", "mouseEntered"},
+        {"mouseExited": 10, "mouseEntered": 10},
+    ),
+    (
+        "LizzieFrameCommentTextAreaHover",
+        "src/main/java/featurecat/lizzie/gui/LizzieFrame.java",
+        {"mouseExited", "mouseEntered"},
+        {"mouseExited": 11, "mouseEntered": 11},
+    ),
+    (
+        "LizzieFrameCommentTextPaneHover",
+        "src/main/java/featurecat/lizzie/gui/LizzieFrame.java",
+        {"mouseExited", "mouseEntered"},
+        {"mouseExited": 12, "mouseEntered": 12},
+    ),
+    (
+        "LizzieFrameCommentTextAreaClick",
+        "src/main/java/featurecat/lizzie/gui/LizzieFrame.java",
+        {"mouseClicked"},
+        {"mouseClicked": 6},
+    ),
+    (
+        "LizzieFrameCommentTextPaneClick",
+        "src/main/java/featurecat/lizzie/gui/LizzieFrame.java",
+        {"mouseClicked"},
+        {"mouseClicked": 7},
+    ),
+    (
+        "LizzieFrameKifuLoadGlassPaneMotion",
+        "src/main/java/featurecat/lizzie/gui/LizzieFrame.java",
+        {"mouseDragged", "mouseMoved"},
+        {"mouseDragged": 1, "mouseMoved": 3},
+    ),
+    (
+        "LizzieFrameTempGamePanelMotion",
+        "src/main/java/featurecat/lizzie/gui/LizzieFrame.java",
+        {"mouseMoved"},
+        {"mouseMoved": 4},
+    ),
+    (
+        "LizzieFrameTempGamePanelClick",
+        "src/main/java/featurecat/lizzie/gui/LizzieFrame.java",
+        {"mouseClicked"},
+        {"mouseClicked": 8},
+    ),
+    (
+        "LizzieFrameBigBoardPanelClick",
+        "src/main/java/featurecat/lizzie/gui/LizzieFrame.java",
+        {"mouseClicked"},
+        {"mouseClicked": 9},
+    ),
+    (
+        "LizzieFramePlayerStrengthModelComboHover",
+        "src/main/java/featurecat/lizzie/gui/LizzieFrame.java",
+        {"mouseEntered", "mouseExited"},
+        {"mouseEntered": 13, "mouseExited": 13},
+    ),
+    (
+        "LizzieFramePlayerStrengthMoveHitMapHover",
+        "src/main/java/featurecat/lizzie/gui/LizzieFrame.java",
+        {"mouseMoved", "mouseExited"},
+        {"mouseMoved": 5, "mouseExited": 14},
+    ),
+    (
+        "LizzieFramePlayerStrengthMatchChartHover",
+        "src/main/java/featurecat/lizzie/gui/LizzieFrame.java",
+        {"mouseMoved", "mouseExited"},
+        {"mouseMoved": 6, "mouseExited": 15},
+    ),
 )
+FULL_POINTER_COVERAGE_PATHS = {
+    "src/main/java/featurecat/lizzie/gui/LizzieFrame.java",
+}
 INPUT_MODIFIER_CHECKS = (
     ("Alt", re.compile(r"\be\.isAltDown\s*\(\s*\)")),
     ("Control", re.compile(r"\be\.isControlDown\s*\(\s*\)")),
@@ -1404,6 +1605,28 @@ def collect_input_cases(legacy_root: Path) -> dict[str, Any]:
         {key: value for key, value in source.items() if key not in {"cases", "bindings"}}
         for source in sources
     ]
+    for source_path in FULL_POINTER_COVERAGE_PATHS:
+        selected_pairs: list[tuple[str, int]] = []
+        for source in INPUT_POINTER_SOURCES:
+            if source[1] != source_path:
+                continue
+            if len(source) != 4:
+                raise ValueError(f"{source_path} full pointer coverage requires method ordinals")
+            expected_events, method_ordinals = source[2], source[3]
+            selected_pairs.extend((event, method_ordinals[event]) for event in expected_events)
+        input_path = legacy_root / source_path
+        source_text = strip_java_comments(
+            input_path.read_text(encoding="utf-8", errors="replace")
+        )
+        actual_counts: dict[str, int] = {}
+        actual_pairs: set[tuple[str, int]] = set()
+        for method_match in INPUT_POINTER_METHOD.finditer(source_text):
+            event = method_match.group("event")
+            actual_counts[event] = actual_counts.get(event, 0) + 1
+            actual_pairs.add((event, actual_counts[event]))
+        if len(selected_pairs) != len(set(selected_pairs)) or set(selected_pairs) != actual_pairs:
+            raise ValueError(f"{input_path.name} pointer method coverage differs from expected")
+
     pointer_sources = [
         collect_pointer_source(legacy_root, *source)
         for source in INPUT_POINTER_SOURCES
@@ -1478,8 +1701,8 @@ def validate_matrix(
     dict[str, list[str]],
     dict[str, list[str]],
 ]:
-    if matrix.get("schema_version") != 31:
-        raise ValueError("Matrix schema_version must be 31")
+    if matrix.get("schema_version") != 32:
+        raise ValueError("Matrix schema_version must be 32")
     allowed_statuses = matrix.get("allowed_statuses")
     if allowed_statuses != list(ALLOWED_STATUSES):
         raise ValueError("Matrix allowed_statuses differ from the repository contract")
@@ -1730,7 +1953,7 @@ def build_inventory(legacy_root: Path, matrix_path: Path) -> dict[str, Any]:
         raise ValueError("Every normalized legacy input path must map to the matrix")
 
     return {
-        "schema_version": 31,
+        "schema_version": 32,
         "source": {
             "root": "../lizzieyzy-next-main",
             "version": read_legacy_version(legacy_root),
@@ -1749,7 +1972,7 @@ def build_inventory(legacy_root: Path, matrix_path: Path) -> dict[str, Any]:
             "Menu literal labels cover active string-literal menu constructors; dynamic labels remain represented by their resource or runtime source.",
             "Menu accelerators cover explicit Menu.java setAccelerator calls and direct OS.isWindows guards; other input bindings remain T-003 work.",
             "Input key bindings symbolically expand Input.java, InputIndependentMainBoard.java, InputIndependentSubboard.java, InputSubboard.java, FloatBoard.java, AnalysisFrame table/window, DrawPainting.java, ChooseMoreEngine.java, LoadEngine.java, OtherPrograms.java, TencentKifuDownload.java, FoxKifuDownload.java, BrowserFrame.java, and CaptureTsumeGoFrame.java key dispatch, condition evaluations, executed statements, empty-listener and empty-statement paths, and switch fall-through; controlIsPressed means Control on every platform plus Meta on macOS, and BrowserFrame dispatches Enter through getKeyChar.",
-            "Pointer bindings symbolically expand the main Input listener, the two indexed subboard listeners, FloatBoard, AnalysisFrame, DrawPainting, ChooseMoreEngine, LoadEngine, OtherPrograms, TencentKifuDownload, FoxKifuDownload, BrowserFrame load/stop/label listeners, JFontTextArea, JFontTextField, JIMSendTextPane, the two DemoScrollBarUI2 arrow-button listeners, JPaintTextPane, WindowMenuStrip, YikeLiveDialog, IndependentSubBoard and IndependentMainBoard lock/close/top-button plus window listeners, BlunderListPanel, SidebarHeaderPanel, BottomToolbar, and ConfigDialog2 sidebar-nav/toggle-row/color-label listeners across mouse, motion, drag, wheel, and release condition evaluations, early returns, executed statements, and explicit no-action paths; data-dependent loops and click try/catch handlers are preserved as normalized atomic statements, while local boolean tracking retains a known value across loops that can only assign the same literal so impossible branches are pruned.",
+            "Pointer bindings symbolically expand the main Input listener, the two indexed subboard listeners, FloatBoard, AnalysisFrame, DrawPainting, ChooseMoreEngine, LoadEngine, OtherPrograms, TencentKifuDownload, FoxKifuDownload, BrowserFrame load/stop/label listeners, JFontTextArea, JFontTextField, JIMSendTextPane, the two DemoScrollBarUI2 arrow-button listeners, JPaintTextPane, WindowMenuStrip, YikeLiveDialog, IndependentSubBoard and IndependentMainBoard lock/close/top-button plus window listeners, BlunderListPanel, SidebarHeaderPanel, BottomToolbar, ConfigDialog2 sidebar-nav/toggle-row/color-label listeners, MoreEngines, and the 33 indexed LizzieFrame listeners across mouse, motion, drag, wheel, and release condition evaluations, early returns, executed statements, and explicit no-action paths; data-dependent loops and click try/catch handlers are preserved as normalized atomic statements, while local boolean tracking retains a known value across loops that can only assign the same literal so impossible branches are pruned.",
             "Other key-listener and pointer-listener classes remain T-003 work.",
         ],
         "matrix_summary": {

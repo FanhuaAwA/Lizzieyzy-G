@@ -1,5 +1,5 @@
 {
-  "schema_version": 31,
+  "schema_version": 32,
   "source": {
     "root": "../lizzieyzy-next-main",
     "version": "yzy2.5.3",
@@ -18,25 +18,25 @@
     "Menu literal labels cover active string-literal menu constructors; dynamic labels remain represented by their resource or runtime source.",
     "Menu accelerators cover explicit Menu.java setAccelerator calls and direct OS.isWindows guards; other input bindings remain T-003 work.",
     "Input key bindings symbolically expand Input.java, InputIndependentMainBoard.java, InputIndependentSubboard.java, InputSubboard.java, FloatBoard.java, AnalysisFrame table/window, DrawPainting.java, ChooseMoreEngine.java, LoadEngine.java, OtherPrograms.java, TencentKifuDownload.java, FoxKifuDownload.java, BrowserFrame.java, and CaptureTsumeGoFrame.java key dispatch, condition evaluations, executed statements, empty-listener and empty-statement paths, and switch fall-through; controlIsPressed means Control on every platform plus Meta on macOS, and BrowserFrame dispatches Enter through getKeyChar.",
-    "Pointer bindings symbolically expand the main Input listener, the two indexed subboard listeners, FloatBoard, AnalysisFrame, DrawPainting, ChooseMoreEngine, LoadEngine, OtherPrograms, TencentKifuDownload, FoxKifuDownload, BrowserFrame load/stop/label listeners, JFontTextArea, JFontTextField, JIMSendTextPane, the two DemoScrollBarUI2 arrow-button listeners, JPaintTextPane, WindowMenuStrip, YikeLiveDialog, IndependentSubBoard and IndependentMainBoard lock/close/top-button plus window listeners, BlunderListPanel, SidebarHeaderPanel, BottomToolbar, and ConfigDialog2 sidebar-nav/toggle-row/color-label listeners across mouse, motion, drag, wheel, and release condition evaluations, early returns, executed statements, and explicit no-action paths; data-dependent loops and click try/catch handlers are preserved as normalized atomic statements, while local boolean tracking retains a known value across loops that can only assign the same literal so impossible branches are pruned.",
+    "Pointer bindings symbolically expand the main Input listener, the two indexed subboard listeners, FloatBoard, AnalysisFrame, DrawPainting, ChooseMoreEngine, LoadEngine, OtherPrograms, TencentKifuDownload, FoxKifuDownload, BrowserFrame load/stop/label listeners, JFontTextArea, JFontTextField, JIMSendTextPane, the two DemoScrollBarUI2 arrow-button listeners, JPaintTextPane, WindowMenuStrip, YikeLiveDialog, IndependentSubBoard and IndependentMainBoard lock/close/top-button plus window listeners, BlunderListPanel, SidebarHeaderPanel, BottomToolbar, ConfigDialog2 sidebar-nav/toggle-row/color-label listeners, MoreEngines, and the 33 indexed LizzieFrame listeners across mouse, motion, drag, wheel, and release condition evaluations, early returns, executed statements, and explicit no-action paths; data-dependent loops and click try/catch handlers are preserved as normalized atomic statements, while local boolean tracking retains a known value across loops that can only assign the same literal so impossible branches are pruned.",
     "Other key-listener and pointer-listener classes remain T-003 work."
   ],
   "matrix_summary": {
-    "rows": 50,
+    "rows": 52,
     "statuses": {
       "未盘点": 0,
-      "已盘点": 50,
+      "已盘点": 52,
       "实施中": 0,
       "已实现待验证": 0,
       "已验证": 0,
       "用户批准不迁移": 0
     },
     "active_config_leaf_keys": 596,
-    "mapped_config_leaf_keys": 146,
-    "unmapped_config_leaf_keys": 450,
+    "mapped_config_leaf_keys": 179,
+    "unmapped_config_leaf_keys": 417,
     "active_menu_resource_keys": 383,
-    "mapped_menu_resource_keys": 93,
-    "unmapped_menu_resource_keys": 290,
+    "mapped_menu_resource_keys": 98,
+    "unmapped_menu_resource_keys": 285,
     "active_menu_literal_labels": 12,
     "mapped_menu_literal_labels": 12,
     "unmapped_menu_literal_labels": 0,
@@ -49,11 +49,11 @@
     "active_input_key_bindings": 365,
     "mapped_input_key_bindings": 365,
     "unmapped_input_key_bindings": 0,
-    "active_input_pointer_events": 111,
-    "mapped_input_pointer_events": 111,
+    "active_input_pointer_events": 159,
+    "mapped_input_pointer_events": 159,
     "unmapped_input_pointer_events": 0,
-    "active_input_pointer_bindings": 443,
-    "mapped_input_pointer_bindings": 443,
+    "active_input_pointer_bindings": 548,
+    "mapped_input_pointer_bindings": 548,
     "unmapped_input_pointer_bindings": 0
   },
   "config": {
@@ -1330,7 +1330,9 @@
       {
         "key": "auto-save-exit",
         "reference_count": 2,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "KIFU-TEMP-SAVES-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -2334,7 +2336,9 @@
       {
         "key": "blunder-is-sorted-AF",
         "reference_count": 2,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "UI-BLUNDER-SCROLLBAR-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -2353,7 +2357,9 @@
       {
         "key": "blunder-is-sorted-NAF",
         "reference_count": 2,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "UI-BLUNDER-SCROLLBAR-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -2457,7 +2463,9 @@
       {
         "key": "blunder-sort-is-origin-order-AF",
         "reference_count": 2,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "UI-BLUNDER-SCROLLBAR-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -2476,7 +2484,9 @@
       {
         "key": "blunder-sort-is-origin-order-NAF",
         "reference_count": 2,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "UI-BLUNDER-SCROLLBAR-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -2495,7 +2505,9 @@
       {
         "key": "blunder-sort-num-AF",
         "reference_count": 2,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "UI-BLUNDER-SCROLLBAR-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -2514,7 +2526,9 @@
       {
         "key": "blunder-sort-num-NAF",
         "reference_count": 2,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "UI-BLUNDER-SCROLLBAR-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -2533,7 +2547,9 @@
       {
         "key": "blunder-table-only-after",
         "reference_count": 1,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "UI-BLUNDER-SCROLLBAR-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -5040,6 +5056,7 @@
         "key": "frame-font-size",
         "reference_count": 3,
         "matrix_ids": [
+          "ANALYSIS-PLAYER-STRENGTH-001",
           "UI-TEXT-EDIT-001",
           "UI-WINDOW-MENU-STRIP-001"
         ],
@@ -6805,7 +6822,9 @@
       {
         "key": "load-save-zoom",
         "reference_count": 2,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "KIFU-TEMP-SAVES-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -8757,7 +8776,9 @@
       {
         "key": "resume-previous-game",
         "reference_count": 3,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "KIFU-TEMP-SAVES-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -8801,7 +8822,9 @@
       {
         "key": "save-auto-game-index",
         "reference_count": 2,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "KIFU-TEMP-SAVES-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java",
@@ -8820,7 +8843,9 @@
       {
         "key": "save-auto-game-index1",
         "reference_count": 2,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "KIFU-TEMP-SAVES-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Lizzie.java",
@@ -8839,7 +8864,9 @@
       {
         "key": "save-auto-game-index2",
         "reference_count": 2,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "KIFU-TEMP-SAVES-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Lizzie.java",
@@ -8858,7 +8885,9 @@
       {
         "key": "save-auto-game-move-list",
         "reference_count": 1,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "KIFU-TEMP-SAVES-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java",
@@ -8871,7 +8900,9 @@
       {
         "key": "save-auto-game-move-list1",
         "reference_count": 1,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "KIFU-TEMP-SAVES-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java",
@@ -8884,7 +8915,9 @@
       {
         "key": "save-auto-game-move-number",
         "reference_count": 1,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "KIFU-TEMP-SAVES-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java",
@@ -8897,7 +8930,9 @@
       {
         "key": "save-auto-game-move-number1",
         "reference_count": 1,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "KIFU-TEMP-SAVES-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java",
@@ -8910,7 +8945,9 @@
       {
         "key": "save-auto-game-time",
         "reference_count": 1,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "KIFU-TEMP-SAVES-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java",
@@ -8923,7 +8960,9 @@
       {
         "key": "save-auto-game-time1",
         "reference_count": 1,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "KIFU-TEMP-SAVES-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java",
@@ -8949,7 +8988,9 @@
       {
         "key": "save-game-index",
         "reference_count": 3,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "KIFU-TEMP-SAVES-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java",
@@ -8974,7 +9015,9 @@
       {
         "key": "save-game-move-list",
         "reference_count": 3,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "KIFU-TEMP-SAVES-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java",
@@ -8999,7 +9042,9 @@
       {
         "key": "save-game-move-number",
         "reference_count": 3,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "KIFU-TEMP-SAVES-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java",
@@ -9024,7 +9069,9 @@
       {
         "key": "save-game-name",
         "reference_count": 3,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "KIFU-TEMP-SAVES-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java",
@@ -9049,7 +9096,9 @@
       {
         "key": "save-game-time",
         "reference_count": 3,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "KIFU-TEMP-SAVES-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java",
@@ -9193,7 +9242,9 @@
       {
         "key": "score-loss-threshold-1",
         "reference_count": 2,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "ANALYSIS-PLAYER-STRENGTH-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -9212,7 +9263,9 @@
       {
         "key": "score-loss-threshold-2",
         "reference_count": 2,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "ANALYSIS-PLAYER-STRENGTH-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -9231,7 +9284,9 @@
       {
         "key": "score-loss-threshold-3",
         "reference_count": 2,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "ANALYSIS-PLAYER-STRENGTH-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -9250,7 +9305,9 @@
       {
         "key": "score-loss-threshold-4",
         "reference_count": 2,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "ANALYSIS-PLAYER-STRENGTH-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -9269,7 +9326,9 @@
       {
         "key": "score-loss-threshold-5",
         "reference_count": 2,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "ANALYSIS-PLAYER-STRENGTH-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -10111,6 +10170,7 @@
         "key": "show-comment",
         "reference_count": 8,
         "matrix_ids": [
+          "KIFU-TEMP-SAVES-001",
           "SETTINGS-GENERAL-001",
           "UI-BLUNDER-SCROLLBAR-001"
         ],
@@ -10242,7 +10302,9 @@
       {
         "key": "show-double-menu",
         "reference_count": 2,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "KIFU-TEMP-SAVES-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -10806,7 +10868,10 @@
       {
         "key": "show-list-pane",
         "reference_count": 6,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "ANALYSIS-DISPLAY-001",
+          "KIFU-TEMP-SAVES-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -12039,6 +12104,8 @@
         "reference_count": 6,
         "matrix_ids": [
           "BOARD-MAIN-INPUT-001",
+          "BOARD-VARIATION-001",
+          "KIFU-TEMP-SAVES-001",
           "SETTINGS-GENERAL-001"
         ],
         "references": [
@@ -13502,6 +13569,7 @@
         "key": "use-morandi-colors",
         "reference_count": 3,
         "matrix_ids": [
+          "ANALYSIS-PLAYER-STRENGTH-001",
           "UI-BLUNDER-SCROLLBAR-001",
           "UI-TEXT-EDIT-001",
           "UI-WINDOW-MENU-STRIP-001"
@@ -13723,7 +13791,9 @@
       {
         "key": "use-score-loss-in-move-rank",
         "reference_count": 3,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "ANALYSIS-PLAYER-STRENGTH-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -13792,7 +13862,9 @@
       {
         "key": "use-win-loss-in-move-rank",
         "reference_count": 3,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "ANALYSIS-PLAYER-STRENGTH-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -13985,6 +14057,7 @@
         "key": "win-loss-threshold-1",
         "reference_count": 2,
         "matrix_ids": [
+          "ANALYSIS-PLAYER-STRENGTH-001",
           "UI-BLUNDER-SCROLLBAR-001"
         ],
         "references": [
@@ -14006,6 +14079,7 @@
         "key": "win-loss-threshold-2",
         "reference_count": 2,
         "matrix_ids": [
+          "ANALYSIS-PLAYER-STRENGTH-001",
           "UI-BLUNDER-SCROLLBAR-001"
         ],
         "references": [
@@ -14027,6 +14101,7 @@
         "key": "win-loss-threshold-3",
         "reference_count": 2,
         "matrix_ids": [
+          "ANALYSIS-PLAYER-STRENGTH-001",
           "UI-BLUNDER-SCROLLBAR-001"
         ],
         "references": [
@@ -14048,6 +14123,7 @@
         "key": "win-loss-threshold-4",
         "reference_count": 2,
         "matrix_ids": [
+          "ANALYSIS-PLAYER-STRENGTH-001",
           "UI-BLUNDER-SCROLLBAR-001"
         ],
         "references": [
@@ -14069,6 +14145,7 @@
         "key": "win-loss-threshold-5",
         "reference_count": 2,
         "matrix_ids": [
+          "ANALYSIS-PLAYER-STRENGTH-001",
           "UI-BLUNDER-SCROLLBAR-001"
         ],
         "references": [
@@ -15926,7 +16003,9 @@
       },
       {
         "key": "Menu.listPane",
-        "matrix_ids": [],
+        "matrix_ids": [
+          "ANALYSIS-DISPLAY-001"
+        ],
         "lines": [
           1225
         ]
@@ -16319,7 +16398,9 @@
       },
       {
         "key": "Menu.playerStrengthEstimate",
-        "matrix_ids": [],
+        "matrix_ids": [
+          "ANALYSIS-PLAYER-STRENGTH-001"
+        ],
         "lines": [
           3327,
           7838
@@ -16327,7 +16408,9 @@
       },
       {
         "key": "Menu.playerStrengthEstimateButton",
-        "matrix_ids": [],
+        "matrix_ids": [
+          "ANALYSIS-PLAYER-STRENGTH-001"
+        ],
         "lines": [
           7827
         ]
@@ -16507,7 +16590,9 @@
       },
       {
         "key": "Menu.saveAndLoad",
-        "matrix_ids": [],
+        "matrix_ids": [
+          "KIFU-TEMP-SAVES-001"
+        ],
         "lines": [
           319
         ]
@@ -16532,7 +16617,9 @@
       },
       {
         "key": "Menu.saveBtn",
-        "matrix_ids": [],
+        "matrix_ids": [
+          "KIFU-TEMP-SAVES-001"
+        ],
         "lines": [
           6051
         ]
@@ -31019,10 +31106,208 @@
         "source": "src/main/java/featurecat/lizzie/gui/MoreEngines.java",
         "active_pointer_events": 1,
         "active_pointer_bindings": 1
+      },
+      {
+        "id": "LizzieFrameMainPanel",
+        "source": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java",
+        "active_pointer_events": 1,
+        "active_pointer_bindings": 2
+      },
+      {
+        "id": "LizzieFrameVariationTreeClick",
+        "source": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java",
+        "active_pointer_events": 1,
+        "active_pointer_bindings": 5
+      },
+      {
+        "id": "LizzieFrameVariationTreeWheel",
+        "source": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java",
+        "active_pointer_events": 1,
+        "active_pointer_bindings": 3
+      },
+      {
+        "id": "LizzieFrameVariationTreeMotion",
+        "source": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java",
+        "active_pointer_events": 1,
+        "active_pointer_bindings": 2
+      },
+      {
+        "id": "LizzieFrameMoveListScrollPaneMotion",
+        "source": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java",
+        "active_pointer_events": 1,
+        "active_pointer_bindings": 2
+      },
+      {
+        "id": "LizzieFrameMoveListScrollPaneClick",
+        "source": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java",
+        "active_pointer_events": 1,
+        "active_pointer_bindings": 1
+      },
+      {
+        "id": "LizzieFrameMoveListTableWheel",
+        "source": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java",
+        "active_pointer_events": 1,
+        "active_pointer_bindings": 4
+      },
+      {
+        "id": "LizzieFrameMoveListTableClick",
+        "source": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java",
+        "active_pointer_events": 1,
+        "active_pointer_bindings": 3
+      },
+      {
+        "id": "LizzieFrameBlunderContentHover",
+        "source": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java",
+        "active_pointer_events": 2,
+        "active_pointer_bindings": 4
+      },
+      {
+        "id": "LizzieFrameBlunderBlackClick",
+        "source": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java",
+        "active_pointer_events": 1,
+        "active_pointer_bindings": 3
+      },
+      {
+        "id": "LizzieFrameBlunderWhiteClick",
+        "source": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java",
+        "active_pointer_events": 1,
+        "active_pointer_bindings": 3
+      },
+      {
+        "id": "LizzieFrameBlunderBlackHeaderRelease",
+        "source": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java",
+        "active_pointer_events": 1,
+        "active_pointer_bindings": 5
+      },
+      {
+        "id": "LizzieFrameBlunderBlackHeaderHover",
+        "source": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java",
+        "active_pointer_events": 2,
+        "active_pointer_bindings": 4
+      },
+      {
+        "id": "LizzieFrameBlunderBlackHover",
+        "source": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java",
+        "active_pointer_events": 2,
+        "active_pointer_bindings": 4
+      },
+      {
+        "id": "LizzieFrameBlunderWhiteHeaderRelease",
+        "source": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java",
+        "active_pointer_events": 1,
+        "active_pointer_bindings": 5
+      },
+      {
+        "id": "LizzieFrameBlunderWhiteHeaderExit",
+        "source": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java",
+        "active_pointer_events": 1,
+        "active_pointer_bindings": 2
+      },
+      {
+        "id": "LizzieFrameBlunderWhiteHover",
+        "source": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java",
+        "active_pointer_events": 2,
+        "active_pointer_bindings": 4
+      },
+      {
+        "id": "LizzieFrameBlunderMinBlackHover",
+        "source": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java",
+        "active_pointer_events": 2,
+        "active_pointer_bindings": 4
+      },
+      {
+        "id": "LizzieFrameBlunderMinWhiteHover",
+        "source": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java",
+        "active_pointer_events": 2,
+        "active_pointer_bindings": 4
+      },
+      {
+        "id": "LizzieFrameBlunderMinBlackScrollbarHover",
+        "source": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java",
+        "active_pointer_events": 2,
+        "active_pointer_bindings": 4
+      },
+      {
+        "id": "LizzieFrameBlunderMinWhiteScrollbarHover",
+        "source": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java",
+        "active_pointer_events": 2,
+        "active_pointer_bindings": 4
+      },
+      {
+        "id": "LizzieFrameCommentBlunderControlHover",
+        "source": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java",
+        "active_pointer_events": 2,
+        "active_pointer_bindings": 2
+      },
+      {
+        "id": "LizzieFrameCommentTextAreaHover",
+        "source": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java",
+        "active_pointer_events": 2,
+        "active_pointer_bindings": 4
+      },
+      {
+        "id": "LizzieFrameCommentTextPaneHover",
+        "source": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java",
+        "active_pointer_events": 2,
+        "active_pointer_bindings": 4
+      },
+      {
+        "id": "LizzieFrameCommentTextAreaClick",
+        "source": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java",
+        "active_pointer_events": 1,
+        "active_pointer_bindings": 2
+      },
+      {
+        "id": "LizzieFrameCommentTextPaneClick",
+        "source": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java",
+        "active_pointer_events": 1,
+        "active_pointer_bindings": 2
+      },
+      {
+        "id": "LizzieFrameKifuLoadGlassPaneMotion",
+        "source": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java",
+        "active_pointer_events": 2,
+        "active_pointer_bindings": 2
+      },
+      {
+        "id": "LizzieFrameTempGamePanelMotion",
+        "source": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java",
+        "active_pointer_events": 1,
+        "active_pointer_bindings": 5
+      },
+      {
+        "id": "LizzieFrameTempGamePanelClick",
+        "source": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java",
+        "active_pointer_events": 1,
+        "active_pointer_bindings": 1
+      },
+      {
+        "id": "LizzieFrameBigBoardPanelClick",
+        "source": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java",
+        "active_pointer_events": 1,
+        "active_pointer_bindings": 5
+      },
+      {
+        "id": "LizzieFramePlayerStrengthModelComboHover",
+        "source": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java",
+        "active_pointer_events": 2,
+        "active_pointer_bindings": 2
+      },
+      {
+        "id": "LizzieFramePlayerStrengthMoveHitMapHover",
+        "source": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java",
+        "active_pointer_events": 2,
+        "active_pointer_bindings": 2
+      },
+      {
+        "id": "LizzieFramePlayerStrengthMatchChartHover",
+        "source": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java",
+        "active_pointer_events": 2,
+        "active_pointer_bindings": 2
       }
     ],
-    "active_pointer_events": 111,
-    "active_pointer_bindings": 443,
+    "active_pointer_events": 159,
+    "active_pointer_bindings": 548,
     "pointer_events": [
       {
         "event_id": "InputIndependentSubboard:mouseClicked",
@@ -32132,6 +32417,486 @@
         "binding_count": 1,
         "matrix_ids": [
           "ENGINE-LIFECYCLE-001"
+        ]
+      },
+      {
+        "event_id": "LizzieFrameMainPanel:mouseEntered",
+        "source_id": "LizzieFrameMainPanel",
+        "event": "mouseEntered",
+        "line": 642,
+        "binding_count": 2,
+        "matrix_ids": [
+          "BOARD-TEMPORARY-001"
+        ]
+      },
+      {
+        "event_id": "LizzieFrameVariationTreeClick:mouseClicked",
+        "source_id": "LizzieFrameVariationTreeClick",
+        "event": "mouseClicked",
+        "line": 746,
+        "binding_count": 5,
+        "matrix_ids": [
+          "BOARD-VARIATION-001"
+        ]
+      },
+      {
+        "event_id": "LizzieFrameVariationTreeWheel:mouseWheelMoved",
+        "source_id": "LizzieFrameVariationTreeWheel",
+        "event": "mouseWheelMoved",
+        "line": 763,
+        "binding_count": 3,
+        "matrix_ids": [
+          "BOARD-VARIATION-001"
+        ]
+      },
+      {
+        "event_id": "LizzieFrameVariationTreeMotion:mouseMoved",
+        "source_id": "LizzieFrameVariationTreeMotion",
+        "event": "mouseMoved",
+        "line": 816,
+        "binding_count": 2,
+        "matrix_ids": [
+          "BOARD-VARIATION-001"
+        ]
+      },
+      {
+        "event_id": "LizzieFrameMoveListScrollPaneMotion:mouseMoved",
+        "source_id": "LizzieFrameMoveListScrollPaneMotion",
+        "event": "mouseMoved",
+        "line": 822,
+        "binding_count": 2,
+        "matrix_ids": [
+          "ANALYSIS-DISPLAY-001"
+        ]
+      },
+      {
+        "event_id": "LizzieFrameMoveListScrollPaneClick:mouseClicked",
+        "source_id": "LizzieFrameMoveListScrollPaneClick",
+        "event": "mouseClicked",
+        "line": 828,
+        "binding_count": 1,
+        "matrix_ids": [
+          "ANALYSIS-DISPLAY-001"
+        ]
+      },
+      {
+        "event_id": "LizzieFrameMoveListTableWheel:mouseWheelMoved",
+        "source_id": "LizzieFrameMoveListTableWheel",
+        "event": "mouseWheelMoved",
+        "line": 908,
+        "binding_count": 4,
+        "matrix_ids": [
+          "ANALYSIS-DISPLAY-001"
+        ]
+      },
+      {
+        "event_id": "LizzieFrameMoveListTableClick:mouseClicked",
+        "source_id": "LizzieFrameMoveListTableClick",
+        "event": "mouseClicked",
+        "line": 925,
+        "binding_count": 3,
+        "matrix_ids": [
+          "ANALYSIS-DISPLAY-001"
+        ]
+      },
+      {
+        "event_id": "LizzieFrameBlunderContentHover:mouseExited",
+        "source_id": "LizzieFrameBlunderContentHover",
+        "event": "mouseExited",
+        "line": 1134,
+        "binding_count": 2,
+        "matrix_ids": [
+          "UI-BLUNDER-SCROLLBAR-001"
+        ]
+      },
+      {
+        "event_id": "LizzieFrameBlunderContentHover:mouseEntered",
+        "source_id": "LizzieFrameBlunderContentHover",
+        "event": "mouseEntered",
+        "line": 1141,
+        "binding_count": 2,
+        "matrix_ids": [
+          "UI-BLUNDER-SCROLLBAR-001"
+        ]
+      },
+      {
+        "event_id": "LizzieFrameBlunderBlackClick:mouseClicked",
+        "source_id": "LizzieFrameBlunderBlackClick",
+        "event": "mouseClicked",
+        "line": 1190,
+        "binding_count": 3,
+        "matrix_ids": [
+          "UI-BLUNDER-SCROLLBAR-001"
+        ]
+      },
+      {
+        "event_id": "LizzieFrameBlunderWhiteClick:mouseClicked",
+        "source_id": "LizzieFrameBlunderWhiteClick",
+        "event": "mouseClicked",
+        "line": 1244,
+        "binding_count": 3,
+        "matrix_ids": [
+          "UI-BLUNDER-SCROLLBAR-001"
+        ]
+      },
+      {
+        "event_id": "LizzieFrameBlunderBlackHeaderRelease:mouseReleased",
+        "source_id": "LizzieFrameBlunderBlackHeaderRelease",
+        "event": "mouseReleased",
+        "line": 1271,
+        "binding_count": 5,
+        "matrix_ids": [
+          "UI-BLUNDER-SCROLLBAR-001"
+        ]
+      },
+      {
+        "event_id": "LizzieFrameBlunderBlackHeaderHover:mouseExited",
+        "source_id": "LizzieFrameBlunderBlackHeaderHover",
+        "event": "mouseExited",
+        "line": 1301,
+        "binding_count": 2,
+        "matrix_ids": [
+          "UI-BLUNDER-SCROLLBAR-001"
+        ]
+      },
+      {
+        "event_id": "LizzieFrameBlunderBlackHeaderHover:mouseEntered",
+        "source_id": "LizzieFrameBlunderBlackHeaderHover",
+        "event": "mouseEntered",
+        "line": 1308,
+        "binding_count": 2,
+        "matrix_ids": [
+          "UI-BLUNDER-SCROLLBAR-001"
+        ]
+      },
+      {
+        "event_id": "LizzieFrameBlunderBlackHover:mouseExited",
+        "source_id": "LizzieFrameBlunderBlackHover",
+        "event": "mouseExited",
+        "line": 1318,
+        "binding_count": 2,
+        "matrix_ids": [
+          "UI-BLUNDER-SCROLLBAR-001"
+        ]
+      },
+      {
+        "event_id": "LizzieFrameBlunderBlackHover:mouseEntered",
+        "source_id": "LizzieFrameBlunderBlackHover",
+        "event": "mouseEntered",
+        "line": 1325,
+        "binding_count": 2,
+        "matrix_ids": [
+          "UI-BLUNDER-SCROLLBAR-001"
+        ]
+      },
+      {
+        "event_id": "LizzieFrameBlunderWhiteHeaderRelease:mouseReleased",
+        "source_id": "LizzieFrameBlunderWhiteHeaderRelease",
+        "event": "mouseReleased",
+        "line": 1338,
+        "binding_count": 5,
+        "matrix_ids": [
+          "UI-BLUNDER-SCROLLBAR-001"
+        ]
+      },
+      {
+        "event_id": "LizzieFrameBlunderWhiteHeaderExit:mouseExited",
+        "source_id": "LizzieFrameBlunderWhiteHeaderExit",
+        "event": "mouseExited",
+        "line": 1368,
+        "binding_count": 2,
+        "matrix_ids": [
+          "UI-BLUNDER-SCROLLBAR-001"
+        ]
+      },
+      {
+        "event_id": "LizzieFrameBlunderWhiteHover:mouseExited",
+        "source_id": "LizzieFrameBlunderWhiteHover",
+        "event": "mouseExited",
+        "line": 1377,
+        "binding_count": 2,
+        "matrix_ids": [
+          "UI-BLUNDER-SCROLLBAR-001"
+        ]
+      },
+      {
+        "event_id": "LizzieFrameBlunderWhiteHover:mouseEntered",
+        "source_id": "LizzieFrameBlunderWhiteHover",
+        "event": "mouseEntered",
+        "line": 1384,
+        "binding_count": 2,
+        "matrix_ids": [
+          "UI-BLUNDER-SCROLLBAR-001"
+        ]
+      },
+      {
+        "event_id": "LizzieFrameBlunderMinBlackHover:mouseExited",
+        "source_id": "LizzieFrameBlunderMinBlackHover",
+        "event": "mouseExited",
+        "line": 1410,
+        "binding_count": 2,
+        "matrix_ids": [
+          "UI-BLUNDER-SCROLLBAR-001"
+        ]
+      },
+      {
+        "event_id": "LizzieFrameBlunderMinBlackHover:mouseEntered",
+        "source_id": "LizzieFrameBlunderMinBlackHover",
+        "event": "mouseEntered",
+        "line": 1417,
+        "binding_count": 2,
+        "matrix_ids": [
+          "UI-BLUNDER-SCROLLBAR-001"
+        ]
+      },
+      {
+        "event_id": "LizzieFrameBlunderMinWhiteHover:mouseExited",
+        "source_id": "LizzieFrameBlunderMinWhiteHover",
+        "event": "mouseExited",
+        "line": 1427,
+        "binding_count": 2,
+        "matrix_ids": [
+          "UI-BLUNDER-SCROLLBAR-001"
+        ]
+      },
+      {
+        "event_id": "LizzieFrameBlunderMinWhiteHover:mouseEntered",
+        "source_id": "LizzieFrameBlunderMinWhiteHover",
+        "event": "mouseEntered",
+        "line": 1434,
+        "binding_count": 2,
+        "matrix_ids": [
+          "UI-BLUNDER-SCROLLBAR-001"
+        ]
+      },
+      {
+        "event_id": "LizzieFrameBlunderMinBlackScrollbarHover:mouseExited",
+        "source_id": "LizzieFrameBlunderMinBlackScrollbarHover",
+        "event": "mouseExited",
+        "line": 1462,
+        "binding_count": 2,
+        "matrix_ids": [
+          "UI-BLUNDER-SCROLLBAR-001"
+        ]
+      },
+      {
+        "event_id": "LizzieFrameBlunderMinBlackScrollbarHover:mouseEntered",
+        "source_id": "LizzieFrameBlunderMinBlackScrollbarHover",
+        "event": "mouseEntered",
+        "line": 1469,
+        "binding_count": 2,
+        "matrix_ids": [
+          "UI-BLUNDER-SCROLLBAR-001"
+        ]
+      },
+      {
+        "event_id": "LizzieFrameBlunderMinWhiteScrollbarHover:mouseExited",
+        "source_id": "LizzieFrameBlunderMinWhiteScrollbarHover",
+        "event": "mouseExited",
+        "line": 1481,
+        "binding_count": 2,
+        "matrix_ids": [
+          "UI-BLUNDER-SCROLLBAR-001"
+        ]
+      },
+      {
+        "event_id": "LizzieFrameBlunderMinWhiteScrollbarHover:mouseEntered",
+        "source_id": "LizzieFrameBlunderMinWhiteScrollbarHover",
+        "event": "mouseEntered",
+        "line": 1488,
+        "binding_count": 2,
+        "matrix_ids": [
+          "UI-BLUNDER-SCROLLBAR-001"
+        ]
+      },
+      {
+        "event_id": "LizzieFrameCommentBlunderControlHover:mouseExited",
+        "source_id": "LizzieFrameCommentBlunderControlHover",
+        "event": "mouseExited",
+        "line": 1498,
+        "binding_count": 1,
+        "matrix_ids": [
+          "UI-BLUNDER-SCROLLBAR-001"
+        ]
+      },
+      {
+        "event_id": "LizzieFrameCommentBlunderControlHover:mouseEntered",
+        "source_id": "LizzieFrameCommentBlunderControlHover",
+        "event": "mouseEntered",
+        "line": 1502,
+        "binding_count": 1,
+        "matrix_ids": [
+          "UI-BLUNDER-SCROLLBAR-001"
+        ]
+      },
+      {
+        "event_id": "LizzieFrameCommentTextAreaHover:mouseExited",
+        "source_id": "LizzieFrameCommentTextAreaHover",
+        "event": "mouseExited",
+        "line": 1509,
+        "binding_count": 2,
+        "matrix_ids": [
+          "UI-TEXT-EDIT-001"
+        ]
+      },
+      {
+        "event_id": "LizzieFrameCommentTextAreaHover:mouseEntered",
+        "source_id": "LizzieFrameCommentTextAreaHover",
+        "event": "mouseEntered",
+        "line": 1516,
+        "binding_count": 2,
+        "matrix_ids": [
+          "UI-TEXT-EDIT-001"
+        ]
+      },
+      {
+        "event_id": "LizzieFrameCommentTextPaneHover:mouseExited",
+        "source_id": "LizzieFrameCommentTextPaneHover",
+        "event": "mouseExited",
+        "line": 1527,
+        "binding_count": 2,
+        "matrix_ids": [
+          "UI-TEXT-EDIT-001"
+        ]
+      },
+      {
+        "event_id": "LizzieFrameCommentTextPaneHover:mouseEntered",
+        "source_id": "LizzieFrameCommentTextPaneHover",
+        "event": "mouseEntered",
+        "line": 1534,
+        "binding_count": 2,
+        "matrix_ids": [
+          "UI-TEXT-EDIT-001"
+        ]
+      },
+      {
+        "event_id": "LizzieFrameCommentTextAreaClick:mouseClicked",
+        "source_id": "LizzieFrameCommentTextAreaClick",
+        "event": "mouseClicked",
+        "line": 1553,
+        "binding_count": 2,
+        "matrix_ids": [
+          "UI-TEXT-EDIT-001"
+        ]
+      },
+      {
+        "event_id": "LizzieFrameCommentTextPaneClick:mouseClicked",
+        "source_id": "LizzieFrameCommentTextPaneClick",
+        "event": "mouseClicked",
+        "line": 1563,
+        "binding_count": 2,
+        "matrix_ids": [
+          "UI-TEXT-EDIT-001"
+        ]
+      },
+      {
+        "event_id": "LizzieFrameKifuLoadGlassPaneMotion:mouseDragged",
+        "source_id": "LizzieFrameKifuLoadGlassPaneMotion",
+        "event": "mouseDragged",
+        "line": 4358,
+        "binding_count": 1,
+        "matrix_ids": [
+          "KIFU-OPEN-001"
+        ]
+      },
+      {
+        "event_id": "LizzieFrameKifuLoadGlassPaneMotion:mouseMoved",
+        "source_id": "LizzieFrameKifuLoadGlassPaneMotion",
+        "event": "mouseMoved",
+        "line": 4360,
+        "binding_count": 1,
+        "matrix_ids": [
+          "KIFU-OPEN-001"
+        ]
+      },
+      {
+        "event_id": "LizzieFrameTempGamePanelMotion:mouseMoved",
+        "source_id": "LizzieFrameTempGamePanelMotion",
+        "event": "mouseMoved",
+        "line": 12611,
+        "binding_count": 5,
+        "matrix_ids": [
+          "KIFU-TEMP-SAVES-001"
+        ]
+      },
+      {
+        "event_id": "LizzieFrameTempGamePanelClick:mouseClicked",
+        "source_id": "LizzieFrameTempGamePanelClick",
+        "event": "mouseClicked",
+        "line": 12675,
+        "binding_count": 1,
+        "matrix_ids": [
+          "KIFU-TEMP-SAVES-001"
+        ]
+      },
+      {
+        "event_id": "LizzieFrameBigBoardPanelClick:mouseClicked",
+        "source_id": "LizzieFrameBigBoardPanelClick",
+        "event": "mouseClicked",
+        "line": 12745,
+        "binding_count": 5,
+        "matrix_ids": [
+          "KIFU-TEMP-SAVES-001"
+        ]
+      },
+      {
+        "event_id": "LizzieFramePlayerStrengthModelComboHover:mouseEntered",
+        "source_id": "LizzieFramePlayerStrengthModelComboHover",
+        "event": "mouseEntered",
+        "line": 14537,
+        "binding_count": 1,
+        "matrix_ids": [
+          "ANALYSIS-PLAYER-STRENGTH-001"
+        ]
+      },
+      {
+        "event_id": "LizzieFramePlayerStrengthModelComboHover:mouseExited",
+        "source_id": "LizzieFramePlayerStrengthModelComboHover",
+        "event": "mouseExited",
+        "line": 14543,
+        "binding_count": 1,
+        "matrix_ids": [
+          "ANALYSIS-PLAYER-STRENGTH-001"
+        ]
+      },
+      {
+        "event_id": "LizzieFramePlayerStrengthMoveHitMapHover:mouseMoved",
+        "source_id": "LizzieFramePlayerStrengthMoveHitMapHover",
+        "event": "mouseMoved",
+        "line": 15193,
+        "binding_count": 1,
+        "matrix_ids": [
+          "ANALYSIS-PLAYER-STRENGTH-001"
+        ]
+      },
+      {
+        "event_id": "LizzieFramePlayerStrengthMoveHitMapHover:mouseExited",
+        "source_id": "LizzieFramePlayerStrengthMoveHitMapHover",
+        "event": "mouseExited",
+        "line": 15198,
+        "binding_count": 1,
+        "matrix_ids": [
+          "ANALYSIS-PLAYER-STRENGTH-001"
+        ]
+      },
+      {
+        "event_id": "LizzieFramePlayerStrengthMatchChartHover:mouseMoved",
+        "source_id": "LizzieFramePlayerStrengthMatchChartHover",
+        "event": "mouseMoved",
+        "line": 16130,
+        "binding_count": 1,
+        "matrix_ids": [
+          "ANALYSIS-PLAYER-STRENGTH-001"
+        ]
+      },
+      {
+        "event_id": "LizzieFramePlayerStrengthMatchChartHover:mouseExited",
+        "source_id": "LizzieFramePlayerStrengthMatchChartHover",
+        "event": "mouseExited",
+        "line": 16135,
+        "binding_count": 1,
+        "matrix_ids": [
+          "ANALYSIS-PLAYER-STRENGTH-001"
         ]
       }
     ],
@@ -64596,6 +65361,2919 @@
         ],
         "matrix_ids": [
           "ENGINE-LIFECYCLE-001"
+        ]
+      },
+      {
+        "binding": "LizzieFrameMainPanel:mouseEntered#1",
+        "event_id": "LizzieFrameMainPanel:mouseEntered",
+        "source_id": "LizzieFrameMainPanel",
+        "event": "mouseEntered",
+        "line": 642,
+        "conditions": [
+          {
+            "expression": "Lizzie.frame.isInTemporaryBoard",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 644,
+            "statement": "Lizzie.frame.stopTemporaryBoardMaybe();"
+          },
+          {
+            "line": 645,
+            "statement": "Lizzie.frame.refresh();"
+          }
+        ],
+        "matrix_ids": [
+          "BOARD-TEMPORARY-001"
+        ]
+      },
+      {
+        "binding": "LizzieFrameMainPanel:mouseEntered#2",
+        "event_id": "LizzieFrameMainPanel:mouseEntered",
+        "source_id": "LizzieFrameMainPanel",
+        "event": "mouseEntered",
+        "line": 642,
+        "conditions": [
+          {
+            "expression": "Lizzie.frame.isInTemporaryBoard",
+            "expected": false
+          }
+        ],
+        "statements": [],
+        "matrix_ids": [
+          "BOARD-TEMPORARY-001"
+        ]
+      },
+      {
+        "binding": "LizzieFrameVariationTreeClick:mouseClicked#1",
+        "event_id": "LizzieFrameVariationTreeClick:mouseClicked",
+        "source_id": "LizzieFrameVariationTreeClick",
+        "event": "mouseClicked",
+        "line": 746,
+        "conditions": [
+          {
+            "expression": "e.getButton() == MouseEvent.BUTTON3",
+            "expected": true
+          },
+          {
+            "expression": "isShowingRightMenu",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 749,
+            "statement": "return;"
+          }
+        ],
+        "matrix_ids": [
+          "BOARD-VARIATION-001"
+        ]
+      },
+      {
+        "binding": "LizzieFrameVariationTreeClick:mouseClicked#2",
+        "event_id": "LizzieFrameVariationTreeClick:mouseClicked",
+        "source_id": "LizzieFrameVariationTreeClick",
+        "event": "mouseClicked",
+        "line": 746,
+        "conditions": [
+          {
+            "expression": "e.getButton() == MouseEvent.BUTTON3",
+            "expected": true
+          },
+          {
+            "expression": "isShowingRightMenu",
+            "expected": false
+          },
+          {
+            "expression": "RightClickMenu2 != null && RightClickMenu2.isVisible()",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 750,
+            "statement": "return;"
+          }
+        ],
+        "matrix_ids": [
+          "BOARD-VARIATION-001"
+        ]
+      },
+      {
+        "binding": "LizzieFrameVariationTreeClick:mouseClicked#3",
+        "event_id": "LizzieFrameVariationTreeClick:mouseClicked",
+        "source_id": "LizzieFrameVariationTreeClick",
+        "event": "mouseClicked",
+        "line": 746,
+        "conditions": [
+          {
+            "expression": "e.getButton() == MouseEvent.BUTTON3",
+            "expected": true
+          },
+          {
+            "expression": "isShowingRightMenu",
+            "expected": false
+          },
+          {
+            "expression": "RightClickMenu2 != null && RightClickMenu2.isVisible()",
+            "expected": false
+          }
+        ],
+        "statements": [
+          {
+            "line": 751,
+            "statement": "undoForRightClick();"
+          },
+          {
+            "line": 757,
+            "statement": "setCommentEditable(false);"
+          }
+        ],
+        "matrix_ids": [
+          "BOARD-VARIATION-001"
+        ]
+      },
+      {
+        "binding": "LizzieFrameVariationTreeClick:mouseClicked#4",
+        "event_id": "LizzieFrameVariationTreeClick:mouseClicked",
+        "source_id": "LizzieFrameVariationTreeClick",
+        "event": "mouseClicked",
+        "line": 746,
+        "conditions": [
+          {
+            "expression": "e.getButton() == MouseEvent.BUTTON3",
+            "expected": false
+          },
+          {
+            "expression": "!EngineManager.isEngineGame",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 754,
+            "statement": "variationTree.onClicked(Utils.zoomOut(e.getX()), Utils.zoomOut(e.getY()));"
+          },
+          {
+            "line": 755,
+            "statement": "renderVarTree(0, 0, false, false);"
+          },
+          {
+            "line": 757,
+            "statement": "setCommentEditable(false);"
+          }
+        ],
+        "matrix_ids": [
+          "BOARD-VARIATION-001"
+        ]
+      },
+      {
+        "binding": "LizzieFrameVariationTreeClick:mouseClicked#5",
+        "event_id": "LizzieFrameVariationTreeClick:mouseClicked",
+        "source_id": "LizzieFrameVariationTreeClick",
+        "event": "mouseClicked",
+        "line": 746,
+        "conditions": [
+          {
+            "expression": "e.getButton() == MouseEvent.BUTTON3",
+            "expected": false
+          },
+          {
+            "expression": "!EngineManager.isEngineGame",
+            "expected": false
+          }
+        ],
+        "statements": [
+          {
+            "line": 755,
+            "statement": "renderVarTree(0, 0, false, false);"
+          },
+          {
+            "line": 757,
+            "statement": "setCommentEditable(false);"
+          }
+        ],
+        "matrix_ids": [
+          "BOARD-VARIATION-001"
+        ]
+      },
+      {
+        "binding": "LizzieFrameVariationTreeWheel:mouseWheelMoved#1",
+        "event_id": "LizzieFrameVariationTreeWheel:mouseWheelMoved",
+        "source_id": "LizzieFrameVariationTreeWheel",
+        "event": "mouseWheelMoved",
+        "line": 763,
+        "conditions": [
+          {
+            "expression": "e.getWheelRotation() > 0",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 766,
+            "statement": "Input.redo();"
+          }
+        ],
+        "matrix_ids": [
+          "BOARD-VARIATION-001"
+        ]
+      },
+      {
+        "binding": "LizzieFrameVariationTreeWheel:mouseWheelMoved#2",
+        "event_id": "LizzieFrameVariationTreeWheel:mouseWheelMoved",
+        "source_id": "LizzieFrameVariationTreeWheel",
+        "event": "mouseWheelMoved",
+        "line": 763,
+        "conditions": [
+          {
+            "expression": "e.getWheelRotation() > 0",
+            "expected": false
+          },
+          {
+            "expression": "e.getWheelRotation() < 0",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 768,
+            "statement": "Input.undo();"
+          }
+        ],
+        "matrix_ids": [
+          "BOARD-VARIATION-001"
+        ]
+      },
+      {
+        "binding": "LizzieFrameVariationTreeWheel:mouseWheelMoved#3",
+        "event_id": "LizzieFrameVariationTreeWheel:mouseWheelMoved",
+        "source_id": "LizzieFrameVariationTreeWheel",
+        "event": "mouseWheelMoved",
+        "line": 763,
+        "conditions": [
+          {
+            "expression": "e.getWheelRotation() > 0",
+            "expected": false
+          },
+          {
+            "expression": "e.getWheelRotation() < 0",
+            "expected": false
+          }
+        ],
+        "statements": [],
+        "matrix_ids": [
+          "BOARD-VARIATION-001"
+        ]
+      },
+      {
+        "binding": "LizzieFrameVariationTreeMotion:mouseMoved#1",
+        "event_id": "LizzieFrameVariationTreeMotion:mouseMoved",
+        "source_id": "LizzieFrameVariationTreeMotion",
+        "event": "mouseMoved",
+        "line": 816,
+        "conditions": [
+          {
+            "expression": "!mainPanel.isFocusOwner()",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 817,
+            "statement": "mainPanel.requestFocus();"
+          }
+        ],
+        "matrix_ids": [
+          "BOARD-VARIATION-001"
+        ]
+      },
+      {
+        "binding": "LizzieFrameVariationTreeMotion:mouseMoved#2",
+        "event_id": "LizzieFrameVariationTreeMotion:mouseMoved",
+        "source_id": "LizzieFrameVariationTreeMotion",
+        "event": "mouseMoved",
+        "line": 816,
+        "conditions": [
+          {
+            "expression": "!mainPanel.isFocusOwner()",
+            "expected": false
+          }
+        ],
+        "statements": [],
+        "matrix_ids": [
+          "BOARD-VARIATION-001"
+        ]
+      },
+      {
+        "binding": "LizzieFrameMoveListScrollPaneMotion:mouseMoved#1",
+        "event_id": "LizzieFrameMoveListScrollPaneMotion:mouseMoved",
+        "source_id": "LizzieFrameMoveListScrollPaneMotion",
+        "event": "mouseMoved",
+        "line": 822,
+        "conditions": [
+          {
+            "expression": "!mainPanel.isFocusOwner()",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 823,
+            "statement": "mainPanel.requestFocus();"
+          }
+        ],
+        "matrix_ids": [
+          "ANALYSIS-DISPLAY-001"
+        ]
+      },
+      {
+        "binding": "LizzieFrameMoveListScrollPaneMotion:mouseMoved#2",
+        "event_id": "LizzieFrameMoveListScrollPaneMotion:mouseMoved",
+        "source_id": "LizzieFrameMoveListScrollPaneMotion",
+        "event": "mouseMoved",
+        "line": 822,
+        "conditions": [
+          {
+            "expression": "!mainPanel.isFocusOwner()",
+            "expected": false
+          }
+        ],
+        "statements": [],
+        "matrix_ids": [
+          "ANALYSIS-DISPLAY-001"
+        ]
+      },
+      {
+        "binding": "LizzieFrameMoveListScrollPaneClick:mouseClicked#1",
+        "event_id": "LizzieFrameMoveListScrollPaneClick:mouseClicked",
+        "source_id": "LizzieFrameMoveListScrollPaneClick",
+        "event": "mouseClicked",
+        "line": 828,
+        "conditions": [],
+        "statements": [
+          {
+            "line": 829,
+            "statement": "setCommentEditable(false);"
+          }
+        ],
+        "matrix_ids": [
+          "ANALYSIS-DISPLAY-001"
+        ]
+      },
+      {
+        "binding": "LizzieFrameMoveListTableWheel:mouseWheelMoved#1",
+        "event_id": "LizzieFrameMoveListTableWheel:mouseWheelMoved",
+        "source_id": "LizzieFrameMoveListTableWheel",
+        "event": "mouseWheelMoved",
+        "line": 908,
+        "conditions": [
+          {
+            "expression": "clickOrder != -1",
+            "expected": true
+          },
+          {
+            "expression": "e.getWheelRotation() > 0",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 912,
+            "statement": "doBranch(1);"
+          },
+          {
+            "line": 916,
+            "statement": "refresh();"
+          }
+        ],
+        "matrix_ids": [
+          "ANALYSIS-DISPLAY-001"
+        ]
+      },
+      {
+        "binding": "LizzieFrameMoveListTableWheel:mouseWheelMoved#2",
+        "event_id": "LizzieFrameMoveListTableWheel:mouseWheelMoved",
+        "source_id": "LizzieFrameMoveListTableWheel",
+        "event": "mouseWheelMoved",
+        "line": 908,
+        "conditions": [
+          {
+            "expression": "clickOrder != -1",
+            "expected": true
+          },
+          {
+            "expression": "e.getWheelRotation() > 0",
+            "expected": false
+          },
+          {
+            "expression": "e.getWheelRotation() < 0",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 914,
+            "statement": "doBranch(-1);"
+          },
+          {
+            "line": 916,
+            "statement": "refresh();"
+          }
+        ],
+        "matrix_ids": [
+          "ANALYSIS-DISPLAY-001"
+        ]
+      },
+      {
+        "binding": "LizzieFrameMoveListTableWheel:mouseWheelMoved#3",
+        "event_id": "LizzieFrameMoveListTableWheel:mouseWheelMoved",
+        "source_id": "LizzieFrameMoveListTableWheel",
+        "event": "mouseWheelMoved",
+        "line": 908,
+        "conditions": [
+          {
+            "expression": "clickOrder != -1",
+            "expected": true
+          },
+          {
+            "expression": "e.getWheelRotation() > 0",
+            "expected": false
+          },
+          {
+            "expression": "e.getWheelRotation() < 0",
+            "expected": false
+          }
+        ],
+        "statements": [
+          {
+            "line": 916,
+            "statement": "refresh();"
+          }
+        ],
+        "matrix_ids": [
+          "ANALYSIS-DISPLAY-001"
+        ]
+      },
+      {
+        "binding": "LizzieFrameMoveListTableWheel:mouseWheelMoved#4",
+        "event_id": "LizzieFrameMoveListTableWheel:mouseWheelMoved",
+        "source_id": "LizzieFrameMoveListTableWheel",
+        "event": "mouseWheelMoved",
+        "line": 908,
+        "conditions": [
+          {
+            "expression": "clickOrder != -1",
+            "expected": false
+          }
+        ],
+        "statements": [
+          {
+            "line": 918,
+            "statement": "listScrollpane.dispatchEvent(e);"
+          }
+        ],
+        "matrix_ids": [
+          "ANALYSIS-DISPLAY-001"
+        ]
+      },
+      {
+        "binding": "LizzieFrameMoveListTableClick:mouseClicked#1",
+        "event_id": "LizzieFrameMoveListTableClick:mouseClicked",
+        "source_id": "LizzieFrameMoveListTableClick",
+        "event": "mouseClicked",
+        "line": 925,
+        "conditions": [
+          {
+            "expression": "row >= 0 && col >= 0",
+            "expected": true
+          },
+          {
+            "expression": "e.getButton() == MouseEvent.BUTTON3",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 926,
+            "statement": "setCommentEditable(false);"
+          },
+          {
+            "line": 927,
+            "statement": "int row = listTable.rowAtPoint(e.getPoint());"
+          },
+          {
+            "line": 928,
+            "statement": "int col = listTable.columnAtPoint(e.getPoint());"
+          },
+          {
+            "line": 931,
+            "statement": "try { handleTableRightClick(row, col); } catch (Exception ex) { ex.printStackTrace(); }"
+          }
+        ],
+        "matrix_ids": [
+          "ANALYSIS-DISPLAY-001"
+        ]
+      },
+      {
+        "binding": "LizzieFrameMoveListTableClick:mouseClicked#2",
+        "event_id": "LizzieFrameMoveListTableClick:mouseClicked",
+        "source_id": "LizzieFrameMoveListTableClick",
+        "event": "mouseClicked",
+        "line": 925,
+        "conditions": [
+          {
+            "expression": "row >= 0 && col >= 0",
+            "expected": true
+          },
+          {
+            "expression": "e.getButton() == MouseEvent.BUTTON3",
+            "expected": false
+          }
+        ],
+        "statements": [
+          {
+            "line": 926,
+            "statement": "setCommentEditable(false);"
+          },
+          {
+            "line": 927,
+            "statement": "int row = listTable.rowAtPoint(e.getPoint());"
+          },
+          {
+            "line": 928,
+            "statement": "int col = listTable.columnAtPoint(e.getPoint());"
+          },
+          {
+            "line": 937,
+            "statement": "try { handleTableClick(row, col); } catch (Exception ex) { ex.printStackTrace(); }"
+          }
+        ],
+        "matrix_ids": [
+          "ANALYSIS-DISPLAY-001"
+        ]
+      },
+      {
+        "binding": "LizzieFrameMoveListTableClick:mouseClicked#3",
+        "event_id": "LizzieFrameMoveListTableClick:mouseClicked",
+        "source_id": "LizzieFrameMoveListTableClick",
+        "event": "mouseClicked",
+        "line": 925,
+        "conditions": [
+          {
+            "expression": "row >= 0 && col >= 0",
+            "expected": false
+          }
+        ],
+        "statements": [
+          {
+            "line": 926,
+            "statement": "setCommentEditable(false);"
+          },
+          {
+            "line": 927,
+            "statement": "int row = listTable.rowAtPoint(e.getPoint());"
+          },
+          {
+            "line": 928,
+            "statement": "int col = listTable.columnAtPoint(e.getPoint());"
+          }
+        ],
+        "matrix_ids": [
+          "ANALYSIS-DISPLAY-001"
+        ]
+      },
+      {
+        "binding": "LizzieFrameBlunderContentHover:mouseExited#1",
+        "event_id": "LizzieFrameBlunderContentHover:mouseExited",
+        "source_id": "LizzieFrameBlunderContentHover",
+        "event": "mouseExited",
+        "line": 1134,
+        "conditions": [
+          {
+            "expression": "Lizzie.config.hideBlunderControlPane",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 1136,
+            "statement": "return;"
+          }
+        ],
+        "matrix_ids": [
+          "UI-BLUNDER-SCROLLBAR-001"
+        ]
+      },
+      {
+        "binding": "LizzieFrameBlunderContentHover:mouseExited#2",
+        "event_id": "LizzieFrameBlunderContentHover:mouseExited",
+        "source_id": "LizzieFrameBlunderContentHover",
+        "event": "mouseExited",
+        "line": 1134,
+        "conditions": [
+          {
+            "expression": "Lizzie.config.hideBlunderControlPane",
+            "expected": false
+          }
+        ],
+        "statements": [
+          {
+            "line": 1138,
+            "statement": "commentBlunderControlPane.setVisible(false);"
+          }
+        ],
+        "matrix_ids": [
+          "UI-BLUNDER-SCROLLBAR-001"
+        ]
+      },
+      {
+        "binding": "LizzieFrameBlunderContentHover:mouseEntered#1",
+        "event_id": "LizzieFrameBlunderContentHover:mouseEntered",
+        "source_id": "LizzieFrameBlunderContentHover",
+        "event": "mouseEntered",
+        "line": 1141,
+        "conditions": [
+          {
+            "expression": "Lizzie.config.hideBlunderControlPane",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 1143,
+            "statement": "return;"
+          }
+        ],
+        "matrix_ids": [
+          "UI-BLUNDER-SCROLLBAR-001"
+        ]
+      },
+      {
+        "binding": "LizzieFrameBlunderContentHover:mouseEntered#2",
+        "event_id": "LizzieFrameBlunderContentHover:mouseEntered",
+        "source_id": "LizzieFrameBlunderContentHover",
+        "event": "mouseEntered",
+        "line": 1141,
+        "conditions": [
+          {
+            "expression": "Lizzie.config.hideBlunderControlPane",
+            "expected": false
+          }
+        ],
+        "statements": [
+          {
+            "line": 1145,
+            "statement": "setBlunderControlPane(false, true);"
+          },
+          {
+            "line": 1146,
+            "statement": "commentBlunderControlPane.setVisible(true);"
+          }
+        ],
+        "matrix_ids": [
+          "UI-BLUNDER-SCROLLBAR-001"
+        ]
+      },
+      {
+        "binding": "LizzieFrameBlunderBlackClick:mouseClicked#1",
+        "event_id": "LizzieFrameBlunderBlackClick:mouseClicked",
+        "source_id": "LizzieFrameBlunderBlackClick",
+        "event": "mouseClicked",
+        "line": 1190,
+        "conditions": [
+          {
+            "expression": "e.getButton() == MouseEvent.BUTTON3",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 1192,
+            "statement": "exportBlunderBlack.show(blunderTabelBlack, e.getX(), e.getY());"
+          },
+          {
+            "line": 1193,
+            "statement": "return;"
+          }
+        ],
+        "matrix_ids": [
+          "UI-BLUNDER-SCROLLBAR-001"
+        ]
+      },
+      {
+        "binding": "LizzieFrameBlunderBlackClick:mouseClicked#2",
+        "event_id": "LizzieFrameBlunderBlackClick:mouseClicked",
+        "source_id": "LizzieFrameBlunderBlackClick",
+        "event": "mouseClicked",
+        "line": 1190,
+        "conditions": [
+          {
+            "expression": "e.getButton() == MouseEvent.BUTTON3",
+            "expected": false
+          },
+          {
+            "expression": "row >= 0 && col >= 0",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 1195,
+            "statement": "int row = blunderTabelBlack.rowAtPoint(e.getPoint());"
+          },
+          {
+            "line": 1196,
+            "statement": "int col = blunderTabelBlack.columnAtPoint(e.getPoint());"
+          },
+          {
+            "line": 1198,
+            "statement": "try { blunderTabelBlack.repaint(); int movenumber = Integer.parseInt(blunderTabelBlack.getValueAt(row, 0).toString()); int[] coords = Board.convertNameToCoordinates(blunderTabelBlack.getValueAt(row, 1).toString()); Lizzie.board.goToMoveNumber(movenumber - 1); Lizzie.frame.clickbadmove = coords; Lizzie.frame.repaint(); } catch (Exception ex) { ex.printStackTrace(); }"
+          }
+        ],
+        "matrix_ids": [
+          "UI-BLUNDER-SCROLLBAR-001"
+        ]
+      },
+      {
+        "binding": "LizzieFrameBlunderBlackClick:mouseClicked#3",
+        "event_id": "LizzieFrameBlunderBlackClick:mouseClicked",
+        "source_id": "LizzieFrameBlunderBlackClick",
+        "event": "mouseClicked",
+        "line": 1190,
+        "conditions": [
+          {
+            "expression": "e.getButton() == MouseEvent.BUTTON3",
+            "expected": false
+          },
+          {
+            "expression": "row >= 0 && col >= 0",
+            "expected": false
+          }
+        ],
+        "statements": [
+          {
+            "line": 1195,
+            "statement": "int row = blunderTabelBlack.rowAtPoint(e.getPoint());"
+          },
+          {
+            "line": 1196,
+            "statement": "int col = blunderTabelBlack.columnAtPoint(e.getPoint());"
+          }
+        ],
+        "matrix_ids": [
+          "UI-BLUNDER-SCROLLBAR-001"
+        ]
+      },
+      {
+        "binding": "LizzieFrameBlunderWhiteClick:mouseClicked#1",
+        "event_id": "LizzieFrameBlunderWhiteClick:mouseClicked",
+        "source_id": "LizzieFrameBlunderWhiteClick",
+        "event": "mouseClicked",
+        "line": 1244,
+        "conditions": [
+          {
+            "expression": "e.getButton() == MouseEvent.BUTTON3",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 1246,
+            "statement": "exportBlunderWhite.show(blunderTabelWhite, e.getX(), e.getY());"
+          },
+          {
+            "line": 1247,
+            "statement": "return;"
+          }
+        ],
+        "matrix_ids": [
+          "UI-BLUNDER-SCROLLBAR-001"
+        ]
+      },
+      {
+        "binding": "LizzieFrameBlunderWhiteClick:mouseClicked#2",
+        "event_id": "LizzieFrameBlunderWhiteClick:mouseClicked",
+        "source_id": "LizzieFrameBlunderWhiteClick",
+        "event": "mouseClicked",
+        "line": 1244,
+        "conditions": [
+          {
+            "expression": "e.getButton() == MouseEvent.BUTTON3",
+            "expected": false
+          },
+          {
+            "expression": "row >= 0 && col >= 0",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 1249,
+            "statement": "int row = blunderTabelWhite.rowAtPoint(e.getPoint());"
+          },
+          {
+            "line": 1250,
+            "statement": "int col = blunderTabelWhite.columnAtPoint(e.getPoint());"
+          },
+          {
+            "line": 1252,
+            "statement": "try { blunderTabelWhite.repaint(); int movenumber = Integer.parseInt(blunderTabelWhite.getValueAt(row, 0).toString()); int[] coords = Board.convertNameToCoordinates(blunderTabelWhite.getValueAt(row, 1).toString()); Lizzie.board.goToMoveNumber(movenumber - 1); Lizzie.frame.clickbadmove = coords; Lizzie.frame.repaint(); } catch (Exception ex) { ex.printStackTrace(); }"
+          }
+        ],
+        "matrix_ids": [
+          "UI-BLUNDER-SCROLLBAR-001"
+        ]
+      },
+      {
+        "binding": "LizzieFrameBlunderWhiteClick:mouseClicked#3",
+        "event_id": "LizzieFrameBlunderWhiteClick:mouseClicked",
+        "source_id": "LizzieFrameBlunderWhiteClick",
+        "event": "mouseClicked",
+        "line": 1244,
+        "conditions": [
+          {
+            "expression": "e.getButton() == MouseEvent.BUTTON3",
+            "expected": false
+          },
+          {
+            "expression": "row >= 0 && col >= 0",
+            "expected": false
+          }
+        ],
+        "statements": [
+          {
+            "line": 1249,
+            "statement": "int row = blunderTabelWhite.rowAtPoint(e.getPoint());"
+          },
+          {
+            "line": 1250,
+            "statement": "int col = blunderTabelWhite.columnAtPoint(e.getPoint());"
+          }
+        ],
+        "matrix_ids": [
+          "UI-BLUNDER-SCROLLBAR-001"
+        ]
+      },
+      {
+        "binding": "LizzieFrameBlunderBlackHeaderRelease:mouseReleased#1",
+        "event_id": "LizzieFrameBlunderBlackHeaderRelease:mouseReleased",
+        "source_id": "LizzieFrameBlunderBlackHeaderRelease",
+        "event": "mouseReleased",
+        "line": 1271,
+        "conditions": [
+          {
+            "expression": "pick == blunderSortNum",
+            "expected": true
+          },
+          {
+            "expression": "blunderSortNum == 2 || blunderSortNum == 3",
+            "expected": true
+          },
+          {
+            "expression": "blunderSortIsOriginOrder",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 1272,
+            "statement": "int pick = blunderTabelBlack.getTableHeader().columnAtPoint(e.getPoint());"
+          },
+          {
+            "line": 1276,
+            "statement": "blunderSortIsOriginOrder = false;"
+          },
+          {
+            "line": 1277,
+            "statement": "blunderIsSorted = false;"
+          },
+          {
+            "line": 1291,
+            "statement": "Lizzie.config.saveBlunderTableSortSettings( blunderSortNum, blunderIsSorted, blunderSortIsOriginOrder);"
+          },
+          {
+            "line": 1293,
+            "statement": "blunderTabelBlack.repaint();"
+          },
+          {
+            "line": 1294,
+            "statement": "blunderTabelWhite.repaint();"
+          }
+        ],
+        "matrix_ids": [
+          "UI-BLUNDER-SCROLLBAR-001"
+        ]
+      },
+      {
+        "binding": "LizzieFrameBlunderBlackHeaderRelease:mouseReleased#2",
+        "event_id": "LizzieFrameBlunderBlackHeaderRelease:mouseReleased",
+        "source_id": "LizzieFrameBlunderBlackHeaderRelease",
+        "event": "mouseReleased",
+        "line": 1271,
+        "conditions": [
+          {
+            "expression": "pick == blunderSortNum",
+            "expected": true
+          },
+          {
+            "expression": "blunderSortNum == 2 || blunderSortNum == 3",
+            "expected": true
+          },
+          {
+            "expression": "blunderSortIsOriginOrder",
+            "expected": false
+          },
+          {
+            "expression": "!blunderIsSorted",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 1272,
+            "statement": "int pick = blunderTabelBlack.getTableHeader().columnAtPoint(e.getPoint());"
+          },
+          {
+            "line": 1278,
+            "statement": "blunderIsSorted = true;"
+          },
+          {
+            "line": 1291,
+            "statement": "Lizzie.config.saveBlunderTableSortSettings( blunderSortNum, blunderIsSorted, blunderSortIsOriginOrder);"
+          },
+          {
+            "line": 1293,
+            "statement": "blunderTabelBlack.repaint();"
+          },
+          {
+            "line": 1294,
+            "statement": "blunderTabelWhite.repaint();"
+          }
+        ],
+        "matrix_ids": [
+          "UI-BLUNDER-SCROLLBAR-001"
+        ]
+      },
+      {
+        "binding": "LizzieFrameBlunderBlackHeaderRelease:mouseReleased#3",
+        "event_id": "LizzieFrameBlunderBlackHeaderRelease:mouseReleased",
+        "source_id": "LizzieFrameBlunderBlackHeaderRelease",
+        "event": "mouseReleased",
+        "line": 1271,
+        "conditions": [
+          {
+            "expression": "pick == blunderSortNum",
+            "expected": true
+          },
+          {
+            "expression": "blunderSortNum == 2 || blunderSortNum == 3",
+            "expected": true
+          },
+          {
+            "expression": "blunderSortIsOriginOrder",
+            "expected": false
+          },
+          {
+            "expression": "!blunderIsSorted",
+            "expected": false
+          }
+        ],
+        "statements": [
+          {
+            "line": 1272,
+            "statement": "int pick = blunderTabelBlack.getTableHeader().columnAtPoint(e.getPoint());"
+          },
+          {
+            "line": 1280,
+            "statement": "blunderSortIsOriginOrder = true;"
+          },
+          {
+            "line": 1281,
+            "statement": "blunderIsSorted = false;"
+          },
+          {
+            "line": 1291,
+            "statement": "Lizzie.config.saveBlunderTableSortSettings( blunderSortNum, blunderIsSorted, blunderSortIsOriginOrder);"
+          },
+          {
+            "line": 1293,
+            "statement": "blunderTabelBlack.repaint();"
+          },
+          {
+            "line": 1294,
+            "statement": "blunderTabelWhite.repaint();"
+          }
+        ],
+        "matrix_ids": [
+          "UI-BLUNDER-SCROLLBAR-001"
+        ]
+      },
+      {
+        "binding": "LizzieFrameBlunderBlackHeaderRelease:mouseReleased#4",
+        "event_id": "LizzieFrameBlunderBlackHeaderRelease:mouseReleased",
+        "source_id": "LizzieFrameBlunderBlackHeaderRelease",
+        "event": "mouseReleased",
+        "line": 1271,
+        "conditions": [
+          {
+            "expression": "pick == blunderSortNum",
+            "expected": true
+          },
+          {
+            "expression": "blunderSortNum == 2 || blunderSortNum == 3",
+            "expected": false
+          }
+        ],
+        "statements": [
+          {
+            "line": 1272,
+            "statement": "int pick = blunderTabelBlack.getTableHeader().columnAtPoint(e.getPoint());"
+          },
+          {
+            "line": 1284,
+            "statement": "blunderIsSorted = !blunderIsSorted;"
+          },
+          {
+            "line": 1291,
+            "statement": "Lizzie.config.saveBlunderTableSortSettings( blunderSortNum, blunderIsSorted, blunderSortIsOriginOrder);"
+          },
+          {
+            "line": 1293,
+            "statement": "blunderTabelBlack.repaint();"
+          },
+          {
+            "line": 1294,
+            "statement": "blunderTabelWhite.repaint();"
+          }
+        ],
+        "matrix_ids": [
+          "UI-BLUNDER-SCROLLBAR-001"
+        ]
+      },
+      {
+        "binding": "LizzieFrameBlunderBlackHeaderRelease:mouseReleased#5",
+        "event_id": "LizzieFrameBlunderBlackHeaderRelease:mouseReleased",
+        "source_id": "LizzieFrameBlunderBlackHeaderRelease",
+        "event": "mouseReleased",
+        "line": 1271,
+        "conditions": [
+          {
+            "expression": "pick == blunderSortNum",
+            "expected": false
+          }
+        ],
+        "statements": [
+          {
+            "line": 1272,
+            "statement": "int pick = blunderTabelBlack.getTableHeader().columnAtPoint(e.getPoint());"
+          },
+          {
+            "line": 1287,
+            "statement": "blunderSortNum = pick;"
+          },
+          {
+            "line": 1288,
+            "statement": "blunderSortIsOriginOrder = true;"
+          },
+          {
+            "line": 1289,
+            "statement": "blunderIsSorted = false;"
+          },
+          {
+            "line": 1291,
+            "statement": "Lizzie.config.saveBlunderTableSortSettings( blunderSortNum, blunderIsSorted, blunderSortIsOriginOrder);"
+          },
+          {
+            "line": 1293,
+            "statement": "blunderTabelBlack.repaint();"
+          },
+          {
+            "line": 1294,
+            "statement": "blunderTabelWhite.repaint();"
+          }
+        ],
+        "matrix_ids": [
+          "UI-BLUNDER-SCROLLBAR-001"
+        ]
+      },
+      {
+        "binding": "LizzieFrameBlunderBlackHeaderHover:mouseExited#1",
+        "event_id": "LizzieFrameBlunderBlackHeaderHover:mouseExited",
+        "source_id": "LizzieFrameBlunderBlackHeaderHover",
+        "event": "mouseExited",
+        "line": 1301,
+        "conditions": [
+          {
+            "expression": "Lizzie.config.hideBlunderControlPane",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 1303,
+            "statement": "return;"
+          }
+        ],
+        "matrix_ids": [
+          "UI-BLUNDER-SCROLLBAR-001"
+        ]
+      },
+      {
+        "binding": "LizzieFrameBlunderBlackHeaderHover:mouseExited#2",
+        "event_id": "LizzieFrameBlunderBlackHeaderHover:mouseExited",
+        "source_id": "LizzieFrameBlunderBlackHeaderHover",
+        "event": "mouseExited",
+        "line": 1301,
+        "conditions": [
+          {
+            "expression": "Lizzie.config.hideBlunderControlPane",
+            "expected": false
+          }
+        ],
+        "statements": [
+          {
+            "line": 1305,
+            "statement": "commentBlunderControlPane.setVisible(false);"
+          }
+        ],
+        "matrix_ids": [
+          "UI-BLUNDER-SCROLLBAR-001"
+        ]
+      },
+      {
+        "binding": "LizzieFrameBlunderBlackHeaderHover:mouseEntered#1",
+        "event_id": "LizzieFrameBlunderBlackHeaderHover:mouseEntered",
+        "source_id": "LizzieFrameBlunderBlackHeaderHover",
+        "event": "mouseEntered",
+        "line": 1308,
+        "conditions": [
+          {
+            "expression": "Lizzie.config.hideBlunderControlPane",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 1310,
+            "statement": "return;"
+          }
+        ],
+        "matrix_ids": [
+          "UI-BLUNDER-SCROLLBAR-001"
+        ]
+      },
+      {
+        "binding": "LizzieFrameBlunderBlackHeaderHover:mouseEntered#2",
+        "event_id": "LizzieFrameBlunderBlackHeaderHover:mouseEntered",
+        "source_id": "LizzieFrameBlunderBlackHeaderHover",
+        "event": "mouseEntered",
+        "line": 1308,
+        "conditions": [
+          {
+            "expression": "Lizzie.config.hideBlunderControlPane",
+            "expected": false
+          }
+        ],
+        "statements": [
+          {
+            "line": 1312,
+            "statement": "setBlunderControlPane(false, true);"
+          },
+          {
+            "line": 1313,
+            "statement": "commentBlunderControlPane.setVisible(true);"
+          }
+        ],
+        "matrix_ids": [
+          "UI-BLUNDER-SCROLLBAR-001"
+        ]
+      },
+      {
+        "binding": "LizzieFrameBlunderBlackHover:mouseExited#1",
+        "event_id": "LizzieFrameBlunderBlackHover:mouseExited",
+        "source_id": "LizzieFrameBlunderBlackHover",
+        "event": "mouseExited",
+        "line": 1318,
+        "conditions": [
+          {
+            "expression": "Lizzie.config.hideBlunderControlPane",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 1320,
+            "statement": "return;"
+          }
+        ],
+        "matrix_ids": [
+          "UI-BLUNDER-SCROLLBAR-001"
+        ]
+      },
+      {
+        "binding": "LizzieFrameBlunderBlackHover:mouseExited#2",
+        "event_id": "LizzieFrameBlunderBlackHover:mouseExited",
+        "source_id": "LizzieFrameBlunderBlackHover",
+        "event": "mouseExited",
+        "line": 1318,
+        "conditions": [
+          {
+            "expression": "Lizzie.config.hideBlunderControlPane",
+            "expected": false
+          }
+        ],
+        "statements": [
+          {
+            "line": 1322,
+            "statement": "commentBlunderControlPane.setVisible(false);"
+          }
+        ],
+        "matrix_ids": [
+          "UI-BLUNDER-SCROLLBAR-001"
+        ]
+      },
+      {
+        "binding": "LizzieFrameBlunderBlackHover:mouseEntered#1",
+        "event_id": "LizzieFrameBlunderBlackHover:mouseEntered",
+        "source_id": "LizzieFrameBlunderBlackHover",
+        "event": "mouseEntered",
+        "line": 1325,
+        "conditions": [
+          {
+            "expression": "Lizzie.config.hideBlunderControlPane",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 1327,
+            "statement": "return;"
+          }
+        ],
+        "matrix_ids": [
+          "UI-BLUNDER-SCROLLBAR-001"
+        ]
+      },
+      {
+        "binding": "LizzieFrameBlunderBlackHover:mouseEntered#2",
+        "event_id": "LizzieFrameBlunderBlackHover:mouseEntered",
+        "source_id": "LizzieFrameBlunderBlackHover",
+        "event": "mouseEntered",
+        "line": 1325,
+        "conditions": [
+          {
+            "expression": "Lizzie.config.hideBlunderControlPane",
+            "expected": false
+          }
+        ],
+        "statements": [
+          {
+            "line": 1329,
+            "statement": "setBlunderControlPane(false, true);"
+          },
+          {
+            "line": 1330,
+            "statement": "commentBlunderControlPane.setVisible(true);"
+          }
+        ],
+        "matrix_ids": [
+          "UI-BLUNDER-SCROLLBAR-001"
+        ]
+      },
+      {
+        "binding": "LizzieFrameBlunderWhiteHeaderRelease:mouseReleased#1",
+        "event_id": "LizzieFrameBlunderWhiteHeaderRelease:mouseReleased",
+        "source_id": "LizzieFrameBlunderWhiteHeaderRelease",
+        "event": "mouseReleased",
+        "line": 1338,
+        "conditions": [
+          {
+            "expression": "pick == blunderSortNum",
+            "expected": true
+          },
+          {
+            "expression": "blunderSortNum == 2 || blunderSortNum == 3",
+            "expected": true
+          },
+          {
+            "expression": "blunderSortIsOriginOrder",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 1339,
+            "statement": "int pick = blunderTabelWhite.getTableHeader().columnAtPoint(e.getPoint());"
+          },
+          {
+            "line": 1343,
+            "statement": "blunderSortIsOriginOrder = false;"
+          },
+          {
+            "line": 1344,
+            "statement": "blunderIsSorted = false;"
+          },
+          {
+            "line": 1358,
+            "statement": "Lizzie.config.saveBlunderTableSortSettings( blunderSortNum, blunderIsSorted, blunderSortIsOriginOrder);"
+          },
+          {
+            "line": 1360,
+            "statement": "blunderTabelWhite.repaint();"
+          },
+          {
+            "line": 1361,
+            "statement": "blunderTabelBlack.repaint();"
+          }
+        ],
+        "matrix_ids": [
+          "UI-BLUNDER-SCROLLBAR-001"
+        ]
+      },
+      {
+        "binding": "LizzieFrameBlunderWhiteHeaderRelease:mouseReleased#2",
+        "event_id": "LizzieFrameBlunderWhiteHeaderRelease:mouseReleased",
+        "source_id": "LizzieFrameBlunderWhiteHeaderRelease",
+        "event": "mouseReleased",
+        "line": 1338,
+        "conditions": [
+          {
+            "expression": "pick == blunderSortNum",
+            "expected": true
+          },
+          {
+            "expression": "blunderSortNum == 2 || blunderSortNum == 3",
+            "expected": true
+          },
+          {
+            "expression": "blunderSortIsOriginOrder",
+            "expected": false
+          },
+          {
+            "expression": "!blunderIsSorted",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 1339,
+            "statement": "int pick = blunderTabelWhite.getTableHeader().columnAtPoint(e.getPoint());"
+          },
+          {
+            "line": 1345,
+            "statement": "blunderIsSorted = true;"
+          },
+          {
+            "line": 1358,
+            "statement": "Lizzie.config.saveBlunderTableSortSettings( blunderSortNum, blunderIsSorted, blunderSortIsOriginOrder);"
+          },
+          {
+            "line": 1360,
+            "statement": "blunderTabelWhite.repaint();"
+          },
+          {
+            "line": 1361,
+            "statement": "blunderTabelBlack.repaint();"
+          }
+        ],
+        "matrix_ids": [
+          "UI-BLUNDER-SCROLLBAR-001"
+        ]
+      },
+      {
+        "binding": "LizzieFrameBlunderWhiteHeaderRelease:mouseReleased#3",
+        "event_id": "LizzieFrameBlunderWhiteHeaderRelease:mouseReleased",
+        "source_id": "LizzieFrameBlunderWhiteHeaderRelease",
+        "event": "mouseReleased",
+        "line": 1338,
+        "conditions": [
+          {
+            "expression": "pick == blunderSortNum",
+            "expected": true
+          },
+          {
+            "expression": "blunderSortNum == 2 || blunderSortNum == 3",
+            "expected": true
+          },
+          {
+            "expression": "blunderSortIsOriginOrder",
+            "expected": false
+          },
+          {
+            "expression": "!blunderIsSorted",
+            "expected": false
+          }
+        ],
+        "statements": [
+          {
+            "line": 1339,
+            "statement": "int pick = blunderTabelWhite.getTableHeader().columnAtPoint(e.getPoint());"
+          },
+          {
+            "line": 1347,
+            "statement": "blunderSortIsOriginOrder = true;"
+          },
+          {
+            "line": 1348,
+            "statement": "blunderIsSorted = false;"
+          },
+          {
+            "line": 1358,
+            "statement": "Lizzie.config.saveBlunderTableSortSettings( blunderSortNum, blunderIsSorted, blunderSortIsOriginOrder);"
+          },
+          {
+            "line": 1360,
+            "statement": "blunderTabelWhite.repaint();"
+          },
+          {
+            "line": 1361,
+            "statement": "blunderTabelBlack.repaint();"
+          }
+        ],
+        "matrix_ids": [
+          "UI-BLUNDER-SCROLLBAR-001"
+        ]
+      },
+      {
+        "binding": "LizzieFrameBlunderWhiteHeaderRelease:mouseReleased#4",
+        "event_id": "LizzieFrameBlunderWhiteHeaderRelease:mouseReleased",
+        "source_id": "LizzieFrameBlunderWhiteHeaderRelease",
+        "event": "mouseReleased",
+        "line": 1338,
+        "conditions": [
+          {
+            "expression": "pick == blunderSortNum",
+            "expected": true
+          },
+          {
+            "expression": "blunderSortNum == 2 || blunderSortNum == 3",
+            "expected": false
+          }
+        ],
+        "statements": [
+          {
+            "line": 1339,
+            "statement": "int pick = blunderTabelWhite.getTableHeader().columnAtPoint(e.getPoint());"
+          },
+          {
+            "line": 1351,
+            "statement": "blunderIsSorted = !blunderIsSorted;"
+          },
+          {
+            "line": 1358,
+            "statement": "Lizzie.config.saveBlunderTableSortSettings( blunderSortNum, blunderIsSorted, blunderSortIsOriginOrder);"
+          },
+          {
+            "line": 1360,
+            "statement": "blunderTabelWhite.repaint();"
+          },
+          {
+            "line": 1361,
+            "statement": "blunderTabelBlack.repaint();"
+          }
+        ],
+        "matrix_ids": [
+          "UI-BLUNDER-SCROLLBAR-001"
+        ]
+      },
+      {
+        "binding": "LizzieFrameBlunderWhiteHeaderRelease:mouseReleased#5",
+        "event_id": "LizzieFrameBlunderWhiteHeaderRelease:mouseReleased",
+        "source_id": "LizzieFrameBlunderWhiteHeaderRelease",
+        "event": "mouseReleased",
+        "line": 1338,
+        "conditions": [
+          {
+            "expression": "pick == blunderSortNum",
+            "expected": false
+          }
+        ],
+        "statements": [
+          {
+            "line": 1339,
+            "statement": "int pick = blunderTabelWhite.getTableHeader().columnAtPoint(e.getPoint());"
+          },
+          {
+            "line": 1354,
+            "statement": "blunderSortNum = pick;"
+          },
+          {
+            "line": 1355,
+            "statement": "blunderSortIsOriginOrder = true;"
+          },
+          {
+            "line": 1356,
+            "statement": "blunderIsSorted = false;"
+          },
+          {
+            "line": 1358,
+            "statement": "Lizzie.config.saveBlunderTableSortSettings( blunderSortNum, blunderIsSorted, blunderSortIsOriginOrder);"
+          },
+          {
+            "line": 1360,
+            "statement": "blunderTabelWhite.repaint();"
+          },
+          {
+            "line": 1361,
+            "statement": "blunderTabelBlack.repaint();"
+          }
+        ],
+        "matrix_ids": [
+          "UI-BLUNDER-SCROLLBAR-001"
+        ]
+      },
+      {
+        "binding": "LizzieFrameBlunderWhiteHeaderExit:mouseExited#1",
+        "event_id": "LizzieFrameBlunderWhiteHeaderExit:mouseExited",
+        "source_id": "LizzieFrameBlunderWhiteHeaderExit",
+        "event": "mouseExited",
+        "line": 1368,
+        "conditions": [
+          {
+            "expression": "Lizzie.config.hideBlunderControlPane",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 1370,
+            "statement": "return;"
+          }
+        ],
+        "matrix_ids": [
+          "UI-BLUNDER-SCROLLBAR-001"
+        ]
+      },
+      {
+        "binding": "LizzieFrameBlunderWhiteHeaderExit:mouseExited#2",
+        "event_id": "LizzieFrameBlunderWhiteHeaderExit:mouseExited",
+        "source_id": "LizzieFrameBlunderWhiteHeaderExit",
+        "event": "mouseExited",
+        "line": 1368,
+        "conditions": [
+          {
+            "expression": "Lizzie.config.hideBlunderControlPane",
+            "expected": false
+          }
+        ],
+        "statements": [
+          {
+            "line": 1372,
+            "statement": "commentBlunderControlPane.setVisible(false);"
+          }
+        ],
+        "matrix_ids": [
+          "UI-BLUNDER-SCROLLBAR-001"
+        ]
+      },
+      {
+        "binding": "LizzieFrameBlunderWhiteHover:mouseExited#1",
+        "event_id": "LizzieFrameBlunderWhiteHover:mouseExited",
+        "source_id": "LizzieFrameBlunderWhiteHover",
+        "event": "mouseExited",
+        "line": 1377,
+        "conditions": [
+          {
+            "expression": "Lizzie.config.hideBlunderControlPane",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 1379,
+            "statement": "return;"
+          }
+        ],
+        "matrix_ids": [
+          "UI-BLUNDER-SCROLLBAR-001"
+        ]
+      },
+      {
+        "binding": "LizzieFrameBlunderWhiteHover:mouseExited#2",
+        "event_id": "LizzieFrameBlunderWhiteHover:mouseExited",
+        "source_id": "LizzieFrameBlunderWhiteHover",
+        "event": "mouseExited",
+        "line": 1377,
+        "conditions": [
+          {
+            "expression": "Lizzie.config.hideBlunderControlPane",
+            "expected": false
+          }
+        ],
+        "statements": [
+          {
+            "line": 1381,
+            "statement": "commentBlunderControlPane.setVisible(false);"
+          }
+        ],
+        "matrix_ids": [
+          "UI-BLUNDER-SCROLLBAR-001"
+        ]
+      },
+      {
+        "binding": "LizzieFrameBlunderWhiteHover:mouseEntered#1",
+        "event_id": "LizzieFrameBlunderWhiteHover:mouseEntered",
+        "source_id": "LizzieFrameBlunderWhiteHover",
+        "event": "mouseEntered",
+        "line": 1384,
+        "conditions": [
+          {
+            "expression": "Lizzie.config.hideBlunderControlPane",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 1386,
+            "statement": "return;"
+          }
+        ],
+        "matrix_ids": [
+          "UI-BLUNDER-SCROLLBAR-001"
+        ]
+      },
+      {
+        "binding": "LizzieFrameBlunderWhiteHover:mouseEntered#2",
+        "event_id": "LizzieFrameBlunderWhiteHover:mouseEntered",
+        "source_id": "LizzieFrameBlunderWhiteHover",
+        "event": "mouseEntered",
+        "line": 1384,
+        "conditions": [
+          {
+            "expression": "Lizzie.config.hideBlunderControlPane",
+            "expected": false
+          }
+        ],
+        "statements": [
+          {
+            "line": 1388,
+            "statement": "setBlunderControlPane(false, true);"
+          },
+          {
+            "line": 1389,
+            "statement": "commentBlunderControlPane.setVisible(true);"
+          }
+        ],
+        "matrix_ids": [
+          "UI-BLUNDER-SCROLLBAR-001"
+        ]
+      },
+      {
+        "binding": "LizzieFrameBlunderMinBlackHover:mouseExited#1",
+        "event_id": "LizzieFrameBlunderMinBlackHover:mouseExited",
+        "source_id": "LizzieFrameBlunderMinBlackHover",
+        "event": "mouseExited",
+        "line": 1410,
+        "conditions": [
+          {
+            "expression": "Lizzie.config.hideBlunderControlPane",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 1412,
+            "statement": "return;"
+          }
+        ],
+        "matrix_ids": [
+          "UI-BLUNDER-SCROLLBAR-001"
+        ]
+      },
+      {
+        "binding": "LizzieFrameBlunderMinBlackHover:mouseExited#2",
+        "event_id": "LizzieFrameBlunderMinBlackHover:mouseExited",
+        "source_id": "LizzieFrameBlunderMinBlackHover",
+        "event": "mouseExited",
+        "line": 1410,
+        "conditions": [
+          {
+            "expression": "Lizzie.config.hideBlunderControlPane",
+            "expected": false
+          }
+        ],
+        "statements": [
+          {
+            "line": 1414,
+            "statement": "commentBlunderControlPane.setVisible(false);"
+          }
+        ],
+        "matrix_ids": [
+          "UI-BLUNDER-SCROLLBAR-001"
+        ]
+      },
+      {
+        "binding": "LizzieFrameBlunderMinBlackHover:mouseEntered#1",
+        "event_id": "LizzieFrameBlunderMinBlackHover:mouseEntered",
+        "source_id": "LizzieFrameBlunderMinBlackHover",
+        "event": "mouseEntered",
+        "line": 1417,
+        "conditions": [
+          {
+            "expression": "Lizzie.config.hideBlunderControlPane",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 1419,
+            "statement": "return;"
+          }
+        ],
+        "matrix_ids": [
+          "UI-BLUNDER-SCROLLBAR-001"
+        ]
+      },
+      {
+        "binding": "LizzieFrameBlunderMinBlackHover:mouseEntered#2",
+        "event_id": "LizzieFrameBlunderMinBlackHover:mouseEntered",
+        "source_id": "LizzieFrameBlunderMinBlackHover",
+        "event": "mouseEntered",
+        "line": 1417,
+        "conditions": [
+          {
+            "expression": "Lizzie.config.hideBlunderControlPane",
+            "expected": false
+          }
+        ],
+        "statements": [
+          {
+            "line": 1421,
+            "statement": "setBlunderControlPane(false, true);"
+          },
+          {
+            "line": 1422,
+            "statement": "commentBlunderControlPane.setVisible(true);"
+          }
+        ],
+        "matrix_ids": [
+          "UI-BLUNDER-SCROLLBAR-001"
+        ]
+      },
+      {
+        "binding": "LizzieFrameBlunderMinWhiteHover:mouseExited#1",
+        "event_id": "LizzieFrameBlunderMinWhiteHover:mouseExited",
+        "source_id": "LizzieFrameBlunderMinWhiteHover",
+        "event": "mouseExited",
+        "line": 1427,
+        "conditions": [
+          {
+            "expression": "Lizzie.config.hideBlunderControlPane",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 1429,
+            "statement": "return;"
+          }
+        ],
+        "matrix_ids": [
+          "UI-BLUNDER-SCROLLBAR-001"
+        ]
+      },
+      {
+        "binding": "LizzieFrameBlunderMinWhiteHover:mouseExited#2",
+        "event_id": "LizzieFrameBlunderMinWhiteHover:mouseExited",
+        "source_id": "LizzieFrameBlunderMinWhiteHover",
+        "event": "mouseExited",
+        "line": 1427,
+        "conditions": [
+          {
+            "expression": "Lizzie.config.hideBlunderControlPane",
+            "expected": false
+          }
+        ],
+        "statements": [
+          {
+            "line": 1431,
+            "statement": "commentBlunderControlPane.setVisible(false);"
+          }
+        ],
+        "matrix_ids": [
+          "UI-BLUNDER-SCROLLBAR-001"
+        ]
+      },
+      {
+        "binding": "LizzieFrameBlunderMinWhiteHover:mouseEntered#1",
+        "event_id": "LizzieFrameBlunderMinWhiteHover:mouseEntered",
+        "source_id": "LizzieFrameBlunderMinWhiteHover",
+        "event": "mouseEntered",
+        "line": 1434,
+        "conditions": [
+          {
+            "expression": "Lizzie.config.hideBlunderControlPane",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 1436,
+            "statement": "return;"
+          }
+        ],
+        "matrix_ids": [
+          "UI-BLUNDER-SCROLLBAR-001"
+        ]
+      },
+      {
+        "binding": "LizzieFrameBlunderMinWhiteHover:mouseEntered#2",
+        "event_id": "LizzieFrameBlunderMinWhiteHover:mouseEntered",
+        "source_id": "LizzieFrameBlunderMinWhiteHover",
+        "event": "mouseEntered",
+        "line": 1434,
+        "conditions": [
+          {
+            "expression": "Lizzie.config.hideBlunderControlPane",
+            "expected": false
+          }
+        ],
+        "statements": [
+          {
+            "line": 1438,
+            "statement": "setBlunderControlPane(false, true);"
+          },
+          {
+            "line": 1439,
+            "statement": "commentBlunderControlPane.setVisible(true);"
+          }
+        ],
+        "matrix_ids": [
+          "UI-BLUNDER-SCROLLBAR-001"
+        ]
+      },
+      {
+        "binding": "LizzieFrameBlunderMinBlackScrollbarHover:mouseExited#1",
+        "event_id": "LizzieFrameBlunderMinBlackScrollbarHover:mouseExited",
+        "source_id": "LizzieFrameBlunderMinBlackScrollbarHover",
+        "event": "mouseExited",
+        "line": 1462,
+        "conditions": [
+          {
+            "expression": "Lizzie.config.hideBlunderControlPane",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 1464,
+            "statement": "return;"
+          }
+        ],
+        "matrix_ids": [
+          "UI-BLUNDER-SCROLLBAR-001"
+        ]
+      },
+      {
+        "binding": "LizzieFrameBlunderMinBlackScrollbarHover:mouseExited#2",
+        "event_id": "LizzieFrameBlunderMinBlackScrollbarHover:mouseExited",
+        "source_id": "LizzieFrameBlunderMinBlackScrollbarHover",
+        "event": "mouseExited",
+        "line": 1462,
+        "conditions": [
+          {
+            "expression": "Lizzie.config.hideBlunderControlPane",
+            "expected": false
+          }
+        ],
+        "statements": [
+          {
+            "line": 1466,
+            "statement": "commentBlunderControlPane.setVisible(false);"
+          }
+        ],
+        "matrix_ids": [
+          "UI-BLUNDER-SCROLLBAR-001"
+        ]
+      },
+      {
+        "binding": "LizzieFrameBlunderMinBlackScrollbarHover:mouseEntered#1",
+        "event_id": "LizzieFrameBlunderMinBlackScrollbarHover:mouseEntered",
+        "source_id": "LizzieFrameBlunderMinBlackScrollbarHover",
+        "event": "mouseEntered",
+        "line": 1469,
+        "conditions": [
+          {
+            "expression": "Lizzie.config.hideBlunderControlPane",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 1471,
+            "statement": "return;"
+          }
+        ],
+        "matrix_ids": [
+          "UI-BLUNDER-SCROLLBAR-001"
+        ]
+      },
+      {
+        "binding": "LizzieFrameBlunderMinBlackScrollbarHover:mouseEntered#2",
+        "event_id": "LizzieFrameBlunderMinBlackScrollbarHover:mouseEntered",
+        "source_id": "LizzieFrameBlunderMinBlackScrollbarHover",
+        "event": "mouseEntered",
+        "line": 1469,
+        "conditions": [
+          {
+            "expression": "Lizzie.config.hideBlunderControlPane",
+            "expected": false
+          }
+        ],
+        "statements": [
+          {
+            "line": 1473,
+            "statement": "setBlunderControlPane(false, true);"
+          },
+          {
+            "line": 1474,
+            "statement": "commentBlunderControlPane.setVisible(true);"
+          }
+        ],
+        "matrix_ids": [
+          "UI-BLUNDER-SCROLLBAR-001"
+        ]
+      },
+      {
+        "binding": "LizzieFrameBlunderMinWhiteScrollbarHover:mouseExited#1",
+        "event_id": "LizzieFrameBlunderMinWhiteScrollbarHover:mouseExited",
+        "source_id": "LizzieFrameBlunderMinWhiteScrollbarHover",
+        "event": "mouseExited",
+        "line": 1481,
+        "conditions": [
+          {
+            "expression": "Lizzie.config.hideBlunderControlPane",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 1483,
+            "statement": "return;"
+          }
+        ],
+        "matrix_ids": [
+          "UI-BLUNDER-SCROLLBAR-001"
+        ]
+      },
+      {
+        "binding": "LizzieFrameBlunderMinWhiteScrollbarHover:mouseExited#2",
+        "event_id": "LizzieFrameBlunderMinWhiteScrollbarHover:mouseExited",
+        "source_id": "LizzieFrameBlunderMinWhiteScrollbarHover",
+        "event": "mouseExited",
+        "line": 1481,
+        "conditions": [
+          {
+            "expression": "Lizzie.config.hideBlunderControlPane",
+            "expected": false
+          }
+        ],
+        "statements": [
+          {
+            "line": 1485,
+            "statement": "commentBlunderControlPane.setVisible(false);"
+          }
+        ],
+        "matrix_ids": [
+          "UI-BLUNDER-SCROLLBAR-001"
+        ]
+      },
+      {
+        "binding": "LizzieFrameBlunderMinWhiteScrollbarHover:mouseEntered#1",
+        "event_id": "LizzieFrameBlunderMinWhiteScrollbarHover:mouseEntered",
+        "source_id": "LizzieFrameBlunderMinWhiteScrollbarHover",
+        "event": "mouseEntered",
+        "line": 1488,
+        "conditions": [
+          {
+            "expression": "Lizzie.config.hideBlunderControlPane",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 1490,
+            "statement": "return;"
+          }
+        ],
+        "matrix_ids": [
+          "UI-BLUNDER-SCROLLBAR-001"
+        ]
+      },
+      {
+        "binding": "LizzieFrameBlunderMinWhiteScrollbarHover:mouseEntered#2",
+        "event_id": "LizzieFrameBlunderMinWhiteScrollbarHover:mouseEntered",
+        "source_id": "LizzieFrameBlunderMinWhiteScrollbarHover",
+        "event": "mouseEntered",
+        "line": 1488,
+        "conditions": [
+          {
+            "expression": "Lizzie.config.hideBlunderControlPane",
+            "expected": false
+          }
+        ],
+        "statements": [
+          {
+            "line": 1492,
+            "statement": "setBlunderControlPane(false, true);"
+          },
+          {
+            "line": 1493,
+            "statement": "commentBlunderControlPane.setVisible(true);"
+          }
+        ],
+        "matrix_ids": [
+          "UI-BLUNDER-SCROLLBAR-001"
+        ]
+      },
+      {
+        "binding": "LizzieFrameCommentBlunderControlHover:mouseExited#1",
+        "event_id": "LizzieFrameCommentBlunderControlHover:mouseExited",
+        "source_id": "LizzieFrameCommentBlunderControlHover",
+        "event": "mouseExited",
+        "line": 1498,
+        "conditions": [],
+        "statements": [
+          {
+            "line": 1499,
+            "statement": "commentBlunderControlPane.setVisible(false);"
+          }
+        ],
+        "matrix_ids": [
+          "UI-BLUNDER-SCROLLBAR-001"
+        ]
+      },
+      {
+        "binding": "LizzieFrameCommentBlunderControlHover:mouseEntered#1",
+        "event_id": "LizzieFrameCommentBlunderControlHover:mouseEntered",
+        "source_id": "LizzieFrameCommentBlunderControlHover",
+        "event": "mouseEntered",
+        "line": 1502,
+        "conditions": [],
+        "statements": [
+          {
+            "line": 1503,
+            "statement": "commentBlunderControlPane.setVisible(true);"
+          }
+        ],
+        "matrix_ids": [
+          "UI-BLUNDER-SCROLLBAR-001"
+        ]
+      },
+      {
+        "binding": "LizzieFrameCommentTextAreaHover:mouseExited#1",
+        "event_id": "LizzieFrameCommentTextAreaHover:mouseExited",
+        "source_id": "LizzieFrameCommentTextAreaHover",
+        "event": "mouseExited",
+        "line": 1509,
+        "conditions": [
+          {
+            "expression": "Lizzie.config.hideBlunderControlPane",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 1511,
+            "statement": "return;"
+          }
+        ],
+        "matrix_ids": [
+          "UI-TEXT-EDIT-001"
+        ]
+      },
+      {
+        "binding": "LizzieFrameCommentTextAreaHover:mouseExited#2",
+        "event_id": "LizzieFrameCommentTextAreaHover:mouseExited",
+        "source_id": "LizzieFrameCommentTextAreaHover",
+        "event": "mouseExited",
+        "line": 1509,
+        "conditions": [
+          {
+            "expression": "Lizzie.config.hideBlunderControlPane",
+            "expected": false
+          }
+        ],
+        "statements": [
+          {
+            "line": 1513,
+            "statement": "commentBlunderControlPane.setVisible(false);"
+          }
+        ],
+        "matrix_ids": [
+          "UI-TEXT-EDIT-001"
+        ]
+      },
+      {
+        "binding": "LizzieFrameCommentTextAreaHover:mouseEntered#1",
+        "event_id": "LizzieFrameCommentTextAreaHover:mouseEntered",
+        "source_id": "LizzieFrameCommentTextAreaHover",
+        "event": "mouseEntered",
+        "line": 1516,
+        "conditions": [
+          {
+            "expression": "Lizzie.config.hideBlunderControlPane",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 1518,
+            "statement": "return;"
+          }
+        ],
+        "matrix_ids": [
+          "UI-TEXT-EDIT-001"
+        ]
+      },
+      {
+        "binding": "LizzieFrameCommentTextAreaHover:mouseEntered#2",
+        "event_id": "LizzieFrameCommentTextAreaHover:mouseEntered",
+        "source_id": "LizzieFrameCommentTextAreaHover",
+        "event": "mouseEntered",
+        "line": 1516,
+        "conditions": [
+          {
+            "expression": "Lizzie.config.hideBlunderControlPane",
+            "expected": false
+          }
+        ],
+        "statements": [
+          {
+            "line": 1520,
+            "statement": "setBlunderControlPane(true, true);"
+          },
+          {
+            "line": 1521,
+            "statement": "commentBlunderControlPane.setVisible(true);"
+          }
+        ],
+        "matrix_ids": [
+          "UI-TEXT-EDIT-001"
+        ]
+      },
+      {
+        "binding": "LizzieFrameCommentTextPaneHover:mouseExited#1",
+        "event_id": "LizzieFrameCommentTextPaneHover:mouseExited",
+        "source_id": "LizzieFrameCommentTextPaneHover",
+        "event": "mouseExited",
+        "line": 1527,
+        "conditions": [
+          {
+            "expression": "Lizzie.config.hideBlunderControlPane",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 1529,
+            "statement": "return;"
+          }
+        ],
+        "matrix_ids": [
+          "UI-TEXT-EDIT-001"
+        ]
+      },
+      {
+        "binding": "LizzieFrameCommentTextPaneHover:mouseExited#2",
+        "event_id": "LizzieFrameCommentTextPaneHover:mouseExited",
+        "source_id": "LizzieFrameCommentTextPaneHover",
+        "event": "mouseExited",
+        "line": 1527,
+        "conditions": [
+          {
+            "expression": "Lizzie.config.hideBlunderControlPane",
+            "expected": false
+          }
+        ],
+        "statements": [
+          {
+            "line": 1531,
+            "statement": "commentBlunderControlPane.setVisible(false);"
+          }
+        ],
+        "matrix_ids": [
+          "UI-TEXT-EDIT-001"
+        ]
+      },
+      {
+        "binding": "LizzieFrameCommentTextPaneHover:mouseEntered#1",
+        "event_id": "LizzieFrameCommentTextPaneHover:mouseEntered",
+        "source_id": "LizzieFrameCommentTextPaneHover",
+        "event": "mouseEntered",
+        "line": 1534,
+        "conditions": [
+          {
+            "expression": "Lizzie.config.hideBlunderControlPane",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 1536,
+            "statement": "return;"
+          }
+        ],
+        "matrix_ids": [
+          "UI-TEXT-EDIT-001"
+        ]
+      },
+      {
+        "binding": "LizzieFrameCommentTextPaneHover:mouseEntered#2",
+        "event_id": "LizzieFrameCommentTextPaneHover:mouseEntered",
+        "source_id": "LizzieFrameCommentTextPaneHover",
+        "event": "mouseEntered",
+        "line": 1534,
+        "conditions": [
+          {
+            "expression": "Lizzie.config.hideBlunderControlPane",
+            "expected": false
+          }
+        ],
+        "statements": [
+          {
+            "line": 1538,
+            "statement": "setBlunderControlPane(true, true);"
+          },
+          {
+            "line": 1539,
+            "statement": "commentBlunderControlPane.setVisible(true);"
+          }
+        ],
+        "matrix_ids": [
+          "UI-TEXT-EDIT-001"
+        ]
+      },
+      {
+        "binding": "LizzieFrameCommentTextAreaClick:mouseClicked#1",
+        "event_id": "LizzieFrameCommentTextAreaClick:mouseClicked",
+        "source_id": "LizzieFrameCommentTextAreaClick",
+        "event": "mouseClicked",
+        "line": 1553,
+        "conditions": [
+          {
+            "expression": "e.getButton() == MouseEvent.BUTTON1",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 1556,
+            "statement": "setCommentEditable(true);"
+          }
+        ],
+        "matrix_ids": [
+          "UI-TEXT-EDIT-001"
+        ]
+      },
+      {
+        "binding": "LizzieFrameCommentTextAreaClick:mouseClicked#2",
+        "event_id": "LizzieFrameCommentTextAreaClick:mouseClicked",
+        "source_id": "LizzieFrameCommentTextAreaClick",
+        "event": "mouseClicked",
+        "line": 1553,
+        "conditions": [
+          {
+            "expression": "e.getButton() == MouseEvent.BUTTON1",
+            "expected": false
+          }
+        ],
+        "statements": [],
+        "matrix_ids": [
+          "UI-TEXT-EDIT-001"
+        ]
+      },
+      {
+        "binding": "LizzieFrameCommentTextPaneClick:mouseClicked#1",
+        "event_id": "LizzieFrameCommentTextPaneClick:mouseClicked",
+        "source_id": "LizzieFrameCommentTextPaneClick",
+        "event": "mouseClicked",
+        "line": 1563,
+        "conditions": [
+          {
+            "expression": "e.getButton() == MouseEvent.BUTTON1",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 1566,
+            "statement": "setCommentEditable(true);"
+          }
+        ],
+        "matrix_ids": [
+          "UI-TEXT-EDIT-001"
+        ]
+      },
+      {
+        "binding": "LizzieFrameCommentTextPaneClick:mouseClicked#2",
+        "event_id": "LizzieFrameCommentTextPaneClick:mouseClicked",
+        "source_id": "LizzieFrameCommentTextPaneClick",
+        "event": "mouseClicked",
+        "line": 1563,
+        "conditions": [
+          {
+            "expression": "e.getButton() == MouseEvent.BUTTON1",
+            "expected": false
+          }
+        ],
+        "statements": [],
+        "matrix_ids": [
+          "UI-TEXT-EDIT-001"
+        ]
+      },
+      {
+        "binding": "LizzieFrameKifuLoadGlassPaneMotion:mouseDragged#1",
+        "event_id": "LizzieFrameKifuLoadGlassPaneMotion:mouseDragged",
+        "source_id": "LizzieFrameKifuLoadGlassPaneMotion",
+        "event": "mouseDragged",
+        "line": 4358,
+        "conditions": [],
+        "statements": [],
+        "matrix_ids": [
+          "KIFU-OPEN-001"
+        ]
+      },
+      {
+        "binding": "LizzieFrameKifuLoadGlassPaneMotion:mouseMoved#1",
+        "event_id": "LizzieFrameKifuLoadGlassPaneMotion:mouseMoved",
+        "source_id": "LizzieFrameKifuLoadGlassPaneMotion",
+        "event": "mouseMoved",
+        "line": 4360,
+        "conditions": [],
+        "statements": [],
+        "matrix_ids": [
+          "KIFU-OPEN-001"
+        ]
+      },
+      {
+        "binding": "LizzieFrameTempGamePanelMotion:mouseMoved#1",
+        "event_id": "LizzieFrameTempGamePanelMotion:mouseMoved",
+        "source_id": "LizzieFrameTempGamePanelMotion",
+        "event": "mouseMoved",
+        "line": 12611,
+        "conditions": [
+          {
+            "expression": "!Lizzie.config.loadASaveZoom",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 12612,
+            "statement": "return;"
+          }
+        ],
+        "matrix_ids": [
+          "KIFU-TEMP-SAVES-001"
+        ]
+      },
+      {
+        "binding": "LizzieFrameTempGamePanelMotion:mouseMoved#2",
+        "event_id": "LizzieFrameTempGamePanelMotion:mouseMoved",
+        "source_id": "LizzieFrameTempGamePanelMotion",
+        "event": "mouseMoved",
+        "line": 12611,
+        "conditions": [
+          {
+            "expression": "!Lizzie.config.loadASaveZoom",
+            "expected": false
+          },
+          {
+            "expression": "bigBoardLastX == x && bigBoardLastY == y",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 12613,
+            "statement": "int x = e.getX();"
+          },
+          {
+            "line": 12614,
+            "statement": "int y = e.getY();"
+          },
+          {
+            "line": 12615,
+            "statement": "return;"
+          }
+        ],
+        "matrix_ids": [
+          "KIFU-TEMP-SAVES-001"
+        ]
+      },
+      {
+        "binding": "LizzieFrameTempGamePanelMotion:mouseMoved#3",
+        "event_id": "LizzieFrameTempGamePanelMotion:mouseMoved",
+        "source_id": "LizzieFrameTempGamePanelMotion",
+        "event": "mouseMoved",
+        "line": 12611,
+        "conditions": [
+          {
+            "expression": "!Lizzie.config.loadASaveZoom",
+            "expected": false
+          },
+          {
+            "expression": "bigBoardLastX == x && bigBoardLastY == y",
+            "expected": false
+          },
+          {
+            "expression": "!isMouseOnImage",
+            "expected": true
+          },
+          {
+            "expression": "bigBoardPanel != null",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 12613,
+            "statement": "int x = e.getX();"
+          },
+          {
+            "line": 12614,
+            "statement": "int y = e.getY();"
+          },
+          {
+            "line": 12616,
+            "statement": "bigBoardLastX = x;"
+          },
+          {
+            "line": 12617,
+            "statement": "bigBoardLastY = y;"
+          },
+          {
+            "line": 12618,
+            "statement": "boolean isMouseOnImage = false;"
+          },
+          {
+            "line": 12619,
+            "statement": "for (TempGameData data : tempGameList) { if (data.x < x && (data.x + 300) > x) if (data.y < y && (data.y + 300) > y) { isMouseOnImage = true; int boardIndex = data.isAutoSave ? data.index : data.index + 20000; if (bigBoardIndex != boardIndex) { if (bigBoardPanel != null) { bigBoardPanel.setVisible(false); isShowingBigBoardPanel = false; } } bigBoardIndex = boardIndex; if (bigBoardPanel == null || !bigBoardPanel.isVisible()) { Runnable runnable2 = new Runnable() { public void run() { try { Thread.sleep(800); } catch (InterruptedException es) { es.printStackTrace(); } if (e.getX() == bigBoardLastX && e.getY() == bigBoardLastY) { showBigBoardImage( data.isAutoSave, data.index, tempGamePanel, x, y, data.curMoveNumer, data.moves, oriShowListPane, OriShowVariationGraph); } } }; Thread thread2 = new Thread(runnable2); thread2.start(); } break; } }"
+          },
+          {
+            "line": 12664,
+            "statement": "bigBoardPanel.setVisible(false);"
+          },
+          {
+            "line": 12665,
+            "statement": "isShowingBigBoardPanel = false;"
+          }
+        ],
+        "matrix_ids": [
+          "KIFU-TEMP-SAVES-001"
+        ]
+      },
+      {
+        "binding": "LizzieFrameTempGamePanelMotion:mouseMoved#4",
+        "event_id": "LizzieFrameTempGamePanelMotion:mouseMoved",
+        "source_id": "LizzieFrameTempGamePanelMotion",
+        "event": "mouseMoved",
+        "line": 12611,
+        "conditions": [
+          {
+            "expression": "!Lizzie.config.loadASaveZoom",
+            "expected": false
+          },
+          {
+            "expression": "bigBoardLastX == x && bigBoardLastY == y",
+            "expected": false
+          },
+          {
+            "expression": "!isMouseOnImage",
+            "expected": true
+          },
+          {
+            "expression": "bigBoardPanel != null",
+            "expected": false
+          }
+        ],
+        "statements": [
+          {
+            "line": 12613,
+            "statement": "int x = e.getX();"
+          },
+          {
+            "line": 12614,
+            "statement": "int y = e.getY();"
+          },
+          {
+            "line": 12616,
+            "statement": "bigBoardLastX = x;"
+          },
+          {
+            "line": 12617,
+            "statement": "bigBoardLastY = y;"
+          },
+          {
+            "line": 12618,
+            "statement": "boolean isMouseOnImage = false;"
+          },
+          {
+            "line": 12619,
+            "statement": "for (TempGameData data : tempGameList) { if (data.x < x && (data.x + 300) > x) if (data.y < y && (data.y + 300) > y) { isMouseOnImage = true; int boardIndex = data.isAutoSave ? data.index : data.index + 20000; if (bigBoardIndex != boardIndex) { if (bigBoardPanel != null) { bigBoardPanel.setVisible(false); isShowingBigBoardPanel = false; } } bigBoardIndex = boardIndex; if (bigBoardPanel == null || !bigBoardPanel.isVisible()) { Runnable runnable2 = new Runnable() { public void run() { try { Thread.sleep(800); } catch (InterruptedException es) { es.printStackTrace(); } if (e.getX() == bigBoardLastX && e.getY() == bigBoardLastY) { showBigBoardImage( data.isAutoSave, data.index, tempGamePanel, x, y, data.curMoveNumer, data.moves, oriShowListPane, OriShowVariationGraph); } } }; Thread thread2 = new Thread(runnable2); thread2.start(); } break; } }"
+          }
+        ],
+        "matrix_ids": [
+          "KIFU-TEMP-SAVES-001"
+        ]
+      },
+      {
+        "binding": "LizzieFrameTempGamePanelMotion:mouseMoved#5",
+        "event_id": "LizzieFrameTempGamePanelMotion:mouseMoved",
+        "source_id": "LizzieFrameTempGamePanelMotion",
+        "event": "mouseMoved",
+        "line": 12611,
+        "conditions": [
+          {
+            "expression": "!Lizzie.config.loadASaveZoom",
+            "expected": false
+          },
+          {
+            "expression": "bigBoardLastX == x && bigBoardLastY == y",
+            "expected": false
+          },
+          {
+            "expression": "!isMouseOnImage",
+            "expected": false
+          }
+        ],
+        "statements": [
+          {
+            "line": 12613,
+            "statement": "int x = e.getX();"
+          },
+          {
+            "line": 12614,
+            "statement": "int y = e.getY();"
+          },
+          {
+            "line": 12616,
+            "statement": "bigBoardLastX = x;"
+          },
+          {
+            "line": 12617,
+            "statement": "bigBoardLastY = y;"
+          },
+          {
+            "line": 12618,
+            "statement": "boolean isMouseOnImage = false;"
+          },
+          {
+            "line": 12619,
+            "statement": "for (TempGameData data : tempGameList) { if (data.x < x && (data.x + 300) > x) if (data.y < y && (data.y + 300) > y) { isMouseOnImage = true; int boardIndex = data.isAutoSave ? data.index : data.index + 20000; if (bigBoardIndex != boardIndex) { if (bigBoardPanel != null) { bigBoardPanel.setVisible(false); isShowingBigBoardPanel = false; } } bigBoardIndex = boardIndex; if (bigBoardPanel == null || !bigBoardPanel.isVisible()) { Runnable runnable2 = new Runnable() { public void run() { try { Thread.sleep(800); } catch (InterruptedException es) { es.printStackTrace(); } if (e.getX() == bigBoardLastX && e.getY() == bigBoardLastY) { showBigBoardImage( data.isAutoSave, data.index, tempGamePanel, x, y, data.curMoveNumer, data.moves, oriShowListPane, OriShowVariationGraph); } } }; Thread thread2 = new Thread(runnable2); thread2.start(); } break; } }"
+          }
+        ],
+        "matrix_ids": [
+          "KIFU-TEMP-SAVES-001"
+        ]
+      },
+      {
+        "binding": "LizzieFrameTempGamePanelClick:mouseClicked#1",
+        "event_id": "LizzieFrameTempGamePanelClick:mouseClicked",
+        "source_id": "LizzieFrameTempGamePanelClick",
+        "event": "mouseClicked",
+        "line": 12675,
+        "conditions": [],
+        "statements": [
+          {
+            "line": 12676,
+            "statement": "int x = e.getX();"
+          },
+          {
+            "line": 12677,
+            "statement": "int y = e.getY();"
+          },
+          {
+            "line": 12678,
+            "statement": "for (TempGameData data : tempGameList) { if (data.x < x && (data.x + 300) > x) if (data.y < y && (data.y + 300) > y) { canShowBigBoardImage = false; loadFile( new File( (data.isAutoSave ? \"save\" + File.separator + \"autoGame\" : \"save\" + File.separator + \"game\") + data.index + \".sgf\"), true, true); if (!data.moves.equals(\"\")) Lizzie.board.playList(data.moves); else Lizzie.board.goToMoveNumber(data.curMoveNumer); if (Lizzie.leelaz.isPondering()) Lizzie.leelaz.ponder(); hideTempGamePanel(oriShowListPane, OriShowVariationGraph); break; } }"
+          }
+        ],
+        "matrix_ids": [
+          "KIFU-TEMP-SAVES-001"
+        ]
+      },
+      {
+        "binding": "LizzieFrameBigBoardPanelClick:mouseClicked#1",
+        "event_id": "LizzieFrameBigBoardPanelClick:mouseClicked",
+        "source_id": "LizzieFrameBigBoardPanelClick",
+        "event": "mouseClicked",
+        "line": 12745,
+        "conditions": [
+          {
+            "expression": "e.getX() == 0 && e.getY() == 0",
+            "expected": true
+          },
+          {
+            "expression": "!moveList.equals(\"\")",
+            "expected": true
+          },
+          {
+            "expression": "Lizzie.leelaz.isPondering()",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 12747,
+            "statement": "canShowBigBoardImage = false;"
+          },
+          {
+            "line": 12748,
+            "statement": "loadFile( new File( (isAutoSave ? \"save\" + File.separator + \"autoGame\" : \"save\" + File.separator + \"game\") + index + \".sgf\"), true, true);"
+          },
+          {
+            "line": 12757,
+            "statement": "Lizzie.board.playList(moveList);"
+          },
+          {
+            "line": 12759,
+            "statement": "Lizzie.leelaz.ponder();"
+          },
+          {
+            "line": 12760,
+            "statement": "hideTempGamePanel(oriShowListPane, OriShowVariationGraph);"
+          },
+          {
+            "line": 12761,
+            "statement": "bigBoardPanel.setVisible(false);"
+          }
+        ],
+        "matrix_ids": [
+          "KIFU-TEMP-SAVES-001"
+        ]
+      },
+      {
+        "binding": "LizzieFrameBigBoardPanelClick:mouseClicked#2",
+        "event_id": "LizzieFrameBigBoardPanelClick:mouseClicked",
+        "source_id": "LizzieFrameBigBoardPanelClick",
+        "event": "mouseClicked",
+        "line": 12745,
+        "conditions": [
+          {
+            "expression": "e.getX() == 0 && e.getY() == 0",
+            "expected": true
+          },
+          {
+            "expression": "!moveList.equals(\"\")",
+            "expected": true
+          },
+          {
+            "expression": "Lizzie.leelaz.isPondering()",
+            "expected": false
+          }
+        ],
+        "statements": [
+          {
+            "line": 12747,
+            "statement": "canShowBigBoardImage = false;"
+          },
+          {
+            "line": 12748,
+            "statement": "loadFile( new File( (isAutoSave ? \"save\" + File.separator + \"autoGame\" : \"save\" + File.separator + \"game\") + index + \".sgf\"), true, true);"
+          },
+          {
+            "line": 12757,
+            "statement": "Lizzie.board.playList(moveList);"
+          },
+          {
+            "line": 12760,
+            "statement": "hideTempGamePanel(oriShowListPane, OriShowVariationGraph);"
+          },
+          {
+            "line": 12761,
+            "statement": "bigBoardPanel.setVisible(false);"
+          }
+        ],
+        "matrix_ids": [
+          "KIFU-TEMP-SAVES-001"
+        ]
+      },
+      {
+        "binding": "LizzieFrameBigBoardPanelClick:mouseClicked#3",
+        "event_id": "LizzieFrameBigBoardPanelClick:mouseClicked",
+        "source_id": "LizzieFrameBigBoardPanelClick",
+        "event": "mouseClicked",
+        "line": 12745,
+        "conditions": [
+          {
+            "expression": "e.getX() == 0 && e.getY() == 0",
+            "expected": true
+          },
+          {
+            "expression": "!moveList.equals(\"\")",
+            "expected": false
+          },
+          {
+            "expression": "Lizzie.leelaz.isPondering()",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 12747,
+            "statement": "canShowBigBoardImage = false;"
+          },
+          {
+            "line": 12748,
+            "statement": "loadFile( new File( (isAutoSave ? \"save\" + File.separator + \"autoGame\" : \"save\" + File.separator + \"game\") + index + \".sgf\"), true, true);"
+          },
+          {
+            "line": 12758,
+            "statement": "Lizzie.board.goToMoveNumber(moveNumber);"
+          },
+          {
+            "line": 12759,
+            "statement": "Lizzie.leelaz.ponder();"
+          },
+          {
+            "line": 12760,
+            "statement": "hideTempGamePanel(oriShowListPane, OriShowVariationGraph);"
+          },
+          {
+            "line": 12761,
+            "statement": "bigBoardPanel.setVisible(false);"
+          }
+        ],
+        "matrix_ids": [
+          "KIFU-TEMP-SAVES-001"
+        ]
+      },
+      {
+        "binding": "LizzieFrameBigBoardPanelClick:mouseClicked#4",
+        "event_id": "LizzieFrameBigBoardPanelClick:mouseClicked",
+        "source_id": "LizzieFrameBigBoardPanelClick",
+        "event": "mouseClicked",
+        "line": 12745,
+        "conditions": [
+          {
+            "expression": "e.getX() == 0 && e.getY() == 0",
+            "expected": true
+          },
+          {
+            "expression": "!moveList.equals(\"\")",
+            "expected": false
+          },
+          {
+            "expression": "Lizzie.leelaz.isPondering()",
+            "expected": false
+          }
+        ],
+        "statements": [
+          {
+            "line": 12747,
+            "statement": "canShowBigBoardImage = false;"
+          },
+          {
+            "line": 12748,
+            "statement": "loadFile( new File( (isAutoSave ? \"save\" + File.separator + \"autoGame\" : \"save\" + File.separator + \"game\") + index + \".sgf\"), true, true);"
+          },
+          {
+            "line": 12758,
+            "statement": "Lizzie.board.goToMoveNumber(moveNumber);"
+          },
+          {
+            "line": 12760,
+            "statement": "hideTempGamePanel(oriShowListPane, OriShowVariationGraph);"
+          },
+          {
+            "line": 12761,
+            "statement": "bigBoardPanel.setVisible(false);"
+          }
+        ],
+        "matrix_ids": [
+          "KIFU-TEMP-SAVES-001"
+        ]
+      },
+      {
+        "binding": "LizzieFrameBigBoardPanelClick:mouseClicked#5",
+        "event_id": "LizzieFrameBigBoardPanelClick:mouseClicked",
+        "source_id": "LizzieFrameBigBoardPanelClick",
+        "event": "mouseClicked",
+        "line": 12745,
+        "conditions": [
+          {
+            "expression": "e.getX() == 0 && e.getY() == 0",
+            "expected": false
+          }
+        ],
+        "statements": [],
+        "matrix_ids": [
+          "KIFU-TEMP-SAVES-001"
+        ]
+      },
+      {
+        "binding": "LizzieFramePlayerStrengthModelComboHover:mouseEntered#1",
+        "event_id": "LizzieFramePlayerStrengthModelComboHover:mouseEntered",
+        "source_id": "LizzieFramePlayerStrengthModelComboHover",
+        "event": "mouseEntered",
+        "line": 14537,
+        "conditions": [],
+        "statements": [
+          {
+            "line": 14538,
+            "statement": "rollover = true;"
+          },
+          {
+            "line": 14539,
+            "statement": "repaint();"
+          }
+        ],
+        "matrix_ids": [
+          "ANALYSIS-PLAYER-STRENGTH-001"
+        ]
+      },
+      {
+        "binding": "LizzieFramePlayerStrengthModelComboHover:mouseExited#1",
+        "event_id": "LizzieFramePlayerStrengthModelComboHover:mouseExited",
+        "source_id": "LizzieFramePlayerStrengthModelComboHover",
+        "event": "mouseExited",
+        "line": 14543,
+        "conditions": [],
+        "statements": [
+          {
+            "line": 14544,
+            "statement": "rollover = false;"
+          },
+          {
+            "line": 14545,
+            "statement": "repaint();"
+          }
+        ],
+        "matrix_ids": [
+          "ANALYSIS-PLAYER-STRENGTH-001"
+        ]
+      },
+      {
+        "binding": "LizzieFramePlayerStrengthMoveHitMapHover:mouseMoved#1",
+        "event_id": "LizzieFramePlayerStrengthMoveHitMapHover:mouseMoved",
+        "source_id": "LizzieFramePlayerStrengthMoveHitMapHover",
+        "event": "mouseMoved",
+        "line": 15193,
+        "conditions": [],
+        "statements": [
+          {
+            "line": 15194,
+            "statement": "updateHoveredPoint(e.getPoint());"
+          }
+        ],
+        "matrix_ids": [
+          "ANALYSIS-PLAYER-STRENGTH-001"
+        ]
+      },
+      {
+        "binding": "LizzieFramePlayerStrengthMoveHitMapHover:mouseExited#1",
+        "event_id": "LizzieFramePlayerStrengthMoveHitMapHover:mouseExited",
+        "source_id": "LizzieFramePlayerStrengthMoveHitMapHover",
+        "event": "mouseExited",
+        "line": 15198,
+        "conditions": [],
+        "statements": [
+          {
+            "line": 15199,
+            "statement": "updateHoveredPoint(null);"
+          }
+        ],
+        "matrix_ids": [
+          "ANALYSIS-PLAYER-STRENGTH-001"
+        ]
+      },
+      {
+        "binding": "LizzieFramePlayerStrengthMatchChartHover:mouseMoved#1",
+        "event_id": "LizzieFramePlayerStrengthMatchChartHover:mouseMoved",
+        "source_id": "LizzieFramePlayerStrengthMatchChartHover",
+        "event": "mouseMoved",
+        "line": 16130,
+        "conditions": [],
+        "statements": [
+          {
+            "line": 16131,
+            "statement": "updateHoverRank(event.getPoint());"
+          }
+        ],
+        "matrix_ids": [
+          "ANALYSIS-PLAYER-STRENGTH-001"
+        ]
+      },
+      {
+        "binding": "LizzieFramePlayerStrengthMatchChartHover:mouseExited#1",
+        "event_id": "LizzieFramePlayerStrengthMatchChartHover:mouseExited",
+        "source_id": "LizzieFramePlayerStrengthMatchChartHover",
+        "event": "mouseExited",
+        "line": 16135,
+        "conditions": [],
+        "statements": [
+          {
+            "line": 16136,
+            "statement": "updateHoverRank(null);"
+          }
+        ],
+        "matrix_ids": [
+          "ANALYSIS-PLAYER-STRENGTH-001"
         ]
       }
     ]

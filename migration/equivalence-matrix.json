@@ -1,5 +1,5 @@
 {
-  "schema_version": 31,
+  "schema_version": 32,
   "allowed_statuses": [
     "未盘点",
     "已盘点",
@@ -199,18 +199,23 @@
       "legacy_shortcuts": [],
       "legacy_input_cases": [
         "keyPressed:VK_O",
-        "InputIndependentMainBoard:keyPressed:VK_O"
+        "InputIndependentMainBoard:keyPressed:VK_O",
+        "LizzieFrameKifuLoadGlassPaneMotion:mouseDragged",
+        "LizzieFrameKifuLoadGlassPaneMotion:mouseMoved"
       ],
       "legacy_input_bindings": [
         "keyPressed:VK_O#1",
         "keyPressed:VK_O#4",
         "InputIndependentMainBoard:keyPressed:VK_O#1",
-        "InputIndependentMainBoard:keyPressed:VK_O#4"
+        "InputIndependentMainBoard:keyPressed:VK_O#4",
+        "LizzieFrameKifuLoadGlassPaneMotion:mouseDragged#1",
+        "LizzieFrameKifuLoadGlassPaneMotion:mouseMoved#1"
       ],
       "java_evidence": [
         { "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "symbol": "openFile" },
         { "path": "src/main/java/featurecat/lizzie/rules/SGFParser.java", "symbol": "class SGFParser" },
-        { "path": "src/main/java/featurecat/lizzie/rules/GIBParser.java", "symbol": "class GIBParser" }
+        { "path": "src/main/java/featurecat/lizzie/rules/GIBParser.java", "symbol": "class GIBParser" },
+        { "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "symbol": "ensureKifuLoadGlassPane" }
       ],
       "config_keys": ["read-komi", "load-sgf-last", "recent-file-paths"],
       "inputs_preconditions": "用户选择可读的 SGF 或 GIB 文件。",
@@ -219,10 +224,16 @@
       "data_io": "读取 SGF/GIB 文件并更新最近文件路径。",
       "external_dependencies": ["本地文件系统"],
       "target_modules": ["Lizzie.Core", "Lizzie.Desktop"],
-      "automated_evidence": [],
+      "automated_evidence": [
+        { "path": "src/test/java/featurecat/lizzie/gui/KifuLoadFinisherTest.java", "symbol": "KifuLoadFinisherTest" },
+        { "path": "src/test/java/featurecat/lizzie/gui/KifuLoadResourceTest.java", "symbol": "KifuLoadResourceTest" },
+        { "path": "src/test/java/featurecat/lizzie/gui/LizzieFrameRegressionTest.java", "symbol": "finishKifuLoadDoesNotRefreshAgainBeforeHidingOverlay" },
+        { "path": "src/test/java/featurecat/lizzie/rules/BoardNodeKindHistoryPipelineTest.java", "symbol": "loadFromStringEntriesMatchParseSgfStandaloneSetupSnapshotBoundary" },
+        { "path": "src/test/java/featurecat/lizzie/analysis/ReadBoardResumeLifecycleTest.java", "symbol": "loadFromStringClearsResumeState" }
+      ],
       "manual_acceptance": "用含主线、分支、注释和提子的 SGF 及一份 GIB 做新旧对照；另测取消和损坏文件。",
       "status": "已盘点",
-      "evidence": "解析入口已定位；旧版缺少以 SGFParser/GIBParser 命名的直接回归测试，是明确测试缺口。"
+      "evidence": "解析入口已定位；加载遮罩的显式 mouseDragged 与 mouseMoved 均各一条空路径，另有无 override 的空 MouseAdapter 用于吞掉其他 pointer 输入，不计为声明事件。遮罩没有 pointer cancel；完成或失败必须在 UI 线程确定恢复交互。KifuLoadFinisherTest、KifuLoadResourceTest 与 LizzieFrameRegressionTest 覆盖完成回调、资源键和遮罩隐藏但不 dispatch 这些 listener；BoardNodeKindHistoryPipelineTest 与 ReadBoardResumeLifecycleTest 已直接覆盖若干 SGFParser.loadFromString/loadFromStringforedit 语义。仍缺 openFile→磁盘 SGF/GIB 的统一端到端回归，尤其 GIB。"
     },
     {
       "id": "KIFU-SAVE-001",
@@ -1351,7 +1362,10 @@
         "InputIndependentMainBoard:keyPressed:VK_9",
         "FloatBoard:keyPressed:VK_UP",
         "FloatBoard:keyPressed:VK_DOWN",
-        "FloatBoard:keyPressed:VK_G"
+        "FloatBoard:keyPressed:VK_G",
+        "LizzieFrameVariationTreeClick:mouseClicked",
+        "LizzieFrameVariationTreeWheel:mouseWheelMoved",
+        "LizzieFrameVariationTreeMotion:mouseMoved"
       ],
       "legacy_input_bindings": [
         "keyPressed:VK_COMMA#2",
@@ -1390,15 +1404,26 @@
         "FloatBoard:keyPressed:VK_UP#2",
         "FloatBoard:keyPressed:VK_DOWN#1",
         "FloatBoard:keyPressed:VK_DOWN#2",
-        "FloatBoard:keyPressed:VK_G#1"
+        "FloatBoard:keyPressed:VK_G#1",
+        "LizzieFrameVariationTreeClick:mouseClicked#1",
+        "LizzieFrameVariationTreeClick:mouseClicked#2",
+        "LizzieFrameVariationTreeClick:mouseClicked#3",
+        "LizzieFrameVariationTreeClick:mouseClicked#4",
+        "LizzieFrameVariationTreeClick:mouseClicked#5",
+        "LizzieFrameVariationTreeWheel:mouseWheelMoved#1",
+        "LizzieFrameVariationTreeWheel:mouseWheelMoved#2",
+        "LizzieFrameVariationTreeWheel:mouseWheelMoved#3",
+        "LizzieFrameVariationTreeMotion:mouseMoved#1",
+        "LizzieFrameVariationTreeMotion:mouseMoved#2"
       ],
       "java_evidence": [
         { "path": "src/main/java/featurecat/lizzie/gui/Input.java", "symbol": "playCurrentVariation" },
         { "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "symbol": "public void replayBranch()" },
         { "path": "src/main/java/featurecat/lizzie/gui/InputIndependentMainBoard.java", "symbol": "replayBranchIndependentMainBoard" },
-        { "path": "src/main/java/featurecat/lizzie/gui/FloatBoard.java", "symbol": "tryToRefreshVariation" }
+        { "path": "src/main/java/featurecat/lizzie/gui/FloatBoard.java", "symbol": "tryToRefreshVariation" },
+        { "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "symbol": "varTreePane.addMouseListener" }
       ],
-      "config_keys": [],
+      "config_keys": ["show-variation-graph"],
       "inputs_preconditions": "当前节点存在引擎建议或可见分支；数字键对应 1–9 号建议。",
       "success_behavior": "按指针位置与显示设置播放当前/最佳变化，进入试下、设为主线、重放分支或预览指定建议；R 按焦点窗口选择主窗口或独立主棋盘重放入口。",
       "failure_cancel_behavior": "无建议、无分支或已处于不兼容模式时保持棋盘一致；重放可停止且不得阻塞 UI。",
@@ -1408,7 +1433,7 @@
       "automated_evidence": [],
       "manual_acceptance": "用至少九个候选和两个分支覆盖鼠标内外、变化开关、试下、主线、主窗口/独立主棋盘 R 重放、FloatBoard Up/Down/G 及无目标路径。",
       "status": "已盘点",
-      "evidence": "两个 switch 输入源的数字 1–8 无 Alt 路径均经连续 case fall-through 到 VK_9；FloatBoard 的 Up/Down 各保留分支显示与仅刷新路径，G 直接刷新变化。"
+      "evidence": "两个 switch 输入源的数字 1–8 无 Alt 路径均经连续 case fall-through 到 VK_9；FloatBoard 的 Up/Down 各保留分支显示与仅刷新路径，G 直接刷新变化。LizzieFrame 变化树新增 clicked 5、wheel 3、motion 2 共 10 条路径：右键菜单已显示时两条早退，普通右键 undo，其他按钮按引擎对局门控选择树节点并重绘；滚轮正负导航历史、零值无动作，移动时可能把焦点抢回主棋盘。非早退 click 还会隐式提交当前评论编辑，目标版需以显式、绑定原节点的提交/取消替代。"
     },
     {
       "id": "BOARD-SUBBOARD-INPUT-001",
@@ -2158,7 +2183,7 @@
       "id": "ANALYSIS-DISPLAY-001",
       "category": "分析",
       "legacy_entry": "主窗口与独立主棋盘的 U/M/J/F/H/V/T/Y/K、FloatBoard 的 F/H/T，以及 AnalysisFrame 表格/窗口的 U/Y 快捷分支控制候选、变化、手数、热力图、策略和问题手显示",
-      "legacy_menu_keys": [],
+      "legacy_menu_keys": ["Menu.listPane"],
       "legacy_menu_labels": [],
       "legacy_shortcuts": [],
       "legacy_input_cases": [
@@ -2186,7 +2211,11 @@
         "AnalysisFrameTable:keyPressed:VK_U",
         "AnalysisFrameTable:keyPressed:VK_Y",
         "AnalysisFrameWindow:keyPressed:VK_U",
-        "AnalysisFrameWindow:keyPressed:VK_Y"
+        "AnalysisFrameWindow:keyPressed:VK_Y",
+        "LizzieFrameMoveListScrollPaneMotion:mouseMoved",
+        "LizzieFrameMoveListScrollPaneClick:mouseClicked",
+        "LizzieFrameMoveListTableWheel:mouseWheelMoved",
+        "LizzieFrameMoveListTableClick:mouseClicked"
       ],
       "legacy_input_bindings": [
         "keyPressed:VK_U#1",
@@ -2223,15 +2252,26 @@
         "AnalysisFrameTable:keyPressed:VK_U#1",
         "AnalysisFrameTable:keyPressed:VK_Y#1",
         "AnalysisFrameWindow:keyPressed:VK_U#1",
-        "AnalysisFrameWindow:keyPressed:VK_Y#1"
+        "AnalysisFrameWindow:keyPressed:VK_Y#1",
+        "LizzieFrameMoveListScrollPaneMotion:mouseMoved#1",
+        "LizzieFrameMoveListScrollPaneMotion:mouseMoved#2",
+        "LizzieFrameMoveListScrollPaneClick:mouseClicked#1",
+        "LizzieFrameMoveListTableWheel:mouseWheelMoved#1",
+        "LizzieFrameMoveListTableWheel:mouseWheelMoved#2",
+        "LizzieFrameMoveListTableWheel:mouseWheelMoved#3",
+        "LizzieFrameMoveListTableWheel:mouseWheelMoved#4",
+        "LizzieFrameMoveListTableClick:mouseClicked#1",
+        "LizzieFrameMoveListTableClick:mouseClicked#2",
+        "LizzieFrameMoveListTableClick:mouseClicked#3"
       ],
       "java_evidence": [
         { "path": "src/main/java/featurecat/lizzie/gui/Input.java", "symbol": "toggleBestMoves" },
         { "path": "src/main/java/featurecat/lizzie/Config.java", "symbol": "toggleShowMoveNumber" },
         { "path": "src/main/java/featurecat/lizzie/gui/FloatBoard.java", "symbol": "toggleHide" },
-        { "path": "src/main/java/featurecat/lizzie/gui/AnalysisFrame.java", "symbol": "Lizzie.frame.toggleBadMoves()" }
+        { "path": "src/main/java/featurecat/lizzie/gui/AnalysisFrame.java", "symbol": "Lizzie.frame.toggleBadMoves()" },
+        { "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "symbol": "listTable.addMouseListener" }
       ],
-      "config_keys": ["show-suggestion-variations"],
+      "config_keys": ["show-suggestion-variations", "show-list-pane"],
       "inputs_preconditions": "主棋盘已显示；需要引擎数据的覆盖层只在相应数据存在时可见。",
       "success_behavior": "各修饰键分支切换对应候选、变化、手数、次选、热力图、策略、问题手或评估着色，并立即刷新。",
       "failure_cancel_behavior": "数据不存在或 Alt+K 条件不满足时允许无动作；持久化失败不得与可见状态静默分叉。",
@@ -2241,7 +2281,7 @@
       "automated_evidence": [],
       "manual_acceptance": "逐一执行主窗口 14 条路径、FloatBoard 的 F/H/T 及 AnalysisFrame 表格/窗口的 U/Y，核对焦点入口、覆盖层、组合优先级、无数据/无修饰 K 的无动作和重启持久化。",
       "status": "已盘点",
-      "evidence": "主窗口 14 条动作/无动作条件路径、FloatBoard 的隐藏候选/热力图/策略入口，以及 AnalysisFrame 表格和窗口各自的 U/Y 入口已静态展开；各 toggle 的完整配置键与视觉基线仍待后续关联。"
+      "evidence": "主窗口 14 条动作/无动作条件路径、FloatBoard 的隐藏候选/热力图/策略入口，以及 AnalysisFrame 表格和窗口各自的 U/Y 入口已静态展开。LizzieFrame 主候选列表新增 scrollpane motion/click 与 table wheel/click 4 个事件、10 条路径：hover 可抢回主棋盘焦点，click 隐式提交评论；固定候选时正负/零滚轮分别调整/仅刷新分支，未固定时转发原事件；有效格右键切换固定候选，其他按钮预览，越界只完成评论提交。try/catch 作为原子动作保留，异常仅打印且可能留下部分全局坐标状态；目标版必须原子更新预览并绑定明确焦点、滚动和评论事务。"
     },
     {
       "id": "ANALYSIS-COUNTING-001",
@@ -2710,13 +2750,16 @@
         "keyPressed:VK_Z",
         "keyReleased:VK_Z",
         "InputIndependentMainBoard:keyPressed:VK_Z",
-        "InputIndependentMainBoard:keyReleased:VK_Z"
+        "InputIndependentMainBoard:keyReleased:VK_Z",
+        "LizzieFrameMainPanel:mouseEntered"
       ],
       "legacy_input_bindings": [
         "keyPressed:VK_Z#3",
         "keyReleased:VK_Z#1",
         "InputIndependentMainBoard:keyPressed:VK_Z#3",
-        "InputIndependentMainBoard:keyReleased:VK_Z#1"
+        "InputIndependentMainBoard:keyReleased:VK_Z#1",
+        "LizzieFrameMainPanel:mouseEntered#1",
+        "LizzieFrameMainPanel:mouseEntered#2"
       ],
       "java_evidence": [
         { "path": "src/main/java/featurecat/lizzie/gui/Input.java", "symbol": "startTemporaryBoard" },
@@ -2732,7 +2775,7 @@
       "automated_evidence": [],
       "manual_acceptance": "覆盖按住/释放、重复按下、焦点切出、黑白候选四种初始组合和独立棋盘同步刷新。",
       "status": "已盘点",
-      "evidence": "按下/释放绑定和状态保存入口已定位；旧版 stopTemporaryBoard 给两个菜单复选框都写 tempShowWhite 的疑似恢复缺陷已登记，目标版不得照搬。"
+      "evidence": "按下/释放绑定和状态保存入口已定位；mainPanel 第一组 mouseEntered 新增真/假 2 条路径，临时态为真时调用 stopTemporaryBoardMaybe 并刷新，否则无动作。mainPanel 同时还挂有 Input.mouseEntered，目标版必须幂等退出且只刷新一次；旧版 stopTemporaryBoard 给两个菜单复选框都写 tempShowWhite 的疑似恢复缺陷已登记，目标版不得照搬。"
     },
     {
       "id": "ENGINE-SWITCH-001",
@@ -2942,7 +2985,30 @@
         "BlunderListPanel:mouseMoved",
         "BlunderListPanel:mouseExited",
         "BlunderListPanel:mouseClicked",
-        "SidebarHeaderPanel:mouseClicked"
+        "SidebarHeaderPanel:mouseClicked",
+        "LizzieFrameBlunderContentHover:mouseExited",
+        "LizzieFrameBlunderContentHover:mouseEntered",
+        "LizzieFrameBlunderBlackClick:mouseClicked",
+        "LizzieFrameBlunderWhiteClick:mouseClicked",
+        "LizzieFrameBlunderBlackHeaderRelease:mouseReleased",
+        "LizzieFrameBlunderBlackHeaderHover:mouseExited",
+        "LizzieFrameBlunderBlackHeaderHover:mouseEntered",
+        "LizzieFrameBlunderBlackHover:mouseExited",
+        "LizzieFrameBlunderBlackHover:mouseEntered",
+        "LizzieFrameBlunderWhiteHeaderRelease:mouseReleased",
+        "LizzieFrameBlunderWhiteHeaderExit:mouseExited",
+        "LizzieFrameBlunderWhiteHover:mouseExited",
+        "LizzieFrameBlunderWhiteHover:mouseEntered",
+        "LizzieFrameBlunderMinBlackHover:mouseExited",
+        "LizzieFrameBlunderMinBlackHover:mouseEntered",
+        "LizzieFrameBlunderMinWhiteHover:mouseExited",
+        "LizzieFrameBlunderMinWhiteHover:mouseEntered",
+        "LizzieFrameBlunderMinBlackScrollbarHover:mouseExited",
+        "LizzieFrameBlunderMinBlackScrollbarHover:mouseEntered",
+        "LizzieFrameBlunderMinWhiteScrollbarHover:mouseExited",
+        "LizzieFrameBlunderMinWhiteScrollbarHover:mouseEntered",
+        "LizzieFrameCommentBlunderControlHover:mouseExited",
+        "LizzieFrameCommentBlunderControlHover:mouseEntered"
       ],
       "legacy_input_bindings": [
         "DemoScrollBarUI2Increase:mouseExited#1",
@@ -2962,7 +3028,59 @@
         "SidebarHeaderPanel:mouseClicked#3",
         "SidebarHeaderPanel:mouseClicked#4",
         "SidebarHeaderPanel:mouseClicked#5",
-        "SidebarHeaderPanel:mouseClicked#6"
+        "SidebarHeaderPanel:mouseClicked#6",
+        "LizzieFrameBlunderContentHover:mouseExited#1",
+        "LizzieFrameBlunderContentHover:mouseExited#2",
+        "LizzieFrameBlunderContentHover:mouseEntered#1",
+        "LizzieFrameBlunderContentHover:mouseEntered#2",
+        "LizzieFrameBlunderBlackClick:mouseClicked#1",
+        "LizzieFrameBlunderBlackClick:mouseClicked#2",
+        "LizzieFrameBlunderBlackClick:mouseClicked#3",
+        "LizzieFrameBlunderWhiteClick:mouseClicked#1",
+        "LizzieFrameBlunderWhiteClick:mouseClicked#2",
+        "LizzieFrameBlunderWhiteClick:mouseClicked#3",
+        "LizzieFrameBlunderBlackHeaderRelease:mouseReleased#1",
+        "LizzieFrameBlunderBlackHeaderRelease:mouseReleased#2",
+        "LizzieFrameBlunderBlackHeaderRelease:mouseReleased#3",
+        "LizzieFrameBlunderBlackHeaderRelease:mouseReleased#4",
+        "LizzieFrameBlunderBlackHeaderRelease:mouseReleased#5",
+        "LizzieFrameBlunderBlackHeaderHover:mouseExited#1",
+        "LizzieFrameBlunderBlackHeaderHover:mouseExited#2",
+        "LizzieFrameBlunderBlackHeaderHover:mouseEntered#1",
+        "LizzieFrameBlunderBlackHeaderHover:mouseEntered#2",
+        "LizzieFrameBlunderBlackHover:mouseExited#1",
+        "LizzieFrameBlunderBlackHover:mouseExited#2",
+        "LizzieFrameBlunderBlackHover:mouseEntered#1",
+        "LizzieFrameBlunderBlackHover:mouseEntered#2",
+        "LizzieFrameBlunderWhiteHeaderRelease:mouseReleased#1",
+        "LizzieFrameBlunderWhiteHeaderRelease:mouseReleased#2",
+        "LizzieFrameBlunderWhiteHeaderRelease:mouseReleased#3",
+        "LizzieFrameBlunderWhiteHeaderRelease:mouseReleased#4",
+        "LizzieFrameBlunderWhiteHeaderRelease:mouseReleased#5",
+        "LizzieFrameBlunderWhiteHeaderExit:mouseExited#1",
+        "LizzieFrameBlunderWhiteHeaderExit:mouseExited#2",
+        "LizzieFrameBlunderWhiteHover:mouseExited#1",
+        "LizzieFrameBlunderWhiteHover:mouseExited#2",
+        "LizzieFrameBlunderWhiteHover:mouseEntered#1",
+        "LizzieFrameBlunderWhiteHover:mouseEntered#2",
+        "LizzieFrameBlunderMinBlackHover:mouseExited#1",
+        "LizzieFrameBlunderMinBlackHover:mouseExited#2",
+        "LizzieFrameBlunderMinBlackHover:mouseEntered#1",
+        "LizzieFrameBlunderMinBlackHover:mouseEntered#2",
+        "LizzieFrameBlunderMinWhiteHover:mouseExited#1",
+        "LizzieFrameBlunderMinWhiteHover:mouseExited#2",
+        "LizzieFrameBlunderMinWhiteHover:mouseEntered#1",
+        "LizzieFrameBlunderMinWhiteHover:mouseEntered#2",
+        "LizzieFrameBlunderMinBlackScrollbarHover:mouseExited#1",
+        "LizzieFrameBlunderMinBlackScrollbarHover:mouseExited#2",
+        "LizzieFrameBlunderMinBlackScrollbarHover:mouseEntered#1",
+        "LizzieFrameBlunderMinBlackScrollbarHover:mouseEntered#2",
+        "LizzieFrameBlunderMinWhiteScrollbarHover:mouseExited#1",
+        "LizzieFrameBlunderMinWhiteScrollbarHover:mouseExited#2",
+        "LizzieFrameBlunderMinWhiteScrollbarHover:mouseEntered#1",
+        "LizzieFrameBlunderMinWhiteScrollbarHover:mouseEntered#2",
+        "LizzieFrameCommentBlunderControlHover:mouseExited#1",
+        "LizzieFrameCommentBlunderControlHover:mouseEntered#1"
       ],
       "java_evidence": [
         { "path": "src/main/java/featurecat/lizzie/gui/DemoScrollBarUI2.java", "symbol": "public DemoScrollBarUI2(boolean needAddAction)" },
@@ -3018,12 +3136,19 @@
         "glass-panel-shadow-color",
         "glass-panel-highlight-color",
         "glass-accent-color",
-        "glass-corner-radius"
+        "glass-corner-radius",
+        "blunder-table-only-after",
+        "blunder-sort-num-AF",
+        "blunder-is-sorted-AF",
+        "blunder-sort-is-origin-order-AF",
+        "blunder-sort-num-NAF",
+        "blunder-is-sorted-NAF",
+        "blunder-sort-is-origin-order-NAF"
       ],
-      "inputs_preconditions": "三个已知构造点都把 UI delegate 安装到垂直滚动条；变化列表传 false，不添加本类 listener，黑白恶手表各传 true，BasicScrollBarUI 创建上下箭头时各安装一组 mouseEntered/mouseExited。事件不检查鼠标按键、点击次数或修饰键；hide-blunder-table-control-pane 为真时四个事件都在副作用前返回。Menu.commitPane 的显示请求还受 extra-mode 约束：Four_Sub 或 Double_Engine 会由 Config.setShowComment 强制改回 false。BlunderListPanel 只有 currentSnapshot 非空且 y≥20、按 64 px 行槽计算的索引位于当前侧过滤后的合并列表内时才命中；x 被读取但完全不参与命中，左右 padding 与卡片底部 12 px 空隙仍算整行，mouseClicked 同样不检查按键、点击次数或修饰键。SidebarHeaderPanel 唯一 mouseClicked 也不检查按键、次数或修饰键：先按当前字体和 Apple/classic 几何命中评论/问题手，主区未命中且当前确为问题手卡片时才命中黑/白，否则早退或无动作；classic 主区第二段与黑棋段在约 x=100..107 存在重叠并由主区优先。旧 side filter 只实际支持 BLACK/WHITE，配置非法或 ALL 都退化为 BLACK。Header 另装 Left/Right/B/W/Enter 的 WHEN_FOCUSED 动作但不属于本轮 KeyListener 静态索引；其中 B/W 没有问题手模式 guard。",
+      "inputs_preconditions": "三个已知构造点都把 UI delegate 安装到垂直滚动条；变化列表传 false，不添加本类 listener，黑白恶手表各传 true，BasicScrollBarUI 创建上下箭头时各安装一组 mouseEntered/mouseExited。事件不检查鼠标按键、点击次数或修饰键；hide-blunder-table-control-pane 为真时四个事件都在副作用前返回。Menu.commitPane 的显示请求还受 extra-mode 约束：Four_Sub 或 Double_Engine 会由 Config.setShowComment 强制改回 false。BlunderListPanel 只有 currentSnapshot 非空且 y≥20、按 64 px 行槽计算的索引位于当前侧过滤后的合并列表内时才命中；x 被读取但完全不参与命中，左右 padding 与卡片底部 12 px 空隙仍算整行，mouseClicked 同样不检查按键、点击次数或修饰键。SidebarHeaderPanel 唯一 mouseClicked 也不检查按键、次数或修饰键：先按当前字体和 Apple/classic 几何命中评论/问题手，主区未命中且当前确为问题手卡片时才命中黑/白，否则早退或无动作；classic 主区第二段与黑棋段在约 x=100..107 存在重叠并由主区优先。旧 side filter 只实际支持 BLACK/WHITE，配置非法或 ALL 都退化为 BLACK。Header 另装 Left/Right/B/W/Enter 的 WHEN_FOCUSED 动作但不属于本轮 KeyListener 静态索引；其中 B/W 没有问题手模式 guard。 LizzieFrame 旧黑白 JTable、表头、min scrollpane、scrollbar、blunderContentPane 与 commentBlunderControlPane 还新增 23 个事件/52 条路径：表格右键弹出导出菜单，其他按钮有效格导航；表头任意 release 排序并持久化；多数 hover 受隐藏键门控，但控制面板自身 hover 不受门控。",
       "success_behavior": "旧版把首选宽高固定为 8 px，以 needAddAction 选择两组硬编码 track/thumb 灰色，用 0.7 alpha 绘制 9 px 滑块；三个已知垂直实例只加载 smallDown/smallUp，上下箭头进入且未隐藏控制时调用 setBlunderControlPane(false,true)。show-comment 为假时该方法先隐藏侧栏；为真时按 is-showing-blunder-table 调 SidebarPanel.switchTo，再显示侧栏，随后事件无条件显示旧 commentBlunderControlPane。switchTo 每次都把模式写入 uiConfig；COMMENTS 分支还同步 appendComment，满足引擎、间隔、候选和配置条件时可由 SGFParser.appendComment 改写当前节点评论，BLUNDERS 分支同步遍历整条主线，按 visits 与胜率损失阈值筛选，分黑白后排序并发布不可修改快照。Menu.commitPane 在 Normal 等允许模式下切换整个评论/问题手侧栏；Min 模式的显示请求会先切回 Normal，Four_Sub/Double_Engine 则保持 show-comment=false 并隐藏侧栏。SidebarHeaderPanel 的评论/问题手命中和 Left/Right/Enter 复用同一 switchTo 副作用；黑/白命中及 B/W 通过 setProblemListSideFilter 写入 uiConfig 并通知 listener，快照进度按 0..totalMoves 钳制显示 running/partial/complete tooltip 并触发 accessible visible-data 通知。列表再次按 winrateLossAbs 降序、moveNumber 升序合并排序；mouseMoved 更新行高亮，mouseExited 清除高亮，命中点击把坐标转换后跳到 moveNumber-1、写 clickbadmove 并刷新，未命中分支无动作。problem-list-metric 虽持久化但刷新、setter 和卡片都强制 WINRATE，score list 实质不可用。原 showCommentConrolPane 只控制旧箭头 hover 面板。目标版复用 Avalonia 原生 TabControl/ToggleButton、虚拟化 ListBox/ScrollViewer、ProgressBar/TextBlock、主题 token 与已有棋盘导航命令：Core 从一致且带 generation 的棋盘快照计算一次有界列表，Desktop 为评论/问题手与黑/白提供独立可聚焦、具名称/角色/选中态的命令，只用主按钮单击或 Enter/Space 激活稳定节点身份；导航成功后才更新高亮，失败保持棋盘/选择不变并给出可访问反馈。不移植 Swing UI delegate、旧 JTable、自绘命中控件/卡片、重复排序或旧 PNG。",
       "failure_cancel_behavior": "隐藏配置为真时保持当前侧栏和旧面板状态不变；Four_Sub/Double_Engine 下 Menu.commitPane 的显示请求被有意拒绝，菜单状态保持未选中且侧栏隐藏。资源缺失会让 ImageIO.read(null) 抛出未捕获的 IllegalArgumentException，IOException 仅打印堆栈并留下空图标；四处 getResourceAsStream 均未关闭，且无已知水平实例会走 smallRight/smallLeft 分支。固定 8/9 px、负 margin、硬编码颜色和纯 pointer hover 不适配高 DPI、高对比、触控、键盘或辅助技术。commentBlunderControlPane 仅被创建为无子项黑色 JPanel，未发现 bounds/size 设置；setBlunderControlPane 的两个参数也已不再使用。问题列表的任意鼠标键、单击或双击都能激活整行槽；jumpToProblemMove 不检查 goToMoveNumber 返回值，广泛 catch 只打印堆栈，可能留下已移动棋盘或错误 clickbadmove 而无用户反馈。快照没有棋局 generation/节点身份，载谱、编辑或排队更新后可按同手数导航到另一状态；hoveredIndex 在快照或过滤器变化时不清除。每次 mouseMoved、click、preferredSize 和 paint 都复制并 O(n log n) 重排，paint 不按 clip 虚拟化且逐行格式化/创建渐变；隐藏侧栏因 listener 始终存在仍扫描整条主线，超长棋谱、NaN/Infinity 分析值、负值/无穷阈值及 rows×64 整数溢出可造成错误显示或 UI/内存拒绝服务。Header 的任意鼠标键/单击次数都可切换并重复触发 appendComment、全主线刷新或配置通知；B/W 键在评论模式仍静默改过滤器。Header 虽 setFocusable(true)，但 F6 zone 枚举优先收集后代文本控件且不把无子项 JPanel 加入候选，mouseClicked 也不请求焦点，故五个键动作可达性不可靠；单个自绘 JPanel 只有整体名称/描述与焦点框，没有四段独立角色、选中态或动作。固定 12px/200×48/56 和 Apple 132/92 px、classic 本地化文字宽度会在长翻译、窄宽/高 DPI 下裁切、重叠或让主区抢占黑棋命中，进度 pill 空间不足时只静默不画；text() 吞资源异常并回退英文，畸形 MessageFormat 模式可在 EDT 抛错。SidebarPanel 注册的 snapshotListener 没有已知 remove 调用，同值过滤仍写配置/通知/重绘。目标版校验 finite/范围/阈值顺序，以可取消、合并、带代次和资源上限的后台快照丢弃旧结果；detach/关闭时解绑，原生控件提供焦点、名称、角色、选择与动作，资源/主题/导航失败时仍保持可操作和一致。",
-      "data_io": "读取 hide-blunder-table-control-pane、show-comment、extra-mode、is-showing-blunder-table、append-winrate-to-comment、analyze-update-interval-centisec、use-morandi-colors，以及问题列表的 problem-list-metric、problem-list-side-filter、problem-list-winrate-threshold、blunder-playouts-threshold、win-loss-threshold-1..5、ui-font-name、is-apple-style、comment-background-color、glass-panel-overlay-color、glass-panel-border-color、glass-panel-shadow-color、glass-panel-highlight-color、glass-accent-color、glass-corner-radius。Header 还读取 SidebarHeader.* 本地化资源和当前 ProblemListSnapshot；SidebarPanel.switchTo 与 Menu.commitPane 更新 uiConfig 中的模式/可见性，Header 的黑/白 pointer/键盘动作更新 problem-list-side-filter。Config.setShowComment 在 Four_Sub/Double_Engine 下把显示请求改回 false，Min 下可先切换 extra-mode。COMMENTS 链可读取引擎候选并修改当前 BoardHistoryNode.comment。BLUNDERS 链读取当前棋盘主线、NodeInfo、分析运行态和阈值，替换内存 ProblemListSnapshot；点击读取 entry move/coords，改变当前棋盘位置与 clickbadmove 后刷新。problem-list-side-filter/metric 与其他 put 不立即调用 Config.save，磁盘持久化依赖后续保存/退出。该侧栏不访问网络或文件；score-loss-threshold-1..5、旧 JTable 阈值/排序/导出键和 Menu.showBlunderBar 不属于本路径。",
+      "data_io": "读取 hide-blunder-table-control-pane、show-comment、extra-mode、is-showing-blunder-table、append-winrate-to-comment、analyze-update-interval-centisec、use-morandi-colors，以及问题列表的 problem-list-metric、problem-list-side-filter、problem-list-winrate-threshold、blunder-playouts-threshold、win-loss-threshold-1..5、ui-font-name、is-apple-style、comment-background-color、glass-panel-overlay-color、glass-panel-border-color、glass-panel-shadow-color、glass-panel-highlight-color、glass-accent-color、glass-corner-radius。Header 还读取 SidebarHeader.* 本地化资源和当前 ProblemListSnapshot；SidebarPanel.switchTo 与 Menu.commitPane 更新 uiConfig 中的模式/可见性，Header 的黑/白 pointer/键盘动作更新 problem-list-side-filter。Config.setShowComment 在 Four_Sub/Double_Engine 下把显示请求改回 false，Min 下可先切换 extra-mode。COMMENTS 链可读取引擎候选并修改当前 BoardHistoryNode.comment。BLUNDERS 链读取当前棋盘主线、NodeInfo、分析运行态和阈值，替换内存 ProblemListSnapshot；点击读取 entry move/coords，改变当前棋盘位置与 clickbadmove 后刷新。problem-list-side-filter/metric 与其他 put 不立即调用 Config.save，磁盘持久化依赖后续保存/退出。该侧栏不访问网络或文件；旧 JTable 还读取 blunder-table-only-after，并由表头 release 写入 AF/NAF 各三项排序键；右键导出可写本地 .xls。score-loss-threshold-1..5 与 Menu.showBlunderBar 仍不属于本次新增 pointer 直接路径。",
       "external_dependencies": [
         "Swing BasicScrollBarUI、JPanel/CardLayout、AWT FontMetrics/Graphics2D、pointer/键盘焦点与 UI 缩放",
         "classpath assets/smallDown.png、smallRight.png、smallUp.png、smallLeft.png",
@@ -3047,7 +3172,7 @@
       ],
       "manual_acceptance": "在 Windows、macOS、Linux 的浅色、深色、高对比和 100%/150%/200% DPI 下检查评论/问题手侧栏、header、列表与滚动条：在 Normal/Min/Four_Sub/Double_Engine 分别触发 Menu.commitPane，确认允许模式正确显示/隐藏、Min 显示时切回 Normal、Four_Sub/Double_Engine 拒绝显示且菜单保持未选中；以左右键、Enter、主按钮单击和独立可聚焦分段切换评论/问题手，以黑/白命令过滤，右键/中键/双击、段间空隙和评论态 B/W 不产生意外写入。覆盖 classic/Apple、窄宽、长中日韩/泰文/英文、进度 0/partial/running/complete、同值更新、主题切换与焦点恢复；Narrator/VoiceOver/Orca 应分别读出四个分段的名称、角色、选中态和动作，不能只有整体 JPanel。验证阈值、严重度、排序、运行/空/错误/超长状态与当前项一致；主按钮单击和 Enter/Space 跳到问题手之前，陈旧项不导航，失败不改变棋盘或高亮。覆盖 show-comment/extra-mode/is-showing-blunder-table/hide-blunder-table-control-pane、窗口缩放和主题键。以超长主线和活跃引擎连续刷新，确认 hover 不写配置/SGF、不在 UI 线程重排整表，旧 generation 被丢弃，隐藏/销毁后无订阅、线程或内存增长。",
       "status": "已盘点",
-      "evidence": "DemoScrollBarUI2 的第 1/第 2 组 entered/exited 方法按 ordinal 分成上下箭头两个来源，共 4 个事件/8 条路径；BlunderListPanel 单一来源精确覆盖 mouseMoved 1、mouseExited 1 与 mouseClicked 真/假 2，共 3 个事件/4 条路径；SidebarHeaderPanel 新增单一 mouseClicked 事件 6 条互斥路径，依次为评论、问题手、评论态空白早退、黑、白和问题手态空白无动作，普通 paint/focus/键盘 action 未冒充 pointer binding。静态链确认 Menu.commitPane→Config.setShowComment→SidebarPanel，并确认 shouldHideCommentPanel 在 Four_Sub/Double_Engine 强制拒绝显示、Min 显示请求切回 Normal；同时确认唯一 Header/BlunderList 构造、InputMap 键动作、listener 注册无解绑、AnalysisEngine 与 frame 刷新入口、全主线快照筛选/排序、BLACK/WHITE 与 dormant ALL/score、任意按键/整行槽命中、jumpToProblemMove 棋盘副作用及父 SidebarPanel 主题键，旧 JTable/胜率图恶手条旁路不属于本源。SidebarHeaderPanelHitTest 的 6 项只覆盖简体中文 helper 命中、固定高度和进度文案，UiLocalizationGuardTest 只拦部分直接 UI 字面量；均未 dispatch 真实 pointer/键盘/focus，也未断言 switchTo、配置写入、appendComment、刷新、订阅解绑、长翻译、DPI、主题或辅助技术。BlunderListPanelLayoutTest 的 3 项仅覆盖 viewport 宽度、短/长高度和滚动增量；未覆盖 pointer、排序/过滤/阈值、跳转失败/陈旧代次、异常数值、线程/取消/解绑或性能。旧测试无 DemoScrollBarUI2 侧栏 hover、资源失败或下游副作用专项覆盖；本轮未运行旧 GUI、修改配置、棋谱或用户数据。"
+      "evidence": "DemoScrollBarUI2 的第 1/第 2 组 entered/exited 方法按 ordinal 分成上下箭头两个来源，共 4 个事件/8 条路径；BlunderListPanel 单一来源精确覆盖 mouseMoved 1、mouseExited 1 与 mouseClicked 真/假 2，共 3 个事件/4 条路径；SidebarHeaderPanel 新增单一 mouseClicked 事件 6 条互斥路径，依次为评论、问题手、评论态空白早退、黑、白和问题手态空白无动作，普通 paint/focus/键盘 action 未冒充 pointer binding。静态链确认 Menu.commitPane→Config.setShowComment→SidebarPanel，并确认 shouldHideCommentPanel 在 Four_Sub/Double_Engine 强制拒绝显示、Min 显示请求切回 Normal；同时确认唯一 Header/BlunderList 构造、InputMap 键动作、listener 注册无解绑、AnalysisEngine 与 frame 刷新入口、全主线快照筛选/排序、BLACK/WHITE 与 dormant ALL/score、任意按键/整行槽命中、jumpToProblemMove 棋盘副作用及父 SidebarPanel 主题键，本轮又纳入 LizzieFrame 旧 JTable/hover 14 个来源、23 个事件/52 条路径；胜率图恶手条仍不属于这些来源。SidebarHeaderPanelHitTest 的 6 项只覆盖简体中文 helper 命中、固定高度和进度文案，UiLocalizationGuardTest 只拦部分直接 UI 字面量；均未 dispatch 真实 pointer/键盘/focus，也未断言 switchTo、配置写入、appendComment、刷新、订阅解绑、长翻译、DPI、主题或辅助技术。BlunderListPanelLayoutTest 的 3 项仅覆盖 viewport 宽度、短/长高度和滚动增量；未覆盖 pointer、排序/过滤/阈值、跳转失败/陈旧代次、异常数值、线程/取消/解绑或性能。旧测试无 DemoScrollBarUI2 侧栏 hover、资源失败或下游副作用专项覆盖；本轮未运行旧 GUI、修改配置、棋谱或用户数据。 黑白表 click 各为右键导出、其他按钮有效格导航、无效格三路；两表 header release 各五路并可能把空白列 -1 持久化；white header 缺少匹配 enter，commentBlunderControlPane hover 不受 hide 配置。旧测试未 dispatch 这些 listener，也不覆盖导出、AF/NAF 排序持久化、任意按钮导航或旧控制面板不对称。"
     },
     {
       "id": "UI-TEXT-EDIT-001",
@@ -3076,7 +3201,13 @@
         "JPaintTextPane:mousePressed",
         "JPaintTextPane:mouseReleased",
         "JPaintTextPane:mouseEntered",
-        "JPaintTextPane:mouseExited"
+        "JPaintTextPane:mouseExited",
+        "LizzieFrameCommentTextAreaHover:mouseExited",
+        "LizzieFrameCommentTextAreaHover:mouseEntered",
+        "LizzieFrameCommentTextPaneHover:mouseExited",
+        "LizzieFrameCommentTextPaneHover:mouseEntered",
+        "LizzieFrameCommentTextAreaClick:mouseClicked",
+        "LizzieFrameCommentTextPaneClick:mouseClicked"
       ],
       "legacy_input_bindings": [
         "JFontTextArea:mouseClicked#1",
@@ -3102,7 +3233,19 @@
         "JPaintTextPane:mousePressed#2",
         "JPaintTextPane:mouseReleased#1",
         "JPaintTextPane:mouseEntered#1",
-        "JPaintTextPane:mouseExited#1"
+        "JPaintTextPane:mouseExited#1",
+        "LizzieFrameCommentTextAreaHover:mouseExited#1",
+        "LizzieFrameCommentTextAreaHover:mouseExited#2",
+        "LizzieFrameCommentTextAreaHover:mouseEntered#1",
+        "LizzieFrameCommentTextAreaHover:mouseEntered#2",
+        "LizzieFrameCommentTextPaneHover:mouseExited#1",
+        "LizzieFrameCommentTextPaneHover:mouseExited#2",
+        "LizzieFrameCommentTextPaneHover:mouseEntered#1",
+        "LizzieFrameCommentTextPaneHover:mouseEntered#2",
+        "LizzieFrameCommentTextAreaClick:mouseClicked#1",
+        "LizzieFrameCommentTextAreaClick:mouseClicked#2",
+        "LizzieFrameCommentTextPaneClick:mouseClicked#1",
+        "LizzieFrameCommentTextPaneClick:mouseClicked#2"
       ],
       "java_evidence": [
         { "path": "src/main/java/featurecat/lizzie/gui/JFontTextArea.java", "symbol": "public void mousePressed(MouseEvent e)" },
@@ -3170,7 +3313,9 @@
         { "path": "src/main/java/featurecat/lizzie/theme/Theme.java", "symbol": "public boolean usePureBackground(boolean onLoad)" },
         { "path": "src/main/java/featurecat/lizzie/theme/Theme.java", "symbol": "public Color pureBackgroundColor()" },
         { "path": "src/main/java/featurecat/lizzie/theme/Theme.java", "symbol": "public Color commentFontColor()" },
-        { "path": "src/main/java/featurecat/lizzie/theme/Theme.java", "symbol": "public Color commentBackgroundColor()" }
+        { "path": "src/main/java/featurecat/lizzie/theme/Theme.java", "symbol": "public Color commentBackgroundColor()" },
+        { "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "symbol": "commentTextArea.addMouseListener" },
+        { "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "symbol": "commentTextPane.addMouseListener" }
       ],
       "config_keys": [
         "frame-font-size",
@@ -3192,7 +3337,7 @@
         "comment-font-color",
         "comment-background-color"
       ],
-      "inputs_preconditions": "文本控件可见且接收 pointer 输入；复制/剪切要求非空选区，粘贴要求系统剪贴板可用且提供字符串。旧版四个共享控件自身都只在 mousePressed 的 BUTTON3 分支弹出，BUTTON3=false 与 clicked/released/entered/exited 都是显式无动作；各调用方的 enabled/editable 状态及另行安装的监听器约束完整运行时行为。JFontTextField 的 122 个非注释构造全部使用无参构造器；JIMSendTextPane 的 4 个非注释构造点中，LizzieFrame 以 true 创建可编辑节点注释，其余 3 个 false 实例随后均设为只读日志；JPaintTextPane 只有 LizzieFrame 的 1 个无参构造点，随即被设为透明、只读并换成 HtmlKit/HTMLDocument。菜单打开本身无提交动作；JFontTextField 的 paste() 可能触发同步 DocumentListener/KeyListener，JIMSendTextPane 的 paste() 只会修改可编辑注释草稿，旧版在外部点击、导航或引擎状态变化调用 setCommentEditable(false) 时隐式提交且没有显式取消。JPaintTextPane 自身只读，但旧 popup 仍会按剪贴板/选区把粘贴和剪切标为可用；LizzieFrame 额外注册的点击与悬停监听器属于尚未盘点的 LizzieFrame pointer 来源。",
+      "inputs_preconditions": "文本控件可见且接收 pointer 输入；复制/剪切要求非空选区，粘贴要求系统剪贴板可用且提供字符串。旧版四个共享控件自身都只在 mousePressed 的 BUTTON3 分支弹出，BUTTON3=false 与 clicked/released/entered/exited 都是显式无动作；各调用方的 enabled/editable 状态及另行安装的监听器约束完整运行时行为。JFontTextField 的 122 个非注释构造全部使用无参构造器；JIMSendTextPane 的 4 个非注释构造点中，LizzieFrame 以 true 创建可编辑节点注释，其余 3 个 false 实例随后均设为只读日志；JPaintTextPane 只有 LizzieFrame 的 1 个无参构造点，随即被设为透明、只读并换成 HtmlKit/HTMLDocument。菜单打开本身无提交动作；JFontTextField 的 paste() 可能触发同步 DocumentListener/KeyListener，JIMSendTextPane 的 paste() 只会修改可编辑注释草稿，旧版在外部点击、导航或引擎状态变化调用 setCommentEditable(false) 时隐式提交且没有显式取消。JPaintTextPane 自身只读，但旧 popup 仍会按剪贴板/选区把粘贴和剪切标为可用；LizzieFrame 额外注册的两个评论控件 hover/click 来源现已纳入：hover 受 hide-blunder-table-control-pane 门控并切换旧控制面板，左键 click 调用 setCommentEditable(true)，其他按钮无动作。",
       "success_behavior": "JFontTextArea 的三个构造器统一使用 Config.sysDefaultFontName/frame-font-size 并启用软换行；JFontTextField 的两个构造器设置相同字体并安装 AppleStyleSupport。JIMSendTextPane 的布尔构造器在注释模式读取 ui-font-name 与 comment-font-size（非正数回退 frame-font-size），控制台模式使用系统默认字体，随后安装 WarpEditorKit；其 WarpLabelView 把 X 轴 minimum span 固定为 0，使无空格长 token 折行，三个只读控制台再覆盖为等宽字体和分色日志。JPaintTextPane 构造时同样安装 WarpEditorKit，并在 opaque 时按 use-pure-background 选择纯色或主窗背景纹理；唯一调用方随即 setOpaque(false)、用 HtmlKit/HTMLDocument 覆盖 EditorKit 并设为只读，所以这两段自定义换行/背景路径不承担该实例的实际显示。在线同步开始时 LizzieFrame 切到此 HTML 评论窗格，停止时切回 JLabel；评论只把换行替换为 br、空格替换为 nbsp 后交给 HTML 组件。旧版右键按下会刷新复制/粘贴/剪切启用态并显示本地化菜单，动作调用 Swing 内建 copy/paste/cut，菜单项标注固定 Ctrl+C/V/X。目标版优先复用 Avalonia 原生纯文本、折行、主题、选择和剪贴板能力，不移植 Swing ViewFactory、自绘背景或 HTML 解释器；只读评论/日志只提供选择和复制，只在能力缺口处增加最小 ContextMenu，并使用稳定命令身份，支持平台 popup/Primary、键盘菜单、焦点、IME 和辅助技术。注释编辑会话绑定原节点并显式提交或取消；即时单行字段仅在完整新值通过逐字段校验后原子应用一次。",
       "failure_cancel_behavior": "剪贴板为空、非文本、正被占用、权限拒绝、转换异常或服务不可用时保持文本与焦点不变，禁用粘贴并提供不含剪贴板内容的诊断；读取/接受前执行明确字符数和字节数上限，超限内容默认拒绝且不得无界保留。不得空 catch、阻塞 UI 或让异常逃出输入事件。旧版四个控件的 getSystemClipboard/getContents 位于 try 外、getTransferData 会完整物化且实际粘贴再次读取；只读/禁用控件仍可能显示剪切和粘贴可用，BUTTON3/mousePressed 与固定 Ctrl 也漏掉 release popup、macOS Ctrl-click、Shift+F10/Menu 键和触控。JFontTextField 下游必须按字段校验数值、路径、端口、协议和命令长度。JIMSendTextPane 的三个控制台不是 GTP 命令输入，目标必须始终禁用其剪切/粘贴；唯一可粘贴的节点注释需限制大小、保留 Unicode/换行和 SGF 转义，节点切换、关窗、焦点变化或 IME composition 中不得静默错存、丢失或由后台线程强制提交。JPaintTextPane 的输入可来自不可信 SGF、引擎日志和在线 JSON，旧转换不转义小于号、大于号、引号或与号，且缓存原文/HTML 后交给 Swing HTML 解释器；目标必须按有界纯文本显示，任何标签、链接或图片语法都不得执行、导航或加载外部/本地资源，过长评论需确定截断/拒绝且 UI 保持响应。旧版在 checkUrl 返回后不论结果都切换 HTML/JLabel 模式，type<=0 或 proc 异常时不恢复；cachedRawComment/cachedComment 又未把显示模式纳入键，切换后可抑制新可见控件刷新。目标应使用单一纯文本视图和不可变快照，不复制这套双控件/双缓存状态。GTP/贡献控制台的旧 ArrayDeque 生产与消费不同步、队列无界、executor 无限循环且后台线程直接改 Swing Document；目标日志接收器必须有容量、丢弃/截断策略、UI 调度、所有者和确定关闭，文件日志另需脱敏、显式编码、轮换与关闭。BrowserInitializing 的全局 stderr 同样需要所有权、有界缓冲和恢复。",
       "data_io": "JFontTextArea 读取系统默认字体与 frame-font-size；JFontTextField 还经 AppleStyleSupport 读取 Apple/Morandi 和玻璃主题键；JIMSendTextPane 的注释模式经 Theme/Config 字段链读取 ui-font-name、comment-font-size 与 frame-font-size；JPaintTextPane 构造器读取同一字体/字号，paintComponent 读取 use-pure-background/pure-background-color，LizzieFrame 另用 comment-font-color/comment-background-color 配置其 HTML 样式和容器。四个控件直接读写系统剪贴板和控件内存，本身不持久化。JIMSendTextPane 的 4 个实例中，LizzieFrame 进入编辑时读取当前 BoardHistoryNode.comment 并为非空值临时追加换行，退出时删除至多一个尾随换行后写回内存注释，后续棋谱保存才进入 SGF；GtpConsolePane、ContributeView 和 TrackingConsolePane 显示带样式的引擎/贡献/跟踪日志，GTP 控制台内容还会在引擎管理器构造时清空，并在引擎加载期间取末 1000 字符显示到主状态区。JPaintTextPane 的唯一实例读取同一 BoardHistoryNode.comment，也可在引擎载入期显示截取后的控制台尾部；OnlineDialog 开始 URL/弈客同步时切到该窗格，把远端 JSON/SGF 评论写入 BoardHistory 后显示，stopSync 切回普通评论区。GTP 命令输入实际由独立 JFontTextField 承担。多行命令调用方、单行 27 类/122 构造及其同步监听语义保持既有记录。两种富文本类的 resetEditorKid/getPop/setPop 都无外部调用，不为这些 dormant API 宣称迁移完成；show-comment、hide-blunder-table-control-pane、在线协议键、SGF 保存和 GTP 日志文件仍归各自矩阵行，本行只新增实际追踪到的四个主题键。",
@@ -3207,7 +3352,7 @@
       "automated_evidence": [],
       "manual_acceptance": "在 Windows、macOS、Linux 真实窗口覆盖单行/多行/富文本、可编辑/只读/禁用控件，空/非空选区，空/文本/非文本/占用/拒绝剪贴板，右键、macOS Ctrl-click、release popup、Shift+F10/Menu 键、触控及 Ctrl/Command+C/V/X；用零长度、恰好位于字符/字节上限和超限内容验证拒绝策略。核对 JFontTextArea 三个构造器、JFontTextField 两个构造器与 updateUI、JIMSendTextPane 的 true/false 构造，以及 JPaintTextPane 在线只读评论模式；覆盖无空格超长 Unicode/emoji/组合字符折行、字体/颜色回退、浅深高对比主题、光标、选区、焦点和辅助名称。用包含小于号、与号、script/a/img 形状文本、file/http URL、畸形标签和超限内容的本地 SGF 与受控在线夹具确认逐字显示、不导航、不加载资源、不卡 UI；切换在线同步/停止后评论内容、选择、滚动和焦点保持确定。节点注释覆盖多行粘贴、IME composition、提交、取消、切换节点、外部点击、关窗和 SGF 保存重读，确认只写原节点且失败零数据损坏；所有只读评论/控制台只能选择/复制，日志突发、超长行、隐藏/关闭和生产者停止时验证有界缓冲、UI 响应和资源回收。单行即时字段仍须证明完整有效值只原子产生一次副作用；BrowserInitializing 验证有界日志和恢复 System.err。",
       "status": "已盘点",
-      "evidence": "JFontTextArea、JFontTextField、JIMSendTextPane 与 JPaintTextPane 各自实现的 5 个 pointer 事件/6 条路径均已静态展开：仅各自 BUTTON3=true 路径执行 copy/paste/cut 启用态刷新和 popup 显示，false 与其余四个事件在类内无动作；JPaint 实例另挂的 LizzieFrame click/enter/exit 监听器不冒充本来源覆盖，留待 LizzieFrame pointer 盘点。JFontTextArea 已追踪 3 个构造器、5 类/6 实例；JFontTextField 已追踪 2 个构造器、AppleStyleSupport/updateUI、27 类/122 个非注释构造，全部无参；JIMSendTextPane 已追踪 1 个布尔构造器、WarpEditorKit、4 类/4 个非注释构造，其中 1 个 true 节点注释可编辑、3 个 false 日志随后只读且覆盖字体。JPaintTextPane 已追踪 1 个无参构造器和 LizzieFrame 的唯一非注释构造点；调用方立即覆盖其 WarpEditorKit、设为透明只读，在线同步才切换显示。两种富文本类的 action 都以本地化显示文字分派三项动作，其他文字无动作；resetEditorKid/getPop/setPop 均无外部调用。静态调用链确认 JIM 粘贴不会发送 GTP，JPaint 只读评论来自 BoardHistory、截取日志及 OnlineDialog 远端 JSON/SGF，且 setComment 只替换换行/空格、不转义 HTML 元字符。配置仅新增追踪到的 use-pure-background、pure-background-color、comment-font-color、comment-background-color，不把 show-comment、hide-blunder-table-control-pane、在线协议或棋谱业务键冒充已覆盖。旧版无 JPaint/popup/剪贴板/纯文本安全/HTML 资源隔离专项测试；OnlineDialogYikeSessionStateTest 只验证分析载荷合并时保留评论，不覆盖渲染。现有 SilentGtpConsole 测试绕过构造，也不能证明控件行为。本轮未读取真实剪贴板、运行旧 GUI、保存棋谱/配置、联网或启动引擎/外部程序。"
+      "evidence": "JFontTextArea、JFontTextField、JIMSendTextPane 与 JPaintTextPane 各自实现的 5 个 pointer 事件/6 条路径均已静态展开：仅各自 BUTTON3=true 路径执行 copy/paste/cut 启用态刷新和 popup 显示，false 与其余四个事件在类内无动作；LizzieFrame 评论区另挂的 area/pane hover 与 click 共 6 个事件/12 条路径现已单独归一：四个 hover 事件各有配置早退/显示隐藏路径，两次 click 各有左键进入编辑与其他按钮无动作路径。JFontTextArea 已追踪 3 个构造器、5 类/6 实例；JFontTextField 已追踪 2 个构造器、AppleStyleSupport/updateUI、27 类/122 个非注释构造，全部无参；JIMSendTextPane 已追踪 1 个布尔构造器、WarpEditorKit、4 类/4 个非注释构造，其中 1 个 true 节点注释可编辑、3 个 false 日志随后只读且覆盖字体。JPaintTextPane 已追踪 1 个无参构造器和 LizzieFrame 的唯一非注释构造点；调用方立即覆盖其 WarpEditorKit、设为透明只读，在线同步才切换显示。两种富文本类的 action 都以本地化显示文字分派三项动作，其他文字无动作；resetEditorKid/getPop/setPop 均无外部调用。静态调用链确认 JIM 粘贴不会发送 GTP，JPaint 只读评论来自 BoardHistory、截取日志及 OnlineDialog 远端 JSON/SGF，且 setComment 只替换换行/空格、不转义 HTML 元字符。配置仅新增追踪到的 use-pure-background、pure-background-color、comment-font-color、comment-background-color，不把 show-comment、hide-blunder-table-control-pane、在线协议或棋谱业务键冒充已覆盖。旧版无 JPaint/popup/剪贴板/纯文本安全/HTML 资源隔离专项测试；OnlineDialogYikeSessionStateTest 只验证分析载荷合并时保留评论，不覆盖渲染。现有 SilentGtpConsole 测试绕过构造，也不能证明控件行为。本轮未读取真实剪贴板、运行旧 GUI、保存棋谱/配置、联网或启动引擎/外部程序。 这些 listener 本身没有专项 dispatch 测试；进入编辑仍读取当前节点，外部关闭仍会把草稿写到届时的当前节点并 appendComment，目标版必须绑定原节点并提供显式提交/取消。"
     },
     {
       "id": "UI-WINDOW-MENU-STRIP-001",
@@ -3274,6 +3419,139 @@
       "manual_acceptance": "在 Windows、macOS、Linux 的浅色、深色、高对比、100%/150%/200% DPI、长本地化文字和 RTL 下，用鼠标、触控、Alt/F10、访问键、Tab、方向键、Enter、Space 与 Escape 覆盖首次打开、同菜单关闭、跨菜单点击/悬停切换、外部点击/取消、快速 press/release/拖动及 250 ms 边界；在窗口四边、多显示器和窄窗口确认 popup 不出可用工作区且焦点可见。动态隐藏/显示引擎和贡献菜单、反复 resize/rebuild、主题/字号切换及关闭重开窗口，确认顺序/状态正确、一次转换只通知一次、无吞键、无陈旧 listener/焦点节点或对象泄漏。用屏幕阅读器核对菜单角色、名称、展开/折叠/禁用状态和菜单项导航。",
       "status": "已盘点",
       "evidence": "WindowMenuStrip 的 mousePressed、mouseEntered、mouseExited 已由现有解析器精确展开为 3 个事件/5 条路径：pressed 的关闭请求真路径执行 suppressNextAction、closeMenu 和 consume，假路径无动作；entered 真路径在已有 popup 时切换，假路径 repaint；exited 只 repaint。普通点击/open/toggle 位于 ActionListener lambda，未冒充已归一 pointer binding，但已用静态调用链登记。生产仅 LizzieFrame 构造 1 次，旧测试另构造 1 次；唯一 WindowMenuStripTest 只覆盖 popup 已显示时 press 后 doClick 不重开，不覆盖正常打开、悬停切换、250 ms 边界、通知次数、popup 定位、键盘/触控、DPI/无障碍或 listener 生命周期。本轮未运行旧 GUI、点击真实菜单、修改配置/用户数据、联网、启动引擎或执行菜单项命令。"
+    },
+    {
+      "id": "KIFU-TEMP-SAVES-001",
+      "category": "棋谱文件",
+      "legacy_entry": "Menu.saveAndLoad 与详细工具栏 Menu.saveBtn 调用 LizzieFrame.showTempGamePanel，临时存档画廊通过 hover 大图预览及 slot/popup 点击恢复自动或手动存档",
+      "legacy_menu_keys": ["Menu.saveAndLoad", "Menu.saveBtn"],
+      "legacy_menu_labels": [],
+      "legacy_shortcuts": [],
+      "legacy_input_cases": [
+        "LizzieFrameTempGamePanelMotion:mouseMoved",
+        "LizzieFrameTempGamePanelClick:mouseClicked",
+        "LizzieFrameBigBoardPanelClick:mouseClicked"
+      ],
+      "legacy_input_bindings": [
+        "LizzieFrameTempGamePanelMotion:mouseMoved#1",
+        "LizzieFrameTempGamePanelMotion:mouseMoved#2",
+        "LizzieFrameTempGamePanelMotion:mouseMoved#3",
+        "LizzieFrameTempGamePanelMotion:mouseMoved#4",
+        "LizzieFrameTempGamePanelMotion:mouseMoved#5",
+        "LizzieFrameTempGamePanelClick:mouseClicked#1",
+        "LizzieFrameBigBoardPanelClick:mouseClicked#1",
+        "LizzieFrameBigBoardPanelClick:mouseClicked#2",
+        "LizzieFrameBigBoardPanelClick:mouseClicked#3",
+        "LizzieFrameBigBoardPanelClick:mouseClicked#4",
+        "LizzieFrameBigBoardPanelClick:mouseClicked#5"
+      ],
+      "java_evidence": [
+        { "path": "src/main/java/featurecat/lizzie/gui/Menu.java", "symbol": "final JFontMenuItem saveAndLoad" },
+        { "path": "src/main/java/featurecat/lizzie/gui/Menu.java", "symbol": "saveLoad = new JFontButton" },
+        { "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "symbol": "public void showTempGamePanel()" },
+        { "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "symbol": "private void showBigBoardImage(" },
+        { "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "symbol": "public ArrayList<TempGameData> getTempGameList()" }
+      ],
+      "config_keys": [
+        "load-save-zoom",
+        "auto-save-exit",
+        "resume-previous-game",
+        "show-list-pane",
+        "show-variation-graph",
+        "show-comment",
+        "show-double-menu",
+        "save-auto-game-index",
+        "save-auto-game-index1",
+        "save-auto-game-index2",
+        "save-auto-game-time",
+        "save-auto-game-time1",
+        "save-auto-game-move-number",
+        "save-auto-game-move-number1",
+        "save-auto-game-move-list",
+        "save-auto-game-move-list1",
+        "save-game-index",
+        "save-game-name",
+        "save-game-time",
+        "save-game-move-number",
+        "save-game-move-list"
+      ],
+      "inputs_preconditions": "临时存档元数据及对应 save/autoGameN 或 save/gameN 的 SGF/BMP 至少部分存在；hover 预览还要求 load-save-zoom 为真。旧 listener 不检查鼠标按钮或点击次数，slot 循环在规范化清单中作为数据依赖原子动作。",
+      "success_behavior": "鼠标在同一坐标不重复调度；进入有效卡片 800 ms 后显示 600×600 预览，移出隐藏。点击卡片或大图旧命中点会载入对应 SGF，再按保存的 move-list 重放或跳到 move-number，必要时恢复 ponder，最后关闭画廊并恢复列表、变化树和评论区。目标版用可取消、带代次的后台解码和原生可访问列表/预览命令，不移植裸线程、坐标魔数或 popup hack。",
+      "failure_cancel_behavior": "旧 hover 每次可创建非 daemon Thread，sleep 中断后仍继续并从后台线程操作 Swing；迟到任务可在关闭后复活 popup。BMP 缺失、损坏、过大或 ImageIO 返回空值时可能把 isShowingBigBoardPanel 卡在 true，show 异常还被吞。slot click 不检查 loadFile 成功，仍可重放、ponder 并隐藏；任意按钮/双击都能触发，大图仅精确 (0,0) 分支有动作且被子 JLabel 覆盖，动态可达性可疑。目标版必须限制文件/图像大小，取消旧代次，仅在完整载入成功后原子替换棋盘，并让缺失/损坏文件、退出或取消保持原状态。",
+      "data_io": "读取与写入工作目录 save/autoGameN.{sgf,bmp}、save/gameN.{sgf,bmp} 及 saveBoardConfig 中的自动/手动存档索引、名称、时间、手数和 move-list；顶部 sibling 控件更新 load-save-zoom、auto-save-exit、resume-previous-game。showTempGamePanel/hideTempGamePanel 读取 show-list-pane、show-variation-graph、show-comment 并在画廊期间临时改动前两项，show-double-menu 只参与布局计算；这些显示切换不在本路径立即持久化。恢复会替换内存棋盘历史并可能向当前 GTP 引擎恢复 ponder。",
+      "external_dependencies": ["本地文件系统与 SGF/BMP 解码", "可选当前 GTP 引擎 ponder 状态"],
+      "target_modules": ["Lizzie.Core", "Lizzie.Engine", "Lizzie.Desktop"],
+      "automated_evidence": [],
+      "manual_acceptance": "覆盖 auto/manual 存档、move-list/手数恢复、800 ms hover、重复坐标、移出取消、缺失/损坏/超大 BMP/SGF、快速切卡片、关窗后迟到任务、任意按钮/双击、键盘/触控等价、DPI/本地化和屏幕阅读器；确认失败零棋盘损坏、无迟到 popup/线程泄漏，重启后三项设置与元数据一致。",
+      "status": "已盘点",
+      "evidence": "LizzieFrame 临时存档新增 motion 5、slot click 1、big-board click 5 共 3 个事件/11 条规范路径。motion 的卡片扫描和 slot click 的运行时命中循环按现有规则保持原子；big-board 精确展开 move-list 空/非空、ponder 真/假及非 (0,0) 无动作。只有 load-save-zoom 是 pointer 直接门控；auto-save-exit、resume-previous-game、四个临时显示/布局键及 14 个 saveBoardConfig 字面索引项作为同一画廊生命周期的兄弟控件/数据源登记，其中 save-auto-game-index/time/move-number/move-list 四项是计算键前缀，运行时 suffix 2 等计算键实例仍待后续归一。旧版无专项 listener、取消、损坏文件、线程或无障碍测试；本轮未读写真实存档、运行旧 GUI 或启动引擎。"
+    },
+    {
+      "id": "ANALYSIS-PLAYER-STRENGTH-001",
+      "category": "分析",
+      "legacy_entry": "分析菜单 Menu.playerStrengthEstimate 与详细工具栏按钮调用 LizzieFrame.showPlayerStrengthEstimate，展示棋力评估、着手命中热图、段位匹配图及可导入模型选择器",
+      "legacy_menu_keys": ["Menu.playerStrengthEstimate", "Menu.playerStrengthEstimateButton"],
+      "legacy_menu_labels": [],
+      "legacy_shortcuts": [],
+      "legacy_input_cases": [
+        "LizzieFramePlayerStrengthModelComboHover:mouseEntered",
+        "LizzieFramePlayerStrengthModelComboHover:mouseExited",
+        "LizzieFramePlayerStrengthMoveHitMapHover:mouseMoved",
+        "LizzieFramePlayerStrengthMoveHitMapHover:mouseExited",
+        "LizzieFramePlayerStrengthMatchChartHover:mouseMoved",
+        "LizzieFramePlayerStrengthMatchChartHover:mouseExited"
+      ],
+      "legacy_input_bindings": [
+        "LizzieFramePlayerStrengthModelComboHover:mouseEntered#1",
+        "LizzieFramePlayerStrengthModelComboHover:mouseExited#1",
+        "LizzieFramePlayerStrengthMoveHitMapHover:mouseMoved#1",
+        "LizzieFramePlayerStrengthMoveHitMapHover:mouseExited#1",
+        "LizzieFramePlayerStrengthMatchChartHover:mouseMoved#1",
+        "LizzieFramePlayerStrengthMatchChartHover:mouseExited#1"
+      ],
+      "java_evidence": [
+        { "path": "src/main/java/featurecat/lizzie/gui/Menu.java", "symbol": "playerStrengthEstimate.addActionListener" },
+        { "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "symbol": "public void showPlayerStrengthEstimate()" },
+        { "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "symbol": "class PlayerStrengthModelCombo" },
+        { "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "symbol": "class PlayerStrengthMoveHitMapPanel" },
+        { "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "symbol": "class PlayerStrengthMatchChart" },
+        { "path": "src/main/java/featurecat/lizzie/analysis/PlayerStrengthEstimator.java", "symbol": "class PlayerStrengthEstimator" }
+      ],
+      "config_keys": [
+        "frame-font-size",
+        "use-morandi-colors",
+        "use-score-loss-in-move-rank",
+        "use-win-loss-in-move-rank",
+        "win-loss-threshold-1",
+        "win-loss-threshold-2",
+        "win-loss-threshold-3",
+        "win-loss-threshold-4",
+        "win-loss-threshold-5",
+        "score-loss-threshold-1",
+        "score-loss-threshold-2",
+        "score-loss-threshold-3",
+        "score-loss-threshold-4",
+        "score-loss-threshold-5"
+      ],
+      "inputs_preconditions": "当前棋盘历史存在；完整结果依赖主线节点已有 MoveData/BoardData 分析样本。模型下拉框 rollover、命中热图和段位图 tooltip 只改变进程内 hover 状态，不检查按钮或修饰键。",
+      "success_behavior": "入口从棋盘起点估算黑白棋力，展示 assessment/match/performance 三页；模型 hover 更新视觉状态，热图移动更新或清除命中样本，段位图移动更新或清除 rank tooltip。选择内置/已导入模型会重新估算，导入受支持 JSON/ZIP 后刷新。目标版优先原生 ComboBox、TabControl、Chart tooltip 与可聚焦数据表替代纯 pointer hover。",
+      "failure_cancel_behavior": "无历史或样本不足时显示可理解空状态；模型不存在、损坏、超限或导入失败不得替换当前活动模型。旧热图依赖 paint 先重建 hitPoints，每像素移动可能线性扫描并 repaint；tooltip/自绘固定尺寸对高 DPI、长本地化、触控、键盘和辅助技术不完整。目标版需限制模型大小/解析深度、验证特征兼容性、原子切换，缓存空间索引并为所有 hover 信息提供键盘/触控/屏幕阅读器等价。",
+      "data_io": "只读当前主线已缓存的棋盘与候选分析数据；内置 XGBoost booster/calibrator 来自 classpath，可选导入模型写入工作目录 strength-models。评估分级读取 use-score-loss-in-move-rank、use-win-loss-in-move-rank 及十个 loss threshold，界面读取 frame-font-size 与 use-morandi-colors；本路径不写这些配置。activeModel 仅是进程内 static 状态，不需要网络或外部引擎进程。",
+      "external_dependencies": ["classpath 棋力模型资源", "可选本地 JSON/ZIP 模型文件"],
+      "target_modules": ["Lizzie.Core", "Lizzie.Desktop"],
+      "automated_evidence": [
+        { "path": "src/test/java/featurecat/lizzie/analysis/PlayerStrengthEstimatorTest.java", "symbol": "PlayerStrengthEstimatorTest" },
+        { "path": "src/test/java/featurecat/lizzie/gui/LizzieFrameRegressionTest.java", "symbol": "playerStrengthDetailPaletteKeepsTextReadable" },
+        { "path": "src/test/java/featurecat/lizzie/gui/LizzieFrameRegressionTest.java", "symbol": "playerStrengthModelSelectorUsesReadableModelNames" },
+        { "path": "src/test/java/featurecat/lizzie/gui/LizzieFrameRegressionTest.java", "symbol": "playerStrengthAssessmentCardExposesCompleteScoreRuleText" },
+        { "path": "src/test/java/featurecat/lizzie/gui/LizzieFrameRegressionTest.java", "symbol": "playerStrengthHeaderButtonExpandsForLocalizedText" },
+        { "path": "src/test/java/featurecat/lizzie/gui/LizzieFrameRegressionTest.java", "symbol": "playerStrengthPerformanceDistributionUsesExclusiveTopChoiceRanks" },
+        { "path": "src/test/java/featurecat/lizzie/gui/LizzieFrameRegressionTest.java", "symbol": "playerStrengthHitMapExposesMoveTooltip" },
+        { "path": "src/test/java/featurecat/lizzie/gui/LizzieFrameRegressionTest.java", "symbol": "playerStrengthRankWindowLabelUsesCompactRankText" }
+      ],
+      "manual_acceptance": "覆盖无历史、少/足样本、三页切换、模型 rollover、热图与段位图 move/exit、tooltip 边界、模型切换及成功/失败/超限导入；在多 DPI、长中日韩/泰文、浅深高对比、键盘、触控和屏幕阅读器下确认信息等价，hover 不写模型、配置或棋谱。",
+      "status": "已盘点",
+      "evidence": "PlayerStrength 三个来源精确登记 entered/exited、moved/exited、moved/exited 共 6 个事件/6 条无条件路径；hover 只更新 rollover、命中点或段位提示并重绘，不执行文件、配置、网络或引擎操作。PlayerStrengthEstimatorTest 覆盖模型枚举、导入清理和估算分档，LizzieFrameRegressionTest 直接覆盖 tooltip、模型选择器可读名称、详情配色、评估卡规则文字、本地化标题布局和性能分布 helper，但没有 dispatch 这三组 listener 或验证键盘、触控、DPI、无障碍与模型导入资源上限。本轮未运行旧 GUI、读取用户模型或修改产品代码。"
     }
   ]
 }
