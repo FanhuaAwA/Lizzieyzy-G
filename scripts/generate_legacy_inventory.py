@@ -2221,8 +2221,8 @@ def validate_matrix(
     dict[str, list[str]],
     dict[str, list[str]],
 ]:
-    if matrix.get("schema_version") != 49:
-        raise ValueError("Matrix schema_version must be 49")
+    if matrix.get("schema_version") != 50:
+        raise ValueError("Matrix schema_version must be 50")
     allowed_statuses = matrix.get("allowed_statuses")
     if allowed_statuses != list(ALLOWED_STATUSES):
         raise ValueError("Matrix allowed_statuses differ from the repository contract")
@@ -2513,8 +2513,28 @@ def build_inventory(legacy_root: Path, matrix_path: Path) -> dict[str, Any]:
                 "public class AnalysisPartGame extends JDialog",
             ),
             (
+                "src/main/java/featurecat/lizzie/gui/AnalysisPartGame.java",
+                "btnStart.addActionListener",
+            ),
+            (
+                "src/main/java/featurecat/lizzie/analysis/AnalysisEngine.java",
+                "private static boolean shouldAnalyzeTurn(int moveNum, int startMove, int endMove)",
+            ),
+            (
                 "src/main/java/featurecat/lizzie/gui/SetAnalysisRules.java",
                 "public void getRules()",
+            ),
+            (
+                "src/main/java/featurecat/lizzie/gui/SetAnalysisRules.java",
+                "btnApply.addActionListener",
+            ),
+            (
+                "src/main/java/featurecat/lizzie/gui/SetAnalysisRules.java",
+                "btnCancel.addActionListener",
+            ),
+            (
+                "src/main/java/featurecat/lizzie/analysis/AnalysisRequestBuilder.java",
+                "static void addRules(JSONObject request)",
             ),
             (
                 "src/main/java/featurecat/lizzie/gui/RemoteEngineSettings.java",
@@ -2523,6 +2543,10 @@ def build_inventory(legacy_root: Path, matrix_path: Path) -> dict[str, Any]:
             (
                 "src/main/java/featurecat/lizzie/util/Utils.java",
                 "public static void saveAnalysisEngineRemoteEngineData(RemoteEngineData remoteEngineData)",
+            ),
+            (
+                "src/main/java/featurecat/lizzie/util/Utils.java",
+                "public static int parseTextToInt(JTextField text, int defaultValue)",
             ),
         },
     )
@@ -2547,11 +2571,31 @@ def build_inventory(legacy_root: Path, matrix_path: Path) -> dict[str, Any]:
         "analysis-engine-preload",
         "analysis-engine-ssh-info",
         "analysis-max-visits",
+        "analysis-specific-rules",
+        "analysis-start-move",
+        "analysis-end-move",
         "analysis-use-current-rules",
         "batch-analysis-playouts",
     }
     if set(analysis_full_row["config_keys"]) != expected_analysis_full_config_keys:
         raise ValueError("ANALYSIS-FULL-001 config keys changed")
+    expected_analysis_child_keys = {
+        "src/main/java/featurecat/lizzie/gui/AnalysisPartGame.java": {
+            "analysis-start-move",
+            "analysis-end-move",
+        },
+        "src/main/java/featurecat/lizzie/gui/SetAnalysisRules.java": {
+            "analysis-specific-rules",
+        },
+    }
+    for source_path, expected_keys in expected_analysis_child_keys.items():
+        actual_keys = {
+            entry["key"]
+            for entry in config_entries
+            if any(ref["path"] == source_path for ref in entry["references"])
+        }
+        if actual_keys != expected_keys:
+            raise ValueError(f"{Path(source_path).name} config key set changed")
     if matrix_ids_by_menu_key.get("Menu.batchAnalyze") != ["ANALYSIS-AUTO-001"]:
         raise ValueError("Menu.batchAnalyze must map only to ANALYSIS-AUTO-001")
     if matrix_ids_by_menu_key.get("Menu.batchAnalyzeTable") != [
@@ -3369,6 +3413,34 @@ def build_inventory(legacy_root: Path, matrix_path: Path) -> dict[str, Any]:
     actual_stop_auto_analysis_calls: dict[str, int] = {}
     actual_analysis_settings_calls: dict[str, int] = {}
     actual_wait_for_analysis_calls: dict[str, int] = {}
+    expected_analysis_call_sites = {
+        "AnalysisPartGame constructor": (
+            r"\bnew\s+AnalysisPartGame\s*\(",
+            {"src/main/java/featurecat/lizzie/gui/LizzieFrame.java": 1},
+        ),
+        "SetAnalysisRules constructor": (
+            r"\bnew\s+SetAnalysisRules\s*\(",
+            {"src/main/java/featurecat/lizzie/gui/AnalysisSettings.java": 1},
+        ),
+        "flashAnalyzePart": (
+            r"\bLizzie\.frame\s*\.\s*flashAnalyzePart\s*\(",
+            {
+                "src/main/java/featurecat/lizzie/gui/BottomToolbar.java": 1,
+                "src/main/java/featurecat/lizzie/gui/Menu.java": 2,
+            },
+        ),
+        "AnalysisRequestBuilder.buildRequest": (
+            r"\bAnalysisRequestBuilder\s*\.\s*buildRequest\s*\(",
+            {
+                "src/main/java/featurecat/lizzie/analysis/HumanSlAnalysisRunner.java": 1,
+                "src/main/java/featurecat/lizzie/analysis/TrackingEngine.java": 1,
+                "src/main/java/featurecat/lizzie/gui/HumanSlGameController.java": 1,
+            },
+        ),
+    }
+    actual_analysis_call_sites: dict[str, dict[str, int]] = {
+        label: {} for label in expected_analysis_call_sites
+    }
     for path in main_java_files:
         source_path = path.relative_to(legacy_root).as_posix()
         source = strip_java_comments(path.read_text(encoding="utf-8", errors="replace"))
@@ -3426,6 +3498,10 @@ def build_inventory(legacy_root: Path, matrix_path: Path) -> dict[str, Any]:
         )
         if wait_for_analysis_count:
             actual_wait_for_analysis_calls[source_path] = wait_for_analysis_count
+        for label, (pattern, _) in expected_analysis_call_sites.items():
+            count = len(re.findall(pattern, source_without_literals))
+            if count:
+                actual_analysis_call_sites[label][source_path] = count
     if actual_engine_parameter_calls != expected_engine_parameter_calls:
         raise ValueError(f"setLzSaiEngine call sites changed: {actual_engine_parameter_calls}")
     expected_set_kata_engine_calls = {
@@ -3583,6 +3659,10 @@ def build_inventory(legacy_root: Path, matrix_path: Path) -> dict[str, Any]:
             "WaitForAnalysis constructor call sites changed: "
             f"{actual_wait_for_analysis_calls}"
         )
+    for label, (_, expected) in expected_analysis_call_sites.items():
+        actual = actual_analysis_call_sites[label]
+        if actual != expected:
+            raise ValueError(f"{label} call sites changed: {actual}")
     config_source = strip_java_comments(
         (legacy_root / "src/main/java/featurecat/lizzie/Config.java").read_text(
             encoding="utf-8", errors="replace"
@@ -3597,10 +3677,254 @@ def build_inventory(legacy_root: Path, matrix_path: Path) -> dict[str, Any]:
             r'optBoolean\(\s*"analysis-always-override"\s*,\s*false\s*\)'
         ),
         "analysis-auto-quit": r'optBoolean\(\s*"analysis-auto-quit"\s*,\s*true\s*\)',
+        "analysis-specific-rules": (
+            r'optString\(\s*"analysis-specific-rules"\s*,\s*""\s*\)'
+        ),
+        "analysis-start-move": r'optInt\(\s*"analysis-start-move"\s*,\s*-1\s*\)',
+        "analysis-end-move": r'optInt\(\s*"analysis-end-move"\s*,\s*-1\s*\)',
     }
     for key, pattern in expected_analysis_defaults.items():
         if len(re.findall(pattern, config_source)) != 1:
             raise ValueError(f"{key} default changed")
+    analysis_engine_source = strip_java_comments(
+        (legacy_root / "src/main/java/featurecat/lizzie/analysis/AnalysisEngine.java").read_text(
+            encoding="utf-8", errors="replace"
+        )
+    )
+    expected_range_predicates = {
+        "inclusive start": r"startMove\s*<\s*0\s*\|\|\s*moveNum\s*>=\s*startMove",
+        "exclusive end": r"endMove\s*<\s*0\s*\|\|\s*moveNum\s*<\s*endMove",
+    }
+    for behavior, pattern in expected_range_predicates.items():
+        if len(re.findall(pattern, analysis_engine_source)) != 1:
+            raise ValueError(f"Analysis range {behavior} behavior changed")
+    if len(
+        re.findall(
+            r"shouldAnalyzeTurn\(\s*moveNum\s*,\s*startMove\s*,\s*endMove\s*\)",
+            analysis_engine_source,
+        )
+    ) != 2:
+        raise ValueError("Analysis range predicate call sites changed")
+    analysis_part_source = strip_java_comments(
+        (legacy_root / "src/main/java/featurecat/lizzie/gui/AnalysisPartGame.java").read_text(
+            encoding="utf-8", errors="replace"
+        )
+    )
+    expected_analysis_range_fields = {
+        "analysis-start-move": ("analysisStartMove", "txtStartMove"),
+        "analysis-end-move": ("analysisEndMove", "txtEndMove"),
+    }
+    for key, (field, text_field) in expected_analysis_range_fields.items():
+        parse_pattern = (
+            rf"Lizzie\.config\.{field}\s*=\s*"
+            rf"Utils\.parseTextToInt\(\s*{text_field}\s*,\s*Lizzie\.config\.{field}\s*\)"
+        )
+        write_pattern = (
+            rf"Lizzie\.config\.uiConfig\.put\(\s*\"{key}\"\s*,\s*"
+            rf"Lizzie\.config\.{field}\s*\)"
+        )
+        if len(re.findall(parse_pattern, analysis_part_source)) != 1 or len(
+            re.findall(write_pattern, analysis_part_source)
+        ) != 1:
+            raise ValueError(f"AnalysisPartGame {key} binding changed")
+    lizzie_frame_source = strip_java_comments(
+        (legacy_root / "src/main/java/featurecat/lizzie/gui/LizzieFrame.java").read_text(
+            encoding="utf-8", errors="replace"
+        )
+    )
+    expected_range_flow = {
+        "batch range assignment": (
+            r"Lizzie\.config\.analysisStartMove\s*=\s*firstMove\s*;\s*"
+            r"Lizzie\.config\.analysisEndMove\s*=\s*lastMove\s*;"
+        ),
+        "request range dispatch": (
+            r"targetEngine\.startRequest\(\s*"
+            r"isAllGame\s*\?\s*-1\s*:\s*Lizzie\.config\.analysisStartMove\s*,\s*"
+            r"isAllGame\s*\?\s*-1\s*:\s*Lizzie\.config\.analysisEndMove\s*,\s*"
+            r"!silentAnalyze\s*\)"
+        ),
+    }
+    for behavior, pattern in expected_range_flow.items():
+        if len(re.findall(pattern, lizzie_frame_source)) != 1:
+            raise ValueError(f"Analysis {behavior} changed")
+    specific_rules_source = strip_java_comments(
+        (legacy_root / "src/main/java/featurecat/lizzie/gui/SetAnalysisRules.java").read_text(
+            encoding="utf-8", errors="replace"
+        )
+    )
+    def analysis_rule_action_body(button: str) -> str:
+        marker = f"{button}.addActionListener"
+        if specific_rules_source.count(marker) != 1:
+            raise ValueError(f"SetAnalysisRules {button} handler changed")
+        listener_start = specific_rules_source.index(marker)
+        call_open = specific_rules_source.find("(", listener_start + len(marker))
+        if call_open < 0:
+            raise ValueError(f"SetAnalysisRules {button} handler changed")
+        call_close = closing_delimiter(specific_rules_source, call_open, "(", ")")
+        listener_call = specific_rules_source[call_open + 1 : call_close]
+        method_match = re.search(
+            r"public\s+void\s+actionPerformed\s*\(\s*ActionEvent\s+\w+\s*\)\s*\{",
+            listener_call,
+        )
+        if method_match is None:
+            raise ValueError(f"SetAnalysisRules {button} handler changed")
+        body_open = method_match.end() - 1
+        return listener_call[body_open + 1 : closing_brace(listener_call, body_open)]
+
+    expected_rule_action_hashes = {
+        "btnApply": "c54170837ca4ce150091d87ed694308b3aa40d012647d7ac753834edf8fd2923",
+        "btnChnRule": "a93d3869eb4daca03158e2a777b004f786ce2e058cb7a4f053a31050076ecc53",
+        "btnJpnRule": "71906286f378abd0952e73e74bf719880e89a42cf4d70ad495f1fdd9a079c128",
+        "btnTTRule": "ea20fdac317f17f6db83b9f9f302b5c96a1c6dcf3a33175758f202e53f76ac93",
+        "btnChnOldRule": "809cfc46f603fa7f66c6a5635e02cf218065cc62167ff39e1a0bc05c51f5b0ee",
+    }
+    for button, expected_hash in expected_rule_action_hashes.items():
+        body_hash = hashlib.sha256(
+            normalize_java(analysis_rule_action_body(button)).encode()
+        ).hexdigest()
+        if body_hash != expected_hash:
+            raise ValueError(f"SetAnalysisRules {button} handler changed")
+    expected_specific_rule_mappings = {
+        "rdoArea": ("scoring", '"AREA"'),
+        "rdoTerritory": ("scoring", '"TERRITORY"'),
+        "rdoSimpleKo": ("ko", '"SIMPLE"'),
+        "rdoPositionKo": ("ko", '"POSITIONAL"'),
+        "rdoSituationalKo": ("ko", '"SITUATIONAL"'),
+        "rdoSuicide": ("suicide", "true"),
+        "rdoNoSuicide": ("suicide", "false"),
+        "rdoNoTax": ("tax", '"NONE"'),
+        "rdoSeKiTax": ("tax", '"SEKI"'),
+        "rdoAllTax": ("tax", '"ALL"'),
+        "rdoNoHandicapKomi": ("whiteHandicapBonus", '"0"'),
+        "rdoHandicapKomiN": ("whiteHandicapBonus", '"N"'),
+        "rdoHandicapKomiN1": ("whiteHandicapBonus", '"N-1"'),
+        "rdoButtonGo": ("hasButton", "true"),
+        "rdoNoButtonGo": ("hasButton", "false"),
+    }
+    apply_block = analysis_rule_action_body("btnApply")
+    actual_specific_rule_pairs = re.findall(
+        r'if\s*\(\s*(rdo\w+)\.isSelected\(\)\s*\)\s*'
+        r'jo\.put\(\s*"([^"]+)"\s*,\s*("[^"]*"|true|false)\s*\)',
+        apply_block,
+    )
+    actual_specific_rule_mappings = {
+        radio: (key, value) for radio, key, value in actual_specific_rule_pairs
+    }
+    if len(actual_specific_rule_pairs) != len(
+        expected_specific_rule_mappings
+    ) or actual_specific_rule_mappings != expected_specific_rule_mappings:
+        raise ValueError("SetAnalysisRules Apply mappings changed")
+    expected_rule_presets = {
+        "btnChnRule": (
+            {
+                "rdoArea": "true",
+                "rdoNoTax": "true",
+                "rdoHandicapKomiN": "true",
+                "rdoSimpleKo": "true",
+                "rdoNoSuicide": "true",
+                "rdoNoButtonGo": "true",
+            },
+            {"rdoNoButtonGo": "true", "rdoButtonGo": "true"},
+        ),
+        "btnJpnRule": (
+            {
+                "rdoTerritory": "true",
+                "rdoSeKiTax": "true",
+                "rdoNoHandicapKomi": "true",
+                "rdoSimpleKo": "true",
+                "rdoNoSuicide": "true",
+                "rdoNoButtonGo": "true",
+            },
+            {"rdoNoButtonGo": "false", "rdoButtonGo": "false"},
+        ),
+        "btnTTRule": (
+            {
+                "rdoArea": "true",
+                "rdoNoTax": "true",
+                "rdoHandicapKomiN": "true",
+                "rdoPositionKo": "true",
+                "rdoSuicide": "true",
+                "rdoNoButtonGo": "true",
+            },
+            {"rdoNoButtonGo": "true", "rdoButtonGo": "true"},
+        ),
+        "btnChnOldRule": (
+            {
+                "rdoArea": "true",
+                "rdoAllTax": "true",
+                "rdoHandicapKomiN": "true",
+                "rdoSimpleKo": "true",
+                "rdoSuicide": "false",
+            },
+            {"rdoNoButtonGo": "true", "rdoButtonGo": "true"},
+        ),
+    }
+    for button, (expected_selected, expected_enabled) in expected_rule_presets.items():
+        block = analysis_rule_action_body(button)
+        selected_pairs = re.findall(r"\b(rdo\w+)\.setSelected\((true|false)\)", block)
+        enabled_pairs = re.findall(r"\b(rdo\w+)\.setEnabled\((true|false)\)", block)
+        selected = dict(selected_pairs)
+        enabled = dict(enabled_pairs)
+        if (
+            len(selected_pairs) != len(expected_selected)
+            or len(enabled_pairs) != len(expected_enabled)
+            or selected != expected_selected
+            or enabled != expected_enabled
+        ):
+            raise ValueError(f"SetAnalysisRules {button} preset changed")
+    expected_rule_commit = (
+        r"Lizzie\.config\.analysisSpecificRules\s*=\s*jo\.toString\(\)\s*;\s*"
+        r"Lizzie\.config\.uiConfig\.put\(\s*\"analysis-specific-rules\"\s*,\s*"
+        r"Lizzie\.config\.analysisSpecificRules\s*\)"
+    )
+    if len(re.findall(expected_rule_commit, apply_block)) != 1:
+        raise ValueError("SetAnalysisRules Apply commit changed")
+    analysis_settings_source = strip_java_comments(
+        (legacy_root / "src/main/java/featurecat/lizzie/gui/AnalysisSettings.java").read_text(
+            encoding="utf-8", errors="replace"
+        )
+    )
+    if re.search(r"\.\s*getRules\s*\(", analysis_settings_source):
+        raise ValueError("AnalysisSettings now calls SetAnalysisRules.getRules")
+    request_builder_source = strip_java_comments(
+        (
+            legacy_root
+            / "src/main/java/featurecat/lizzie/analysis/AnalysisRequestBuilder.java"
+        ).read_text(encoding="utf-8", errors="replace")
+    )
+    if len(re.findall(r"\baddRules\(\s*request\s*\)", request_builder_source)) != 1:
+        raise ValueError("AnalysisRequestBuilder rule dispatch changed")
+    local_specific_rule_flow = (
+        r"if\s*\(\s*!Lizzie\.config\.analysisUseCurrentRules\s*\)\s*\{\s*"
+        r"if\s*\(\s*!Lizzie\.config\.analysisSpecificRules\.equals\(\s*\"\"\s*\)\s*\)\s*\{\s*"
+        r"ruleSettings\s*=\s*new\s+JSONObject\(\s*Lizzie\.config\.analysisSpecificRules\s*\)\s*;\s*"
+        r"request\.put\(\s*\"rules\"\s*,\s*ruleSettings\s*\)\s*;\s*\}\s*"
+        r"else\s+request\.put\(\s*\"rules\"\s*,\s*\"tromp-taylor\"\s*\)"
+    )
+    for consumer, source in {
+        "AnalysisEngine": analysis_engine_source,
+        "AnalysisRequestBuilder": request_builder_source,
+    }.items():
+        if len(re.findall(local_specific_rule_flow, source)) != 1:
+            raise ValueError(f"{consumer} specific rule flow changed")
+    get_rules_flow = (
+        r"public\s+void\s+getRules\s*\(\s*\)\s*\{\s*"
+        r"if\s*\(\s*!Lizzie\.config\.analysisSpecificRules\.equals\(\s*\"\"\s*\)\s*\)\s*\{\s*"
+        r"JSONObject\s+jo\s*=\s*new\s+JSONObject\(\s*Lizzie\.config\.analysisSpecificRules\s*\)"
+    )
+    if len(re.findall(get_rules_flow, specific_rules_source)) != 1:
+        raise ValueError("SetAnalysisRules getRules parsing changed")
+    remote_rule_flow = (
+        r"String\s+rules\s*=\s*Lizzie\.config\s*==\s*null\s*\?\s*\"\"\s*:\s*"
+        r"Lizzie\.config\.analysisSpecificRules\s*;.*?"
+        r'"chinese"\.equals\(normalized\).*?"japanese"\.equals\(normalized\).*?'
+        r'"tromp-taylor"\.equals\(normalized\).*?return\s+normalized\s*;.*?'
+        r'return\s+"chinese"\s*;'
+    )
+    if len(re.findall(remote_rule_flow, analysis_engine_source, re.DOTALL)) != 1:
+        raise ValueError("Remote GTP specific rule flow changed")
+    if len(re.findall(r'commands\.add\(\s*"kata-set-rules "\s*\+\s*remoteGtpRules\(\)\s*\)', analysis_engine_source)) != 1:
+        raise ValueError("Remote GTP rule dispatch changed")
     mapped_keys = sum(bool(entry["matrix_ids"]) for entry in config_entries)
     menu["keys"] = [
         {
@@ -3678,7 +4002,7 @@ def build_inventory(legacy_root: Path, matrix_path: Path) -> dict[str, Any]:
         raise ValueError("Every normalized legacy input path must map to the matrix")
 
     return {
-        "schema_version": 49,
+        "schema_version": matrix["schema_version"],
         "source": {
             "root": "../lizzieyzy-next-main",
             "version": read_legacy_version(legacy_root),

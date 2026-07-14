@@ -1,5 +1,5 @@
 {
-  "schema_version": 49,
+  "schema_version": 50,
   "source": {
     "root": "../lizzieyzy-next-main",
     "version": "yzy2.5.3",
@@ -32,8 +32,8 @@
       "用户批准不迁移": 0
     },
     "active_config_leaf_keys": 596,
-    "mapped_config_leaf_keys": 311,
-    "unmapped_config_leaf_keys": 285,
+    "mapped_config_leaf_keys": 314,
+    "unmapped_config_leaf_keys": 282,
     "active_menu_resource_keys": 383,
     "mapped_menu_resource_keys": 118,
     "unmapped_menu_resource_keys": 265,
@@ -633,7 +633,9 @@
       {
         "key": "analysis-end-move",
         "reference_count": 2,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "ANALYSIS-FULL-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -808,7 +810,9 @@
       {
         "key": "analysis-specific-rules",
         "reference_count": 2,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "ANALYSIS-FULL-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -827,7 +831,9 @@
       {
         "key": "analysis-start-move",
         "reference_count": 2,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "ANALYSIS-FULL-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
