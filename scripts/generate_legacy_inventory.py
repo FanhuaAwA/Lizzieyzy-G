@@ -20,10 +20,12 @@ DEFAULT_MATRIX = REPOSITORY_ROOT / "migration" / "equivalence-matrix.json"
 DEFAULT_OUTPUT = REPOSITORY_ROOT / "migration" / "legacy-inventory.json"
 
 JSON_APIS = (
+    "opt",
     "optBoolean",
     "optInt",
     "optLong",
     "optDouble",
+    "optFloat",
     "optString",
     "optJSONObject",
     "optJSONArray",
@@ -35,6 +37,7 @@ JSON_APIS = (
     "getJSONObject",
     "getJSONArray",
     "put",
+    "putOpt",
     "remove",
     "has",
 )
@@ -1562,6 +1565,8 @@ def source_fingerprint(legacy_root: Path) -> tuple[str, list[Path]]:
 def is_persistent_config_call(path: Path, receiver: str) -> bool:
     if path.name == "Config.java":
         return receiver != "Lizzie.resourceBundle"
+    if path.name == "Theme.java" and receiver == "config":
+        return True
     return receiver in PERSISTENT_RECEIVERS or receiver.endswith(PERSISTENT_RECEIVER_SUFFIXES)
 
 
@@ -2216,8 +2221,8 @@ def validate_matrix(
     dict[str, list[str]],
     dict[str, list[str]],
 ]:
-    if matrix.get("schema_version") != 41:
-        raise ValueError("Matrix schema_version must be 41")
+    if matrix.get("schema_version") != 42:
+        raise ValueError("Matrix schema_version must be 42")
     allowed_statuses = matrix.get("allowed_statuses")
     if allowed_statuses != list(ALLOWED_STATUSES):
         raise ValueError("Matrix allowed_statuses differ from the repository contract")
@@ -2391,6 +2396,90 @@ def build_inventory(legacy_root: Path, matrix_path: Path) -> dict[str, Any]:
         }
         for key, references in config_references.items()
     ]
+    new_game_dialog_path = "src/main/java/featurecat/lizzie/gui/NewGameDialog.java"
+    expected_new_game_keys = {
+        "advance-time-settings",
+        "advance-time-txt",
+        "auto-save-played-game",
+        "check-continue-play",
+        "check-play-black",
+        "genmove-game-notime",
+        "kata-playouts-txt",
+        "kata-time-byoyomi-secs",
+        "kata-time-byoyomi-times",
+        "kata-time-fisher-increment-secs",
+        "kata-time-main-time-mins",
+        "kata-time-settings",
+        "kata-time-type",
+        "kata-visits-playouts-settings",
+        "kata-visits-txt",
+        "limit-my-time",
+        "max-game-thinking-time-seconds",
+        "my-byoyomo-seconds",
+        "my-byoyomo-times",
+        "my-save-time",
+        "new-game-handicap",
+        "new-game-komi",
+        "play-ponder",
+        "use-free-handicap",
+        "use-play-mode",
+    }
+    actual_new_game_keys = {
+        entry["key"]
+        for entry in config_entries
+        if any(reference["path"] == new_game_dialog_path for reference in entry["references"])
+    }
+    if actual_new_game_keys != expected_new_game_keys:
+        raise ValueError(
+            "NewGameDialog config key set changed: "
+            f"missing={sorted(expected_new_game_keys - actual_new_game_keys)}, "
+            f"unexpected={sorted(actual_new_game_keys - expected_new_game_keys)}"
+        )
+    unmapped_new_game_keys = sorted(
+        key
+        for key in expected_new_game_keys
+        if "GAME-HUMAN-AI-001" not in matrix_ids_by_config_key.get(key, [])
+    )
+    if unmapped_new_game_keys:
+        raise ValueError(
+            "NewGameDialog config keys must map to GAME-HUMAN-AI-001: "
+            f"{unmapped_new_game_keys}"
+        )
+    for menu_key in ("Menu.newGenmoveGame", "Menu.newAnalyzeModeGame"):
+        if "GAME-HUMAN-AI-001" not in matrix_ids_by_menu_key.get(menu_key, []):
+            raise ValueError(f"{menu_key} must map to GAME-HUMAN-AI-001")
+    expected_new_game_cases = {
+        "keyPressed:VK_N",
+        "InputIndependentMainBoard:keyPressed:VK_N",
+    }
+    expected_new_game_bindings = {
+        "keyPressed:VK_N#2",
+        "InputIndependentMainBoard:keyPressed:VK_N#2",
+    }
+    new_game_row = next(
+        row for row in matrix["rows"] if row["id"] == "GAME-HUMAN-AI-001"
+    )
+    if set(new_game_row["legacy_input_cases"]) != expected_new_game_cases:
+        raise ValueError("GAME-HUMAN-AI-001 input cases changed")
+    if set(new_game_row["legacy_input_bindings"]) != expected_new_game_bindings:
+        raise ValueError("GAME-HUMAN-AI-001 input bindings changed")
+    required_new_game_evidence = {
+        ("src/main/java/featurecat/lizzie/gui/Input.java", "keyPressed"),
+        (
+            "src/main/java/featurecat/lizzie/gui/InputIndependentMainBoard.java",
+            "keyPressed",
+        ),
+        ("src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "startNewGame"),
+        (
+            "src/main/java/featurecat/lizzie/gui/LizzieFrame.java",
+            "startAnalyzeGameDialog",
+        ),
+    }
+    actual_new_game_evidence = {
+        (entry["path"], entry["symbol"]) for entry in new_game_row["java_evidence"]
+    }
+    if not required_new_game_evidence <= actual_new_game_evidence:
+        raise ValueError("GAME-HUMAN-AI-001 entry evidence is incomplete")
     mapped_keys = sum(bool(entry["matrix_ids"]) for entry in config_entries)
     menu["keys"] = [
         {
@@ -2468,7 +2557,7 @@ def build_inventory(legacy_root: Path, matrix_path: Path) -> dict[str, Any]:
         raise ValueError("Every normalized legacy input path must map to the matrix")
 
     return {
-        "schema_version": 41,
+        "schema_version": 42,
         "source": {
             "root": "../lizzieyzy-next-main",
             "version": read_legacy_version(legacy_root),

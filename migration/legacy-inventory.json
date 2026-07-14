@@ -1,5 +1,5 @@
 {
-  "schema_version": 41,
+  "schema_version": 42,
   "source": {
     "root": "../lizzieyzy-next-main",
     "version": "yzy2.5.3",
@@ -32,11 +32,11 @@
       "用户批准不迁移": 0
     },
     "active_config_leaf_keys": 596,
-    "mapped_config_leaf_keys": 219,
-    "unmapped_config_leaf_keys": 377,
+    "mapped_config_leaf_keys": 241,
+    "unmapped_config_leaf_keys": 355,
     "active_menu_resource_keys": 383,
-    "mapped_menu_resource_keys": 102,
-    "unmapped_menu_resource_keys": 281,
+    "mapped_menu_resource_keys": 104,
+    "unmapped_menu_resource_keys": 279,
     "active_menu_literal_labels": 12,
     "mapped_menu_literal_labels": 12,
     "unmapped_menu_literal_labels": 0,
@@ -58,7 +58,7 @@
   },
   "config": {
     "active_literal_leaf_keys": 596,
-    "active_literal_references": 1627,
+    "active_literal_references": 1681,
     "commented_only_config_java_keys": [
       "all-font-size",
       "allow-drag-doubleclick",
@@ -152,7 +152,9 @@
       {
         "key": "advance-time-settings",
         "reference_count": 3,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "GAME-HUMAN-AI-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -177,7 +179,9 @@
       {
         "key": "advance-time-txt",
         "reference_count": 4,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "GAME-HUMAN-AI-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -884,7 +888,7 @@
       },
       {
         "key": "analyze-update-interval-centisec",
-        "reference_count": 2,
+        "reference_count": 3,
         "matrix_ids": [
           "ANALYSIS-HAWKEYE-001",
           "UI-BLUNDER-SCROLLBAR-001"
@@ -901,12 +905,18 @@
             "line": 2815,
             "receiver": "leelaz",
             "api": "put"
+          },
+          {
+            "path": "src/main/java/featurecat/lizzie/gui/ConfigDialog2.java",
+            "line": 5999,
+            "receiver": "leelazConfig",
+            "api": "putOpt"
           }
         ]
       },
       {
         "key": "analyze-update-interval-centisecssh",
-        "reference_count": 1,
+        "reference_count": 2,
         "matrix_ids": [],
         "references": [
           {
@@ -914,12 +924,18 @@
             "line": 2132,
             "receiver": "leelazConfig",
             "api": "optInt"
+          },
+          {
+            "path": "src/main/java/featurecat/lizzie/gui/ConfigDialog2.java",
+            "line": 6001,
+            "receiver": "leelazConfig",
+            "api": "putOpt"
           }
         ]
       },
       {
         "key": "append-winrate-to-comment",
-        "reference_count": 3,
+        "reference_count": 4,
         "matrix_ids": [
           "UI-BLUNDER-SCROLLBAR-001"
         ],
@@ -941,6 +957,12 @@
             "line": 2877,
             "receiver": "ui",
             "api": "put"
+          },
+          {
+            "path": "src/main/java/featurecat/lizzie/gui/ConfigDialog2.java",
+            "line": 6104,
+            "receiver": "Lizzie.config.uiConfig",
+            "api": "putOpt"
           }
         ]
       },
@@ -1352,7 +1374,9 @@
       {
         "key": "auto-save-played-game",
         "reference_count": 3,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "GAME-HUMAN-AI-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -2302,7 +2326,7 @@
       },
       {
         "key": "black-stone-image",
-        "reference_count": 1,
+        "reference_count": 2,
         "matrix_ids": [],
         "references": [
           {
@@ -2310,6 +2334,12 @@
             "line": 5537,
             "receiver": "theme.config",
             "api": "put"
+          },
+          {
+            "path": "src/main/java/featurecat/lizzie/theme/Theme.java",
+            "line": 130,
+            "receiver": "config",
+            "api": "optString"
           }
         ]
       },
@@ -2656,7 +2686,7 @@
       },
       {
         "key": "board-position-proportion",
-        "reference_count": 2,
+        "reference_count": 3,
         "matrix_ids": [],
         "references": [
           {
@@ -2670,6 +2700,12 @@
             "line": 3557,
             "receiver": "jsonLayout",
             "api": "optInt"
+          },
+          {
+            "path": "src/main/java/featurecat/lizzie/gui/ConfigDialog2.java",
+            "line": 6136,
+            "receiver": "Lizzie.config.uiConfig",
+            "api": "putOpt"
           }
         ]
       },
@@ -2878,7 +2914,9 @@
       {
         "key": "check-continue-play",
         "reference_count": 3,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "GAME-HUMAN-AI-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -2903,7 +2941,9 @@
       {
         "key": "check-play-black",
         "reference_count": 3,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "GAME-HUMAN-AI-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -3180,7 +3220,7 @@
       },
       {
         "key": "color-by-winrate-instead-of-visits",
-        "reference_count": 1,
+        "reference_count": 2,
         "matrix_ids": [],
         "references": [
           {
@@ -3188,6 +3228,12 @@
             "line": 1817,
             "receiver": "uiConfig",
             "api": "optBoolean"
+          },
+          {
+            "path": "src/main/java/featurecat/lizzie/gui/ConfigDialog2.java",
+            "line": 6133,
+            "receiver": "Lizzie.config.uiConfig",
+            "api": "putOpt"
           }
         ]
       },
@@ -4551,7 +4597,7 @@
       },
       {
         "key": "extra-mode",
-        "reference_count": 4,
+        "reference_count": 5,
         "matrix_ids": [
           "ANALYSIS-HAWKEYE-001",
           "BOARD-MAIN-INPUT-001",
@@ -4575,6 +4621,12 @@
             "line": 3481,
             "receiver": "uiConfig",
             "api": "put"
+          },
+          {
+            "path": "src/main/java/featurecat/lizzie/Config.java",
+            "line": 3688,
+            "receiver": "uiConfig",
+            "api": "opt"
           },
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -4640,7 +4692,7 @@
       },
       {
         "key": "fast-engine-change",
-        "reference_count": 1,
+        "reference_count": 2,
         "matrix_ids": [
           "SETTINGS-GENERAL-001"
         ],
@@ -4650,6 +4702,12 @@
             "line": 2120,
             "receiver": "leelazConfig",
             "api": "optBoolean"
+          },
+          {
+            "path": "src/main/java/featurecat/lizzie/gui/ConfigDialog2.java",
+            "line": 5968,
+            "receiver": "leelazConfig",
+            "api": "putOpt"
           }
         ]
       },
@@ -5143,7 +5201,9 @@
       {
         "key": "genmove-game-notime",
         "reference_count": 3,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "GAME-HUMAN-AI-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -5418,7 +5478,7 @@
       },
       {
         "key": "hide-blunder-table-control-pane",
-        "reference_count": 2,
+        "reference_count": 3,
         "matrix_ids": [
           "SETTINGS-GENERAL-001",
           "UI-BLUNDER-SCROLLBAR-001"
@@ -5429,6 +5489,12 @@
             "line": 1676,
             "receiver": "uiConfig",
             "api": "optBoolean"
+          },
+          {
+            "path": "src/main/java/featurecat/lizzie/gui/ConfigDialog2.java",
+            "line": 6107,
+            "receiver": "Lizzie.config.uiConfig",
+            "api": "putOpt"
           },
           {
             "path": "src/main/java/featurecat/lizzie/gui/Menu.java",
@@ -5926,7 +5992,9 @@
       {
         "key": "kata-playouts-txt",
         "reference_count": 2,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "GAME-HUMAN-AI-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -5964,7 +6032,9 @@
       {
         "key": "kata-time-byoyomi-secs",
         "reference_count": 3,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "GAME-HUMAN-AI-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -5989,7 +6059,9 @@
       {
         "key": "kata-time-byoyomi-times",
         "reference_count": 3,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "GAME-HUMAN-AI-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -6014,7 +6086,9 @@
       {
         "key": "kata-time-fisher-increment-secs",
         "reference_count": 3,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "GAME-HUMAN-AI-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -6039,7 +6113,9 @@
       {
         "key": "kata-time-main-time-mins",
         "reference_count": 3,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "GAME-HUMAN-AI-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -6064,7 +6140,9 @@
       {
         "key": "kata-time-settings",
         "reference_count": 3,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "GAME-HUMAN-AI-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -6089,7 +6167,9 @@
       {
         "key": "kata-time-type",
         "reference_count": 3,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "GAME-HUMAN-AI-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -6114,7 +6194,9 @@
       {
         "key": "kata-visits-playouts-settings",
         "reference_count": 2,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "GAME-HUMAN-AI-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -6133,7 +6215,9 @@
       {
         "key": "kata-visits-txt",
         "reference_count": 2,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "GAME-HUMAN-AI-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -6676,7 +6760,9 @@
       {
         "key": "limit-my-time",
         "reference_count": 3,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "GAME-HUMAN-AI-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -7288,7 +7374,7 @@
       },
       {
         "key": "max-analyze-time-seconds",
-        "reference_count": 2,
+        "reference_count": 4,
         "matrix_ids": [],
         "references": [
           {
@@ -7296,6 +7382,18 @@
             "line": 2121,
             "receiver": "leelazConfig",
             "api": "optInt"
+          },
+          {
+            "path": "src/main/java/featurecat/lizzie/gui/ConfigDialog2.java",
+            "line": 5986,
+            "receiver": "leelazConfig",
+            "api": "putOpt"
+          },
+          {
+            "path": "src/main/java/featurecat/lizzie/gui/FirstUseSettings.java",
+            "line": 660,
+            "receiver": "Lizzie.config.leelazConfig",
+            "api": "putOpt"
           },
           {
             "path": "src/main/java/featurecat/lizzie/gui/Menu.java",
@@ -7307,8 +7405,10 @@
       },
       {
         "key": "max-game-thinking-time-seconds",
-        "reference_count": 6,
-        "matrix_ids": [],
+        "reference_count": 10,
+        "matrix_ids": [
+          "GAME-HUMAN-AI-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -7341,10 +7441,34 @@
             "api": "getInt"
           },
           {
+            "path": "src/main/java/featurecat/lizzie/gui/ConfigDialog2.java",
+            "line": 5987,
+            "receiver": "leelazConfig",
+            "api": "putOpt"
+          },
+          {
+            "path": "src/main/java/featurecat/lizzie/gui/NewAnaGameDialog.java",
+            "line": 779,
+            "receiver": "Lizzie.config.leelazConfig",
+            "api": "putOpt"
+          },
+          {
+            "path": "src/main/java/featurecat/lizzie/gui/NewGameDialog.java",
+            "line": 909,
+            "receiver": "Lizzie.config.leelazConfig",
+            "api": "putOpt"
+          },
+          {
             "path": "src/main/java/featurecat/lizzie/gui/SetAiTimes.java",
             "line": 120,
             "receiver": "Lizzie.config.leelazConfig",
             "api": "getInt"
+          },
+          {
+            "path": "src/main/java/featurecat/lizzie/gui/SetAiTimes.java",
+            "line": 486,
+            "receiver": "Lizzie.config.leelazConfig",
+            "api": "putOpt"
           }
         ]
       },
@@ -7529,7 +7653,7 @@
       },
       {
         "key": "move-list-score-threshold",
-        "reference_count": 1,
+        "reference_count": 2,
         "matrix_ids": [
           "ANALYSIS-HAWKEYE-001"
         ],
@@ -7539,12 +7663,18 @@
             "line": 1872,
             "receiver": "uiConfig",
             "api": "optInt"
+          },
+          {
+            "path": "src/main/java/featurecat/lizzie/Config.java",
+            "line": 3474,
+            "receiver": "uiConfig",
+            "api": "putOpt"
           }
         ]
       },
       {
         "key": "move-list-visits-threshold",
-        "reference_count": 1,
+        "reference_count": 2,
         "matrix_ids": [
           "ANALYSIS-HAWKEYE-001"
         ],
@@ -7554,12 +7684,18 @@
             "line": 1874,
             "receiver": "uiConfig",
             "api": "optInt"
+          },
+          {
+            "path": "src/main/java/featurecat/lizzie/Config.java",
+            "line": 3475,
+            "receiver": "uiConfig",
+            "api": "putOpt"
           }
         ]
       },
       {
         "key": "move-list-winrate-threshold",
-        "reference_count": 1,
+        "reference_count": 2,
         "matrix_ids": [
           "ANALYSIS-HAWKEYE-001"
         ],
@@ -7569,6 +7705,12 @@
             "line": 1873,
             "receiver": "uiConfig",
             "api": "optInt"
+          },
+          {
+            "path": "src/main/java/featurecat/lizzie/Config.java",
+            "line": 3473,
+            "receiver": "uiConfig",
+            "api": "putOpt"
           }
         ]
       },
@@ -7738,7 +7880,7 @@
       },
       {
         "key": "movenumber-from-one",
-        "reference_count": 2,
+        "reference_count": 3,
         "matrix_ids": [],
         "references": [
           {
@@ -7746,6 +7888,12 @@
             "line": 1603,
             "receiver": "uiConfig",
             "api": "optBoolean"
+          },
+          {
+            "path": "src/main/java/featurecat/lizzie/gui/ConfigDialog2.java",
+            "line": 6096,
+            "receiver": "Lizzie.config.uiConfig",
+            "api": "putOpt"
           },
           {
             "path": "src/main/java/featurecat/lizzie/gui/Menu.java",
@@ -7758,7 +7906,9 @@
       {
         "key": "my-byoyomo-seconds",
         "reference_count": 3,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "GAME-HUMAN-AI-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -7783,7 +7933,9 @@
       {
         "key": "my-byoyomo-times",
         "reference_count": 3,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "GAME-HUMAN-AI-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -7808,7 +7960,9 @@
       {
         "key": "my-save-time",
         "reference_count": 3,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "GAME-HUMAN-AI-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -7947,7 +8101,9 @@
       {
         "key": "new-game-handicap",
         "reference_count": 3,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "GAME-HUMAN-AI-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -8087,7 +8243,7 @@
       },
       {
         "key": "norefresh-onmouse-move",
-        "reference_count": 2,
+        "reference_count": 4,
         "matrix_ids": [
           "BOARD-HISTORY-001",
           "BOARD-MAIN-INPUT-001"
@@ -8098,6 +8254,18 @@
             "line": 1783,
             "receiver": "uiConfig",
             "api": "optBoolean"
+          },
+          {
+            "path": "src/main/java/featurecat/lizzie/gui/ConfigDialog2.java",
+            "line": 6124,
+            "receiver": "Lizzie.config.uiConfig",
+            "api": "putOpt"
+          },
+          {
+            "path": "src/main/java/featurecat/lizzie/gui/FirstUseSettings.java",
+            "line": 673,
+            "receiver": "Lizzie.config.uiConfig",
+            "api": "putOpt"
           },
           {
             "path": "src/main/java/featurecat/lizzie/gui/Menu.java",
@@ -8332,8 +8500,9 @@
       },
       {
         "key": "play-ponder",
-        "reference_count": 2,
+        "reference_count": 5,
         "matrix_ids": [
+          "GAME-HUMAN-AI-001",
           "SETTINGS-GENERAL-001"
         ],
         "references": [
@@ -8344,10 +8513,28 @@
             "api": "optBoolean"
           },
           {
+            "path": "src/main/java/featurecat/lizzie/gui/ConfigDialog2.java",
+            "line": 5966,
+            "receiver": "leelazConfig",
+            "api": "putOpt"
+          },
+          {
             "path": "src/main/java/featurecat/lizzie/gui/NewAnaGameDialog.java",
             "line": 756,
             "receiver": "Lizzie.config.leelazConfig",
             "api": "put"
+          },
+          {
+            "path": "src/main/java/featurecat/lizzie/gui/NewGameDialog.java",
+            "line": 911,
+            "receiver": "Lizzie.config.leelazConfig",
+            "api": "putOpt"
+          },
+          {
+            "path": "src/main/java/featurecat/lizzie/gui/SetAiTimes.java",
+            "line": 503,
+            "receiver": "Lizzie.config.leelazConfig",
+            "api": "putOpt"
           }
         ]
       },
@@ -9284,7 +9471,7 @@
       },
       {
         "key": "score-lead-stroke-width",
-        "reference_count": 2,
+        "reference_count": 5,
         "matrix_ids": [],
         "references": [
           {
@@ -9295,9 +9482,27 @@
           },
           {
             "path": "src/main/java/featurecat/lizzie/gui/ConfigDialog2.java",
+            "line": 5584,
+            "receiver": "Lizzie.config.uiConfig",
+            "api": "optFloat"
+          },
+          {
+            "path": "src/main/java/featurecat/lizzie/gui/ConfigDialog2.java",
             "line": 5669,
             "receiver": "Lizzie.config.uiConfig",
             "api": "put"
+          },
+          {
+            "path": "src/main/java/featurecat/lizzie/theme/Theme.java",
+            "line": 285,
+            "receiver": "config",
+            "api": "optFloat"
+          },
+          {
+            "path": "src/main/java/featurecat/lizzie/theme/Theme.java",
+            "line": 286,
+            "receiver": "uiConfig",
+            "api": "optFloat"
           }
         ]
       },
@@ -10131,7 +10336,7 @@
       },
       {
         "key": "show-blue-ring",
-        "reference_count": 1,
+        "reference_count": 2,
         "matrix_ids": [],
         "references": [
           {
@@ -10139,12 +10344,18 @@
             "line": 1791,
             "receiver": "uiConfig",
             "api": "optBoolean"
+          },
+          {
+            "path": "src/main/java/featurecat/lizzie/gui/ConfigDialog2.java",
+            "line": 6013,
+            "receiver": "Lizzie.config.uiConfig",
+            "api": "putOpt"
           }
         ]
       },
       {
         "key": "show-blunder-bar",
-        "reference_count": 5,
+        "reference_count": 6,
         "matrix_ids": [
           "SETTINGS-GENERAL-001"
         ],
@@ -10174,6 +10385,12 @@
             "api": "put"
           },
           {
+            "path": "src/main/java/featurecat/lizzie/gui/ConfigDialog2.java",
+            "line": 6068,
+            "receiver": "Lizzie.config.uiConfig",
+            "api": "putOpt"
+          },
+          {
             "path": "src/main/java/featurecat/lizzie/gui/Menu.java",
             "line": 1538,
             "receiver": "Lizzie.config.uiConfig",
@@ -10196,7 +10413,7 @@
       },
       {
         "key": "show-captured",
-        "reference_count": 6,
+        "reference_count": 7,
         "matrix_ids": [],
         "references": [
           {
@@ -10234,12 +10451,18 @@
             "line": 3554,
             "receiver": "jsonLayout",
             "api": "optBoolean"
+          },
+          {
+            "path": "src/main/java/featurecat/lizzie/gui/ConfigDialog2.java",
+            "line": 6048,
+            "receiver": "Lizzie.config.uiConfig",
+            "api": "putOpt"
           }
         ]
       },
       {
         "key": "show-comment",
-        "reference_count": 8,
+        "reference_count": 9,
         "matrix_ids": [
           "KIFU-TEMP-SAVES-001",
           "SETTINGS-GENERAL-001",
@@ -10293,6 +10516,12 @@
             "line": 3698,
             "receiver": "uiConfig",
             "api": "put"
+          },
+          {
+            "path": "src/main/java/featurecat/lizzie/gui/ConfigDialog2.java",
+            "line": 6051,
+            "receiver": "Lizzie.config.uiConfig",
+            "api": "putOpt"
           }
         ]
       },
@@ -10323,7 +10552,7 @@
       },
       {
         "key": "show-coordinates",
-        "reference_count": 3,
+        "reference_count": 4,
         "matrix_ids": [
           "SETTINGS-GENERAL-001",
           "UI-COORDS-001"
@@ -10346,6 +10575,12 @@
             "line": 2846,
             "receiver": "ui",
             "api": "put"
+          },
+          {
+            "path": "src/main/java/featurecat/lizzie/gui/ConfigDialog2.java",
+            "line": 6053,
+            "receiver": "Lizzie.config.uiConfig",
+            "api": "putOpt"
           }
         ]
       },
@@ -11060,7 +11295,7 @@
       },
       {
         "key": "show-move-rect",
-        "reference_count": 1,
+        "reference_count": 2,
         "matrix_ids": [
           "BOARD-MAIN-INPUT-001"
         ],
@@ -11070,12 +11305,18 @@
             "line": 2048,
             "receiver": "uiConfig",
             "api": "optInt"
+          },
+          {
+            "path": "src/main/java/featurecat/lizzie/gui/ConfigDialog2.java",
+            "line": 5980,
+            "receiver": "Lizzie.config.uiConfig",
+            "api": "putOpt"
           }
         ]
       },
       {
         "key": "show-moveall-inbranch",
-        "reference_count": 2,
+        "reference_count": 4,
         "matrix_ids": [],
         "references": [
           {
@@ -11089,6 +11330,18 @@
             "line": 2450,
             "receiver": "uiConfig",
             "api": "put"
+          },
+          {
+            "path": "src/main/java/featurecat/lizzie/gui/ConfigDialog2.java",
+            "line": 6099,
+            "receiver": "Lizzie.config.uiConfig",
+            "api": "putOpt"
+          },
+          {
+            "path": "src/main/java/featurecat/lizzie/gui/Menu.java",
+            "line": 812,
+            "receiver": "Lizzie.config.uiConfig",
+            "api": "putOpt"
           }
         ]
       },
@@ -11128,7 +11381,7 @@
       },
       {
         "key": "show-name-in-board",
-        "reference_count": 2,
+        "reference_count": 3,
         "matrix_ids": [],
         "references": [
           {
@@ -11136,6 +11389,12 @@
             "line": 1756,
             "receiver": "uiConfig",
             "api": "optBoolean"
+          },
+          {
+            "path": "src/main/java/featurecat/lizzie/gui/ConfigDialog2.java",
+            "line": 6010,
+            "receiver": "Lizzie.config.uiConfig",
+            "api": "putOpt"
           },
           {
             "path": "src/main/java/featurecat/lizzie/gui/Menu.java",
@@ -11232,7 +11491,7 @@
       },
       {
         "key": "show-nosugg-circle",
-        "reference_count": 1,
+        "reference_count": 2,
         "matrix_ids": [],
         "references": [
           {
@@ -11240,6 +11499,12 @@
             "line": 1869,
             "receiver": "leelazConfig",
             "api": "optBoolean"
+          },
+          {
+            "path": "src/main/java/featurecat/lizzie/gui/ConfigDialog2.java",
+            "line": 6016,
+            "receiver": "leelazConfig",
+            "api": "putOpt"
           }
         ]
       },
@@ -11302,7 +11567,7 @@
       },
       {
         "key": "show-playouts-in-suggestion",
-        "reference_count": 6,
+        "reference_count": 7,
         "matrix_ids": [],
         "references": [
           {
@@ -11310,6 +11575,12 @@
             "line": 1754,
             "receiver": "uiConfig",
             "api": "optBoolean"
+          },
+          {
+            "path": "src/main/java/featurecat/lizzie/gui/ConfigDialog2.java",
+            "line": 6145,
+            "receiver": "Lizzie.config.uiConfig",
+            "api": "putOpt"
           },
           {
             "path": "src/main/java/featurecat/lizzie/gui/FirstUseSettings.java",
@@ -11730,7 +12001,7 @@
       },
       {
         "key": "show-scoremean-in-suggestion",
-        "reference_count": 6,
+        "reference_count": 7,
         "matrix_ids": [],
         "references": [
           {
@@ -11738,6 +12009,12 @@
             "line": 1755,
             "receiver": "uiConfig",
             "api": "optBoolean"
+          },
+          {
+            "path": "src/main/java/featurecat/lizzie/gui/ConfigDialog2.java",
+            "line": 6147,
+            "receiver": "Lizzie.config.uiConfig",
+            "api": "putOpt"
           },
           {
             "path": "src/main/java/featurecat/lizzie/gui/FirstUseSettings.java",
@@ -11881,7 +12158,7 @@
       },
       {
         "key": "show-subboard",
-        "reference_count": 9,
+        "reference_count": 10,
         "matrix_ids": [
           "BOARD-MAIN-INPUT-001",
           "SETTINGS-GENERAL-001",
@@ -11941,12 +12218,18 @@
             "line": 3549,
             "receiver": "jsonLayout",
             "api": "optBoolean"
+          },
+          {
+            "path": "src/main/java/featurecat/lizzie/gui/ConfigDialog2.java",
+            "line": 6052,
+            "receiver": "Lizzie.config.uiConfig",
+            "api": "putOpt"
           }
         ]
       },
       {
         "key": "show-suggestion-maxred",
-        "reference_count": 3,
+        "reference_count": 4,
         "matrix_ids": [
           "SETTINGS-GENERAL-001"
         ],
@@ -11964,6 +12247,12 @@
             "api": "put"
           },
           {
+            "path": "src/main/java/featurecat/lizzie/gui/ConfigDialog2.java",
+            "line": 6117,
+            "receiver": "Lizzie.config.uiConfig",
+            "api": "putOpt"
+          },
+          {
             "path": "src/main/java/featurecat/lizzie/gui/Menu.java",
             "line": 1413,
             "receiver": "Lizzie.config.uiConfig",
@@ -11973,7 +12262,7 @@
       },
       {
         "key": "show-suggestion-order",
-        "reference_count": 2,
+        "reference_count": 3,
         "matrix_ids": [],
         "references": [
           {
@@ -11981,6 +12270,12 @@
             "line": 1607,
             "receiver": "uiConfig",
             "api": "optBoolean"
+          },
+          {
+            "path": "src/main/java/featurecat/lizzie/gui/ConfigDialog2.java",
+            "line": 6115,
+            "receiver": "Lizzie.config.uiConfig",
+            "api": "putOpt"
           },
           {
             "path": "src/main/java/featurecat/lizzie/gui/Menu.java",
@@ -11992,7 +12287,7 @@
       },
       {
         "key": "show-suggestion-variations",
-        "reference_count": 5,
+        "reference_count": 6,
         "matrix_ids": [
           "ANALYSIS-DISPLAY-001",
           "BOARD-MAIN-INPUT-001"
@@ -12009,6 +12304,12 @@
             "line": 2726,
             "receiver": "uiConfig",
             "api": "put"
+          },
+          {
+            "path": "src/main/java/featurecat/lizzie/gui/ConfigDialog2.java",
+            "line": 6120,
+            "receiver": "Lizzie.config.uiConfig",
+            "api": "putOpt"
           },
           {
             "path": "src/main/java/featurecat/lizzie/gui/Input.java",
@@ -12181,7 +12482,7 @@
       },
       {
         "key": "show-variation-graph",
-        "reference_count": 6,
+        "reference_count": 7,
         "matrix_ids": [
           "BOARD-MAIN-INPUT-001",
           "BOARD-VARIATION-001",
@@ -12224,6 +12525,12 @@
             "line": 3553,
             "receiver": "jsonLayout",
             "api": "optBoolean"
+          },
+          {
+            "path": "src/main/java/featurecat/lizzie/gui/ConfigDialog2.java",
+            "line": 6050,
+            "receiver": "Lizzie.config.uiConfig",
+            "api": "putOpt"
           }
         ]
       },
@@ -12266,7 +12573,7 @@
       },
       {
         "key": "show-winrate-graph",
-        "reference_count": 6,
+        "reference_count": 7,
         "matrix_ids": [
           "BOARD-MAIN-INPUT-001",
           "SETTINGS-GENERAL-001"
@@ -12307,12 +12614,18 @@
             "line": 3550,
             "receiver": "jsonLayout",
             "api": "optBoolean"
+          },
+          {
+            "path": "src/main/java/featurecat/lizzie/gui/ConfigDialog2.java",
+            "line": 6049,
+            "receiver": "Lizzie.config.uiConfig",
+            "api": "putOpt"
           }
         ]
       },
       {
         "key": "show-winrate-in-suggestion",
-        "reference_count": 6,
+        "reference_count": 7,
         "matrix_ids": [],
         "references": [
           {
@@ -12320,6 +12633,12 @@
             "line": 1753,
             "receiver": "uiConfig",
             "api": "optBoolean"
+          },
+          {
+            "path": "src/main/java/featurecat/lizzie/gui/ConfigDialog2.java",
+            "line": 6143,
+            "receiver": "Lizzie.config.uiConfig",
+            "api": "putOpt"
           },
           {
             "path": "src/main/java/featurecat/lizzie/gui/FirstUseSettings.java",
@@ -12500,7 +12819,7 @@
       },
       {
         "key": "stop-at-empty-board",
-        "reference_count": 1,
+        "reference_count": 2,
         "matrix_ids": [
           "SETTINGS-GENERAL-001"
         ],
@@ -12510,6 +12829,12 @@
             "line": 2116,
             "receiver": "leelazConfig",
             "api": "optBoolean"
+          },
+          {
+            "path": "src/main/java/featurecat/lizzie/gui/ConfigDialog2.java",
+            "line": 5970,
+            "receiver": "leelazConfig",
+            "api": "putOpt"
           }
         ]
       },
@@ -13550,7 +13875,9 @@
       {
         "key": "use-free-handicap",
         "reference_count": 3,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "GAME-HUMAN-AI-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -13762,7 +14089,8 @@
         "key": "use-play-mode",
         "reference_count": 3,
         "matrix_ids": [
-          "BOARD-MAIN-INPUT-001"
+          "BOARD-MAIN-INPUT-001",
+          "GAME-HUMAN-AI-001"
         ],
         "references": [
           {
@@ -14090,7 +14418,7 @@
       },
       {
         "key": "white-stone-image",
-        "reference_count": 1,
+        "reference_count": 2,
         "matrix_ids": [],
         "references": [
           {
@@ -14098,12 +14426,18 @@
             "line": 5538,
             "receiver": "theme.config",
             "api": "put"
+          },
+          {
+            "path": "src/main/java/featurecat/lizzie/theme/Theme.java",
+            "line": 126,
+            "receiver": "config",
+            "api": "optString"
           }
         ]
       },
       {
         "key": "white-suggestion-order-white",
-        "reference_count": 1,
+        "reference_count": 2,
         "matrix_ids": [],
         "references": [
           {
@@ -14111,12 +14445,18 @@
             "line": 1762,
             "receiver": "uiConfig",
             "api": "optBoolean"
+          },
+          {
+            "path": "src/main/java/featurecat/lizzie/gui/ConfigDialog2.java",
+            "line": 6089,
+            "receiver": "Lizzie.config.uiConfig",
+            "api": "putOpt"
           }
         ]
       },
       {
         "key": "white-suggestion-white",
-        "reference_count": 2,
+        "reference_count": 4,
         "matrix_ids": [],
         "references": [
           {
@@ -14124,6 +14464,18 @@
             "line": 1761,
             "receiver": "uiConfig",
             "api": "optBoolean"
+          },
+          {
+            "path": "src/main/java/featurecat/lizzie/gui/ConfigDialog2.java",
+            "line": 6088,
+            "receiver": "Lizzie.config.uiConfig",
+            "api": "putOpt"
+          },
+          {
+            "path": "src/main/java/featurecat/lizzie/gui/ConfigDialog2.java",
+            "line": 6092,
+            "receiver": "Lizzie.config.uiConfig",
+            "api": "putOpt"
           },
           {
             "path": "src/main/java/featurecat/lizzie/gui/Menu.java",
@@ -14531,7 +14883,7 @@
       },
       {
         "key": "winrate-stroke-width",
-        "reference_count": 3,
+        "reference_count": 6,
         "matrix_ids": [],
         "references": [
           {
@@ -14548,9 +14900,27 @@
           },
           {
             "path": "src/main/java/featurecat/lizzie/gui/ConfigDialog2.java",
+            "line": 5582,
+            "receiver": "Lizzie.config.uiConfig",
+            "api": "optFloat"
+          },
+          {
+            "path": "src/main/java/featurecat/lizzie/gui/ConfigDialog2.java",
             "line": 5668,
             "receiver": "Lizzie.config.uiConfig",
             "api": "put"
+          },
+          {
+            "path": "src/main/java/featurecat/lizzie/theme/Theme.java",
+            "line": 281,
+            "receiver": "config",
+            "api": "optFloat"
+          },
+          {
+            "path": "src/main/java/featurecat/lizzie/theme/Theme.java",
+            "line": 281,
+            "receiver": "uiConfig",
+            "api": "optFloat"
           }
         ]
       }
@@ -16254,7 +16624,9 @@
       },
       {
         "key": "Menu.newAnalyzeModeGame",
-        "matrix_ids": [],
+        "matrix_ids": [
+          "GAME-HUMAN-AI-001"
+        ],
         "lines": [
           6639
         ]
@@ -16295,7 +16667,9 @@
       },
       {
         "key": "Menu.newGenmoveGame",
-        "matrix_ids": [],
+        "matrix_ids": [
+          "GAME-HUMAN-AI-001"
+        ],
         "lines": [
           2905,
           7606,

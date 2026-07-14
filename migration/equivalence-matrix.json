@@ -1,5 +1,5 @@
 {
-  "schema_version": 41,
+  "schema_version": 42,
   "allowed_statuses": [
     "未盘点",
     "已盘点",
@@ -58,8 +58,8 @@
     {
       "id": "GAME-HUMAN-AI-001",
       "category": "棋盘与对局",
-      "legacy_entry": "Input.java 的 N 默认分支调用 LizzieFrame.startNewGame，并由 NewGameDialog 配置人机对局；仅 Alt+N 且允许分析时转入整谱分析",
-      "legacy_menu_keys": [],
+      "legacy_entry": "菜单 Menu.newGenmoveGame、Input/InputIndependentMainBoard 的 N 默认分支，或 Menu.newAnalyzeModeGame 调用 startAnalyzeGameDialog 后在 noAnalyze 时回退到 LizzieFrame.startNewGame，并由 NewGameDialog 配置人机对局；菜单文字虽写 Alt+N，但仅 Alt+N 且允许分析时实际转入整谱分析，禁用分析时 Alt+N 以及 Ctrl/Meta/Shift+N 仍落入人机对局",
+      "legacy_menu_keys": ["Menu.newGenmoveGame", "Menu.newAnalyzeModeGame"],
       "legacy_menu_labels": [],
       "legacy_shortcuts": [],
       "legacy_input_cases": [
@@ -72,20 +72,57 @@
       ],
       "java_evidence": [
         { "path": "src/main/java/featurecat/lizzie/gui/Input.java", "symbol": "keyPressed" },
+        { "path": "src/main/java/featurecat/lizzie/gui/InputIndependentMainBoard.java", "symbol": "keyPressed" },
+        { "path": "src/main/java/featurecat/lizzie/gui/Menu.java", "symbol": "Menu.newGenmoveGame" },
         { "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "symbol": "startNewGame" },
-        { "path": "src/main/java/featurecat/lizzie/gui/NewGameDialog.java", "symbol": "class NewGameDialog" }
+        { "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "symbol": "startAnalyzeGameDialog" },
+        { "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "symbol": "sendAiTime" },
+        { "path": "src/main/java/featurecat/lizzie/gui/NewGameDialog.java", "symbol": "class NewGameDialog" },
+        { "path": "src/main/java/featurecat/lizzie/gui/NewGameDialog.java", "symbol": "public void apply()" },
+        { "path": "src/main/java/featurecat/lizzie/Config.java", "symbol": "checkPlayBlack = uiConfig.optBoolean" },
+        { "path": "src/main/java/featurecat/lizzie/rules/Board.java", "symbol": "getMoveList()" },
+        { "path": "src/main/java/featurecat/lizzie/gui/BottomToolbar.java", "symbol": "setChkShowBlack" }
       ],
-      "config_keys": ["new-game-komi"],
-      "inputs_preconditions": "应用已启动且分析引擎可用；用户按下未进入 Alt+N 整谱分析分支的 N 键，打开人机新对局参数窗口。",
-      "success_behavior": "按玩家执色、贴目和让子设置清空棋盘，同步引擎状态；需要时由引擎先行并进入人机对局。",
-      "failure_cancel_behavior": "用户取消时保留当前棋盘并恢复此前的后台分析状态；引擎未就绪或退出时不得无限等待或遗留半初始化对局。",
-      "data_io": "更新内存棋盘和对局信息，并向 GTP 引擎发送贴目、让子、用时和 genmove 命令。",
+      "config_keys": [
+        "advance-time-settings",
+        "advance-time-txt",
+        "auto-save-played-game",
+        "check-continue-play",
+        "check-play-black",
+        "genmove-game-notime",
+        "kata-playouts-txt",
+        "kata-time-byoyomi-secs",
+        "kata-time-byoyomi-times",
+        "kata-time-fisher-increment-secs",
+        "kata-time-main-time-mins",
+        "kata-time-settings",
+        "kata-time-type",
+        "kata-visits-playouts-settings",
+        "kata-visits-txt",
+        "limit-my-time",
+        "max-game-thinking-time-seconds",
+        "my-byoyomo-seconds",
+        "my-byoyomo-times",
+        "my-save-time",
+        "new-game-handicap",
+        "new-game-komi",
+        "play-ponder",
+        "use-free-handicap",
+        "use-play-mode"
+      ],
+      "inputs_preconditions": "应用已启动；用户从三个 Menu.newGenmoveGame 入口之一、主/独立棋盘未进入整谱分析分支的 N，或 Menu.newAnalyzeModeGame 在当前引擎 noAnalyze 时的回退打开模态窗口。没有可选引擎仍能打开，直到确认才提示。窗口读取上次执色、续弈、贴目、让子、人类/AI 时间制、KataGo visits/playouts、后台思考、自由让子、落子模式和自动保存设置；贡献算力中则在打开窗口前拒绝。",
+      "success_behavior": "确认后可切换所选引擎，按执色、贴目和让子建立新对局；旧“续弈”只导出当前节点到根的落子/pass/start stones，清盘后重放该单一路径，会丢弃其他分支、评论、节点分析、标记和属性，目标版必须保留完整棋谱树或在用户明确批准后从不可变快照建立独立对局，不得复制该数据损失。流程更新 GameInfo、棋盘/标题/菜单状态及 25 个持久配置键；黑/白候选显示框每次默认 false，确认还会把 toolbar/menu 与 Config.showBlackCandidates/showWhiteCandidates 置为所选值，因此默认确认会关闭双方候选显示。引擎就绪后依普通、进阶、KataGo 或无时间模式设置人类倒计时与 AI 时间；旧版向非 KataGo 也先发送 kata-time_settings 再警告，并不检查类型就发送 maxVisits/maxPlayouts，空白或非正值用 1125899906842624 哨兵。仅 isKatago 且 use-free-handicap 才发 place_free_handicap，否则发 fixed_handicap，轮到引擎时再发对应颜色 genmove。目标版必须先做 capability 与范围校验，用明确的取消限额语义替代巨大哨兵，不得先发不支持命令后警告，并把设置、棋盘替换和命令表达为可取消且失败可恢复的事务。",
+      "failure_cancel_behavior": "无可选引擎时旧版提示并留在窗口；直接进入 startNewGame 时，窗口关闭只恢复该入口观察到的先前 pondering，已先停止的 AI/策略状态以及自由让子、时间类型、落子模式、自动保存等即时内存写入不会回滚。startAnalyzeGameDialog 的 noAnalyze fallback 会在外层先关闭 pondering，再进入 startNewGame；此时取消不会恢复 fallback 前的 pondering，外层也不补偿。打开窗口前 stopAiPlayingAndPolicy 还可能异步自动保存刚停止的旧局，取消也不撤销，目录创建/保存失败只打印堆栈。确认路径在校验全部数字前就停止对局并可能切换引擎；贴目/让子解析异常静默回退 7.5/0，后续时间解析失败也静默留窗且可能已经部分修改引擎、配置或临时续弈棋步。确认后后台线程无取消/超时地 sleep 轮询引擎，忽略中断语义并越过 EDT 更新 UI；引擎未就绪、退出或命令失败可永久等待或遗留半初始化对局。目标版必须先完整校验，在取消、解析、切换、启动、超时、崩溃和拒绝命令时恢复原棋盘、引擎、分析、计时器及配置，并给出可理解反馈。",
+      "data_io": "读取 config.txt 的 ui/leelaz 叶键并修改内存 JSONObject；旧流程不在对话框内调用 Config.save/persist，依赖后续全局保存。兼容层必须保留拼写错误的 my-byoyomo-seconds/my-byoyomo-times；new-game-handicap 索引 0..8 映射 0,2,3,4,5,6,7,8,9，my-save-time 索引 0..7 映射 -1,5,10,20,30,60,120,180 分钟，my-byoyomo-seconds 索引 0..7 映射 -1,10,15,20,30,40,60,120 秒，my-byoyomo-times 索引 0..5 映射 1,2,3,5,10,20 次，kata-time-type 仅 0/1/2 对应读秒/Fischer/包干。Swing JComboBox 的 -1 是合法的“无选中项”：旧版让子应用时会因 null 被 catch 后回退为 0 且可能把 -1 写回，my-save-time 可保存 -1，kata-time-type=-1 则可能拼出不完整命令；小于 -1 或大于等于项目数才会令 setSelectedIndex 抛错并使窗口构造失败。目标导入须分别处理 -1 与真正越界值，保留原文件并报告无效已知值，不得静默改写，领域模型也不得复制拼写错误或把索引误当实际值。停止旧局可能写工作目录 MyGames 下的 SGF；确认时更新 GameInfo、当前棋盘/单一路径 move list、候选显示、计时器和 UI 状态，并向所选 GTP 引擎发送 komi、time_settings/kata-time_settings/kata-set-param、place_free_handicap/fixed_handicap 与 genmove。",
       "external_dependencies": ["GTP 引擎进程"],
       "target_modules": ["Lizzie.Core", "Lizzie.Engine", "Lizzie.Desktop"],
-      "automated_evidence": [],
-      "manual_acceptance": "分别选择黑白执子、让子和取消，核对棋盘清空、引擎先行、对局标题与原分析状态恢复；再注入未就绪和异常退出引擎。",
+      "automated_evidence": [
+        { "path": "src/test/java/featurecat/lizzie/gui/LizzieFrameAiTimeControlTest.java", "symbol": "LizzieFrameAiTimeControlTest" },
+        { "path": "src/test/java/featurecat/lizzie/rules/EngineCountDownFixedTimeTest.java", "symbol": "EngineCountDownFixedTimeTest" }
+      ],
+      "manual_acceptance": "在隔离配置和确定性测试 GTP 中，从菜单三处、主/独立棋盘 Plain/Ctrl/Meta/Shift/Alt+N 及 noAnalyze 的分析对局入口进入，覆盖无引擎、贡献算力、取消和确认；另以已开启 pondering 从 noAnalyze 分析入口进入后取消，记录旧版 pondering 丢失，并验证目标版事务恢复。分别选择黑/白、0/2–9 让子、自由/固定让子、续弈、双方候选显示、后台思考、普通/进阶/KataGo 读秒/Fischer/包干/无时间、人类倒计时、visits/playouts、落子模式和自动保存，核对 25 键、索引映射、棋谱树/评论/分析/标记、GameInfo、候选显示、标题、计时器及精确命令顺序。用非 KataGo 覆盖 Kata 时间与 visits/playouts 能力拒绝，并验证清除限额不发送巨大哨兵；对空白/非法、-1 无选中、真正越界（小于 -1 或大于等于项目数）、其他损坏索引、切换失败、未就绪、迟到就绪、拒绝命令、崩溃和取消注入故障，确认兼容层能区分旧行为且目标流程不会部分提交、丢棋谱或无限等待。用键盘、窗口关闭、不同 DPI/字号和屏幕阅读器检查焦点、标签、错误态及恢复；最后用真实 KataGo 复核让子、时间制、先后手和正常退出。",
       "status": "已盘点",
-      "evidence": "快捷键与完整调用链已定位；旧版用后台线程 sleep 轮询引擎就绪并打印 InterruptedException，新版不得复制该等待和中断处理方式。"
+      "evidence": "已静态贯通三个 Menu.newGenmoveGame、Menu.newAnalyzeModeGame 的 noAnalyze 回退、主/独立棋盘 N、LizzieFrame.startNewGame、NewGameDialog.apply、Config 加载、当前路径导出/重放、候选显示 setter 和 GTP 命令链；本行反向关联 NewGameDialog 触达的全部 25 个活跃字面量配置键，其中原库存已有 22 个未映射键，play-ponder/use-play-mode 复用既有映射，new-game-komi 原已属于本行；putOpt 修复补全的是引用证据而非新发现 key。旧测试仅覆盖固定 AI 时间命令和倒计时解析，不构造 NewGameDialog，也不验证取消回滚、配置提交、续弈数据完整性、候选显示、让子、引擎能力/切换/就绪、命令事务、线程、DPI 或无障碍；新版实现与新旧动态对照均未开始。"
     },
     {
       "id": "BOARD-HISTORY-001",
