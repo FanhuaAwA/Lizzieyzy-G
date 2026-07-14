@@ -1,5 +1,5 @@
 {
-  "schema_version": 34,
+  "schema_version": 35,
   "allowed_statuses": [
     "未盘点",
     "已盘点",
@@ -1554,7 +1554,8 @@
         "Input:mouseExited",
         "Input:mouseDragged",
         "Input:mouseMoved",
-        "Input:mouseWheelMoved"
+        "Input:mouseWheelMoved",
+        "RightClickMenuExit:mouseExited"
       ],
       "legacy_input_bindings": [
         "IndependentMainBoardLockButton:mouseExited#1",
@@ -1829,7 +1830,8 @@
         "Input:mouseWheelMoved#4",
         "Input:mouseWheelMoved#5",
         "Input:mouseWheelMoved#6",
-        "Input:mouseWheelMoved#7"
+        "Input:mouseWheelMoved#7",
+        "RightClickMenuExit:mouseExited#1"
       ],
       "java_evidence": [
         {
@@ -1951,6 +1953,46 @@
         {
           "path": "src/main/java/featurecat/lizzie/gui/BoardRenderer.java",
           "symbol": "public BoardRenderer(boolean isIndependBoard)"
+        },
+        {
+          "path": "src/main/java/featurecat/lizzie/gui/RightClickMenu.java",
+          "symbol": "public RightClickMenu()"
+        },
+        {
+          "path": "src/main/java/featurecat/lizzie/gui/RightClickMenu.java",
+          "symbol": "private void trackPointAction()"
+        },
+        {
+          "path": "src/main/java/featurecat/lizzie/gui/RightClickMenu.java",
+          "symbol": "private void allow3()"
+        },
+        {
+          "path": "src/main/java/featurecat/lizzie/gui/RightClickMenu.java",
+          "symbol": "private void avoid()"
+        },
+        {
+          "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java",
+          "symbol": "public boolean openRightClickMenu(int x, int y)"
+        },
+        {
+          "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java",
+          "symbol": "public boolean ensureTrackingEngineWithWarning()"
+        },
+        {
+          "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java",
+          "symbol": "public void clearTrackedCoords()"
+        },
+        {
+          "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java",
+          "symbol": "public void triggerTrackingAnalysis()"
+        },
+        {
+          "path": "src/main/java/featurecat/lizzie/analysis/TrackingEngine.java",
+          "symbol": "public void sendTrackingRequest(BoardHistoryNode node, Set<String> trackedCoords)"
+        },
+        {
+          "path": "src/main/java/featurecat/lizzie/analysis/Leelaz.java",
+          "symbol": "Lizzie.config.trackingEnginePreload"
         }
       ],
       "config_keys": [
@@ -1982,12 +2024,15 @@
         "extra-mode",
         "play-sound",
         "show-previous-bestmoves-in-enginegame",
-        "use-play-mode"
+        "use-play-mode",
+        "tracking-engine-preload",
+        "tracking-engine-max-visits",
+        "tracking-engine-skip-warning"
       ],
-      "inputs_preconditions": "主窗口 Input 总挂接 mainPanel 的 MouseMotionListener 与 toolbar 的 MouseWheelListener；addInput 再挂接 mainPanel 的 click/key/wheel，removeInput 只移除后三者并切到 InputSubboard，因此 noInput 下 motion 与 toolbar wheel 仍会到达。主/独立棋盘模式、引擎对局、选择/插入/拖子、右键菜单、候选、子棋盘和 renderer 命中共同决定优先级。独立棋盘已由启动恢复、菜单、快捷键、设置或布局创建；三个 19×19 图标按钮的 ActionListener、windowClosing、resize 与 paint 不冒充 pointer binding，但属于生命周期验收，且旧按钮不可聚焦、无可访问名称/状态并默认隐藏到 hover。",
-      "success_behavior": "主窗口点击清除 Alt 选择；按下依次处理数子、临时拖子、右键菜单、框选、评论焦点、子棋盘、手动引擎/浮动棋盘、双击跳手、SGF 标记、普通/插黑/插白落子、右键菜单与悔棋；释放提交框选/拖子或中键播放变化；拖动处理框选、棋子编辑及胜率图 scrub；移动更新临时拖子、候选/问题手/自动变化/落点框并清理 press stone；滚轮先交子棋盘，再按变化预览或历史前进/后退。独立窗口另覆盖三个 hover 按钮和等边缩放/移动。目标版以 Avalonia 原生命令、Pointer 事件、Window 移动/缩放和单一坐标服务重建，保持主/独立板优先级及显式空路径；工具栏命令须可聚焦、有可见焦点、支持 Enter/Space，并暴露名称、角色及锁定/置顶状态。",
-      "failure_cancel_behavior": "旧版显式空路径、非法按钮/零滚轮、模式早退和无坐标分支不得误落子。迁移不得复刻这些破坏边界：removeInput 后 motion 与 toolbar wheel 仍生效，gtpShortKey 增删又不严格幂等；toolbar 坐标被当作 mainPanel 坐标，可能误命中子棋盘；全局 wheelWhen 跨组件丢弃同/回退时间戳，零旋转也可压掉后续事件；高频移动会抢焦点，queued graph scrub 无 owner/generation 取消。四副棋盘第四象限左击递增候选后漏 return，可继续触发主棋盘动作；单副棋盘中键 press 切布局后 release 又播放变化；数子模式只拦 press；stopTemporaryBoard 还误用白方快照恢复黑方候选状态。按下任何按钮可先结束评论编辑，双击第一下可能先落子，右键菜单禁用或离盘可直接 undo；拖子/插入和中键多步变化缺事务/finally，目标占用或异常可遗留 playSound=false、Draggedmode 或半更新棋谱，bothSync 还可能重复落子。独立拖子另误用主窗口 startcoords，数子/中键误用主 renderer；其 replayBranch 裸线程、bounds、资源与 DPI 风险保持。目标必须按输入 owner 正确挂卸并统一坐标，原子编辑棋谱、finally 恢复声音/ponder、取消陈旧 scrub/重放、验证 bounds，且取消/关闭无全局副作用。",
-      "data_io": "主窗口 Input 读取按钮/modifier/组件坐标与 wheel timestamp，改动棋谱历史、落子/SGF 标记、allow/avoid、选择/拖子/hover/press/menu/评论焦点、renderer 缓存、声音和引擎 pondering；toolbar wheel 与 mainPanel 共用 wheelWhen。ui-persist 的 independent-main-board 保存 bounds，布局保存可见性与位置；主/独立窗口紧邻链还读取允许双击/拖子、自动重放、子棋盘/胜率图/变化图、问题手/落点框、右键菜单、声音、额外棋盘模式和引擎对局历史键。目标需保留未知配置，以 typed、原子、可回滚写入替代同名异型和分步全局修改。",
+      "inputs_preconditions": "主窗口 Input 总挂接 mainPanel 的 MouseMotionListener 与 toolbar 的 MouseWheelListener；addInput 再挂接 mainPanel 的 click/key/wheel，removeInput 只移除后三者并切到 InputSubboard，因此 noInput 下 motion 与 toolbar wheel 仍会到达。主/独立棋盘模式、引擎对局、选择/插入/拖子、右键菜单、候选、子棋盘和 renderer 命中共同决定优先级。旧入口仅硬编码 BUTTON3 press；在数子、临时拖子、选择/Alt、评论/子棋盘、引擎对局、主窗口 FloatBoard、编辑态 clickOrder 和候选等更高优先级均未消费，且右键路由到棋盘并满足 blackorwhite==0 后，空点才进入共享的 RightClickMenu、有子进入 RightClickMenu2；show-right-menu=false 且非候选，或离盘时才直接悔棋。RightClickMenu 的唯一 MouseAdapter mouseExited 是显式空操作，真实菜单工作流属于 PopupMenuListener 与 ActionListener，不冒充 pointer binding。独立棋盘已由启动恢复、菜单、快捷键、设置或布局创建；三个 19×19 图标按钮的 ActionListener、windowClosing、resize 与 paint 不冒充 pointer binding，但属于生命周期验收，且旧按钮不可聚焦、无可访问名称/状态并默认隐藏到 hover。",
+      "success_behavior": "主窗口点击清除 Alt 选择；按下依次处理数子、临时拖子、右键菜单、框选、评论焦点、子棋盘、手动引擎/浮动棋盘、双击跳手、SGF 标记、普通/插黑/插白落子、右键菜单与悔棋；释放提交框选/拖子或中键播放变化；拖动处理框选、棋子编辑及胜率图 scrub；移动更新临时拖子、候选/问题手/自动变化/落点框并清理 press stone；滚轮先交子棋盘，再按变化预览或历史前进/后退。空点菜单按模式提供候选变化加分支、上一步、查找棋步、插黑/插白、编辑缓存撤销/重做/清空、KataGo Custom 优先点/清空、allow 添加/删除/单点、avoid/持续/清除，以及 KataGo 追踪/取消/清空/持续；追踪 visits 读取 tracking-engine-max-visits，主 KataGo 引擎加载后可按 tracking-engine-preload 预载。独立窗口另覆盖三个 hover 按钮和等边缩放/移动。目标版以 Avalonia 原生命令、Pointer 事件、Window 移动/缩放和单一坐标服务重建，保持主/独立板优先级及显式空路径；工具栏和上下文菜单命令须可聚焦、有可见焦点、支持 Enter/Space、Menu 键与 Shift+F10，并暴露名称、角色、锁定/置顶和动态选中状态。",
+      "failure_cancel_behavior": "旧版显式空路径、非法按钮/零滚轮、模式早退和无坐标分支不得误落子。迁移不得复刻这些破坏边界：removeInput 后 motion 与 toolbar wheel 仍生效，gtpShortKey 增删又不严格幂等；toolbar 坐标被当作 mainPanel 坐标，可能误命中子棋盘；全局 wheelWhen 跨组件丢弃同/回退时间戳，零旋转也可压掉后续事件；高频移动会抢焦点，queued graph scrub 无 owner/generation 取消。四副棋盘第四象限左击递增候选后漏 return，可继续触发主棋盘动作；单副棋盘中键 press 切布局后 release 又播放变化；数子模式只拦 press；stopTemporaryBoard 还误用白方快照恢复黑方候选状态。按下任何按钮可先结束评论编辑，双击第一下可能先落子，右键菜单禁用或离盘可直接 undo；BUTTON3 而非 isPopupTrigger 还漏掉 macOS Control-click、release-trigger、触控/笔与键盘入口。RightClickMenu 共享静态坐标且 zoomOut/zoomIn 往返可截断；隐藏时每次创建未关闭的非 daemon Timer，延迟在线程外改全局标志。多处字符串用 == 空串，allow3 删除多点时只保留最后一个其他点，cancelavoid 可见性与持续选中态会陈旧；菜单命令、内存与绘制分步提交，addSuggestionAsBranch、插入/编辑和声音恢复缺事务/finally。tracking-engine-max-visits 未验证负数、零或上限，并以 int 乘 trackedCoords.size，可能溢出或让第二引擎资源失控；目标必须做有界校验和 checked 计算。ensureTrackingEngineWithWarning 实际不调用警告，tracking-engine-skip-warning 成为兼容死键，追踪会无确认启动第二引擎且失败回滚不完整。独立拖子另误用主窗口 startcoords，数子/中键误用主 renderer；其 replayBranch 裸线程、bounds、资源与 DPI 风险保持。目标必须按输入 owner 正确挂卸并统一坐标，原子编辑棋谱、finally 恢复声音/ponder、取消陈旧 scrub/重放、验证 bounds，让菜单取消/关闭无全局副作用，并给追踪进程明确确认、所有权、取消和 teardown。",
+      "data_io": "主窗口 Input 读取按钮/modifier/组件坐标与 wheel timestamp，改动棋谱历史、落子/SGF 标记、allow/avoid、选择/拖子/hover/press/menu/评论焦点、renderer 缓存、声音和引擎 pondering；toolbar wheel 与 mainPanel 共用 wheelWhen。空点菜单还发送 setmaxpolicy/clearpolicy、analyze allow/avoid 与追踪分析请求，维护优先点、allow/avoid 字符串、trackedCoords、keepTracking 和编辑前后快照，并可能复制当前引擎命令启动第二进程。ui-persist 的 independent-main-board 保存 bounds，布局保存可见性与位置；主/独立窗口紧邻链还读取允许双击/拖子、自动重放、子棋盘/胜率图/变化图、问题手/落点框、右键菜单、声音、额外棋盘模式、引擎对局历史及 tracking-engine-preload/max-visits/skip-warning。21 个 RightClickMenu.* 本地化资源键不属于当前仅接纳 Menu/menu.* 键名空间的菜单资源索引；12 个 raster 图标无 DPI 变体，资源流未关闭且缺资源可能让构造失败。目标需保留未知配置，以 typed、原子、可回滚写入替代同名异型和分步全局修改，并为引擎命令、棋谱和 UI 状态设置一致提交边界。",
       "external_dependencies": [
         "操作系统窗口管理",
         "分析引擎（候选、ponder、手动引擎对局与变化重放）"
@@ -2023,9 +2068,9 @@
           "symbol": "void suggestionTablePreviewClearsWhenMouseReturnsToBoardCandidate()"
         }
       ],
-      "manual_acceptance": "在普通、noInput/InputSubboard、浮动/双引擎、数子、选择、插入、拖子、评论编辑、引擎对局和右键菜单状态覆盖主画布/toolbar 的全部按钮、modifier、双击、滚轮正负/零/同时间戳、子棋盘命中、胜率图拖扫、进入/离开与显式空路径；验证 removeInput 后 motion/wheel 路由、跨组件坐标和焦点不串线。再从菜单启动四种独立棋盘模式，覆盖三个按钮、窗口缩放/移动和相同棋谱动作。用隔离棋谱、故障注入核对 undo、重复落子、陈旧 scrub/replay 取消、声音/ponder/树事务不泄漏；覆盖异常 bounds、多屏/DPI、触控/笔、键盘等价入口和 Narrator；10 分钟 hover/drag/wheel/replay 测帧时间、分配、线程、窗口、句柄和 listener 不增长。",
+      "manual_acceptance": "在普通、noInput/InputSubboard、浮动/双引擎、数子、选择、插入、拖子、评论编辑、引擎对局和右键菜单状态覆盖主画布/toolbar 的全部按钮、modifier、双击、滚轮正负/零/同时间戳、子棋盘命中、胜率图拖扫、进入/离开与显式空路径；验证 removeInput 后 motion/wheel 路由、跨组件坐标和焦点不串线。再从菜单启动四种独立棋盘模式，覆盖三个按钮、窗口缩放/移动和相同棋谱动作。对空点/有子/盘外及主/独立棋盘核对 RightClickMenu/RightClickMenu2 分流，覆盖对局/KataGo Custom/allow/avoid/已追踪可见性、全部空点菜单动作、精确引擎命令与 analysis 请求；注入无引擎命令、启动/发送失败和编辑异常，核对空点门、GameInfo 保留、状态回滚、追踪异步启动/清空/常驻 teardown、弹窗反复显隐及 200ms 延迟，并以 tracking-engine-max-visits 的负数、0、INT_MAX 和多个追踪点验证拒绝、上限及乘法不溢出。用隔离棋谱核对 undo、重复落子、陈旧 scrub/replay 取消、声音/ponder/树事务不泄漏；覆盖异常 bounds、多屏/DPI、大字号/长本地化、触控/笔、macOS Control-click、release-trigger、Menu/Shift+F10、焦点与 Narrator；10 分钟 hover/drag/wheel/replay/popup 测帧时间、分配、线程、窗口、句柄、Timer 和 listener 不增长。",
       "status": "已盘点",
-      "evidence": "五个 pointer 来源共 22 个事件、273 条可达路径：既有三按钮 6 条、独立窗口 219 条；Input 精确为 clicked 2、pressed 22、released 5、entered 1、exited 2、dragged 4、moved 5、wheel 7，共 48 条。现有一项测试真实调用 Input.mousePressed 验证引擎对局胜率图命中；三项测试覆盖下游主棋盘 hover，其他胜率图测试直接调用 onMouseDragged。没有 listener 挂卸、toolbar wheel/去重、选择、评论焦点、右键 undo、拖子/插入事务、子棋盘、触控/DPI/键盘等价或无障碍测试。本轮仅建立基线，不运行旧 GUI、不写用户配置、不改棋谱、不联网、不启动引擎且不修改旧 Java。"
+      "evidence": "六个 pointer 来源共 23 个事件、274 条可达路径：既有三按钮 6 条、独立窗口 219 条；Input 精确为 clicked 2、pressed 22、released 5、entered 1、exited 2、dragged 4、moved 5、wheel 7，共 48 条；RightClickMenu 仅新增 1 条空 mouseExited。现有一项测试真实调用 Input.mousePressed 验证引擎对局胜率图命中；三项测试覆盖下游主棋盘 hover，其他胜率图测试直接调用 onMouseDragged。旧测试未执行 RightClickMenu 构造器或 dispatch 其 PopupMenuListener、MouseAdapter 或任一 ActionListener；追踪图标、TrackingEngine 请求序列化和 ensureTrackingEngine 回归测试仅是下游间接证据，不证明菜单入口、可见性、动作或回滚。没有 listener 挂卸、toolbar wheel/去重、选择、评论焦点、右键菜单动作/undo、拖子/插入事务、子棋盘、触控/DPI/键盘等价或无障碍测试。本轮仅建立静态基线，不运行旧 GUI、不写用户配置、不改棋谱、不联网、不启动引擎且不修改旧 Java。"
     },
     {
       "id": "BOARD-FLOAT-INPUT-001",
