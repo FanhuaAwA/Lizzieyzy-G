@@ -2221,8 +2221,8 @@ def validate_matrix(
     dict[str, list[str]],
     dict[str, list[str]],
 ]:
-    if matrix.get("schema_version") != 42:
-        raise ValueError("Matrix schema_version must be 42")
+    if matrix.get("schema_version") != 43:
+        raise ValueError("Matrix schema_version must be 43")
     allowed_statuses = matrix.get("allowed_statuses")
     if allowed_statuses != list(ALLOWED_STATUSES):
         raise ValueError("Matrix allowed_statuses differ from the repository contract")
@@ -2352,6 +2352,52 @@ def validate_matrix(
     )
 
 
+def validate_workflow_guard(
+    matrix: dict[str, Any],
+    config_entries: list[dict[str, Any]],
+    matrix_ids_by_config_key: dict[str, list[str]],
+    matrix_ids_by_menu_key: dict[str, list[str]],
+    *,
+    row_id: str,
+    source_path: str,
+    expected_config_keys: set[str],
+    expected_menu_keys: set[str],
+    expected_input_cases: set[str],
+    expected_input_bindings: set[str],
+    required_evidence: set[tuple[str, str]],
+) -> None:
+    source_name = Path(source_path).name
+    actual_config_keys = {
+        entry["key"]
+        for entry in config_entries
+        if any(reference["path"] == source_path for reference in entry["references"])
+    }
+    if actual_config_keys != expected_config_keys:
+        raise ValueError(
+            f"{source_name} config key set changed: "
+            f"missing={sorted(expected_config_keys - actual_config_keys)}, "
+            f"unexpected={sorted(actual_config_keys - expected_config_keys)}"
+        )
+    unmapped_config_keys = sorted(
+        key
+        for key in expected_config_keys
+        if row_id not in matrix_ids_by_config_key.get(key, [])
+    )
+    if unmapped_config_keys:
+        raise ValueError(f"{source_name} config keys must map to {row_id}: {unmapped_config_keys}")
+    for menu_key in expected_menu_keys:
+        if row_id not in matrix_ids_by_menu_key.get(menu_key, []):
+            raise ValueError(f"{menu_key} must map to {row_id}")
+    row = next(entry for entry in matrix["rows"] if entry["id"] == row_id)
+    if set(row["legacy_input_cases"]) != expected_input_cases:
+        raise ValueError(f"{row_id} input cases changed")
+    if set(row["legacy_input_bindings"]) != expected_input_bindings:
+        raise ValueError(f"{row_id} input bindings changed")
+    actual_evidence = {(entry["path"], entry["symbol"]) for entry in row["java_evidence"]}
+    if not required_evidence <= actual_evidence:
+        raise ValueError(f"{row_id} entry evidence is incomplete")
+
+
 def build_inventory(legacy_root: Path, matrix_path: Path) -> dict[str, Any]:
     validate_comment_stripper()
     validate_input_parser()
@@ -2396,90 +2442,152 @@ def build_inventory(legacy_root: Path, matrix_path: Path) -> dict[str, Any]:
         }
         for key, references in config_references.items()
     ]
-    new_game_dialog_path = "src/main/java/featurecat/lizzie/gui/NewGameDialog.java"
-    expected_new_game_keys = {
-        "advance-time-settings",
-        "advance-time-txt",
-        "auto-save-played-game",
-        "check-continue-play",
-        "check-play-black",
-        "genmove-game-notime",
-        "kata-playouts-txt",
-        "kata-time-byoyomi-secs",
-        "kata-time-byoyomi-times",
-        "kata-time-fisher-increment-secs",
-        "kata-time-main-time-mins",
-        "kata-time-settings",
-        "kata-time-type",
-        "kata-visits-playouts-settings",
-        "kata-visits-txt",
-        "limit-my-time",
-        "max-game-thinking-time-seconds",
-        "my-byoyomo-seconds",
-        "my-byoyomo-times",
-        "my-save-time",
-        "new-game-handicap",
-        "new-game-komi",
-        "play-ponder",
-        "use-free-handicap",
-        "use-play-mode",
-    }
-    actual_new_game_keys = {
-        entry["key"]
-        for entry in config_entries
-        if any(reference["path"] == new_game_dialog_path for reference in entry["references"])
-    }
-    if actual_new_game_keys != expected_new_game_keys:
-        raise ValueError(
-            "NewGameDialog config key set changed: "
-            f"missing={sorted(expected_new_game_keys - actual_new_game_keys)}, "
-            f"unexpected={sorted(actual_new_game_keys - expected_new_game_keys)}"
-        )
-    unmapped_new_game_keys = sorted(
-        key
-        for key in expected_new_game_keys
-        if "GAME-HUMAN-AI-001" not in matrix_ids_by_config_key.get(key, [])
+    validate_workflow_guard(
+        matrix,
+        config_entries,
+        matrix_ids_by_config_key,
+        matrix_ids_by_menu_key,
+        row_id="GAME-HUMAN-AI-001",
+        source_path="src/main/java/featurecat/lizzie/gui/NewGameDialog.java",
+        expected_config_keys={
+            "advance-time-settings",
+            "advance-time-txt",
+            "auto-save-played-game",
+            "check-continue-play",
+            "check-play-black",
+            "genmove-game-notime",
+            "kata-playouts-txt",
+            "kata-time-byoyomi-secs",
+            "kata-time-byoyomi-times",
+            "kata-time-fisher-increment-secs",
+            "kata-time-main-time-mins",
+            "kata-time-settings",
+            "kata-time-type",
+            "kata-visits-playouts-settings",
+            "kata-visits-txt",
+            "limit-my-time",
+            "max-game-thinking-time-seconds",
+            "my-byoyomo-seconds",
+            "my-byoyomo-times",
+            "my-save-time",
+            "new-game-handicap",
+            "new-game-komi",
+            "play-ponder",
+            "use-free-handicap",
+            "use-play-mode",
+        },
+        expected_menu_keys={
+            "Menu.newGenmoveGame",
+            "Menu.newAnalyzeModeGame",
+            "Menu.continueGameAgainstAi",
+            "Menu.continueGenmoveGameAsWhite",
+            "Menu.continueGenmoveGameAsBlack",
+            "Menu.continueAnalyzeGameAsWhite",
+            "Menu.continueAnalyzeGameAsBlack",
+        },
+        expected_input_cases={
+            "keyPressed:VK_N",
+            "keyPressed:VK_ENTER",
+            "InputIndependentMainBoard:keyPressed:VK_N",
+            "InputIndependentMainBoard:keyPressed:VK_ENTER",
+        },
+        expected_input_bindings={
+            "keyPressed:VK_N#2",
+            "keyPressed:VK_ENTER#1",
+            "keyPressed:VK_ENTER#2",
+            "InputIndependentMainBoard:keyPressed:VK_N#2",
+            "InputIndependentMainBoard:keyPressed:VK_ENTER#1",
+            "InputIndependentMainBoard:keyPressed:VK_ENTER#2",
+        },
+        required_evidence={
+            ("src/main/java/featurecat/lizzie/gui/Input.java", "keyPressed"),
+            (
+                "src/main/java/featurecat/lizzie/gui/InputIndependentMainBoard.java",
+                "keyPressed",
+            ),
+            ("src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "startNewGame"),
+            (
+                "src/main/java/featurecat/lizzie/gui/LizzieFrame.java",
+                "startAnalyzeGameDialog",
+            ),
+            (
+                "src/main/java/featurecat/lizzie/gui/LizzieFrame.java",
+                "public void continueAiPlaying(",
+            ),
+        },
     )
-    if unmapped_new_game_keys:
-        raise ValueError(
-            "NewGameDialog config keys must map to GAME-HUMAN-AI-001: "
-            f"{unmapped_new_game_keys}"
-        )
-    for menu_key in ("Menu.newGenmoveGame", "Menu.newAnalyzeModeGame"):
-        if "GAME-HUMAN-AI-001" not in matrix_ids_by_menu_key.get(menu_key, []):
-            raise ValueError(f"{menu_key} must map to GAME-HUMAN-AI-001")
-    expected_new_game_cases = {
-        "keyPressed:VK_N",
-        "InputIndependentMainBoard:keyPressed:VK_N",
-    }
-    expected_new_game_bindings = {
-        "keyPressed:VK_N#2",
-        "InputIndependentMainBoard:keyPressed:VK_N#2",
-    }
-    new_game_row = next(
-        row for row in matrix["rows"] if row["id"] == "GAME-HUMAN-AI-001"
+    validate_workflow_guard(
+        matrix,
+        config_entries,
+        matrix_ids_by_config_key,
+        matrix_ids_by_menu_key,
+        row_id="ENGINE-GAME-001",
+        source_path="src/main/java/featurecat/lizzie/gui/NewEngineGameDialog.java",
+        expected_config_keys={
+            "advance-black-time-txt",
+            "advance-white-time-txt",
+            "disable-wrn-in-game",
+            "engine-pk-ponder",
+            "engine-sgf-random",
+            "first-engine-min-move",
+            "first-engine-resign-move-counts",
+            "first-engine-resign-winrate",
+            "new-engine-game-handicap",
+            "new-engine-game-komi",
+            "pk-advance-time-settings",
+            "second-engine-min-move",
+            "second-engine-resign-move-counts",
+            "second-engine-resign-winrate",
+        },
+        expected_menu_keys={"Menu.newEngineGame"},
+        expected_input_cases={
+            "keyPressed:VK_E",
+            "InputIndependentMainBoard:keyPressed:VK_E",
+        },
+        expected_input_bindings={
+            "keyPressed:VK_E#2",
+            "InputIndependentMainBoard:keyPressed:VK_E#2",
+        },
+        required_evidence={
+            (
+                "src/main/java/featurecat/lizzie/gui/Input.java",
+                "startEngineGameDialog",
+            ),
+            (
+                "src/main/java/featurecat/lizzie/gui/InputIndependentMainBoard.java",
+                "startEngineGameDialog",
+            ),
+            ("src/main/java/featurecat/lizzie/gui/Menu.java", "Menu.newEngineGame"),
+            (
+                "src/main/java/featurecat/lizzie/gui/LizzieFrame.java",
+                "public void startEngineGameDialog()",
+            ),
+            (
+                "src/main/java/featurecat/lizzie/gui/NewEngineGameDialog.java",
+                "public void apply()",
+            ),
+            (
+                "src/main/java/featurecat/lizzie/analysis/EngineManager.java",
+                "public boolean startEngineGame(",
+            ),
+        },
     )
-    if set(new_game_row["legacy_input_cases"]) != expected_new_game_cases:
-        raise ValueError("GAME-HUMAN-AI-001 input cases changed")
-    if set(new_game_row["legacy_input_bindings"]) != expected_new_game_bindings:
-        raise ValueError("GAME-HUMAN-AI-001 input bindings changed")
-    required_new_game_evidence = {
-        ("src/main/java/featurecat/lizzie/gui/Input.java", "keyPressed"),
-        (
-            "src/main/java/featurecat/lizzie/gui/InputIndependentMainBoard.java",
-            "keyPressed",
-        ),
-        ("src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "startNewGame"),
-        (
-            "src/main/java/featurecat/lizzie/gui/LizzieFrame.java",
-            "startAnalyzeGameDialog",
-        ),
+    expected_engine_game_calls = {
+        "src/main/java/featurecat/lizzie/gui/Input.java": 1,
+        "src/main/java/featurecat/lizzie/gui/InputIndependentMainBoard.java": 1,
+        "src/main/java/featurecat/lizzie/gui/Menu.java": 3,
     }
-    actual_new_game_evidence = {
-        (entry["path"], entry["symbol"]) for entry in new_game_row["java_evidence"]
-    }
-    if not required_new_game_evidence <= actual_new_game_evidence:
-        raise ValueError("GAME-HUMAN-AI-001 entry evidence is incomplete")
+    actual_engine_game_calls = {}
+    for path in (legacy_root / "src/main/java").rglob("*.java"):
+        count = strip_java_comments(
+            path.read_text(encoding="utf-8", errors="replace")
+        ).count("startEngineGameDialog();")
+        if count:
+            actual_engine_game_calls[path.relative_to(legacy_root).as_posix()] = count
+    if actual_engine_game_calls != expected_engine_game_calls:
+        raise ValueError(
+            f"startEngineGameDialog call sites changed: {actual_engine_game_calls}"
+        )
     mapped_keys = sum(bool(entry["matrix_ids"]) for entry in config_entries)
     menu["keys"] = [
         {
@@ -2557,7 +2665,7 @@ def build_inventory(legacy_root: Path, matrix_path: Path) -> dict[str, Any]:
         raise ValueError("Every normalized legacy input path must map to the matrix")
 
     return {
-        "schema_version": 42,
+        "schema_version": 43,
         "source": {
             "root": "../lizzieyzy-next-main",
             "version": read_legacy_version(legacy_root),

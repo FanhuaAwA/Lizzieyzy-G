@@ -1,5 +1,5 @@
 {
-  "schema_version": 42,
+  "schema_version": 43,
   "allowed_statuses": [
     "未盘点",
     "已盘点",
@@ -58,17 +58,31 @@
     {
       "id": "GAME-HUMAN-AI-001",
       "category": "棋盘与对局",
-      "legacy_entry": "菜单 Menu.newGenmoveGame、Input/InputIndependentMainBoard 的 N 默认分支，或 Menu.newAnalyzeModeGame 调用 startAnalyzeGameDialog 后在 noAnalyze 时回退到 LizzieFrame.startNewGame，并由 NewGameDialog 配置人机对局；菜单文字虽写 Alt+N，但仅 Alt+N 且允许分析时实际转入整谱分析，禁用分析时 Alt+N 以及 Ctrl/Meta/Shift+N 仍落入人机对局",
-      "legacy_menu_keys": ["Menu.newGenmoveGame", "Menu.newAnalyzeModeGame"],
+      "legacy_entry": "菜单 Menu.newGenmoveGame、Input/InputIndependentMainBoard 的 N 默认分支，或 Menu.newAnalyzeModeGame 调用 startAnalyzeGameDialog 后在 noAnalyze 时回退到 LizzieFrame.startNewGame，并由 NewGameDialog 配置人机对局；主/独立棋盘 Enter 与 Alt+Enter 及人机续弈菜单的四个子项调用 continueAiPlaying；菜单文字虽写 Alt+N，但仅 Alt+N 且允许分析时实际转入整谱分析，禁用分析时 Alt+N 以及 Ctrl/Meta/Shift+N 仍落入人机对局",
+      "legacy_menu_keys": [
+        "Menu.newGenmoveGame",
+        "Menu.newAnalyzeModeGame",
+        "Menu.continueGameAgainstAi",
+        "Menu.continueGenmoveGameAsWhite",
+        "Menu.continueGenmoveGameAsBlack",
+        "Menu.continueAnalyzeGameAsWhite",
+        "Menu.continueAnalyzeGameAsBlack"
+      ],
       "legacy_menu_labels": [],
       "legacy_shortcuts": [],
       "legacy_input_cases": [
         "keyPressed:VK_N",
-        "InputIndependentMainBoard:keyPressed:VK_N"
+        "keyPressed:VK_ENTER",
+        "InputIndependentMainBoard:keyPressed:VK_N",
+        "InputIndependentMainBoard:keyPressed:VK_ENTER"
       ],
       "legacy_input_bindings": [
         "keyPressed:VK_N#2",
-        "InputIndependentMainBoard:keyPressed:VK_N#2"
+        "keyPressed:VK_ENTER#1",
+        "keyPressed:VK_ENTER#2",
+        "InputIndependentMainBoard:keyPressed:VK_N#2",
+        "InputIndependentMainBoard:keyPressed:VK_ENTER#1",
+        "InputIndependentMainBoard:keyPressed:VK_ENTER#2"
       ],
       "java_evidence": [
         { "path": "src/main/java/featurecat/lizzie/gui/Input.java", "symbol": "keyPressed" },
@@ -76,6 +90,7 @@
         { "path": "src/main/java/featurecat/lizzie/gui/Menu.java", "symbol": "Menu.newGenmoveGame" },
         { "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "symbol": "startNewGame" },
         { "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "symbol": "startAnalyzeGameDialog" },
+        { "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "symbol": "public void continueAiPlaying(" },
         { "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "symbol": "sendAiTime" },
         { "path": "src/main/java/featurecat/lizzie/gui/NewGameDialog.java", "symbol": "class NewGameDialog" },
         { "path": "src/main/java/featurecat/lizzie/gui/NewGameDialog.java", "symbol": "public void apply()" },
@@ -110,9 +125,9 @@
         "use-free-handicap",
         "use-play-mode"
       ],
-      "inputs_preconditions": "应用已启动；用户从三个 Menu.newGenmoveGame 入口之一、主/独立棋盘未进入整谱分析分支的 N，或 Menu.newAnalyzeModeGame 在当前引擎 noAnalyze 时的回退打开模态窗口。没有可选引擎仍能打开，直到确认才提示。窗口读取上次执色、续弈、贴目、让子、人类/AI 时间制、KataGo visits/playouts、后台思考、自由让子、落子模式和自动保存设置；贡献算力中则在打开窗口前拒绝。",
-      "success_behavior": "确认后可切换所选引擎，按执色、贴目和让子建立新对局；旧“续弈”只导出当前节点到根的落子/pass/start stones，清盘后重放该单一路径，会丢弃其他分支、评论、节点分析、标记和属性，目标版必须保留完整棋谱树或在用户明确批准后从不可变快照建立独立对局，不得复制该数据损失。流程更新 GameInfo、棋盘/标题/菜单状态及 25 个持久配置键；黑/白候选显示框每次默认 false，确认还会把 toolbar/menu 与 Config.showBlackCandidates/showWhiteCandidates 置为所选值，因此默认确认会关闭双方候选显示。引擎就绪后依普通、进阶、KataGo 或无时间模式设置人类倒计时与 AI 时间；旧版向非 KataGo 也先发送 kata-time_settings 再警告，并不检查类型就发送 maxVisits/maxPlayouts，空白或非正值用 1125899906842624 哨兵。仅 isKatago 且 use-free-handicap 才发 place_free_handicap，否则发 fixed_handicap，轮到引擎时再发对应颜色 genmove。目标版必须先做 capability 与范围校验，用明确的取消限额语义替代巨大哨兵，不得先发不支持命令后警告，并把设置、棋盘替换和命令表达为可取消且失败可恢复的事务。",
-      "failure_cancel_behavior": "无可选引擎时旧版提示并留在窗口；直接进入 startNewGame 时，窗口关闭只恢复该入口观察到的先前 pondering，已先停止的 AI/策略状态以及自由让子、时间类型、落子模式、自动保存等即时内存写入不会回滚。startAnalyzeGameDialog 的 noAnalyze fallback 会在外层先关闭 pondering，再进入 startNewGame；此时取消不会恢复 fallback 前的 pondering，外层也不补偿。打开窗口前 stopAiPlayingAndPolicy 还可能异步自动保存刚停止的旧局，取消也不撤销，目录创建/保存失败只打印堆栈。确认路径在校验全部数字前就停止对局并可能切换引擎；贴目/让子解析异常静默回退 7.5/0，后续时间解析失败也静默留窗且可能已经部分修改引擎、配置或临时续弈棋步。确认后后台线程无取消/超时地 sleep 轮询引擎，忽略中断语义并越过 EDT 更新 UI；引擎未就绪、退出或命令失败可永久等待或遗留半初始化对局。目标版必须先完整校验，在取消、解析、切换、启动、超时、崩溃和拒绝命令时恢复原棋盘、引擎、分析、计时器及配置，并给出可理解反馈。",
+      "inputs_preconditions": "应用已启动；用户从三个 Menu.newGenmoveGame 入口之一、主/独立棋盘未进入整谱分析分支的 N，或 Menu.newAnalyzeModeGame 在当前引擎 noAnalyze 时的回退打开模态窗口。没有可选引擎仍能打开，直到确认才提示。Enter/Alt+Enter 与四个人机续弈菜单子项不要求已有正在运行的人机对局，只要非贡献算力且引擎列表非空即可从任意当前棋盘调用；独立棋盘监听器在 EngineManager 双引擎对局中仍然活跃。窗口读取上次执色、续弈、贴目、让子、人类/AI 时间制、KataGo visits/playouts、后台思考、自由让子、落子模式和自动保存设置；贡献算力中则在打开窗口前拒绝。",
+      "success_behavior": "确认后可切换所选引擎，按执色、贴目和让子建立新对局；旧“续弈”只导出当前节点到根的落子/pass/start stones，清盘后重放该单一路径，会丢弃其他分支、评论、节点分析、标记和属性，目标版必须保留完整棋谱树或在用户明确批准后从不可变快照建立独立对局，不得复制该数据损失。流程更新 GameInfo、棋盘/标题/菜单状态及 25 个持久配置键；黑/白候选显示框每次默认 false，确认还会把 toolbar/menu 与 Config.showBlackCandidates/showWhiteCandidates 置为所选值，因此默认确认会关闭双方候选显示。引擎就绪后依普通、进阶、KataGo 或无时间模式设置人类倒计时与 AI 时间；旧版向非 KataGo 也先发送 kata-time_settings 再警告，并不检查类型就发送 maxVisits/maxPlayouts，空白或非正值用 1125899906842624 哨兵。仅 isKatago 且 use-free-handicap 才发 place_free_handicap，否则发 fixed_handicap，轮到引擎时再发对应颜色 genmove。Enter 调用 continueAiPlaying(true, true, true, true)，Alt+Enter 调用 continueAiPlaying(false, true, true, true)；两个 genmove 菜单子项明确 AI 执色且 continueNow=false，两个分析菜单子项在 noAnalyze=false 时用 analysis、noAnalyze=true 时回退 genmove。目标版必须先做 capability 与范围校验，用明确的取消限额语义替代巨大哨兵，不得先发不支持命令后警告，并把设置、棋盘替换和命令表达为可取消且失败可恢复的事务。",
+      "failure_cancel_behavior": "无可选引擎时旧版提示并留在窗口；直接进入 startNewGame 时，窗口关闭只恢复该入口观察到的先前 pondering，已先停止的 AI/策略状态以及自由让子、时间类型、落子模式、自动保存等即时内存写入不会回滚。startAnalyzeGameDialog 的 noAnalyze fallback 会在外层先关闭 pondering，再进入 startNewGame；此时取消不会恢复 fallback 前的 pondering，外层也不补偿。打开窗口前 stopAiPlayingAndPolicy 还可能异步自动保存刚停止的旧局，取消也不撤销，目录创建/保存失败只打印堆栈。确认路径在校验全部数字前就停止对局并可能切换引擎；贴目/让子解析异常静默回退 7.5/0，后续时间解析失败也静默留窗且可能已经部分修改引擎、配置或临时续弈棋步。确认后后台线程无取消/超时地 sleep 轮询引擎，忽略中断语义并越过 EDT 更新 UI；引擎未就绪、退出或命令失败可永久等待或遗留半初始化对局。旧 continueAiPlaying 没有 isEngineGame guard；双引擎对局中独立棋盘 Enter/Alt+Enter 可改写人机/分析标志、工具栏、计时与 pondering，甚至向全局引擎再发 genmove。目标版必须先完整校验，在取消、解析、切换、启动、超时、崩溃和拒绝命令时恢复原棋盘、引擎、分析、计时器及配置；活动双引擎对局中的人机续弈请求必须拒绝或经显式协调，不得破坏协议状态，并给出可理解反馈。",
       "data_io": "读取 config.txt 的 ui/leelaz 叶键并修改内存 JSONObject；旧流程不在对话框内调用 Config.save/persist，依赖后续全局保存。兼容层必须保留拼写错误的 my-byoyomo-seconds/my-byoyomo-times；new-game-handicap 索引 0..8 映射 0,2,3,4,5,6,7,8,9，my-save-time 索引 0..7 映射 -1,5,10,20,30,60,120,180 分钟，my-byoyomo-seconds 索引 0..7 映射 -1,10,15,20,30,40,60,120 秒，my-byoyomo-times 索引 0..5 映射 1,2,3,5,10,20 次，kata-time-type 仅 0/1/2 对应读秒/Fischer/包干。Swing JComboBox 的 -1 是合法的“无选中项”：旧版让子应用时会因 null 被 catch 后回退为 0 且可能把 -1 写回，my-save-time 可保存 -1，kata-time-type=-1 则可能拼出不完整命令；小于 -1 或大于等于项目数才会令 setSelectedIndex 抛错并使窗口构造失败。目标导入须分别处理 -1 与真正越界值，保留原文件并报告无效已知值，不得静默改写，领域模型也不得复制拼写错误或把索引误当实际值。停止旧局可能写工作目录 MyGames 下的 SGF；确认时更新 GameInfo、当前棋盘/单一路径 move list、候选显示、计时器和 UI 状态，并向所选 GTP 引擎发送 komi、time_settings/kata-time_settings/kata-set-param、place_free_handicap/fixed_handicap 与 genmove。",
       "external_dependencies": ["GTP 引擎进程"],
       "target_modules": ["Lizzie.Core", "Lizzie.Engine", "Lizzie.Desktop"],
@@ -120,9 +135,9 @@
         { "path": "src/test/java/featurecat/lizzie/gui/LizzieFrameAiTimeControlTest.java", "symbol": "LizzieFrameAiTimeControlTest" },
         { "path": "src/test/java/featurecat/lizzie/rules/EngineCountDownFixedTimeTest.java", "symbol": "EngineCountDownFixedTimeTest" }
       ],
-      "manual_acceptance": "在隔离配置和确定性测试 GTP 中，从菜单三处、主/独立棋盘 Plain/Ctrl/Meta/Shift/Alt+N 及 noAnalyze 的分析对局入口进入，覆盖无引擎、贡献算力、取消和确认；另以已开启 pondering 从 noAnalyze 分析入口进入后取消，记录旧版 pondering 丢失，并验证目标版事务恢复。分别选择黑/白、0/2–9 让子、自由/固定让子、续弈、双方候选显示、后台思考、普通/进阶/KataGo 读秒/Fischer/包干/无时间、人类倒计时、visits/playouts、落子模式和自动保存，核对 25 键、索引映射、棋谱树/评论/分析/标记、GameInfo、候选显示、标题、计时器及精确命令顺序。用非 KataGo 覆盖 Kata 时间与 visits/playouts 能力拒绝，并验证清除限额不发送巨大哨兵；对空白/非法、-1 无选中、真正越界（小于 -1 或大于等于项目数）、其他损坏索引、切换失败、未就绪、迟到就绪、拒绝命令、崩溃和取消注入故障，确认兼容层能区分旧行为且目标流程不会部分提交、丢棋谱或无限等待。用键盘、窗口关闭、不同 DPI/字号和屏幕阅读器检查焦点、标签、错误态及恢复；最后用真实 KataGo 复核让子、时间制、先后手和正常退出。",
+      "manual_acceptance": "在隔离配置和确定性测试 GTP 中，从菜单三处、主/独立棋盘 Plain/Ctrl/Meta/Shift/Alt+N 及 noAnalyze 的分析对局入口进入，覆盖无引擎、贡献算力、取消和确认；另以已开启 pondering 从 noAnalyze 分析入口进入后取消，记录旧版 pondering 丢失，并验证目标版事务恢复。分别选择黑/白、0/2–9 让子、自由/固定让子、续弈、双方候选显示、后台思考、普通/进阶/KataGo 读秒/Fischer/包干/无时间、人类倒计时、visits/playouts、落子模式和自动保存，核对 25 键、索引映射、棋谱树/评论/分析/标记、GameInfo、候选显示、标题、计时器及精确命令顺序；在两套棋盘分别以 Enter/Alt+Enter 复核 continueAiPlaying 的首参数 true/false，并从五个人机续弈菜单键覆盖四个子项的模式/执色组合，两个分析子项分别测试 noAnalyze=true/false。在活动双引擎对局中从独立棋盘 Enter/Alt+Enter 及至少一个菜单续弈入口触发，目标版须拒绝或协调且两个 GTP transcript、棋盘、计时、工具栏与模式标志不变。用非 KataGo 覆盖 Kata 时间与 visits/playouts 能力拒绝，并验证清除限额不发送巨大哨兵；对空白/非法、-1 无选中、真正越界（小于 -1 或大于等于项目数）、其他损坏索引、切换失败、未就绪、迟到就绪、拒绝命令、崩溃和取消注入故障，确认兼容层能区分旧行为且目标流程不会部分提交、丢棋谱或无限等待。用键盘、窗口关闭、不同 DPI/字号和屏幕阅读器检查焦点、标签、错误态及恢复；最后用真实 KataGo 复核让子、时间制、先后手和正常退出。",
       "status": "已盘点",
-      "evidence": "已静态贯通三个 Menu.newGenmoveGame、Menu.newAnalyzeModeGame 的 noAnalyze 回退、主/独立棋盘 N、LizzieFrame.startNewGame、NewGameDialog.apply、Config 加载、当前路径导出/重放、候选显示 setter 和 GTP 命令链；本行反向关联 NewGameDialog 触达的全部 25 个活跃字面量配置键，其中原库存已有 22 个未映射键，play-ponder/use-play-mode 复用既有映射，new-game-komi 原已属于本行；putOpt 修复补全的是引用证据而非新发现 key。旧测试仅覆盖固定 AI 时间命令和倒计时解析，不构造 NewGameDialog，也不验证取消回滚、配置提交、续弈数据完整性、候选显示、让子、引擎能力/切换/就绪、命令事务、线程、DPI 或无障碍；新版实现与新旧动态对照均未开始。"
+      "evidence": "已静态贯通三个 Menu.newGenmoveGame、Menu.newAnalyzeModeGame 的 noAnalyze 回退、Menu.continueGameAgainstAi 与四个续弈子项、主/独立棋盘 N 与 Enter/Alt+Enter、LizzieFrame.startNewGame/continueAiPlaying、NewGameDialog.apply、Config 加载、当前路径导出/重放、候选显示 setter 和 GTP 命令链；本行反向关联 NewGameDialog 触达的全部 25 个活跃字面量配置键，其中原库存已有 22 个未映射键，play-ponder/use-play-mode 复用既有映射，new-game-komi 原已属于本行；putOpt 修复补全的是引用证据而非新发现 key。旧测试仅覆盖固定 AI 时间命令和倒计时解析，不构造 NewGameDialog，也不验证取消回滚、配置提交、续弈数据完整性、候选显示、让子、引擎能力/切换/就绪、命令事务、线程、DPI 或无障碍；新版实现与新旧动态对照均未开始。"
     },
     {
       "id": "BOARD-HISTORY-001",
@@ -476,13 +491,15 @@
     {
       "id": "ENGINE-GTP-001",
       "category": "引擎",
-      "legacy_entry": "Leelaz 负责 GTP 命令发送、响应绑定、分析流和失败恢复；Input、引擎对局专用 LizzieFrame gtpShortKey、GtpConsolePane、菜单与启动配置切换控制台，GtpConsolePane/FastCommands 提供原始命令、分类命令和引擎命令列表入口，Menu 顶部 PDA 文本框以任意键释放即时发送 playoutDoublingAdvantage",
+      "legacy_entry": "Leelaz 负责 GTP 命令发送、响应绑定、分析流和失败恢复；主/独立棋盘 Alt+逗号经 LizzieFrame.genmove 请求当前单引擎落子；Input、引擎对局专用 LizzieFrame gtpShortKey、GtpConsolePane、菜单与启动配置切换控制台，GtpConsolePane/FastCommands 提供原始命令、分类命令和引擎命令列表入口，Menu 顶部 PDA 文本框以任意键释放即时发送 playoutDoublingAdvantage",
       "legacy_menu_keys": ["Menu.engineParameters", "Menu.engineRules", "Menu.gtpPanel"],
       "legacy_menu_labels": [],
       "legacy_shortcuts": [],
       "legacy_input_cases": [
         "keyPressed:VK_E",
+        "keyPressed:VK_COMMA",
         "InputIndependentMainBoard:keyPressed:VK_E",
+        "InputIndependentMainBoard:keyPressed:VK_COMMA",
         "GtpConsolePaneContent:keyPressed:VK_E",
         "GtpConsolePaneConsole:keyPressed:VK_E",
         "LizzieFrameGtpShortKey:keyPressed:VK_E",
@@ -490,7 +507,9 @@
       ],
       "legacy_input_bindings": [
         "keyPressed:VK_E#4",
+        "keyPressed:VK_COMMA#1",
         "InputIndependentMainBoard:keyPressed:VK_E#4",
+        "InputIndependentMainBoard:keyPressed:VK_COMMA#1",
         "GtpConsolePaneContent:keyPressed:VK_E#1",
         "GtpConsolePaneConsole:keyPressed:VK_E#1",
         "LizzieFrameGtpShortKey:keyPressed:VK_E#1",
@@ -499,11 +518,14 @@
       ],
       "java_evidence": [
         { "path": "src/main/java/featurecat/lizzie/analysis/Leelaz.java", "symbol": "class Leelaz" },
+        { "path": "src/main/java/featurecat/lizzie/gui/Input.java", "symbol": "Lizzie.frame.genmove()" },
+        { "path": "src/main/java/featurecat/lizzie/gui/InputIndependentMainBoard.java", "symbol": "Lizzie.frame.genmove()" },
         { "path": "src/main/java/featurecat/lizzie/analysis/LeelazEngineCommandSink.java", "symbol": "LeelazEngineCommandSink" },
         { "path": "src/main/java/featurecat/lizzie/gui/GtpConsolePane.java", "symbol": "postCommand" },
         { "path": "src/main/java/featurecat/lizzie/gui/GtpConsolePane.java", "symbol": "read" },
         { "path": "src/main/java/featurecat/lizzie/gui/FastCommands.java", "symbol": "class FastCommands" },
         { "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "symbol": "gtpShortKey" },
+        { "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "symbol": "public void genmove()" },
         { "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "symbol": "public void addInput(boolean forEngineGame)" },
         { "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "symbol": "public void removeInput(boolean forEngineGame)" },
         { "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "symbol": "toggleGtpConsole" },
@@ -523,9 +545,9 @@
         { "path": "src/main/java/featurecat/lizzie/Config.java", "symbol": "gtp-console-position" }
       ],
       "config_keys": ["limit-branch-length", "limit-max-suggestion", "always-gtp", "gtp-console-position", "gtp-console-opened", "log-gtp-to-file", "fast-commands-width", "fast-commands-height", "frame-font-size", "ui-font-name"],
-      "inputs_preconditions": "引擎进程已启动并提供标准输入、输出和错误流。主窗口或独立主棋盘获得焦点时 E 可打开控制台；开始引擎对局时 EngineManager 调用 removeInput(true)，主面板改挂 InputSubboard 与 LizzieFrame gtpShortKey，后者在 mainPanel 真正持焦点时接受任意修饰状态的 E。控制台 content pane 和只读输出各自注册 E 监听器，但 content pane 未显式设为 focusable 且可见区域由子控件覆盖，其焦点可达性尚未验证。命令输入框不继承这些监听器，Enter 由 ActionListener 发送命令，因此输入框中的字母 E 必须保留为文本。顶部 txtPDA 仅在当前自定义 PDA 引擎，或引擎对局双方至少一方标记 isKataGoPda 时显示；字段持焦点后，凡已投递给该 listener 的 keyReleased 都不读取 KeyEvent，字符、编辑、导航、修饰或 Enter 的已投递事件会处理当前完整文本；Tab 可能先被 Swing 焦点遍历消费，实际顺序尚需动态验证。空串、单独负号或单独小数点会进入返回 guard，但 DoubleDocument 通常拒绝后两种单字符插入。",
-      "success_behavior": "命令与带编号响应正确绑定，分析建议持续更新并遵守限制设置；菜单、常态主棋盘 Plain E、引擎对局主面板 Plain E、已保存启动状态和只读输出 E 可切换可见性，content pane 监听器只在它真实成为事件目标时执行，不把注册等同于用户可达入口。引擎对局开始只挂一次 gtpShortKey，停止、清理或失败恢复时移除它并恢复常态 Input。Enter 与发送按钮提交同一条去除首尾空白的命令；原始 GTP 直接发送，genmove/play/showboard/clear_board/heatmap/kata-raw/boardsize/komi/undo/PDA 分类命令按各自语义更新棋盘、贴目、轮次、候选或 pondering。txtPDA 除返回 guard 外的可解析文本转为 double 后向 Lizzie.leelaz 发送 kata-set-param playoutDoublingAdvantage，若正在分析则重新 ponder；普通双引擎模式由默认 sendCommand 镜像规则路由副引擎。目标版只在完整、有限且受支持的值确认后向明确目标引擎提交一次，并同步参数模型与可见字段。双引擎模式下主引擎的默认 sendCommand 还镜像到副引擎，副引擎按 KataGo/Leela 类型转换 lz-/kata-/heatmap/ownership 命令。FastCommands 展示引擎 list_commands 并可复制或发送；stdout/stderr 按类型着色、跟随末尾，显示文档保持有界。",
-      "failure_cancel_behavior": "超时、错误响应、stderr 噪声和进程退出不得错配后续响应；停止分析应及时生效，控制台切换不得改变协议状态。引擎对局 gtpShortKey 不检查或 consume modifier，故 Plain/Ctrl/Meta/Alt/Shift+E 全部切换控制台，而常态 Input 的相同组合分属控制台、棋谱分享、引擎对局或死活入口；它也只在 mainPanel 获得焦点时有效。removeInput(true) 在 noInput guard 外重复 add 同一 listener，addInput(true) 每次只 remove 一次，普通 boolean noInput 又无同步；重复/竞态调用可遗留重复或缺失 listener，使一次 E 多次 toggle。Manual 人工落子用 addInput(false) 恢复常态 Input 却不移除 gtpShortKey，两者可同时处理 Plain E 并连续切换两次，看似无动作；目标版须用有唯一 owner 的幂等 command/key binding 明确修饰键优先级和焦点范围。txtPDA 对每次已投递的键释放都重复发送，包括方向键、修饰键、Enter 和同值；Tab 是否先被焦点遍历消费尚未验证。逐字输入会把每个可解析中间值依次提交并反复 ponder。DoubleDocument 无长度或业务范围上限，指数可经 BigDecimal 后由 Double.parseDouble 溢出为 Infinity；handler 不校验引擎能力或命令结果，只吞 NumberFormatException 且无反馈，null/写入/ponder 等运行时错误可逃出 EDT。它直接 sendCommand 而不更新 Leelaz.pda/pdaBeforeGame，UI、进程和内存恢复值可分裂；引擎对局因任一参赛引擎支持 PDA 即显示字段，但提交仍走全局 Lizzie.leelaz/普通双引擎镜像，不保证命中参赛引擎，Kata 命令向非 Kata 副引擎转换为 lz- 前缀也可能无效。引擎响应解析还可从后台线程直接 setText Swing 字段。目标版须以 capability-gated、有限、可取消的单次命令绑定明确每个目标引擎，成功后原子更新模型，拒绝或发送失败提供可访问反馈。旧版使用默认 locale 小写、宽泛前缀和 split(\" \")，部分分支又按原命令大小写比较；boardsize/komi 数字异常未捕获，NaN/Infinity、超长/越界尺寸、重复空白与缺参可导致崩溃、资源失控、静默丢输入或棋盘/引擎半更新，undo 大小写差异还可造成历史失步。任意 raw GTP 虽不是 shell，却可 quit 或改变引擎状态并与本地棋盘脱节；内部 CR/LF/NUL 未拒绝时，一次粘贴还能写入多条协议行、绕过编号并污染响应绑定。目标版须保留明确警告的高级模式，只接受一条无控制字符的命令，按精确 verb 和通用空白解析、使用 invariant culture、限制命令/数字/棋盘尺寸，在验证和发送成功前不提交本地状态，并为拒绝、写失败和引擎对局/双引擎路由给出可访问反馈。双引擎必须显式定义每条命令的镜像/转换和失败原子性；旧 PDA 分类分支先把副引擎内存 pda 置 0、随后又镜像原命令，可能让属性与进程状态分裂。旧输出 ArrayDeque 的生产者未同步且无界，消费者异常时还会在旧锁内替换队列对象；Clear 只清文档，排队消息可重新出现。后台 read 线程直接改 Swing 文档并在引擎未加载时每 100ms 强制结束评论编辑、调用 appendComment，可能竞态写错当前节点；它还忽略中断，executor 和日志流不关闭。目标版须把输出展示与棋谱副作用解耦，使用有界线程安全通道、UI 调度、取消/释放、UTF-8 安全路径与日志轮换/脱敏。窗口几何须校正到当前多显示器工作区，字号、DPI、键盘和读屏状态不得裁切或丢失。",
+      "inputs_preconditions": "引擎进程已启动并提供标准输入、输出和错误流。主窗口或独立主棋盘获得焦点时 E 可打开控制台；Alt+逗号可调用全局 Lizzie.leelaz.genmove。开始引擎对局时 EngineManager 调用 removeInput(true)，主面板改挂 InputSubboard 与 LizzieFrame gtpShortKey，后者在 mainPanel 真正持焦点时接受任意修饰状态的 E；独立棋盘的原监听器不受替换影响，双引擎对局中仍可触发 Alt+逗号。控制台 content pane 和只读输出各自注册 E 监听器，但 content pane 未显式设为 focusable 且可见区域由子控件覆盖，其焦点可达性尚未验证。命令输入框不继承这些监听器，Enter 由 ActionListener 发送命令，因此输入框中的字母 E 必须保留为文本。顶部 txtPDA 仅在当前自定义 PDA 引擎，或引擎对局双方至少一方标记 isKataGoPda 时显示；字段持焦点后，凡已投递给该 listener 的 keyReleased 都不读取 KeyEvent，字符、编辑、导航、修饰或 Enter 的已投递事件会处理当前完整文本；Tab 可能先被 Swing 焦点遍历消费，实际顺序尚需动态验证。空串、单独负号或单独小数点会进入返回 guard，但 DoubleDocument 通常拒绝后两种单字符插入。",
+      "success_behavior": "命令与带编号响应正确绑定，分析建议持续更新并遵守限制设置；主/独立棋盘 Alt+逗号调用 LizzieFrame.genmove，只向全局当前 Lizzie.leelaz 请求单次落子，本身不进入 EngineManager 双引擎状态机。菜单、常态主棋盘 Plain E、引擎对局主面板 Plain E、已保存启动状态和只读输出 E 可切换可见性，content pane 监听器只在它真实成为事件目标时执行，不把注册等同于用户可达入口。引擎对局开始只挂一次 gtpShortKey，停止、清理或失败恢复时移除它并恢复常态 Input。Enter 与发送按钮提交同一条去除首尾空白的命令；原始 GTP 直接发送，genmove/play/showboard/clear_board/heatmap/kata-raw/boardsize/komi/undo/PDA 分类命令按各自语义更新棋盘、贴目、轮次、候选或 pondering。txtPDA 除返回 guard 外的可解析文本转为 double 后向 Lizzie.leelaz 发送 kata-set-param playoutDoublingAdvantage，若正在分析则重新 ponder；普通双引擎模式由默认 sendCommand 镜像规则路由副引擎。目标版只在完整、有限且受支持的值确认后向明确目标引擎提交一次，并同步参数模型与可见字段。双引擎模式下主引擎的默认 sendCommand 还镜像到副引擎，副引擎按 KataGo/Leela 类型转换 lz-/kata-/heatmap/ownership 命令。FastCommands 展示引擎 list_commands 并可复制或发送；stdout/stderr 按类型着色、跟随末尾，显示文档保持有界。",
+      "failure_cancel_behavior": "超时、错误响应、stderr 噪声和进程退出不得错配后续响应；停止分析应及时生效，控制台切换不得改变协议状态。双引擎对局中独立棋盘 Alt+逗号仍会绕过 EngineManager，直接向全局 Lizzie.leelaz 发额外 genmove；该对象可能不是预期参赛方，会破坏双方命令顺序、轮次和棋盘状态。目标版必须在活动双引擎状态拒绝或显式路由该请求，不能静默注入协议命令。引擎对局 gtpShortKey 不检查或 consume modifier，故 Plain/Ctrl/Meta/Alt/Shift+E 全部切换控制台，而常态 Input 的相同组合分属控制台、棋谱分享、引擎对局或死活入口；它也只在 mainPanel 获得焦点时有效。removeInput(true) 在 noInput guard 外重复 add 同一 listener，addInput(true) 每次只 remove 一次，普通 boolean noInput 又无同步；重复/竞态调用可遗留重复或缺失 listener，使一次 E 多次 toggle。Manual 人工落子用 addInput(false) 恢复常态 Input 却不移除 gtpShortKey，两者可同时处理 Plain E 并连续切换两次，看似无动作；目标版须用有唯一 owner 的幂等 command/key binding 明确修饰键优先级和焦点范围。txtPDA 对每次已投递的键释放都重复发送，包括方向键、修饰键、Enter 和同值；Tab 是否先被焦点遍历消费尚未验证。逐字输入会把每个可解析中间值依次提交并反复 ponder。DoubleDocument 无长度或业务范围上限，指数可经 BigDecimal 后由 Double.parseDouble 溢出为 Infinity；handler 不校验引擎能力或命令结果，只吞 NumberFormatException 且无反馈，null/写入/ponder 等运行时错误可逃出 EDT。它直接 sendCommand 而不更新 Leelaz.pda/pdaBeforeGame，UI、进程和内存恢复值可分裂；引擎对局因任一参赛引擎支持 PDA 即显示字段，但提交仍走全局 Lizzie.leelaz/普通双引擎镜像，不保证命中参赛引擎，Kata 命令向非 Kata 副引擎转换为 lz- 前缀也可能无效。引擎响应解析还可从后台线程直接 setText Swing 字段。目标版须以 capability-gated、有限、可取消的单次命令绑定明确每个目标引擎，成功后原子更新模型，拒绝或发送失败提供可访问反馈。旧版使用默认 locale 小写、宽泛前缀和 split(\" \")，部分分支又按原命令大小写比较；boardsize/komi 数字异常未捕获，NaN/Infinity、超长/越界尺寸、重复空白与缺参可导致崩溃、资源失控、静默丢输入或棋盘/引擎半更新，undo 大小写差异还可造成历史失步。任意 raw GTP 虽不是 shell，却可 quit 或改变引擎状态并与本地棋盘脱节；内部 CR/LF/NUL 未拒绝时，一次粘贴还能写入多条协议行、绕过编号并污染响应绑定。目标版须保留明确警告的高级模式，只接受一条无控制字符的命令，按精确 verb 和通用空白解析、使用 invariant culture、限制命令/数字/棋盘尺寸，在验证和发送成功前不提交本地状态，并为拒绝、写失败和引擎对局/双引擎路由给出可访问反馈。双引擎必须显式定义每条命令的镜像/转换和失败原子性；旧 PDA 分类分支先把副引擎内存 pda 置 0、随后又镜像原命令，可能让属性与进程状态分裂。旧输出 ArrayDeque 的生产者未同步且无界，消费者异常时还会在旧锁内替换队列对象；Clear 只清文档，排队消息可重新出现。后台 read 线程直接改 Swing 文档并在引擎未加载时每 100ms 强制结束评论编辑、调用 appendComment，可能竞态写错当前节点；它还忽略中断，executor 和日志流不关闭。目标版须把输出展示与棋谱副作用解耦，使用有界线程安全通道、UI 调度、取消/释放、UTF-8 安全路径与日志轮换/脱敏。窗口几何须校正到当前多显示器工作区，字号、DPI、键盘和读屏状态不得裁切或丢失。",
       "data_io": "GTP stdin/stdout/stderr、控制台内存队列与有界显示文档；txtPDA 读取控件文本并写 kata-set-param 命令，响应解析可改写 Leelaz.pda 与字段显示，但该 key listener 本身不更新 pda、配置或文件。read 状态检查还可结束评论编辑并通过 appendComment 修改当前 SGF 节点评论；可选 LastGtpLogs 文件；持久化控制台可见性/位置和快捷命令窗口尺寸；快捷命令可写系统剪贴板。",
       "external_dependencies": ["GTP 引擎进程", "可选本地日志文件系统", "系统剪贴板"],
       "target_modules": ["Lizzie.Engine", "Lizzie.Core", "Lizzie.Desktop"],
@@ -534,7 +556,7 @@
         { "path": "src/test/java/featurecat/lizzie/analysis/LeelazExclusiveRemoteGtpSessionTest.java", "symbol": "LeelazExclusiveRemoteGtpSessionTest" },
         { "path": "src/test/java/featurecat/lizzie/analysis/LeelazPonderStateTest.java", "symbol": "LeelazPonderStateTest" }
       ],
-      "manual_acceptance": "以可控假 GTP 进程注入成功、错误、延迟和异常退出序列，核对命令绑定与恢复。常态主棋盘以 Plain E 只切换一次控制台，Ctrl/Meta/Alt/Shift+E 只执行各自已登记命令且不额外切换；引擎对局主面板以 Plain E 保留控制台入口，并逐一记录旧版 Ctrl/Meta/Alt/Shift+E 均被 gtpShortKey 截为控制台切换的冲突，目标版按明确映射只执行一个命令。只读输出的 E 切换窗口，命令输入框正常录入。引擎对局开始、启动失败、停止、清理、批量换局和重复恢复前后检查 mainPanel listener 数量恒定；打开 Manual 并反复启用/关闭人工落子，确认 Input 与 gtpShortKey 不会双重处理 E。焦点移到工具栏、输入框和其他窗口时不得误触发。顶部 txtPDA 覆盖逐字输入、选择替换、粘贴、Backspace/Delete、方向键、Shift/Ctrl/Alt/Meta、Enter、同值重复释放、空/负号/小数点、-0.0、指数、超大值和 Infinity；对 Tab 记录 listener 与 focusLost 的实际先后，并验证 DoubleDocument 对单独负号/小数点的正常拒绝及 guard 被程序化设置时的行为；逐一录制单引擎、普通双引擎和 engine-game first/second stdin、命令次数、ponder 次数及 Leelaz.pda/pdaBeforeGame，确认 capability、路由和模型一致。注入未加载/null/不支持引擎、首目标成功次目标失败、异步拒绝、写失败和 ponder 失败，拒绝不得伪装成功或遗留静默半提交；响应更新字段必须经 UI 调度，并在大字号/DPI、Tab、焦点视觉和读屏下提供状态/错误反馈。另单独点击 content pane 可见背景并记录真实 focus owner，若不能聚焦则登记旧版键盘可达性缺口，不伪装成 E 切换成功。比较 Enter 与发送按钮对空白、原始 GTP、全部分类命令、大小写、重复空白/Tab、缺参、非法数、NaN/Infinity、超长命令和越界棋盘尺寸的行为，合法单行输入须让目标假引擎录到恰好一条带编号命令。任何含 CR/LF/NUL 的输入须显示拒绝，主/副假引擎均记录 0 条且棋盘、UI 和命令队列不变。在含主线/分支的隔离棋谱核对 play/undo/clear_board/boardsize/komi 成败前后棋盘与引擎事务；引擎未加载时保留未保存评论并快速切换当前节点，确认控制台输出循环不能结束编辑或写错节点。普通、引擎对局和双引擎分别核对拒绝与路由；双引擎逐一录制主/副 stdin，验证旧版要求的镜像与 Kata/Leela 转换，并对 PDA 属性/进程不一致建立失败样本。注入 Unicode、超长行和高频 stdout/stderr，验证颜色、截断、滚动和内存上限；关闭重开、引擎崩溃、日志写失败及多显示器/DPI/大字号/键盘/读屏场景验证线程、文件句柄、几何和状态恢复。",
+      "manual_acceptance": "以可控假 GTP 进程注入成功、错误、延迟和异常退出序列，核对命令绑定与恢复。常态主/独立棋盘 Alt+逗号各使全局当前引擎收到恰好一次 genmove；活动双引擎对局中从独立棋盘重复 Alt、Ctrl+Alt、Meta+Alt、Shift+Alt+逗号，目标版须拒绝或显式路由且双方 transcript、轮次和棋盘一致。常态主棋盘以 Plain E 只切换一次控制台，Ctrl/Meta/Alt/Shift+E 只执行各自已登记命令且不额外切换；引擎对局主面板以 Plain E 保留控制台入口，并逐一记录旧版 Ctrl/Meta/Alt/Shift+E 均被 gtpShortKey 截为控制台切换的冲突，目标版按明确映射只执行一个命令。只读输出的 E 切换窗口，命令输入框正常录入。引擎对局开始、启动失败、停止、清理、批量换局和重复恢复前后检查 mainPanel listener 数量恒定；打开 Manual 并反复启用/关闭人工落子，确认 Input 与 gtpShortKey 不会双重处理 E。焦点移到工具栏、输入框和其他窗口时不得误触发。顶部 txtPDA 覆盖逐字输入、选择替换、粘贴、Backspace/Delete、方向键、Shift/Ctrl/Alt/Meta、Enter、同值重复释放、空/负号/小数点、-0.0、指数、超大值和 Infinity；对 Tab 记录 listener 与 focusLost 的实际先后，并验证 DoubleDocument 对单独负号/小数点的正常拒绝及 guard 被程序化设置时的行为；逐一录制单引擎、普通双引擎和 engine-game first/second stdin、命令次数、ponder 次数及 Leelaz.pda/pdaBeforeGame，确认 capability、路由和模型一致。注入未加载/null/不支持引擎、首目标成功次目标失败、异步拒绝、写失败和 ponder 失败，拒绝不得伪装成功或遗留静默半提交；响应更新字段必须经 UI 调度，并在大字号/DPI、Tab、焦点视觉和读屏下提供状态/错误反馈。另单独点击 content pane 可见背景并记录真实 focus owner，若不能聚焦则登记旧版键盘可达性缺口，不伪装成 E 切换成功。比较 Enter 与发送按钮对空白、原始 GTP、全部分类命令、大小写、重复空白/Tab、缺参、非法数、NaN/Infinity、超长命令和越界棋盘尺寸的行为，合法单行输入须让目标假引擎录到恰好一条带编号命令。任何含 CR/LF/NUL 的输入须显示拒绝，主/副假引擎均记录 0 条且棋盘、UI 和命令队列不变。在含主线/分支的隔离棋谱核对 play/undo/clear_board/boardsize/komi 成败前后棋盘与引擎事务；引擎未加载时保留未保存评论并快速切换当前节点，确认控制台输出循环不能结束编辑或写错节点。普通、引擎对局和双引擎分别核对拒绝与路由；双引擎逐一录制主/副 stdin，验证旧版要求的镜像与 Kata/Leela 转换，并对 PDA 属性/进程不一致建立失败样本。注入 Unicode、超长行和高频 stdout/stderr，验证颜色、截断、滚动和内存上限；关闭重开、引擎崩溃、日志写失败及多显示器/DPI/大字号/键盘/读屏场景验证线程、文件句柄、几何和状态恢复。",
       "status": "已盘点",
       "evidence": "已静态贯通 Lizzie 启动、Menu.gtpPanel、常态 Input/独立主棋盘、EngineManager 引擎对局开始/停止/清理、LizzieFrame addInput/removeInput/gtpShortKey/toggleGtpConsole、Manual 人工落子切换、GtpConsolePane 两个 E 监听器、Menu txtPDA 已投递键释放、showPda 能力可见性、Leelaz PDA 查询/解析/setPda/默认镜像、命令框 Enter/发送按钮、postCommand 分类、FastCommands、输出队列、引擎未加载时的 setCommentEditable/appendComment 与配置保存。MenuPdaText 显式 ANY_KEY 来源生成 1 个 case/2 条路径：空/负号/小数点 guard 返回，其他文本进入原子 try；静态路径存在不等于 DoubleDocument 可正常录入单独负号/小数点，也不证明 Tab 一定投递。KeyAdapter 未覆写的 keyPressed/keyTyped 只是继承空实现。ANY_KEY 只能由来源 tuple 显式启用，生成器断言方法体不引用事件参数或 VK 常量，不会把其他解析失败自动降级。现有 LeelazLoadSgfResponseBindingTest、LeelazExclusiveRemoteGtpSessionTest 与 LeelazPonderStateTest 只提供底层间接证据；旧测试没有构造 Menu、dispatch txtPDA listener、发送 playoutDoublingAdvantage 或断言命令/ponder 次数、capability、engine-game 路由、有限值、错误反馈和焦点，也没有触发 gtpShortKey 挂卸或 GtpConsolePane UI。SilentGtpConsole 绕过构造并空实现输出方法，不能证明控制台 UI、命令分类、CR/LF 注入拒绝、评论/棋谱副作用、输出线程/日志生命周期或双引擎镜像/拦截。协议录制夹具、新版回放器及上述入口级动态验证仍待建立。"
     },
@@ -1125,43 +1147,60 @@
     {
       "id": "ENGINE-GAME-001",
       "category": "引擎对局",
-      "legacy_entry": "Alt+E 打开引擎对局，Alt+逗号请求引擎落子，Enter/Alt+Enter 继续 AI 对局",
-      "legacy_menu_keys": [],
+      "legacy_entry": "三个 Menu.newEngineGame 入口或主/独立棋盘 Alt+E 调用 LizzieFrame.startEngineGameDialog，以 NewEngineGameDialog 配置分析模式或 genmove 模式的双引擎对局",
+      "legacy_menu_keys": ["Menu.newEngineGame"],
       "legacy_menu_labels": [],
       "legacy_shortcuts": [],
       "legacy_input_cases": [
         "keyPressed:VK_E",
-        "keyPressed:VK_COMMA",
-        "keyPressed:VK_ENTER",
-        "InputIndependentMainBoard:keyPressed:VK_E",
-        "InputIndependentMainBoard:keyPressed:VK_COMMA",
-        "InputIndependentMainBoard:keyPressed:VK_ENTER"
+        "InputIndependentMainBoard:keyPressed:VK_E"
       ],
       "legacy_input_bindings": [
         "keyPressed:VK_E#2",
-        "keyPressed:VK_COMMA#1",
-        "keyPressed:VK_ENTER#1",
-        "keyPressed:VK_ENTER#2",
-        "InputIndependentMainBoard:keyPressed:VK_E#2",
-        "InputIndependentMainBoard:keyPressed:VK_COMMA#1",
-        "InputIndependentMainBoard:keyPressed:VK_ENTER#1",
-        "InputIndependentMainBoard:keyPressed:VK_ENTER#2"
+        "InputIndependentMainBoard:keyPressed:VK_E#2"
       ],
       "java_evidence": [
         { "path": "src/main/java/featurecat/lizzie/gui/Input.java", "symbol": "startEngineGameDialog" },
-        { "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "symbol": "public void startEngineGameDialog()" }
+        { "path": "src/main/java/featurecat/lizzie/gui/InputIndependentMainBoard.java", "symbol": "startEngineGameDialog" },
+        { "path": "src/main/java/featurecat/lizzie/gui/Menu.java", "symbol": "Menu.newEngineGame" },
+        { "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "symbol": "public void startEngineGameDialog()" },
+        { "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "symbol": "public void openSgfStart()" },
+        { "path": "src/main/java/featurecat/lizzie/gui/NewEngineGameDialog.java", "symbol": "class NewEngineGameDialog" },
+        { "path": "src/main/java/featurecat/lizzie/gui/NewEngineGameDialog.java", "symbol": "public void apply()" },
+        { "path": "src/main/java/featurecat/lizzie/gui/BottomToolbar.java", "symbol": "public boolean startEngineGame()" },
+        { "path": "src/main/java/featurecat/lizzie/analysis/EngineManager.java", "symbol": "public boolean startEngineGame(" },
+        { "path": "src/main/java/featurecat/lizzie/analysis/EngineManager.java", "symbol": "public void startNewEngineGame(boolean firstTime)" },
+        { "path": "src/main/java/featurecat/lizzie/analysis/EngineManager.java", "symbol": "public ArrayList<Movelist> getStartListForEnginePk()" },
+        { "path": "src/main/java/featurecat/lizzie/analysis/Leelaz.java", "symbol": "private void notifyAutoPK(boolean playImmediately)" }
       ],
-      "config_keys": [],
-      "inputs_preconditions": "至少一个可用引擎已加载；开始新引擎对局时不得已有引擎对局运行。",
-      "success_behavior": "打开并确认引擎对局参数后开始对局；请求或继续落子时按快捷键分支推进对应一方。",
-      "failure_cancel_behavior": "已有对局时提示先停止；取消参数对话框恢复工具栏状态；引擎不可用时不得伪造落子。",
-      "data_io": "读取当前棋盘和对局参数，通过 GTP 驱动引擎并更新棋盘历史。",
+      "config_keys": [
+        "advance-black-time-txt",
+        "advance-white-time-txt",
+        "disable-wrn-in-game",
+        "engine-pk-ponder",
+        "engine-sgf-random",
+        "first-engine-min-move",
+        "first-engine-resign-move-counts",
+        "first-engine-resign-winrate",
+        "new-engine-game-handicap",
+        "new-engine-game-komi",
+        "pk-advance-time-settings",
+        "second-engine-min-move",
+        "second-engine-resign-move-counts",
+        "second-engine-resign-winrate"
+      ],
+      "inputs_preconditions": "应用已启动；用户从三个菜单入口或主/独立棋盘 E 分支进入。Control 在全平台优先于 Alt，Meta 仅在 macOS 作为 Primary 优先，因此 Control+Alt+E 与 macOS 的 Meta+Alt+E 走未实现的棋谱分享；Windows/Linux 的 Meta+Alt+E、以及全平台 Alt+Shift+E 走引擎对局。已有 EngineManager.isEngineGame 时拒绝；旧人机/分析对局则先由 togglePonderMannul 停止，之后即使取消也不能恢复。窗口复用 BottomToolbar 的黑白引擎、每手秒数、总/首位计算量、多盘数、续弈、交换、最大手数与 analysis/genmove 模式控件，并读取本行 14 个配置键；零个或仅一个引擎也能打开窗口。",
+      "success_behavior": "用户选择两个不同引擎，设置贴目、让子、每手时间/总计算量/首位计算量或 genmove 高级时间、多盘/交换/最大手数、当前局面续弈或多选 SGF 开局、后台计算、胜率图隐藏与双方认输阈值后确认。旧版把 14 键写入内存 uiConfig，更新当前 GameInfo；19 路让子 2–9 先按固定星位清空并放置黑子，再作为续弈快照交给 EngineManager。EngineManager 校验引擎不同及分析模式双方至少一个正限额，保存续弈或顺序/随机 SGF 的线性 move list；两者均不能证明保留分支、评论、分析、标记和其他 SGF 属性，目标版必须从完整不可变棋谱快照创建对局，不复制这种数据损失。随后旧版禁用普通输入和相关 UI，结束其他引擎并启动黑白进程。分析模式清盘/重放后让轮到的一方 ponder，由连续低胜率、秒数、总/首位计算量触发落子；genmove 模式发送双方高级时间原文或 time_settings 0 <秒> 1、clear_cache，再令轮到的一方 genmove。成功后设置 isEngineGame、双方名称、标题、菜单和计时；多盘流程按设置继续并在工作目录 EngineGames 下保存棋谱。目标版必须用两个有明确所有者的可取消 GTP 会话、不可变启动快照和原子 UI/棋盘事务表达同一行为。",
+      "failure_cancel_behavior": "旧窗口的高级时间、后台计算、隐藏胜率图和 SGF 随机顺序在点击时立即修改 uiConfig；引擎下拉框及续弈/SGF 开关直接改共享 BottomToolbar/Config，取消或关闭只重置字体、控件位置和部分启用态，不回滚这些内存改动，也不恢复已停止的人机/分析对局。openSgfStart 在选择器前停止 pondering、清空开局统计并取消主窗置顶；选择器取消不恢复 pondering 且可能沿用旧 enginePKSgfString；选择过 SGF 后再取消整个对话框时当前棋盘已经被清空。SGF 开关虽把对话框本地续弈设为 false，却未同步工具栏续弈，EngineManager 又优先续弈，可导致所选 SGF 被忽略。加载异常没有 finally，可能遗留 isLoadingFile、静音、棋盘或置顶半状态；多选 SGF 且未启用批量只提示但仍继续。确认时贴目/让子使用默认 locale 的宽松前缀解析，空值 ParseException 被静默吞掉；六个认输值解析失败也静默保留旧值，负数、过大值和 NaN/Infinity 缺少业务校验。cancelled 在真正启动成功前已设 false，配置、GameInfo 和 19 路让子棋盘也先提交；同引擎、双方限额无效或后续启动失败会留窗却遗留部分状态，零引擎还可能在校验前因索引 -1 崩溃。startEngineGame 在完整校验前已结束试下、热力图/候选和标题状态；启动后先杀其他引擎并清盘，再用多个非 daemon 裸线程无取消/超时轮询 isLoaded、response/cmdNumber，忽略中断且从后台线程改 UI。进程退出、命令拒绝或永不就绪可永久停在 isPreEngineGame，旧版五秒恢复计时器只处理已进入 isEngineGame 的运行期崩溃；重启高级计时还会不分执黑执白都发送黑方字符串。用户批处理名称未经规范化就成为 EngineGames 的目录段，../ 可逃逸目标目录；mkdir/写入不检查且非原子，异常只打印，结束提示仍可能声称已保存。手动停止在保存分支前直接返回，即使启用自动保存或处于批量模式也不保存当前未完成局，提示还可能让用户误以为已写入 EngineGames；目标版必须保留未完成局或明确询问保存，且不得虚假成功。高级时间解析失败只提示，随后仍把未经单行/能力校验的原文发送给 GTP，可能包含控制字符或不支持命令。目标版须在任何取消、选择器/解析、同引擎、限额、能力、启动、命令、超时、崩溃或保存失败时保留原棋盘、GameInfo、配置、输入路由和既有进程，并给出可访问反馈。",
+      "data_io": "读取并修改 config.txt 对应 uiConfig 的 14 个叶键，但对话框不调用 Config.save，磁盘持久化依赖后续全局保存。默认值依次包括高级时间 false、黑白 time_settings 10 2 1、隐藏胜率图 true、后台计算 false、SGF 随机 true、双方最少手数 0/连续次数 2/胜率 10.0、贴目 7.5、让子 0。高级时间字符串会原样进入 GTP stdin；普通时间以秒传给 time_settings，认输胜率以百分数比较，最少手数和连续次数为整数。多选本地 SGF 会逐个载入当前 Board、提取线性 move list 后清盘；续弈读取当前 Board.getMoveList。运行期更新棋盘历史、GameInfo、菜单、工具栏、输入路由和两个外部进程；结束/批量流程在工作目录 EngineGames 写非原子 SGF。目标兼容层必须备份并保留未知键，以 invariant/有限数值和单行命令校验导入值，文件与 GTP 输入均按不可信数据处理；批处理名称必须经目录规范化与 containment 校验，棋谱须在受控目录内原子保存并对失败给出真实结果。",
       "external_dependencies": ["GTP 引擎进程"],
       "target_modules": ["Lizzie.Core", "Lizzie.Engine", "Lizzie.Desktop"],
-      "automated_evidence": [],
-      "manual_acceptance": "以确定性 GTP 引擎覆盖开始、取消、继续双方、单次 genmove、已有对局拒绝和引擎失败。",
+      "automated_evidence": [
+        { "path": "src/test/java/featurecat/lizzie/rules/EngineCountDownFixedTimeTest.java", "symbol": "EngineCountDownFixedTimeTest" }
+      ],
+      "manual_acceptance": "在隔离配置、临时棋谱目录和两个可录制的确定性 GTP 中，从三个菜单及主/独立棋盘 Plain/Control/Meta/Alt/Shift 组合 E 进入，分别验证全平台 Control 优先、仅 macOS Meta 优先、Windows/Linux Meta+Alt 进入引擎对局，覆盖已有引擎对局、人机/分析对局、零/一/两个引擎和同引擎。分别运行 analysis/genmove、黑白不同引擎、每手秒数/总访问/首位访问/高级 time_settings、后台计算开关、普通/2–9/越界让子、贴目、双方最少手数/连续次数/胜率、最大手数、交换、多盘和当前局面续弈；录制两个进程的启动/退出、stdin 命令顺序、落子方、认输、GameInfo、完整棋谱树、菜单/输入和保存文件。用单份/多份/随机 SGF、取消选择、选择 SGF 后取消整个对话框、旧 SGF 列表与续弈冲突、损坏/超大/深层/不可读棋谱和中途解析失败验证原子恢复与分支/评论/分析/标记保真。对空白、前缀数字、负数、溢出、NaN/Infinity、CR/LF/NUL 高级命令、同引擎、无正限额、进程启动失败、迟到/永不就绪、首/次目标命令拒绝、运行中崩溃、保存失败及取消/关窗注入故障，确认无配置/棋盘/进程半提交、无无限等待且错误可访问。用 ../、绝对路径、保留名和超长批处理名称验证保存始终受控于目标目录，并以写入/重命名失败确认无损坏文件或虚假成功提示；分别崩溃黑白引擎，验证启动期恢复及重启时采用各自高级时间设置。最后用两个真实支持引擎复核完整一局、暂停/继续、正常退出和进程树清理；对自动保存开/关与批量模式逐一手动停止，确认目标版保留未完成棋局或明确保存选择且结果提示与磁盘一致。以单调时钟和 CPU/唤醒测量替代旧版高频计时轮询，并在三平台、多 DPI、大字号、键盘和屏幕阅读器下检查滚动、标签、焦点和状态。",
       "status": "已盘点",
-      "evidence": "四条快捷条件路径和入口方法已定位；完整对局状态机、取消和崩溃恢复仍待纵切实现。"
+      "evidence": "已静态贯通三个 Menu.newEngineGame、主/独立棋盘 E、LizzieFrame.startEngineGameDialog/openSgfStart、NewEngineGameDialog.apply、BottomToolbar.startEngineGame、EngineManager.startEngineGame/startNewEngineGame/getStartListForEnginePk、Leelaz.notifyAutoPK 与本行全部 14 个直接字面量配置键。旧测试仅验证 EngineCountDown 的固定 time_settings 解析/扣时，不构造对话框、不启动双引擎，也不覆盖配置提交、SGF/续弈、认输、取消回滚、失败原子性、线程、进程、DPI 或无障碍；新版实现与新旧动态对照均未开始。"
     },
     {
       "id": "ENGINE-GAME-CONTROL-001",

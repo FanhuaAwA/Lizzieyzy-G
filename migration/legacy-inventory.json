@@ -1,5 +1,5 @@
 {
-  "schema_version": 42,
+  "schema_version": 43,
   "source": {
     "root": "../lizzieyzy-next-main",
     "version": "yzy2.5.3",
@@ -32,11 +32,11 @@
       "用户批准不迁移": 0
     },
     "active_config_leaf_keys": 596,
-    "mapped_config_leaf_keys": 241,
-    "unmapped_config_leaf_keys": 355,
+    "mapped_config_leaf_keys": 255,
+    "unmapped_config_leaf_keys": 341,
     "active_menu_resource_keys": 383,
-    "mapped_menu_resource_keys": 104,
-    "unmapped_menu_resource_keys": 279,
+    "mapped_menu_resource_keys": 110,
+    "unmapped_menu_resource_keys": 273,
     "active_menu_literal_labels": 12,
     "mapped_menu_literal_labels": 12,
     "unmapped_menu_literal_labels": 0,
@@ -133,7 +133,9 @@
       {
         "key": "advance-black-time-txt",
         "reference_count": 2,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "ENGINE-GAME-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -212,7 +214,9 @@
       {
         "key": "advance-white-time-txt",
         "reference_count": 2,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "ENGINE-GAME-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -4069,7 +4073,9 @@
       {
         "key": "disable-wrn-in-game",
         "reference_count": 3,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "ENGINE-GAME-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -4330,7 +4336,9 @@
       {
         "key": "engine-pk-ponder",
         "reference_count": 3,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "ENGINE-GAME-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -4414,7 +4422,9 @@
       {
         "key": "engine-sgf-random",
         "reference_count": 2,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "ENGINE-GAME-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -4818,7 +4828,9 @@
       {
         "key": "first-engine-min-move",
         "reference_count": 3,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "ENGINE-GAME-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -4843,7 +4855,9 @@
       {
         "key": "first-engine-resign-move-counts",
         "reference_count": 3,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "ENGINE-GAME-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -4868,7 +4882,9 @@
       {
         "key": "first-engine-resign-winrate",
         "reference_count": 3,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "ENGINE-GAME-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -8063,7 +8079,9 @@
       {
         "key": "new-engine-game-handicap",
         "reference_count": 2,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "ENGINE-GAME-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -8082,7 +8100,9 @@
       {
         "key": "new-engine-game-komi",
         "reference_count": 2,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "ENGINE-GAME-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -8482,7 +8502,9 @@
       {
         "key": "pk-advance-time-settings",
         "reference_count": 2,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "ENGINE-GAME-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -9671,7 +9693,9 @@
       {
         "key": "second-engine-min-move",
         "reference_count": 3,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "ENGINE-GAME-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -9696,7 +9720,9 @@
       {
         "key": "second-engine-resign-move-counts",
         "reference_count": 3,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "ENGINE-GAME-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -9721,7 +9747,9 @@
       {
         "key": "second-engine-resign-winrate",
         "reference_count": 3,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "ENGINE-GAME-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -15648,21 +15676,27 @@
       },
       {
         "key": "Menu.continueAnalyzeGameAsBlack",
-        "matrix_ids": [],
+        "matrix_ids": [
+          "GAME-HUMAN-AI-001"
+        ],
         "lines": [
           2986
         ]
       },
       {
         "key": "Menu.continueAnalyzeGameAsWhite",
-        "matrix_ids": [],
+        "matrix_ids": [
+          "GAME-HUMAN-AI-001"
+        ],
         "lines": [
           2971
         ]
       },
       {
         "key": "Menu.continueGameAgainstAi",
-        "matrix_ids": [],
+        "matrix_ids": [
+          "GAME-HUMAN-AI-001"
+        ],
         "lines": [
           2900
         ]
@@ -15679,14 +15713,18 @@
       },
       {
         "key": "Menu.continueGenmoveGameAsBlack",
-        "matrix_ids": [],
+        "matrix_ids": [
+          "GAME-HUMAN-AI-001"
+        ],
         "lines": [
           2958
         ]
       },
       {
         "key": "Menu.continueGenmoveGameAsWhite",
-        "matrix_ids": [],
+        "matrix_ids": [
+          "GAME-HUMAN-AI-001"
+        ],
         "lines": [
           2945
         ]
@@ -16642,7 +16680,9 @@
       },
       {
         "key": "Menu.newEngineGame",
-        "matrix_ids": [],
+        "matrix_ids": [
+          "ENGINE-GAME-001"
+        ],
         "lines": [
           2919,
           7594,
@@ -18607,7 +18647,7 @@
         "binding_count": 5,
         "matrix_ids": [
           "BOARD-VARIATION-001",
-          "ENGINE-GAME-001"
+          "ENGINE-GTP-001"
         ]
       },
       {
@@ -18875,7 +18915,7 @@
         ],
         "binding_count": 2,
         "matrix_ids": [
-          "ENGINE-GAME-001"
+          "GAME-HUMAN-AI-001"
         ]
       },
       {
@@ -19445,7 +19485,7 @@
         "binding_count": 5,
         "matrix_ids": [
           "BOARD-VARIATION-001",
-          "ENGINE-GAME-001"
+          "ENGINE-GTP-001"
         ]
       },
       {
@@ -19713,7 +19753,7 @@
         ],
         "binding_count": 2,
         "matrix_ids": [
-          "ENGINE-GAME-001"
+          "GAME-HUMAN-AI-001"
         ]
       },
       {
@@ -21781,7 +21821,7 @@
           }
         ],
         "matrix_ids": [
-          "ENGINE-GAME-001"
+          "ENGINE-GTP-001"
         ]
       },
       {
@@ -23816,7 +23856,7 @@
           }
         ],
         "matrix_ids": [
-          "ENGINE-GAME-001"
+          "GAME-HUMAN-AI-001"
         ]
       },
       {
@@ -23842,7 +23882,7 @@
           }
         ],
         "matrix_ids": [
-          "ENGINE-GAME-001"
+          "GAME-HUMAN-AI-001"
         ]
       },
       {
@@ -26807,7 +26847,7 @@
           }
         ],
         "matrix_ids": [
-          "ENGINE-GAME-001"
+          "ENGINE-GTP-001"
         ]
       },
       {
@@ -28842,7 +28882,7 @@
           }
         ],
         "matrix_ids": [
-          "ENGINE-GAME-001"
+          "GAME-HUMAN-AI-001"
         ]
       },
       {
@@ -28868,7 +28908,7 @@
           }
         ],
         "matrix_ids": [
-          "ENGINE-GAME-001"
+          "GAME-HUMAN-AI-001"
         ]
       },
       {
