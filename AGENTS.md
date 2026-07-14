@@ -71,8 +71,8 @@
 - 旧项目使用 Maven；`pom.xml` 目标 Java 17，旧 GitHub CI 配置 JDK 21。
 - 静态盘点：约 276 个主 Java 文件、179,215 行，约 145 个测试 Java 文件。
 - 最大类包括约 18,146 行的 `LizzieFrame.java`、10,401 行的 `Menu.java`、5,618 行的 `Leelaz.java`。
-- T-003 按“活跃字面量叶键 + 明确持久化 JSON 接收者”的当前静态口径检出 596 个配置键和 1,681 处引用，现有矩阵关联 255 个键；另有 37 个仅出现在 `Config.java` 注释中的历史候选键；其余 341 个字面量键、嵌套规范路径、计算键和逐用例语义归属仍未完成。
-- T-003 按 `Menu.java` 中活跃的 `Menu.*`/`menu.*` 资源读取检出 383 个菜单资源键和 473 处引用，现有矩阵关联 110 个键；12 个活跃硬编码菜单字面量和两个显式 `setAccelerator`（`Shift+O`、仅 Windows 的 `Alt+O`）均已全部反向关联。二十个文件的二十七个已纳入键源合计 171/171 个活跃 case、397/397 条路径；三十个文件的八十三个 pointer 源合计 180/180 个事件、599/599 条可达路径；全部反向关联 54 行矩阵并保留来源、修饰键、条件方法副作用、早退、空监听/空动作、执行语句、switch fall-through、数据依赖循环和原子 try/catch。全局 guard 已确认旧源码 active public key/pointer handler 全部纳入，继承 no-op 与显式空回调不伪装成 active case；其余 341 个配置键和 273 个菜单资源键仍待盘点。
+- T-003 按“活跃字面量叶键 + 明确持久化 JSON 接收者”的当前静态口径检出 596 个配置键和 1,681 处引用，现有矩阵关联 271 个键；另有 37 个仅出现在 `Config.java` 注释中的历史候选键；其余 325 个字面量键、嵌套规范路径、计算键和逐用例语义归属仍未完成。
+- T-003 按 `Menu.java` 中活跃的 `Menu.*`/`menu.*` 资源读取检出 383 个菜单资源键和 473 处引用，现有矩阵关联 111 个键；12 个活跃硬编码菜单字面量和两个显式 `setAccelerator`（`Shift+O`、仅 Windows 的 `Alt+O`）均已全部反向关联。二十个文件的二十七个已纳入键源合计 171/171 个活跃 case、397/397 条路径；三十个文件的八十三个 pointer 源合计 180/180 个事件、599/599 条可达路径；全部反向关联 54 行矩阵并保留来源、修饰键、条件方法副作用、早退、空监听/空动作、执行语句、switch fall-through、数据依赖循环和原子 try/catch。全局 guard 已确认旧源码 active public key/pointer handler 全部纳入，继承 no-op 与显式空回调不伪装成 active case；其余 325 个配置键和 272 个菜单资源键仍待盘点。
 - AI 计算由外部 KataGo/Leela 进程承担；旧程序主要负责 GTP、规则/棋谱状态和 UI。
 - 本机没有系统级 `mvn`，T-003 已在仓库外下载并校验 Apache Maven 3.9.16，在仓库外隔离副本以 Temurin 21.0.11 执行 `mvn -Dfmt.skip=true test`：1,161 项测试、0 failure、0 error、1 项按操作系统条件 skip；旧源码 576 个文件逐一比对无变化。
 - 本机 `PATH` 当前先解析到 `C:/Program Files (x86)/dotnet/dotnet.exe`，该 x86 host 没有 SDK；项目命令必须显式使用 `C:/Program Files/dotnet/dotnet.exe` 的 x64 稳定 SDK。`global.json` 已固定 `10.0.103`、`latestPatch` 且禁止 preview；另有 `8.0.420` 和不得用于本项目的 `10.0.300-preview...`。
@@ -422,7 +422,7 @@ dotnet build .\LizzieYzy.slnx -c Release --no-restore /warnaserror
 dotnet test .\LizzieYzy.slnx -c Release --no-build --logger "trx;LogFileName=tests.trx"
 ```
 
-- 当前 solution 不存在，这些门是“未实现”，不得伪造成功。
+- 当前 `LizzieYzy.slnx` 已存在；每次中/大范围变更必须真实执行这些门，不得以旧记录或空脚本代替。
 - 启用 nullable、.NET analyzers、确定性构建、warnings as errors。
 - NuGet lock file 提交，CI `--locked-mode`；依赖升级单独 review 后重新锁定。
 - T-005 完成后，跨平台统一入口为 `pwsh ./scripts/quality.ps1 -Level Medium` 或 `-Level Large`。脚本必须打印实际子命令、顺序执行本节门、首个失败即非零退出，并生成证据摘要；不得修改源码、自动跳过、自动提交或推送。脚本损坏时仍可用上面的显式命令复核，禁止空壳 gate 脚本。
@@ -667,7 +667,7 @@ push 成功但 CI 未通过时，任务状态仍是“进行中”。修复使�
 | --- | --- | --- | --- |
 | T-001 | 完成 | 确定新版源码目录 | 用户已确认 `F:/Lizzieyzy-GL/Lizzieyzy-G/` 为重构后源码根目录 |
 | T-002 | 完成 | 创建最小 .NET 10 + Avalonia SLNX solution | SDK/依赖/锁文件、3 个产品项目和对应测试、真实空棋盘启动退出、format、Release build、5 项 tests 和依赖审计均通过；实现提交 `c17873dde901b77637e770c241dbdc3e3037218a` 已推送，draft PR `#1` 为 OPEN/CLEAN；Actions 尚未建立并由 T-006 跟踪 |
-| T-003 | 进行中 | 建立旧版行为基线和功能等价矩阵 | 已校验便携 Maven 并在隔离副本跑通旧版 1,161 项测试；已生成 576 文件来源指纹、596 活跃配置叶键/1,681 引用、37 注释候选键、383 菜单资源键/473 活跃引用、12 个硬编码菜单字面量，以及二十个文件的二十七个键盘来源共 171 个 case/397 条路径、三十个文件的八十三个 pointer 来源共 180 个事件/599 条可达路径，并建立 54 个 `已盘点` 用例；当前关联 258 配置键、110 菜单资源键、全部菜单字面量/accelerator 和全部 active public key/pointer handler。`ENGINE-GAME-001` 已贯通 `NewEngineGameDialog`/`EnginePkConfig` 的 18 个配置键、详细工具栏直接启动、双 GTP 启动/轮转/认输/暂停/批量/SGF/续弈/保存/崩溃恢复、随机访问筛选、上一手候选及评论/走时/GTP 间隔链，并登记取消半提交、非有限数值、随机边界、启动重入、线性棋谱数据损失、路径逃逸、非原子假保存、无限轮询和恢复缺口；`ANALYSIS-AUTO-001` 记录共享随机函数的跨功能权重耦合，`BOARD-MAIN-INPUT-001` 记录 only-first 的真实落子匹配和视图不一致。生成器锁定两个对话框的键全集、菜单/输入/证据、构造入口和直接启动调用。下一步唯一盘点 `SetKataEngines.java` 及其 13 个当前未映射配置键，再继续其余 338 配置键、273 菜单资源键、嵌套/计算键、SGF/GIB 与 GTP 语料、旧版动态截图及 GUI/引擎分离性能 |
+| T-003 | 进行中 | 建立旧版行为基线和功能等价矩阵 | 已校验便携 Maven 并在隔离副本跑通旧版 1,161 项测试；已生成 576 文件来源指纹、596 活跃配置叶键/1,681 引用、37 注释候选键、383 菜单资源键/473 活跃引用、12 个硬编码菜单字面量，以及二十个文件的二十七个键盘来源共 171 个 case/397 条路径、三十个文件的八十三个 pointer 来源共 180 个事件/599 条可达路径，并建立 54 个 `已盘点` 用例；当前关联 271 配置键、111 菜单资源键、全部菜单字面量/accelerator 和全部 active public key/pointer handler。`ENGINE-GAME-001` 已贯通 `NewEngineGameDialog`/`EnginePkConfig`；`SETTINGS-ENGINE-001` 已贯通四个 `setLzSaiEngine` 入口、唯一 `SetKataEngines` 构造点、13 键、顶部工具栏显隐、PDA/WRN/线程即时应用、启动自动加载、首次推荐/benchmark、引擎回读与对局 WRN 暂存恢复，并登记非模态多窗口旧快照、dormant 线程值丢失、有限范围只染色、命令/保存半提交、全局引擎竞态、资源上限、外链、DPI 和无障碍缺口。生成器锁定上述键/菜单/输入/证据及调用点全集。下一步唯一盘点兄弟 `SetLeelaEngines.java` 及其 12 个当前未映射配置键，再继续其余 325 配置键、272 菜单资源键、嵌套/计算键、SGF/GIB 与 GTP 语料、旧版动态截图及 GUI/引擎分离性能 |
 | T-004 | 未开始 | 配置兼容清单和迁移器 | 以 T-003 当前 596 个活跃字面量叶键及后续发现项为输入，备份、未知键保留、原子保存和回滚测试通过 |
 | T-005 | 未开始 | 实现本地质量门脚本 | solution 存在后创建跨平台 `scripts/quality.ps1`，实际执行并传播 format/build/test/smoke/实测失败，Windows/macOS/Linux 均验证非零退出 |
 | T-006 | 未开始 | 实现 GitHub Actions | 三平台 CI、fast smoke、real KataGo、security、release 在 GitHub 真实跑通，预期失败能被拦截并记录 run URL |
@@ -681,7 +681,7 @@ push 成功但 CI 未通过时，任务状态仍是“进行中”。修复使�
 | T-014 | 未开始 | 建立可靠性、恢复与长稳体系 | crash/恢复证据、故障注入、100 次棋谱循环、50 次引擎循环和 8 小时 soak 均按 §6.4 通过 |
 | T-015 | 未开始 | 实现“万变”自由工作区布局系统 | 在 T-013 视觉方向确定后，按 §6.2.1 建立版本化模块注册表与逐项验收矩阵，让主棋盘、胜率/目差图、分支树、候选、历史、评论、引擎状态、GTP 控制台及后续同类模块统一支持拖拽停靠、分栏、标签、浮动、缩放、隐藏/恢复、锁定、命名工作区、原子持久化、跨显示器/DPI 恢复、键盘和辅助技术；三平台实测、损坏恢复、T-009 固定基线下 200 次布局循环满足 §6.5/§6.6 帧时间/停顿/资源无单调增长门、用户视觉确认全部通过 |
 
-当前可用范围仅为能启动、显示 19×19 空棋盘并正常关闭的原生新壳；不包含棋谱、设置迁移、引擎、“万变”布局或其他旧版功能，不能替代旧版。下一次继续 T-003 时，唯一盘点 `SetKataEngines.java` 及其 13 个当前未映射配置键；T-015 在 T-013 视觉方向确定后按 §6.2.1 实现，未经三平台动态验收不得把可拖拽布局标为完成。后续任何部分功能必须新增/拆分 ID，不得藏在“进行中”描述里。
+当前可用范围仅为能启动、显示 19×19 空棋盘并正常关闭的原生新壳；不包含棋谱、设置迁移、引擎、“万变”布局或其他旧版功能，不能替代旧版。下一次继续 T-003 时，唯一盘点 `SetLeelaEngines.java` 及其 12 个当前未映射配置键；T-015 在 T-013 视觉方向确定后按 §6.2.1 实现，未经三平台动态验收不得把可拖拽布局标为完成。后续任何部分功能必须新增/拆分 ID，不得藏在“进行中”描述里。
 
 ### 12.2 最近验证记录
 
@@ -750,6 +750,7 @@ push 成功但 CI 未通过时，任务状态仍是“进行中”。修复使�
 
 | 2026-07-14 | T-003 EnginePkConfig 随机落子、上一手候选与直接启动安全边界 | 矩阵和生成清单升级到 schema 44；复用 `ENGINE-GAME-001` 并联动 `ANALYSIS-AUTO-001`、`BOARD-MAIN-INPUT-001`，配置映射 255→258/596、未映射 341→338，菜单保持 110/383、键盘 171/397、pointer 180/599、54 行均为 `已盘点`。静态贯通 `EnginePkConfig(false/true)` 两入口、详细工具栏绕过对话框直接开始、11 个直接键及两个对话框 18 键并集、随机访问比例筛选、自动落子重复候选权重、上一手真实落子匹配、KataGo genmove 间隔、候选/评论/走时来源和非手动批量 TXT 的 Locale.ENGLISH 一位小数格式；登记 `isPreEngineGame` 启动期重复开始、DoubleDocument 巨大指数到 Infinity 后 JSONObject 拒绝造成半提交、空候选/除零/无种子随机、子窗口确认后外层取消不回滚、隐藏窗口泄漏、兄弟候选视图不一致，以及手动停止、AutosavePk 和批量 SGF/TXT 的真实保存分支。生成器精确锁定 11 键、菜单/输入、关键证据、两个 EnginePkConfig 构造入口和全树两个直接 `startEngineGame` 调用；缺键、缺 apply 证据和缺工具栏入口证据三项 mutation 均以退出码 2 被拒绝。`python -m py_compile scripts/generate_legacy_inventory.py`、生成与两个 `PYTHONHASHSEED` 的 `--check`、JSON、changed-file UTF-8/LF、diff、秘密、动态执行、二进制和旧基准无 `.git`/`target` 审计均退出 0，清单 SHA-256 为 `cf8f5b5fcc538ea3f0bb31934bddc0abe7394ab6bba8b3495fdab78896e4ae1c`；首次全仓 LF 抽查因既有未修改的 `.gitignore` 为 CRLF 退出 1，未擅自改动无关文件，随后本轮三个变更文件严格检查通过。绝对 x64 SDK 10.0.103 的 locked restore、format、Release `/warnaserror` build 和 Core 3 + Engine 1 + Desktop 1 共 5/5 tests 全部退出 0，build 0 warning/0 error；六项目直接/传递依赖均无已知漏洞。Computer Use 实图确认 Release `LizzieYzy GL` 与完整 19×19 空棋盘，Alt+F4 后窗口和进程均消失；三路独立 review 发现并修正生成器变量遮蔽、直接启动全树漏报、TXT/AutosavePk 分支、父开关下游与评论回退等问题，最终 P0–P3 全零；实现提交 `9e077e5d6da957e29879ee162dc376030d2f193d`。 | T-003 仍未完成：338 配置键、273 菜单资源键、嵌套/计算键、受控 EnginePk 设置快照/有限范围校验/确定随机源/原子提交、双 GTP、完整棋谱快照、保存恢复、焦点/DPI/键盘/辅助技术夹具、跨实现 SGF/GIB/GTP 语料、旧版动态截图、性能和跨平台验证仍待完成。本轮未运行旧 GUI/JAR、修改用户配置/棋谱、启动真实或假 GTP 引擎，也未修改产品代码或旧 Java，因此新版 EnginePk 设置、随机落子、动态候选、真实功能、可靠性、性能、DPI/无障碍均未实现或验证；空壳冒烟不能证明这些功能。Actions 由 T-006 跟踪，当前无 checks 或 run URL；唯一推荐下一步为盘点 `SetKataEngines.java` 及其 13 个当前未映射配置键。 |
 | 2026-07-14 | T-015 用户指定“万变”自由工作区布局系统 | 新增 §6.2.1 和稳定任务 T-015，明确主棋盘、胜率/目差图、分支树、候选、历史、评论、引擎状态、GTP 控制台及后续非模态信息模块统一支持拖拽停靠、分栏、标签、浮动、缩放、隐藏/恢复、锁定和命名工作区；同时锁定版本化原子持久化、未知模块保留、显示器/DPI 越界恢复、键盘等价、辅助技术、增量渲染、200 次循环性能/泄漏证据、三平台实测和用户确认。 | 仅建立用户批准的后续开发契约，产品代码、布局 schema、控件、自动测试和动态 UI 均未实现；T-015 必须在 T-013 视觉方向确定后实施，不能用默认空壳或静态截图宣称完成。 |
+| 2026-07-14 | T-003 SetKataEngines 高级参数、自动加载与事务安全边界 | 矩阵和生成清单升级到 schema 45；复用 `SETTINGS-ENGINE-001`，配置映射 258→271/596、未映射 338→325，菜单映射 110→111/383、未映射 273→272，键盘 171/397、pointer 180/599 和 54 行状态不变。静态贯通主/独立棋盘 Alt+D、设置菜单、详细工具栏四入口、唯一构造点、13 个直接键、顶部工具栏显隐、PDA/WRN/线程即时命令、启动自动加载、首次推荐/benchmark 写入与运行引擎应用、参数回读及对局 WRN 暂存恢复；登记修饰键优先级、非模态 always-on-top 多窗口旧快照、取消/X 只隐藏、中途换引擎、dormant 线程文本被清空、Komi/Double 巨大指数与空值、范围只染色、线程 1..1024 未落实、GTP/配置分步半提交、非原子保存、全局回读竞态、EDT、外链、固定 DPI 与无障碍缺口。生成器精确锁定 13 键、两个资源键、四个 input case/binding、关键 evidence、四个 `setLzSaiEngine` 调用和唯一构造点；移除 `show-wrn-in-menu` 的 mutation 以退出码 2 被拒绝。`python -m py_compile`、生成、两个 `PYTHONHASHSEED` 的 `--check`、JSON、UTF-8/LF、diff、秘密、二进制和旧基准无 `.git`/`target` 审计均退出 0，清单 SHA-256 为 `1e93dfca7788f98818fc602ca933aa90259129abbf0d9d93846e9dcfdadd464d`；x64 SDK 10.0.103 locked restore、format、Release `/warnaserror` build 和 Core 3 + Engine 1 + Desktop 1 共 5/5 tests 均退出 0，build 0 warning/0 error，六项目依赖无已知漏洞。Computer Use 实图确认 Release `LizzieYzy GL` 与完整 19×19 空棋盘，Alt+F4 后窗口消失；三路独立 review 的 3 个 P1、5 个 P2、2 个 P3 均已修复，最终 P0–P3 全零；实现提交 `783a1169d0151cac11aeae2e4808cfd264d6e2f4f`。 | T-003 仍未完成：325 配置键、272 菜单资源键、嵌套/计算键、受控高级参数草稿/有限范围与 capability 校验/目标引擎冻结/命令响应/配置原子提交/备份恢复/单实例生命周期、跨实现 SGF/GIB/GTP 语料、旧版动态截图、性能和跨平台验证仍待完成。本轮未运行旧 GUI/JAR、修改用户配置、点击外链或启动真实/假 GTP 引擎，也未修改产品代码或旧 Java，因此新版高级参数、真实引擎事务、持久化、可靠性、性能、DPI/无障碍均未实现或动态验证；空壳冒烟不能证明这些功能。Actions 由 T-006 跟踪，当前 PR 无 checks/run URL；唯一推荐下一步为盘点 `SetLeelaEngines.java` 及其 12 个当前未映射配置键。 |
 
 ### 12.3 更新规则
 
