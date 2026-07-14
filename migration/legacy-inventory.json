@@ -1,5 +1,5 @@
 {
-  "schema_version": 30,
+  "schema_version": 31,
   "source": {
     "root": "../lizzieyzy-next-main",
     "version": "yzy2.5.3",
@@ -35,8 +35,8 @@
     "mapped_config_leaf_keys": 146,
     "unmapped_config_leaf_keys": 450,
     "active_menu_resource_keys": 383,
-    "mapped_menu_resource_keys": 92,
-    "unmapped_menu_resource_keys": 291,
+    "mapped_menu_resource_keys": 93,
+    "unmapped_menu_resource_keys": 290,
     "active_menu_literal_labels": 12,
     "mapped_menu_literal_labels": 12,
     "unmapped_menu_literal_labels": 0,
@@ -49,11 +49,11 @@
     "active_input_key_bindings": 365,
     "mapped_input_key_bindings": 365,
     "unmapped_input_key_bindings": 0,
-    "active_input_pointer_events": 110,
-    "mapped_input_pointer_events": 110,
+    "active_input_pointer_events": 111,
+    "mapped_input_pointer_events": 111,
     "unmapped_input_pointer_events": 0,
-    "active_input_pointer_bindings": 442,
-    "mapped_input_pointer_bindings": 442,
+    "active_input_pointer_bindings": 443,
+    "mapped_input_pointer_bindings": 443,
     "unmapped_input_pointer_bindings": 0
   },
   "config": {
@@ -15283,7 +15283,9 @@
       },
       {
         "key": "Menu.engineConfig",
-        "matrix_ids": [],
+        "matrix_ids": [
+          "ENGINE-LIFECYCLE-001"
+        ],
         "lines": [
           5137
         ]
@@ -31011,10 +31013,16 @@
         "source": "src/main/java/featurecat/lizzie/gui/Input.java",
         "active_pointer_events": 8,
         "active_pointer_bindings": 48
+      },
+      {
+        "id": "MoreEngines",
+        "source": "src/main/java/featurecat/lizzie/gui/MoreEngines.java",
+        "active_pointer_events": 1,
+        "active_pointer_bindings": 1
       }
     ],
-    "active_pointer_events": 110,
-    "active_pointer_bindings": 442,
+    "active_pointer_events": 111,
+    "active_pointer_bindings": 443,
     "pointer_events": [
       {
         "event_id": "InputIndependentSubboard:mouseClicked",
@@ -32114,6 +32122,16 @@
         "binding_count": 7,
         "matrix_ids": [
           "BOARD-MAIN-INPUT-001"
+        ]
+      },
+      {
+        "event_id": "MoreEngines:mouseClicked",
+        "source_id": "MoreEngines",
+        "event": "mouseClicked",
+        "line": 775,
+        "binding_count": 1,
+        "matrix_ids": [
+          "ENGINE-LIFECYCLE-001"
         ]
       }
     ],
@@ -64553,6 +64571,31 @@
         "statements": [],
         "matrix_ids": [
           "BOARD-MAIN-INPUT-001"
+        ]
+      },
+      {
+        "binding": "MoreEngines:mouseClicked#1",
+        "event_id": "MoreEngines:mouseClicked",
+        "source_id": "MoreEngines",
+        "event": "mouseClicked",
+        "line": 775,
+        "conditions": [],
+        "statements": [
+          {
+            "line": 776,
+            "statement": "int row = table.rowAtPoint(e.getPoint());"
+          },
+          {
+            "line": 777,
+            "statement": "checkSave();"
+          },
+          {
+            "line": 778,
+            "statement": "handleTableClick(row);"
+          }
+        ],
+        "matrix_ids": [
+          "ENGINE-LIFECYCLE-001"
         ]
       }
     ]

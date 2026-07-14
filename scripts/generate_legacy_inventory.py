@@ -396,6 +396,11 @@ INPUT_POINTER_SOURCES = (
             "mouseDragged",
         },
     ),
+    (
+        "MoreEngines",
+        "src/main/java/featurecat/lizzie/gui/MoreEngines.java",
+        {"mouseClicked"},
+    ),
 )
 INPUT_MODIFIER_CHECKS = (
     ("Alt", re.compile(r"\be\.isAltDown\s*\(\s*\)")),
@@ -1473,8 +1478,8 @@ def validate_matrix(
     dict[str, list[str]],
     dict[str, list[str]],
 ]:
-    if matrix.get("schema_version") != 30:
-        raise ValueError("Matrix schema_version must be 30")
+    if matrix.get("schema_version") != 31:
+        raise ValueError("Matrix schema_version must be 31")
     allowed_statuses = matrix.get("allowed_statuses")
     if allowed_statuses != list(ALLOWED_STATUSES):
         raise ValueError("Matrix allowed_statuses differ from the repository contract")
@@ -1725,7 +1730,7 @@ def build_inventory(legacy_root: Path, matrix_path: Path) -> dict[str, Any]:
         raise ValueError("Every normalized legacy input path must map to the matrix")
 
     return {
-        "schema_version": 30,
+        "schema_version": 31,
         "source": {
             "root": "../lizzieyzy-next-main",
             "version": read_legacy_version(legacy_root),
