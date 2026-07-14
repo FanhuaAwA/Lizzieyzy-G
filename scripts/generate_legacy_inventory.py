@@ -64,8 +64,10 @@ INPUT_KEY_METHOD = re.compile(
     r"\(\s*KeyEvent\s+(?P<parameter>[A-Za-z_$][\w$]*)\s*\)\s*\{"
 )
 PUBLIC_KEY_METHOD = re.compile(
-    r"public\s+void\s+(?P<event>keyPressed|keyReleased|keyTyped)\s*"
-    r"\(\s*KeyEvent\s+(?P<parameter>[A-Za-z_$][\w$]*)\s*\)\s*\{"
+    r"public\s+(?:(?:final|synchronized)\s+)*void\s+"
+    r"(?P<event>keyPressed|keyReleased|keyTyped)\s*"
+    r"\(\s*(?:final\s+)?(?:java\.awt\.event\.)?KeyEvent\s+"
+    r"(?P<parameter>[A-Za-z_$][\w$]*)\s*\)\s*\{"
 )
 INPUT_KEY_CASE = re.compile(r"\bcase\s+(?P<key>VK_[A-Z0-9_]+)\s*:")
 INPUT_DEFAULT_CASE = re.compile(r"\bdefault\s*:")
