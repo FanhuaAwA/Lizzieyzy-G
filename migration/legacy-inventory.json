@@ -1,5 +1,5 @@
 {
-  "schema_version": 47,
+  "schema_version": 48,
   "source": {
     "root": "../lizzieyzy-next-main",
     "version": "yzy2.5.3",
@@ -22,21 +22,21 @@
     "All active public key and pointer handlers in the legacy Java sources are inventoried; inherited no-op callbacks and explicitly empty listener methods do not become active cases."
   ],
   "matrix_summary": {
-    "rows": 54,
+    "rows": 55,
     "statuses": {
       "未盘点": 0,
-      "已盘点": 54,
+      "已盘点": 55,
       "实施中": 0,
       "已实现待验证": 0,
       "已验证": 0,
       "用户批准不迁移": 0
     },
     "active_config_leaf_keys": 596,
-    "mapped_config_leaf_keys": 289,
-    "unmapped_config_leaf_keys": 307,
+    "mapped_config_leaf_keys": 307,
+    "unmapped_config_leaf_keys": 289,
     "active_menu_resource_keys": 383,
-    "mapped_menu_resource_keys": 111,
-    "unmapped_menu_resource_keys": 272,
+    "mapped_menu_resource_keys": 115,
+    "unmapped_menu_resource_keys": 268,
     "active_menu_literal_labels": 12,
     "mapped_menu_literal_labels": 12,
     "unmapped_menu_literal_labels": 0,
@@ -235,7 +235,9 @@
       {
         "key": "allow-close-comment-control-hint",
         "reference_count": 2,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "UI-LAYOUT-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -855,7 +857,9 @@
       {
         "key": "analyze-all-branch",
         "reference_count": 2,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "ANALYSIS-AUTO-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -973,7 +977,9 @@
       {
         "key": "auto-ana-diff-black",
         "reference_count": 2,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "ANALYSIS-AUTO-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -992,7 +998,9 @@
       {
         "key": "auto-ana-diff-enable",
         "reference_count": 2,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "ANALYSIS-AUTO-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -1011,7 +1019,9 @@
       {
         "key": "auto-ana-diff-first-playouts",
         "reference_count": 2,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "ANALYSIS-AUTO-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -1030,7 +1040,9 @@
       {
         "key": "auto-ana-diff-playouts",
         "reference_count": 2,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "ANALYSIS-AUTO-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -1049,7 +1061,9 @@
       {
         "key": "auto-ana-diff-score-threshold",
         "reference_count": 2,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "ANALYSIS-AUTO-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -1068,7 +1082,9 @@
       {
         "key": "auto-ana-diff-time",
         "reference_count": 2,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "ANALYSIS-AUTO-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -1087,7 +1103,9 @@
       {
         "key": "auto-ana-diff-use-score",
         "reference_count": 2,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "ANALYSIS-AUTO-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -1106,7 +1124,9 @@
       {
         "key": "auto-ana-diff-use-win",
         "reference_count": 2,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "ANALYSIS-AUTO-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -1125,7 +1145,9 @@
       {
         "key": "auto-ana-diff-white",
         "reference_count": 2,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "ANALYSIS-AUTO-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -1144,7 +1166,9 @@
       {
         "key": "auto-ana-diff-win-threshold",
         "reference_count": 2,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "ANALYSIS-AUTO-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -1316,6 +1340,7 @@
         "key": "auto-replay-branch",
         "reference_count": 3,
         "matrix_ids": [
+          "BOARD-AUTO-REPLAY-001",
           "BOARD-MAIN-INPUT-001"
         ],
         "references": [
@@ -1343,6 +1368,7 @@
         "key": "auto-replay-display-entire-variations-first",
         "reference_count": 2,
         "matrix_ids": [
+          "BOARD-AUTO-REPLAY-001",
           "BOARD-MAIN-INPUT-001"
         ],
         "references": [
@@ -2993,7 +3019,6 @@
         "key": "check-random-visits",
         "reference_count": 2,
         "matrix_ids": [
-          "ANALYSIS-AUTO-001",
           "ENGINE-GAME-001"
         ],
         "references": [
@@ -3448,7 +3473,9 @@
       {
         "key": "continue-with-best-move",
         "reference_count": 2,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "BOARD-AUTO-REPLAY-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -4078,7 +4105,9 @@
       {
         "key": "directly-with-best-move",
         "reference_count": 2,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "BOARD-AUTO-REPLAY-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -4144,6 +4173,7 @@
         "key": "display-entire-variations-first-seconds",
         "reference_count": 2,
         "matrix_ids": [
+          "BOARD-AUTO-REPLAY-001",
           "BOARD-MAIN-INPUT-001"
         ],
         "references": [
@@ -4609,7 +4639,9 @@
       {
         "key": "exit-auto-analyze-by-pause",
         "reference_count": 2,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "ANALYSIS-AUTO-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -4628,7 +4660,10 @@
       {
         "key": "exit-auto-analyze-tip",
         "reference_count": 3,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "ANALYSIS-AUTO-001",
+          "UI-LAYOUT-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -4954,7 +4989,9 @@
       {
         "key": "first-load-katago",
         "reference_count": 3,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "UI-LAYOUT-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -9052,6 +9089,7 @@
         "key": "replay-branch-interval-seconds",
         "reference_count": 5,
         "matrix_ids": [
+          "BOARD-AUTO-REPLAY-001",
           "BOARD-MAIN-INPUT-001"
         ],
         "references": [
@@ -11931,7 +11969,9 @@
       {
         "key": "show-replace-file-hint",
         "reference_count": 4,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "UI-LAYOUT-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -15386,7 +15426,9 @@
       },
       {
         "key": "Menu.autoAnalyze",
-        "matrix_ids": [],
+        "matrix_ids": [
+          "ANALYSIS-AUTO-001"
+        ],
         "lines": [
           3225,
           7924
@@ -15902,7 +15944,9 @@
       },
       {
         "key": "Menu.deletePersistFile",
-        "matrix_ids": [],
+        "matrix_ids": [
+          "UI-LAYOUT-001"
+        ],
         "lines": [
           654
         ]
@@ -16623,7 +16667,9 @@
       },
       {
         "key": "Menu.makeAutoPlay",
-        "matrix_ids": [],
+        "matrix_ids": [
+          "BOARD-AUTO-REPLAY-001"
+        ],
         "lines": [
           572
         ]
@@ -17824,7 +17870,9 @@
       },
       {
         "key": "Menu.stopAutoAnalyze",
-        "matrix_ids": [],
+        "matrix_ids": [
+          "ANALYSIS-AUTO-001"
+        ],
         "lines": [
           3264,
           7963
@@ -19087,6 +19135,7 @@
         "binding_count": 6,
         "matrix_ids": [
           "ANALYSIS-AUTO-001",
+          "BOARD-AUTO-REPLAY-001",
           "BOARD-EDIT-001",
           "UI-LAYOUT-001"
         ]
@@ -19925,6 +19974,7 @@
         "binding_count": 6,
         "matrix_ids": [
           "ANALYSIS-AUTO-001",
+          "BOARD-AUTO-REPLAY-001",
           "BOARD-EDIT-001",
           "UI-LAYOUT-001"
         ]
@@ -24419,7 +24469,7 @@
           }
         ],
         "matrix_ids": [
-          "ANALYSIS-AUTO-001"
+          "BOARD-AUTO-REPLAY-001"
         ]
       },
       {
@@ -29445,7 +29495,7 @@
           }
         ],
         "matrix_ids": [
-          "ANALYSIS-AUTO-001"
+          "BOARD-AUTO-REPLAY-001"
         ]
       },
       {

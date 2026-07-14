@@ -2221,8 +2221,8 @@ def validate_matrix(
     dict[str, list[str]],
     dict[str, list[str]],
 ]:
-    if matrix.get("schema_version") != 47:
-        raise ValueError("Matrix schema_version must be 47")
+    if matrix.get("schema_version") != 48:
+        raise ValueError("Matrix schema_version must be 48")
     allowed_statuses = matrix.get("allowed_statuses")
     if allowed_statuses != list(ALLOWED_STATUSES):
         raise ValueError("Matrix allowed_statuses differ from the repository contract")
@@ -2447,6 +2447,85 @@ def build_inventory(legacy_root: Path, matrix_path: Path) -> dict[str, Any]:
         config_entries,
         matrix_ids_by_config_key,
         matrix_ids_by_menu_key,
+        row_id="BOARD-AUTO-REPLAY-001",
+        source_path="src/main/java/featurecat/lizzie/gui/AutoPlay.java",
+        expected_config_keys={
+            "auto-replay-branch",
+            "auto-replay-display-entire-variations-first",
+            "continue-with-best-move",
+            "directly-with-best-move",
+            "display-entire-variations-first-seconds",
+            "replay-branch-interval-seconds",
+        },
+        expected_menu_keys={"Menu.makeAutoPlay"},
+        expected_input_cases={
+            "keyPressed:VK_A",
+            "InputIndependentMainBoard:keyPressed:VK_A",
+        },
+        expected_input_bindings={
+            "keyPressed:VK_A#1",
+            "InputIndependentMainBoard:keyPressed:VK_A#1",
+        },
+        required_evidence={
+            (
+                "src/main/java/featurecat/lizzie/gui/Input.java",
+                "AutoPlay autoPlay = new AutoPlay();",
+            ),
+            (
+                "src/main/java/featurecat/lizzie/gui/InputIndependentMainBoard.java",
+                "AutoPlay autoPlay = new AutoPlay();",
+            ),
+            (
+                "src/main/java/featurecat/lizzie/gui/BottomToolbar.java",
+                "AutoPlay autoPlay = new AutoPlay();",
+            ),
+            (
+                "src/main/java/featurecat/lizzie/gui/Menu.java",
+                "AutoPlay autoPlay = new AutoPlay();",
+            ),
+            (
+                "src/main/java/featurecat/lizzie/gui/AutoPlay.java",
+                "okButton.addActionListener",
+            ),
+            (
+                "src/main/java/featurecat/lizzie/gui/BottomToolbar.java",
+                "public void autoPlayMain(boolean autoQuit)",
+            ),
+            (
+                "src/main/java/featurecat/lizzie/gui/BottomToolbar.java",
+                "public void autoPlaySub()",
+            ),
+            (
+                "src/main/java/featurecat/lizzie/gui/LizzieFrame.java",
+                "public void autoReplayBranch()",
+            ),
+            (
+                "src/main/java/featurecat/lizzie/Config.java",
+                'replayBranchIntervalSeconds = uiConfig.optDouble("replay-branch-interval-seconds", 0.5);',
+            ),
+            (
+                "src/main/java/featurecat/lizzie/Config.java",
+                'ui.put("replay-branch-interval-seconds", 0.9);',
+            ),
+            (
+                "src/main/java/featurecat/lizzie/Config.java",
+                "public boolean mergeDefaults(JSONObject config, JSONObject defaultsConfig)",
+            ),
+            (
+                "src/main/java/featurecat/lizzie/Config.java",
+                'directlyWithBestMove = uiConfig.optBoolean("directly-with-best-move", false);',
+            ),
+            (
+                "src/main/java/featurecat/lizzie/Config.java",
+                "private void writeConfig(JSONObject config, File file)",
+            ),
+        },
+    )
+    validate_workflow_guard(
+        matrix,
+        config_entries,
+        matrix_ids_by_config_key,
+        matrix_ids_by_menu_key,
         row_id="GAME-HUMAN-AI-001",
         source_path="src/main/java/featurecat/lizzie/gui/NewGameDialog.java",
         expected_config_keys={
@@ -2516,6 +2595,212 @@ def build_inventory(legacy_root: Path, matrix_path: Path) -> dict[str, Any]:
             ),
         },
     )
+    validate_workflow_guard(
+        matrix,
+        config_entries,
+        matrix_ids_by_config_key,
+        matrix_ids_by_menu_key,
+        row_id="ANALYSIS-AUTO-001",
+        source_path="src/main/java/featurecat/lizzie/gui/SetDiffAnalyze.java",
+        expected_config_keys={
+            "auto-ana-diff-black",
+            "auto-ana-diff-first-playouts",
+            "auto-ana-diff-playouts",
+            "auto-ana-diff-score-threshold",
+            "auto-ana-diff-time",
+            "auto-ana-diff-use-score",
+            "auto-ana-diff-use-win",
+            "auto-ana-diff-white",
+            "auto-ana-diff-win-threshold",
+        },
+        expected_menu_keys={"Menu.autoAnalyze", "Menu.stopAutoAnalyze"},
+        expected_input_cases={
+            "keyPressed:VK_A",
+            "InputIndependentMainBoard:keyPressed:VK_A",
+        },
+        expected_input_bindings={
+            "keyPressed:VK_A#5",
+            "keyPressed:VK_A#6",
+            "InputIndependentMainBoard:keyPressed:VK_A#5",
+            "InputIndependentMainBoard:keyPressed:VK_A#6",
+        },
+        required_evidence={
+            (
+                "src/main/java/featurecat/lizzie/gui/StartAnaDialog.java",
+                "SetDiffAnalyze setDiffAnalyze = new SetDiffAnalyze(thisDialog);",
+            ),
+            (
+                "src/main/java/featurecat/lizzie/gui/AnalysisTable.java",
+                "new StartAnaDialog(false, Lizzie.frame)",
+            ),
+            (
+                "src/main/java/featurecat/lizzie/gui/AnalysisTable.java",
+                "new StartAnaDialog(true, Lizzie.frame)",
+            ),
+            (
+                "src/main/java/featurecat/lizzie/gui/LizzieFrame.java",
+                "new StartAnaDialog(isFlashMode, Lizzie.frame)",
+            ),
+            (
+                "src/main/java/featurecat/lizzie/gui/LizzieFrame.java",
+                "new StartAnaDialog(false, Lizzie.frame)",
+            ),
+            (
+                "src/main/java/featurecat/lizzie/gui/StartAnaDialog.java",
+                'Lizzie.config.uiConfig.put("auto-ana-diff-enable", Lizzie.config.autoAnaDiffEnable);',
+            ),
+            (
+                "src/main/java/featurecat/lizzie/gui/StartAnaDialog.java",
+                'Lizzie.config.uiConfig.put("analyze-all-branch", Lizzie.config.analyzeAllBranch);',
+            ),
+            (
+                "src/main/java/featurecat/lizzie/gui/StartAnaDialog.java",
+                '"exit-auto-analyze-by-pause", Lizzie.config.exitAutoAnalyzeByPause',
+            ),
+            (
+                "src/main/java/featurecat/lizzie/gui/LizzieFrame.java",
+                'Lizzie.config.uiConfig.put("exit-auto-analyze-tip", Lizzie.config.exitAutoAnalyzeTip);',
+            ),
+            (
+                "src/main/java/featurecat/lizzie/gui/Menu.java",
+                "LizzieFrame.toolbar.stopAutoAna(true, true);",
+            ),
+            (
+                "src/main/java/featurecat/lizzie/gui/SetDiffAnalyze.java",
+                "btnConfirm.addActionListener",
+            ),
+            (
+                "src/main/java/featurecat/lizzie/gui/SetDiffAnalyze.java",
+                "btnCancel.addActionListener",
+            ),
+            (
+                "src/main/java/featurecat/lizzie/gui/BottomToolbar.java",
+                "private boolean checkDiffAnalyze(boolean isForceStop)",
+            ),
+            (
+                "src/main/java/featurecat/lizzie/gui/BottomToolbar.java",
+                "Lizzie.board.analyzeAllNodesAfter(Lizzie.board.getHistory().getCurrentHistoryNode());",
+            ),
+            (
+                "src/main/java/featurecat/lizzie/gui/BottomToolbar.java",
+                "public void getAllDiffNodesAfter(",
+            ),
+            (
+                "src/main/java/featurecat/lizzie/gui/BottomToolbar.java",
+                "private void autoAnaSaveAndLoad()",
+            ),
+            (
+                "src/main/java/featurecat/lizzie/rules/Board.java",
+                "public void analyzeAllDiffNodes(",
+            ),
+            (
+                "src/main/java/featurecat/lizzie/rules/Board.java",
+                "public void analyzeAllNodesAfter(",
+            ),
+            (
+                "src/main/java/featurecat/lizzie/analysis/Leelaz.java",
+                "private void nofityDiffAna()",
+            ),
+            (
+                "src/main/java/featurecat/lizzie/Config.java",
+                'autoAnaDiffEnable = uiConfig.optBoolean("auto-ana-diff-enable", false);',
+            ),
+            (
+                "src/main/java/featurecat/lizzie/Config.java",
+                'autoAnaDiffFirstPlayouts = uiConfig.optInt("auto-ana-diff-first-playouts", -1);',
+            ),
+            (
+                "src/main/java/featurecat/lizzie/Config.java",
+                'analyzeAllBranch = uiConfig.optBoolean("analyze-all-branch", false);',
+            ),
+            (
+                "src/main/java/featurecat/lizzie/Config.java",
+                'exitAutoAnalyzeByPause = uiConfig.optBoolean("exit-auto-analyze-by-pause", true);',
+            ),
+            (
+                "src/main/java/featurecat/lizzie/Config.java",
+                'exitAutoAnalyzeTip = uiConfig.optBoolean("exit-auto-analyze-tip", true);',
+            ),
+            (
+                "src/main/java/featurecat/lizzie/Lizzie.java",
+                "public static void resetAllHints()",
+            ),
+            (
+                "src/main/java/featurecat/lizzie/Lizzie.java",
+                'config.uiConfig.put("exit-auto-analyze-tip", true);',
+            ),
+            (
+                "src/main/java/featurecat/lizzie/gui/LizzieFrame.java",
+                "public boolean importData(JComponent comp, Transferable t)",
+            ),
+            (
+                "src/main/java/featurecat/lizzie/gui/LizzieFrame.java",
+                "t.getTransferData(DataFlavor.javaFileListFlavor)",
+            ),
+            (
+                "src/main/java/featurecat/lizzie/Config.java",
+                "private void writeConfig(JSONObject config, File file)",
+            ),
+        },
+    )
+    analysis_auto_dialog_keys = {
+        "analyze-all-branch",
+        "auto-ana-diff-enable",
+        "exit-auto-analyze-by-pause",
+        "exit-auto-analyze-tip",
+    }
+    unmapped_analysis_auto_dialog_keys = sorted(
+        key
+        for key in analysis_auto_dialog_keys
+        if "ANALYSIS-AUTO-001" not in matrix_ids_by_config_key.get(key, [])
+    )
+    if unmapped_analysis_auto_dialog_keys:
+        raise ValueError(
+            "StartAnaDialog/pause config keys must map to ANALYSIS-AUTO-001: "
+            f"{unmapped_analysis_auto_dialog_keys}"
+        )
+    if "UI-LAYOUT-001" not in matrix_ids_by_menu_key.get("Menu.deletePersistFile", []):
+        raise ValueError("Menu.deletePersistFile must map to UI-LAYOUT-001")
+    ui_reset_config_keys = {
+        "allow-close-comment-control-hint",
+        "exit-auto-analyze-tip",
+        "first-load-katago",
+        "show-replace-file-hint",
+    }
+    unmapped_ui_reset_config_keys = sorted(
+        key
+        for key in ui_reset_config_keys
+        if "UI-LAYOUT-001" not in matrix_ids_by_config_key.get(key, [])
+    )
+    if unmapped_ui_reset_config_keys:
+        raise ValueError(
+            "resetAllHints config keys must map to UI-LAYOUT-001: "
+            f"{unmapped_ui_reset_config_keys}"
+        )
+    ui_layout_row = next(row for row in matrix["rows"] if row["id"] == "UI-LAYOUT-001")
+    ui_layout_evidence = {
+        (entry["path"], entry["symbol"]) for entry in ui_layout_row["java_evidence"]
+    }
+    required_ui_reset_evidence = {
+        (
+            "src/main/java/featurecat/lizzie/gui/Menu.java",
+            "Lizzie.config.deletePersist(true);",
+        ),
+        (
+            "src/main/java/featurecat/lizzie/gui/Menu.java",
+            "Lizzie.resetAllHints();",
+        ),
+        (
+            "src/main/java/featurecat/lizzie/Config.java",
+            "public void deletePersist(boolean showMsg)",
+        ),
+        (
+            "src/main/java/featurecat/lizzie/Lizzie.java",
+            "public static void resetAllHints()",
+        ),
+    }
+    if not required_ui_reset_evidence <= ui_layout_evidence:
+        raise ValueError("UI-LAYOUT-001 reset-persist evidence is incomplete")
     validate_workflow_guard(
         matrix,
         config_entries,
@@ -2944,6 +3229,14 @@ def build_inventory(legacy_root: Path, matrix_path: Path) -> dict[str, Any]:
     actual_set_leela_engine_calls: dict[str, int] = {}
     actual_set_kata_pda_calls: dict[str, int] = {}
     actual_kata_pda_entry_calls: dict[str, int] = {}
+    actual_auto_play_dialog_calls: dict[str, int] = {}
+    actual_start_ana_dialog_calls: dict[str, int] = {}
+    actual_start_ana_dialog_false_calls: dict[str, int] = {}
+    actual_start_ana_dialog_true_calls: dict[str, int] = {}
+    actual_start_ana_dialog_mode_calls: dict[str, int] = {}
+    actual_set_diff_analyze_calls: dict[str, int] = {}
+    actual_set_diff_entry_calls: dict[str, int] = {}
+    actual_stop_auto_analysis_calls: dict[str, int] = {}
     for path in main_java_files:
         source_path = path.relative_to(legacy_root).as_posix()
         source = strip_java_comments(path.read_text(encoding="utf-8", errors="replace"))
@@ -2962,6 +3255,32 @@ def build_inventory(legacy_root: Path, matrix_path: Path) -> dict[str, Any]:
         kata_pda_entry_count = source.count("more2.addActionListener(")
         if kata_pda_entry_count:
             actual_kata_pda_entry_calls[source_path] = kata_pda_entry_count
+        auto_play_dialog_count = source.count("new AutoPlay(")
+        if auto_play_dialog_count:
+            actual_auto_play_dialog_calls[source_path] = auto_play_dialog_count
+        start_ana_dialog_count = source.count("new StartAnaDialog(")
+        if start_ana_dialog_count:
+            actual_start_ana_dialog_calls[source_path] = start_ana_dialog_count
+        start_ana_dialog_false_count = source.count("new StartAnaDialog(false,")
+        if start_ana_dialog_false_count:
+            actual_start_ana_dialog_false_calls[source_path] = (
+                start_ana_dialog_false_count
+            )
+        start_ana_dialog_true_count = source.count("new StartAnaDialog(true,")
+        if start_ana_dialog_true_count:
+            actual_start_ana_dialog_true_calls[source_path] = start_ana_dialog_true_count
+        start_ana_dialog_mode_count = source.count("new StartAnaDialog(isFlashMode,")
+        if start_ana_dialog_mode_count:
+            actual_start_ana_dialog_mode_calls[source_path] = start_ana_dialog_mode_count
+        set_diff_analyze_count = source.count("new SetDiffAnalyze(")
+        if set_diff_analyze_count:
+            actual_set_diff_analyze_calls[source_path] = set_diff_analyze_count
+        set_diff_entry_count = source.count("btnSetDiff.addActionListener(")
+        if set_diff_entry_count:
+            actual_set_diff_entry_calls[source_path] = set_diff_entry_count
+        stop_auto_analysis_count = source.count("stopAutoAna(true, true);")
+        if stop_auto_analysis_count:
+            actual_stop_auto_analysis_calls[source_path] = stop_auto_analysis_count
     if actual_engine_parameter_calls != expected_engine_parameter_calls:
         raise ValueError(f"setLzSaiEngine call sites changed: {actual_engine_parameter_calls}")
     expected_set_kata_engine_calls = {
@@ -2995,6 +3314,86 @@ def build_inventory(legacy_root: Path, matrix_path: Path) -> dict[str, Any]:
         raise ValueError(
             "SetKataPDA entry call sites changed: "
             f"{actual_kata_pda_entry_calls}"
+        )
+    expected_auto_play_dialog_calls = {
+        "src/main/java/featurecat/lizzie/gui/BottomToolbar.java": 1,
+        "src/main/java/featurecat/lizzie/gui/Input.java": 1,
+        "src/main/java/featurecat/lizzie/gui/InputIndependentMainBoard.java": 1,
+        "src/main/java/featurecat/lizzie/gui/Menu.java": 1,
+    }
+    if actual_auto_play_dialog_calls != expected_auto_play_dialog_calls:
+        raise ValueError(
+            "AutoPlay constructor call sites changed: "
+            f"{actual_auto_play_dialog_calls}"
+        )
+    expected_start_ana_dialog_calls = {
+        "src/main/java/featurecat/lizzie/gui/AnalysisTable.java": 2,
+        "src/main/java/featurecat/lizzie/gui/BottomToolbar.java": 1,
+        "src/main/java/featurecat/lizzie/gui/Input.java": 1,
+        "src/main/java/featurecat/lizzie/gui/InputIndependentMainBoard.java": 1,
+        "src/main/java/featurecat/lizzie/gui/LizzieFrame.java": 2,
+        "src/main/java/featurecat/lizzie/gui/Menu.java": 3,
+    }
+    if actual_start_ana_dialog_calls != expected_start_ana_dialog_calls:
+        raise ValueError(
+            "StartAnaDialog constructor call sites changed: "
+            f"{actual_start_ana_dialog_calls}"
+        )
+    expected_start_ana_dialog_false_calls = {
+        "src/main/java/featurecat/lizzie/gui/AnalysisTable.java": 1,
+        "src/main/java/featurecat/lizzie/gui/BottomToolbar.java": 1,
+        "src/main/java/featurecat/lizzie/gui/Input.java": 1,
+        "src/main/java/featurecat/lizzie/gui/InputIndependentMainBoard.java": 1,
+        "src/main/java/featurecat/lizzie/gui/LizzieFrame.java": 1,
+        "src/main/java/featurecat/lizzie/gui/Menu.java": 3,
+    }
+    if actual_start_ana_dialog_false_calls != expected_start_ana_dialog_false_calls:
+        raise ValueError(
+            "StartAnaDialog false-mode call sites changed: "
+            f"{actual_start_ana_dialog_false_calls}"
+        )
+    expected_start_ana_dialog_true_calls = {
+        "src/main/java/featurecat/lizzie/gui/AnalysisTable.java": 1,
+    }
+    if actual_start_ana_dialog_true_calls != expected_start_ana_dialog_true_calls:
+        raise ValueError(
+            "StartAnaDialog true-mode call sites changed: "
+            f"{actual_start_ana_dialog_true_calls}"
+        )
+    expected_start_ana_dialog_mode_calls = {
+        "src/main/java/featurecat/lizzie/gui/LizzieFrame.java": 1,
+    }
+    if actual_start_ana_dialog_mode_calls != expected_start_ana_dialog_mode_calls:
+        raise ValueError(
+            "StartAnaDialog variable-mode call sites changed: "
+            f"{actual_start_ana_dialog_mode_calls}"
+        )
+    expected_set_diff_analyze_calls = {
+        "src/main/java/featurecat/lizzie/gui/StartAnaDialog.java": 1,
+    }
+    if actual_set_diff_analyze_calls != expected_set_diff_analyze_calls:
+        raise ValueError(
+            "SetDiffAnalyze constructor call sites changed: "
+            f"{actual_set_diff_analyze_calls}"
+        )
+    expected_set_diff_entry_calls = {
+        "src/main/java/featurecat/lizzie/gui/StartAnaDialog.java": 1,
+    }
+    if actual_set_diff_entry_calls != expected_set_diff_entry_calls:
+        raise ValueError(
+            "SetDiffAnalyze entry call sites changed: "
+            f"{actual_set_diff_entry_calls}"
+        )
+    expected_stop_auto_analysis_calls = {
+        "src/main/java/featurecat/lizzie/gui/AnalysisTable.java": 1,
+        "src/main/java/featurecat/lizzie/gui/BottomToolbar.java": 3,
+        "src/main/java/featurecat/lizzie/gui/Menu.java": 2,
+        "src/main/java/featurecat/lizzie/gui/StartAnaDialog.java": 1,
+    }
+    if actual_stop_auto_analysis_calls != expected_stop_auto_analysis_calls:
+        raise ValueError(
+            "stopAutoAna(true, true) call sites changed: "
+            f"{actual_stop_auto_analysis_calls}"
         )
     mapped_keys = sum(bool(entry["matrix_ids"]) for entry in config_entries)
     menu["keys"] = [
@@ -3073,7 +3472,7 @@ def build_inventory(legacy_root: Path, matrix_path: Path) -> dict[str, Any]:
         raise ValueError("Every normalized legacy input path must map to the matrix")
 
     return {
-        "schema_version": 47,
+        "schema_version": 48,
         "source": {
             "root": "../lizzieyzy-next-main",
             "version": read_legacy_version(legacy_root),
