@@ -1,5 +1,5 @@
 {
-  "schema_version": 43,
+  "schema_version": 44,
   "allowed_statuses": [
     "未盘点",
     "已盘点",
@@ -1147,7 +1147,7 @@
     {
       "id": "ENGINE-GAME-001",
       "category": "引擎对局",
-      "legacy_entry": "三个 Menu.newEngineGame 入口或主/独立棋盘 Alt+E 调用 LizzieFrame.startEngineGameDialog，以 NewEngineGameDialog 配置分析模式或 genmove 模式的双引擎对局",
+      "legacy_entry": "三个 Menu.newEngineGame 入口或主/独立棋盘 Alt+E 调用 LizzieFrame.startEngineGameDialog，以 NewEngineGameDialog 配置双引擎对局；详细工具栏的开始按钮则不打开该对话框，直接用当前控件调用 BottomToolbar.startEngineGame。NewEngineGameDialog 的更多设置与详细工具栏设置按钮分别以 EnginePkConfig(false/true) 编辑共享的 analysis/genmove、随机落子、候选显示和认输设置",
       "legacy_menu_keys": ["Menu.newEngineGame"],
       "legacy_menu_labels": [],
       "legacy_shortcuts": [],
@@ -1167,15 +1167,31 @@
         { "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "symbol": "public void openSgfStart()" },
         { "path": "src/main/java/featurecat/lizzie/gui/NewEngineGameDialog.java", "symbol": "class NewEngineGameDialog" },
         { "path": "src/main/java/featurecat/lizzie/gui/NewEngineGameDialog.java", "symbol": "public void apply()" },
+        { "path": "src/main/java/featurecat/lizzie/gui/NewEngineGameDialog.java", "symbol": "new EnginePkConfig(false)" },
+        { "path": "src/main/java/featurecat/lizzie/gui/EnginePkConfig.java", "symbol": "public class EnginePkConfig extends JDialog" },
+        { "path": "src/main/java/featurecat/lizzie/gui/EnginePkConfig.java", "symbol": "private void applyChange()" },
+        { "path": "src/main/java/featurecat/lizzie/gui/DoubleDocument.java", "symbol": "public void insertString(" },
+        { "path": "src/main/java/featurecat/lizzie/gui/BottomToolbar.java", "symbol": "new EnginePkConfig(true)" },
+        { "path": "src/main/java/featurecat/lizzie/gui/BottomToolbar.java", "symbol": "btnStartPk.addActionListener" },
         { "path": "src/main/java/featurecat/lizzie/gui/BottomToolbar.java", "symbol": "public boolean startEngineGame()" },
         { "path": "src/main/java/featurecat/lizzie/analysis/EngineManager.java", "symbol": "public boolean startEngineGame(" },
         { "path": "src/main/java/featurecat/lizzie/analysis/EngineManager.java", "symbol": "public void startNewEngineGame(boolean firstTime)" },
         { "path": "src/main/java/featurecat/lizzie/analysis/EngineManager.java", "symbol": "public ArrayList<Movelist> getStartListForEnginePk()" },
-        { "path": "src/main/java/featurecat/lizzie/analysis/Leelaz.java", "symbol": "private void notifyAutoPK(boolean playImmediately)" }
+        { "path": "src/main/java/featurecat/lizzie/analysis/EngineManager.java", "symbol": "public void stopEngineGame(int resgnEngineIndex, boolean mannul)" },
+        { "path": "src/main/java/featurecat/lizzie/analysis/EngineManager.java", "symbol": "private void savePkTxt(" },
+        { "path": "src/main/java/featurecat/lizzie/analysis/Leelaz.java", "symbol": "private void notifyAutoPK(boolean playImmediately)" },
+        { "path": "src/main/java/featurecat/lizzie/analysis/Leelaz.java", "symbol": "public MoveData randomBestmove(" },
+        { "path": "src/main/java/featurecat/lizzie/analysis/Leelaz.java", "symbol": "public int getIntervalForGenmovePk()" },
+        { "path": "src/main/java/featurecat/lizzie/gui/BoardRenderer.java", "symbol": "private boolean shouldShowPreviousBestMoves()" },
+        { "path": "src/main/java/featurecat/lizzie/gui/BoardRenderer.java", "symbol": "private void drawBranch()" },
+        { "path": "src/main/java/featurecat/lizzie/gui/AnalysisFrame.java", "symbol": "public int getRowCount()" },
+        { "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "symbol": "public List<MoveData> getBestMoves()" },
+        { "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "symbol": "private void setComment(boolean needReaddText)" }
       ],
       "config_keys": [
         "advance-black-time-txt",
         "advance-white-time-txt",
+        "check-random-visits",
         "disable-wrn-in-game",
         "engine-pk-ponder",
         "engine-sgf-random",
@@ -1184,23 +1200,27 @@
         "first-engine-resign-winrate",
         "new-engine-game-handicap",
         "new-engine-game-komi",
+        "percents-random-visits",
         "pk-advance-time-settings",
         "second-engine-min-move",
         "second-engine-resign-move-counts",
-        "second-engine-resign-winrate"
+        "second-engine-resign-winrate",
+        "show-previous-bestmoves-in-enginegame",
+        "show-previous-bestmoves-only-first-move"
       ],
-      "inputs_preconditions": "应用已启动；用户从三个菜单入口或主/独立棋盘 E 分支进入。Control 在全平台优先于 Alt，Meta 仅在 macOS 作为 Primary 优先，因此 Control+Alt+E 与 macOS 的 Meta+Alt+E 走未实现的棋谱分享；Windows/Linux 的 Meta+Alt+E、以及全平台 Alt+Shift+E 走引擎对局。已有 EngineManager.isEngineGame 时拒绝；旧人机/分析对局则先由 togglePonderMannul 停止，之后即使取消也不能恢复。窗口复用 BottomToolbar 的黑白引擎、每手秒数、总/首位计算量、多盘数、续弈、交换、最大手数与 analysis/genmove 模式控件，并读取本行 14 个配置键；零个或仅一个引擎也能打开窗口。",
-      "success_behavior": "用户选择两个不同引擎，设置贴目、让子、每手时间/总计算量/首位计算量或 genmove 高级时间、多盘/交换/最大手数、当前局面续弈或多选 SGF 开局、后台计算、胜率图隐藏与双方认输阈值后确认。旧版把 14 键写入内存 uiConfig，更新当前 GameInfo；19 路让子 2–9 先按固定星位清空并放置黑子，再作为续弈快照交给 EngineManager。EngineManager 校验引擎不同及分析模式双方至少一个正限额，保存续弈或顺序/随机 SGF 的线性 move list；两者均不能证明保留分支、评论、分析、标记和其他 SGF 属性，目标版必须从完整不可变棋谱快照创建对局，不复制这种数据损失。随后旧版禁用普通输入和相关 UI，结束其他引擎并启动黑白进程。分析模式清盘/重放后让轮到的一方 ponder，由连续低胜率、秒数、总/首位计算量触发落子；genmove 模式发送双方高级时间原文或 time_settings 0 <秒> 1、clear_cache，再令轮到的一方 genmove。成功后设置 isEngineGame、双方名称、标题、菜单和计时；多盘流程按设置继续并在工作目录 EngineGames 下保存棋谱。目标版必须用两个有明确所有者的可取消 GTP 会话、不可变启动快照和原子 UI/棋盘事务表达同一行为。",
-      "failure_cancel_behavior": "旧窗口的高级时间、后台计算、隐藏胜率图和 SGF 随机顺序在点击时立即修改 uiConfig；引擎下拉框及续弈/SGF 开关直接改共享 BottomToolbar/Config，取消或关闭只重置字体、控件位置和部分启用态，不回滚这些内存改动，也不恢复已停止的人机/分析对局。openSgfStart 在选择器前停止 pondering、清空开局统计并取消主窗置顶；选择器取消不恢复 pondering 且可能沿用旧 enginePKSgfString；选择过 SGF 后再取消整个对话框时当前棋盘已经被清空。SGF 开关虽把对话框本地续弈设为 false，却未同步工具栏续弈，EngineManager 又优先续弈，可导致所选 SGF 被忽略。加载异常没有 finally，可能遗留 isLoadingFile、静音、棋盘或置顶半状态；多选 SGF 且未启用批量只提示但仍继续。确认时贴目/让子使用默认 locale 的宽松前缀解析，空值 ParseException 被静默吞掉；六个认输值解析失败也静默保留旧值，负数、过大值和 NaN/Infinity 缺少业务校验。cancelled 在真正启动成功前已设 false，配置、GameInfo 和 19 路让子棋盘也先提交；同引擎、双方限额无效或后续启动失败会留窗却遗留部分状态，零引擎还可能在校验前因索引 -1 崩溃。startEngineGame 在完整校验前已结束试下、热力图/候选和标题状态；启动后先杀其他引擎并清盘，再用多个非 daemon 裸线程无取消/超时轮询 isLoaded、response/cmdNumber，忽略中断且从后台线程改 UI。进程退出、命令拒绝或永不就绪可永久停在 isPreEngineGame，旧版五秒恢复计时器只处理已进入 isEngineGame 的运行期崩溃；重启高级计时还会不分执黑执白都发送黑方字符串。用户批处理名称未经规范化就成为 EngineGames 的目录段，../ 可逃逸目标目录；mkdir/写入不检查且非原子，异常只打印，结束提示仍可能声称已保存。手动停止在保存分支前直接返回，即使启用自动保存或处于批量模式也不保存当前未完成局，提示还可能让用户误以为已写入 EngineGames；目标版必须保留未完成局或明确询问保存，且不得虚假成功。高级时间解析失败只提示，随后仍把未经单行/能力校验的原文发送给 GTP，可能包含控制字符或不支持命令。目标版须在任何取消、选择器/解析、同引擎、限额、能力、启动、命令、超时、崩溃或保存失败时保留原棋盘、GameInfo、配置、输入路由和既有进程，并给出可访问反馈。",
-      "data_io": "读取并修改 config.txt 对应 uiConfig 的 14 个叶键，但对话框不调用 Config.save，磁盘持久化依赖后续全局保存。默认值依次包括高级时间 false、黑白 time_settings 10 2 1、隐藏胜率图 true、后台计算 false、SGF 随机 true、双方最少手数 0/连续次数 2/胜率 10.0、贴目 7.5、让子 0。高级时间字符串会原样进入 GTP stdin；普通时间以秒传给 time_settings，认输胜率以百分数比较，最少手数和连续次数为整数。多选本地 SGF 会逐个载入当前 Board、提取线性 move list 后清盘；续弈读取当前 Board.getMoveList。运行期更新棋盘历史、GameInfo、菜单、工具栏、输入路由和两个外部进程；结束/批量流程在工作目录 EngineGames 写非原子 SGF。目标兼容层必须备份并保留未知键，以 invariant/有限数值和单行命令校验导入值，文件与 GTP 输入均按不可信数据处理；批处理名称必须经目录规范化与 containment 校验，棋谱须在受控目录内原子保存并对失败给出真实结果。",
+      "inputs_preconditions": "应用已启动；用户从三个菜单入口或主/独立棋盘 E 分支进入 NewEngineGameDialog，也可从详细工具栏开始按钮直接使用当前控件启动。Control 在全平台优先于 Alt，Meta 仅在 macOS 作为 Primary 优先，因此 Control+Alt+E 与 macOS 的 Meta+Alt+E 走未实现的棋谱分享；Windows/Linux 的 Meta+Alt+E、以及全平台 Alt+Shift+E 走引擎对局。已有 EngineManager.isEngineGame 时对话框入口拒绝；旧人机/分析对局则先由 togglePonderMannul 停止，之后即使取消也不能恢复。NewEngineGameDialog 的更多设置以 EnginePkConfig(false) 打开，隐藏后台计算和双方认输区；详细工具栏设置按钮以 EnginePkConfig(true) 打开完整区。两者复用共享 BottomToolbar/Config，EnginePkConfig 直接触达 11 个配置键，本行两个对话框合计关联 18 个键；genmove 模式只禁用随机/认输控件，确认仍会提交其已初始化值。零个或仅一个引擎也能打开新对局窗口。",
+      "success_behavior": "用户选择两个不同引擎，设置贴目、让子、每手时间/总计算量/首位计算量或 genmove 高级时间、多盘/交换/最大手数、当前局面续弈或多选 SGF 开局、后台计算、胜率图隐藏与双方认输阈值后确认；详细工具栏开始按钮可绕过新对局窗口直接使用当前控件。EnginePkConfig 的随机落子先按手数和与首位的胜率差取候选；启用 check-random-visits 后再要求候选访问量/最高访问量不低于 percents-random-visits 百分比，然后用无种子的 Random 等概率选取保留下来的列表。上一手候选显示启用时，show-previous-bestmoves-only-first-move 并非按 order==0，而是只保留上一节点候选中与本局真实落子坐标相同的一项；关闭时显示上一节点全部候选。父开关 show-previous-bestmoves-in-enginegame 还会令 KataGo 的 kata-genmove_analyze 间隔参数变为 Integer.MAX_VALUE，并让 LizzieFrame 的 bestMoves、评论和候选表改读上一节点；关闭时通常读取当前节点评论并附加本手用时，但当前评论为空且 appendWinrateToComment 开启时仍会回退上一节点评论，因此它不是纯棋盘渲染选项。旧版把本行 18 键写入内存 uiConfig，更新当前 GameInfo；19 路让子 2–9 先按固定星位清空并放置黑子，再作为续弈快照交给 EngineManager。EngineManager 校验引擎不同及分析模式双方至少一个正限额，保存续弈或顺序/随机 SGF 的线性 move list；两者均不能证明保留分支、评论、分析、标记和其他 SGF 属性，目标版必须从完整不可变棋谱快照创建对局，不复制这种数据损失。随后旧版禁用普通输入和相关 UI，结束其他引擎并启动黑白进程。分析模式清盘/重放后让轮到的一方 ponder，由连续低胜率、秒数、总/首位计算量触发落子；genmove 模式发送双方高级时间原文或 time_settings 0 <秒> 1、clear_cache，再令轮到的一方 genmove。成功后设置 isEngineGame、双方名称、标题、菜单和计时；非手动结束的批量对局若启用了随机落子，结果 TXT 记录手数与胜率差，check-random-visits 开启时再以 Locale.ENGLISH 一位小数写入访问百分比；手动停止在该分支前返回，非批量自动结束仅在 AutosavePk 开启时保存 SGF，否则不写文件。多盘流程按设置继续并在工作目录 EngineGames 下保存棋谱。目标版必须把一局设置冻结成不可变快照，并用两个有明确所有者的可取消 GTP 会话及原子 UI/棋盘事务表达同一行为。",
+      "failure_cancel_behavior": "旧窗口的高级时间、后台计算、隐藏胜率图和 SGF 随机顺序在点击时立即修改 uiConfig；引擎下拉框及续弈/SGF 开关直接改共享 BottomToolbar/Config，取消或关闭只重置字体、控件位置和部分启用态，不回滚这些内存改动，也不恢复已停止的人机/分析对局。EnginePkConfig 的三个本轮键仅在其确认时提交，取消或 X 不提交；但确认子窗口后再取消外层 NewEngineGameDialog 不会回滚，且相邻 engine-pk-ponder 在点击时立即提交。其取消仅隐藏实例而调用方随后丢弃引用，存在窗口/监听器生命周期泄漏。percents-random-visits 的 DoubleDocument 接受巨大指数，Double.parseDouble 可得到 Infinity；applyChange 又先写全局字段和 check-random-visits，再因 JSONObject 拒绝非有限数而抛错，留下部分提交且无字段级反馈。随机候选为空会越界，最高访问量为零产生 NaN，负数、0、超过 100、NaN/Infinity 改变或破坏筛选语义；无种子随机也不可复现。only-first 找不到真实落子或节点是快照时会显示空列表，AnalysisFrame 等兄弟视图又未遵守同一开关。详细工具栏开始按钮只检查 isEngineGame，启动等待期 isPreEngineGame 仍可重复点击并再次 startEngineGame，覆盖共享状态或启动额外线程。openSgfStart 在选择器前停止 pondering、清空开局统计并取消主窗置顶；选择器取消不恢复 pondering 且可能沿用旧 enginePKSgfString；选择过 SGF 后再取消整个对话框时当前棋盘已经被清空。SGF 开关虽把对话框本地续弈设为 false，却未同步工具栏续弈，EngineManager 又优先续弈，可导致所选 SGF 被忽略。加载异常没有 finally，可能遗留 isLoadingFile、静音、棋盘或置顶半状态；多选 SGF 且未启用批量只提示但仍继续。确认时贴目/让子使用默认 locale 的宽松前缀解析，空值 ParseException 被静默吞掉；六个认输值解析失败也静默保留旧值，负数、过大值和 NaN/Infinity 缺少业务校验。cancelled 在真正启动成功前已设 false，配置、GameInfo 和 19 路让子棋盘也先提交；同引擎、双方限额无效或后续启动失败会留窗却遗留部分状态，零引擎还可能在校验前因索引 -1 崩溃。startEngineGame 在完整校验前已结束试下、热力图/候选和标题状态；启动后先杀其他引擎并清盘，再用多个非 daemon 裸线程无取消/超时轮询 isLoaded、response/cmdNumber，忽略中断且从后台线程改 UI。进程退出、命令拒绝或永不就绪可永久停在 isPreEngineGame，旧版五秒恢复计时器只处理已进入 isEngineGame 的运行期崩溃；重启高级计时还会不分执黑执白都发送黑方字符串。用户批处理名称未经规范化就成为 EngineGames 的目录段，../ 可逃逸目标目录；mkdir/写入不检查且非原子，异常只打印，结束提示仍可能声称已保存。手动停止在保存分支前直接返回，即使启用自动保存或处于批量模式也不保存当前未完成局，提示还可能让用户误以为已写入 EngineGames；目标版必须保留未完成局或明确询问保存，且不得虚假成功。高级时间解析失败只提示，随后仍把未经单行/能力校验的原文发送给 GTP，可能包含控制字符或不支持命令。目标版须冻结并原子校验设置快照，百分比只接纳有限 0–100；在任何取消、选择器/解析、同引擎、限额、能力、启动、命令、超时、崩溃或保存失败时保留原棋盘、GameInfo、配置、输入路由和既有进程，并给出可访问反馈。",
+      "data_io": "读取并修改 config.txt 对应 uiConfig 的 18 个叶键，但两个对话框均不调用 Config.save，磁盘持久化依赖后续全局保存；EnginePkConfig 直接触达其中 11 键。本轮新增默认值为 check-random-visits false、percents-random-visits 10.0、show-previous-bestmoves-in-enginegame false、show-previous-bestmoves-only-first-move true；其余默认值包括高级时间 false、黑白 time_settings 10 2 1、隐藏胜率图 true、后台计算 false、SGF 随机 true、双方最少手数 0/连续次数 2/胜率 10.0、贴目 7.5、让子 0。随机访问阈值以最高候选访问量的百分比比较，上一手单候选显示按真实落子坐标匹配；父开关还改变 KataGo genmove 分析间隔、bestMoves、评论/本手用时和候选表的数据源。高级时间字符串会原样进入 GTP stdin；普通时间以秒传给 time_settings，认输胜率以百分数比较，最少手数和连续次数为整数。多选本地 SGF 会逐个载入当前 Board、提取线性 move list 后清盘；续弈读取当前 Board.getMoveList。运行期更新棋盘历史、GameInfo、菜单、工具栏、输入路由和两个外部进程；非手动结束的批量流程或 AutosavePk 开启的非批量自动结束在 EngineGames 写非原子 SGF，只有非手动结束的批量分支另写结果 TXT，随机访问阈值按 Locale.ENGLISH 的 %.1f 百分比进入 TXT 设置摘要；手动停止和 AutosavePk 关闭的非批量结束不写文件。目标兼容层必须备份并保留未知键，以 invariant/有限数值和单行命令校验导入值，文件与 GTP 输入均按不可信数据处理；批处理名称必须经目录规范化与 containment 校验，棋谱和结果摘要须在受控目录内原子保存并对失败给出真实结果。",
       "external_dependencies": ["GTP 引擎进程"],
       "target_modules": ["Lizzie.Core", "Lizzie.Engine", "Lizzie.Desktop"],
       "automated_evidence": [
-        { "path": "src/test/java/featurecat/lizzie/rules/EngineCountDownFixedTimeTest.java", "symbol": "EngineCountDownFixedTimeTest" }
+        { "path": "src/test/java/featurecat/lizzie/rules/EngineCountDownFixedTimeTest.java", "symbol": "EngineCountDownFixedTimeTest" },
+        { "path": "src/test/java/featurecat/lizzie/gui/SnapshotMoveUiGateTest.java", "symbol": "void previousBestFilterIgnoresSnapshotLastMoveMarker()" }
       ],
-      "manual_acceptance": "在隔离配置、临时棋谱目录和两个可录制的确定性 GTP 中，从三个菜单及主/独立棋盘 Plain/Control/Meta/Alt/Shift 组合 E 进入，分别验证全平台 Control 优先、仅 macOS Meta 优先、Windows/Linux Meta+Alt 进入引擎对局，覆盖已有引擎对局、人机/分析对局、零/一/两个引擎和同引擎。分别运行 analysis/genmove、黑白不同引擎、每手秒数/总访问/首位访问/高级 time_settings、后台计算开关、普通/2–9/越界让子、贴目、双方最少手数/连续次数/胜率、最大手数、交换、多盘和当前局面续弈；录制两个进程的启动/退出、stdin 命令顺序、落子方、认输、GameInfo、完整棋谱树、菜单/输入和保存文件。用单份/多份/随机 SGF、取消选择、选择 SGF 后取消整个对话框、旧 SGF 列表与续弈冲突、损坏/超大/深层/不可读棋谱和中途解析失败验证原子恢复与分支/评论/分析/标记保真。对空白、前缀数字、负数、溢出、NaN/Infinity、CR/LF/NUL 高级命令、同引擎、无正限额、进程启动失败、迟到/永不就绪、首/次目标命令拒绝、运行中崩溃、保存失败及取消/关窗注入故障，确认无配置/棋盘/进程半提交、无无限等待且错误可访问。用 ../、绝对路径、保留名和超长批处理名称验证保存始终受控于目标目录，并以写入/重命名失败确认无损坏文件或虚假成功提示；分别崩溃黑白引擎，验证启动期恢复及重启时采用各自高级时间设置。最后用两个真实支持引擎复核完整一局、暂停/继续、正常退出和进程树清理；对自动保存开/关与批量模式逐一手动停止，确认目标版保留未完成棋局或明确保存选择且结果提示与磁盘一致。以单调时钟和 CPU/唤醒测量替代旧版高频计时轮询，并在三平台、多 DPI、大字号、键盘和屏幕阅读器下检查滚动、标签、焦点和状态。",
+      "manual_acceptance": "在隔离配置、临时棋谱目录和两个可录制的确定性 GTP 中，从三个菜单、主/独立棋盘 E 以及详细工具栏直接开始进入，分别验证全平台 Control 优先、仅 macOS Meta 优先、Windows/Linux Meta+Alt 进入引擎对局，覆盖已有引擎对局、人机/分析对局、零/一/两个引擎、同引擎和启动等待期双击开始。分别从 NewEngineGameDialog 的 EnginePkConfig(false) 与详细工具栏 EnginePkConfig(true) 验证区块可见性、确认/取消/X、子窗口确认后外层取消、genmove 禁用态和 11 键原子提交；对随机访问百分比覆盖 0、100、负数、超过 100、巨大指数、NaN/Infinity、最高访问量为零和空候选，以注入随机源的固定候选验证筛选边界及可复现选择；仅在非手动结束的批量场景逐字节核对结果 TXT 中手数、胜率差及 Locale.ENGLISH 一位小数访问百分比，并验证手动停止与非批量自动结束不产生 TXT。对上一手候选覆盖父开关开/关、only-first 开/关、真实落子匹配/缺失和快照节点；同时录制 KataGo kata-genmove_analyze 间隔参数，核对主棋盘、LizzieFrame/AnalysisFrame 候选表、评论与本手用时来源一致，并覆盖父开关关闭、当前评论为空且 appendWinrateToComment 开启时回退上一节点评论。分别运行 analysis/genmove、黑白不同引擎、每手秒数/总访问/首位访问/高级 time_settings、后台计算开关、普通/2–9/越界让子、贴目、双方最少手数/连续次数/胜率、最大手数、交换、多盘和当前局面续弈；录制两个进程的启动/退出、stdin 命令顺序、落子方、认输、GameInfo、完整棋谱树、菜单/输入和保存文件。用单份/多份/随机 SGF、取消选择、选择 SGF 后取消整个对话框、旧 SGF 列表与续弈冲突、损坏/超大/深层/不可读棋谱和中途解析失败验证原子恢复与分支/评论/分析/标记保真。对空白、前缀数字、负数、溢出、NaN/Infinity、CR/LF/NUL 高级命令、同引擎、无正限额、进程启动失败、迟到/永不就绪、首/次目标命令拒绝、运行中崩溃、保存失败及取消/关窗注入故障，确认无配置/棋盘/进程半提交、无无限等待且错误可访问。用 ../、绝对路径、保留名和超长批处理名称验证保存始终受控于目标目录，并以棋谱或批量 TXT 写入/重命名失败确认无损坏文件或虚假成功提示；分别崩溃黑白引擎，验证启动期恢复及重启时采用各自高级时间设置。最后用两个真实支持引擎复核完整一局、暂停/继续、正常退出和进程树清理；对自动保存开/关与批量模式逐一手动停止，确认目标版保留未完成棋局或明确保存选择且结果提示与磁盘一致。以单调时钟和 CPU/唤醒测量替代旧版高频计时轮询，并在三平台、多 DPI、大字号、全键盘和屏幕阅读器下检查滚动、标签关联、可访问名称、焦点、错误与状态。",
       "status": "已盘点",
-      "evidence": "已静态贯通三个 Menu.newEngineGame、主/独立棋盘 E、LizzieFrame.startEngineGameDialog/openSgfStart、NewEngineGameDialog.apply、BottomToolbar.startEngineGame、EngineManager.startEngineGame/startNewEngineGame/getStartListForEnginePk、Leelaz.notifyAutoPK 与本行全部 14 个直接字面量配置键。旧测试仅验证 EngineCountDown 的固定 time_settings 解析/扣时，不构造对话框、不启动双引擎，也不覆盖配置提交、SGF/续弈、认输、取消回滚、失败原子性、线程、进程、DPI 或无障碍；新版实现与新旧动态对照均未开始。"
+      "evidence": "已静态贯通三个 Menu.newEngineGame、主/独立棋盘 E、详细工具栏直接开始、EnginePkConfig 两个构造入口、LizzieFrame.startEngineGameDialog/openSgfStart、NewEngineGameDialog.apply、EnginePkConfig.applyChange 与 DoubleDocument.insertString、BottomToolbar.startEngineGame、EngineManager.startEngineGame/startNewEngineGame/getStartListForEnginePk/stopEngineGame/savePkTxt、Leelaz.notifyAutoPK/randomBestmove/getIntervalForGenmovePk、BoardRenderer/AnalysisFrame/LizzieFrame 上一手候选、评论与走时呈现及本行全部 18 个直接字面量配置键；EnginePkConfig 自身直接触达 11 键。旧测试仅以 EngineCountDown 覆盖固定 time_settings，并有一项 SnapshotMoveUiGateTest 直接证明快照节点不会被 only-first 当作真实上一手；后者仍只覆盖单一门控，不构造对话框、不验证正常匹配、AnalysisFrame/LizzieFrame 一致性、GTP 间隔、结果 TXT 或随机访问。旧测试也不启动双引擎，不覆盖配置提交、SGF/续弈、认输、取消回滚、失败原子性、线程、进程、DPI 或无障碍；新版实现与新旧动态对照均未开始。"
     },
     {
       "id": "ENGINE-GAME-CONTROL-001",
@@ -2160,15 +2180,16 @@
         "extra-mode",
         "play-sound",
         "show-previous-bestmoves-in-enginegame",
+        "show-previous-bestmoves-only-first-move",
         "use-play-mode",
         "tracking-engine-preload",
         "tracking-engine-max-visits",
         "tracking-engine-skip-warning"
       ],
       "inputs_preconditions": "主窗口 Input 总挂接 mainPanel 的 MouseMotionListener 与 toolbar 的 MouseWheelListener；addInput 再挂接 mainPanel 的 click/key/wheel，removeInput 只移除后三者并切到 InputSubboard，因此 noInput 下 motion 与 toolbar wheel 仍会到达。主/独立棋盘模式、引擎对局、选择/插入/拖子、右键菜单、候选、子棋盘和 renderer 命中共同决定优先级。旧入口仅硬编码 BUTTON3 press；在数子、临时拖子、选择/Alt、评论/子棋盘、引擎对局、主窗口 FloatBoard、编辑态 clickOrder 和候选等更高优先级均未消费，且右键路由到棋盘并满足 blackorwhite==0 后，空点才进入共享的 RightClickMenu、有子进入 RightClickMenu2；show-right-menu=false 且非候选，或离盘时才直接悔棋。RightClickMenu 的唯一 MouseAdapter mouseExited 是显式空操作，真实菜单工作流属于 PopupMenuListener 与 ActionListener，不冒充 pointer binding。独立棋盘已由启动恢复、菜单、快捷键、设置或布局创建；三个 19×19 图标按钮的 ActionListener、windowClosing、resize 与 paint 不冒充 pointer binding，但属于生命周期验收，且旧按钮不可聚焦、无可访问名称/状态并默认隐藏到 hover。",
-      "success_behavior": "主窗口点击清除 Alt 选择；按下依次处理数子、临时拖子、右键菜单、框选、评论焦点、子棋盘、手动引擎/浮动棋盘、双击跳手、SGF 标记、普通/插黑/插白落子、右键菜单与悔棋；释放提交框选/拖子或中键播放变化；拖动处理框选、棋子编辑及胜率图 scrub；移动更新临时拖子、候选/问题手/自动变化/落点框并清理 press stone；滚轮先交子棋盘，再按变化预览或历史前进/后退。空点菜单按模式提供候选变化加分支、上一步、查找棋步、插黑/插白、编辑缓存撤销/重做/清空、KataGo Custom 优先点/清空、allow 添加/删除/单点、avoid/持续/清除，以及 KataGo 追踪/取消/清空/持续；追踪 visits 读取 tracking-engine-max-visits，主 KataGo 引擎加载后可按 tracking-engine-preload 预载。独立窗口另覆盖三个 hover 按钮和等边缩放/移动。目标版以 Avalonia 原生命令、Pointer 事件、Window 移动/缩放和单一坐标服务重建，保持主/独立板优先级及显式空路径；工具栏和上下文菜单命令须可聚焦、有可见焦点、支持 Enter/Space、Menu 键与 Shift+F10，并暴露名称、角色、锁定/置顶和动态选中状态。",
+      "success_behavior": "主窗口点击清除 Alt 选择；按下依次处理数子、临时拖子、右键菜单、框选、评论焦点、子棋盘、手动引擎/浮动棋盘、双击跳手、SGF 标记、普通/插黑/插白落子、右键菜单与悔棋；释放提交框选/拖子或中键播放变化；拖动处理框选、棋子编辑及胜率图 scrub；移动更新临时拖子、候选/问题手/自动变化/落点框并清理 press stone；滚轮先交子棋盘，再按变化预览或历史前进/后退。空点菜单按模式提供候选变化加分支、上一步、查找棋步、插黑/插白、编辑缓存撤销/重做/清空、KataGo Custom 优先点/清空、allow 添加/删除/单点、avoid/持续/清除，以及 KataGo 追踪/取消/清空/持续；追踪 visits 读取 tracking-engine-max-visits，主 KataGo 引擎加载后可按 tracking-engine-preload 预载。引擎对局的上一手候选还由 show-previous-bestmoves-in-enginegame 与 show-previous-bestmoves-only-first-move 共同门控：only-first 开启时按上一节点候选坐标匹配本局真实落子，而非取候选顺序第一项；关闭时呈现全部上一手候选。独立窗口另覆盖三个 hover 按钮和等边缩放/移动。目标版以 Avalonia 原生命令、Pointer 事件、Window 移动/缩放和单一坐标服务重建，保持主/独立板优先级及显式空路径；工具栏和上下文菜单命令须可聚焦、有可见焦点、支持 Enter/Space、Menu 键与 Shift+F10，并暴露名称、角色、锁定/置顶和动态选中状态。",
       "failure_cancel_behavior": "旧版显式空路径、非法按钮/零滚轮、模式早退和无坐标分支不得误落子。迁移不得复刻这些破坏边界：removeInput 后 motion 与 toolbar wheel 仍生效，gtpShortKey 增删又不严格幂等；toolbar 坐标被当作 mainPanel 坐标，可能误命中子棋盘；全局 wheelWhen 跨组件丢弃同/回退时间戳，零旋转也可压掉后续事件；高频移动会抢焦点，queued graph scrub 无 owner/generation 取消。四副棋盘第四象限左击递增候选后漏 return，可继续触发主棋盘动作；单副棋盘中键 press 切布局后 release 又播放变化；数子模式只拦 press；stopTemporaryBoard 还误用白方快照恢复黑方候选状态。按下任何按钮可先结束评论编辑，双击第一下可能先落子，右键菜单禁用或离盘可直接 undo；BUTTON3 而非 isPopupTrigger 还漏掉 macOS Control-click、release-trigger、触控/笔与键盘入口。RightClickMenu 共享静态坐标且 zoomOut/zoomIn 往返可截断；隐藏时每次创建未关闭的非 daemon Timer，延迟在线程外改全局标志。多处字符串用 == 空串，allow3 删除多点时只保留最后一个其他点，cancelavoid 可见性与持续选中态会陈旧；菜单命令、内存与绘制分步提交，addSuggestionAsBranch、插入/编辑和声音恢复缺事务/finally。tracking-engine-max-visits 未验证负数、零或上限，并以 int 乘 trackedCoords.size，可能溢出或让第二引擎资源失控；目标必须做有界校验和 checked 计算。ensureTrackingEngineWithWarning 实际不调用警告，tracking-engine-skip-warning 成为兼容死键，追踪会无确认启动第二引擎且失败回滚不完整。独立拖子另误用主窗口 startcoords，数子/中键误用主 renderer；其 replayBranch 裸线程、bounds、资源与 DPI 风险保持。目标必须按输入 owner 正确挂卸并统一坐标，原子编辑棋谱、finally 恢复声音/ponder、取消陈旧 scrub/重放、验证 bounds，让菜单取消/关闭无全局副作用，并给追踪进程明确确认、所有权、取消和 teardown。",
-      "data_io": "主窗口 Input 读取按钮/modifier/组件坐标与 wheel timestamp，改动棋谱历史、落子/SGF 标记、allow/avoid、选择/拖子/hover/press/menu/评论焦点、renderer 缓存、声音和引擎 pondering；toolbar wheel 与 mainPanel 共用 wheelWhen。空点菜单还发送 setmaxpolicy/clearpolicy、analyze allow/avoid 与追踪分析请求，维护优先点、allow/avoid 字符串、trackedCoords、keepTracking 和编辑前后快照，并可能复制当前引擎命令启动第二进程。ui-persist 的 independent-main-board 保存 bounds，布局保存可见性与位置；主/独立窗口紧邻链还读取允许双击/拖子、自动重放、子棋盘/胜率图/变化图、问题手/落点框、右键菜单、声音、额外棋盘模式、引擎对局历史及 tracking-engine-preload/max-visits/skip-warning。21 个 RightClickMenu.* 本地化资源键不属于当前仅接纳 Menu/menu.* 键名空间的菜单资源索引；12 个 raster 图标无 DPI 变体，资源流未关闭且缺资源可能让构造失败。目标需保留未知配置，以 typed、原子、可回滚写入替代同名异型和分步全局修改，并为引擎命令、棋谱和 UI 状态设置一致提交边界。",
+      "data_io": "主窗口 Input 读取按钮/modifier/组件坐标与 wheel timestamp，改动棋谱历史、落子/SGF 标记、allow/avoid、选择/拖子/hover/press/menu/评论焦点、renderer 缓存、声音和引擎 pondering；toolbar wheel 与 mainPanel 共用 wheelWhen。空点菜单还发送 setmaxpolicy/clearpolicy、analyze allow/avoid 与追踪分析请求，维护优先点、allow/avoid 字符串、trackedCoords、keepTracking 和编辑前后快照，并可能复制当前引擎命令启动第二进程。ui-persist 的 independent-main-board 保存 bounds，布局保存可见性与位置；主/独立窗口紧邻链还读取允许双击/拖子、自动重放、子棋盘/胜率图/变化图、问题手/落点框、右键菜单、声音、额外棋盘模式、引擎对局历史及 tracking-engine-preload/max-visits/skip-warning；上一手候选读取两个 show-previous-bestmoves-* 键及棋谱节点的真实落子坐标与 bestMoves。21 个 RightClickMenu.* 本地化资源键不属于当前仅接纳 Menu/menu.* 键名空间的菜单资源索引；12 个 raster 图标无 DPI 变体，资源流未关闭且缺资源可能让构造失败。目标需保留未知配置，以 typed、原子、可回滚写入替代同名异型和分步全局修改，并为引擎命令、棋谱和 UI 状态设置一致提交边界。",
       "external_dependencies": [
         "操作系统窗口管理",
         "分析引擎（候选、ponder、手动引擎对局与变化重放）"
@@ -2202,11 +2223,15 @@
         {
           "path": "src/test/java/featurecat/lizzie/gui/MoveOnlyUiGateTest.java",
           "symbol": "void suggestionTablePreviewClearsWhenMouseReturnsToBoardCandidate()"
+        },
+        {
+          "path": "src/test/java/featurecat/lizzie/gui/SnapshotMoveUiGateTest.java",
+          "symbol": "void previousBestFilterIgnoresSnapshotLastMoveMarker()"
         }
       ],
-      "manual_acceptance": "在普通、noInput/InputSubboard、浮动/双引擎、数子、选择、插入、拖子、评论编辑、引擎对局和右键菜单状态覆盖主画布/toolbar 的全部按钮、modifier、双击、滚轮正负/零/同时间戳、子棋盘命中、胜率图拖扫、进入/离开与显式空路径；验证 removeInput 后 motion/wheel 路由、跨组件坐标和焦点不串线。再从菜单启动四种独立棋盘模式，覆盖三个按钮、窗口缩放/移动和相同棋谱动作。对空点/有子/盘外及主/独立棋盘核对 RightClickMenu/RightClickMenu2 分流，覆盖对局/KataGo Custom/allow/avoid/已追踪可见性、全部空点菜单动作、精确引擎命令与 analysis 请求；注入无引擎命令、启动/发送失败和编辑异常，核对空点门、GameInfo 保留、状态回滚、追踪异步启动/清空/常驻 teardown、弹窗反复显隐及 200ms 延迟，并以 tracking-engine-max-visits 的负数、0、INT_MAX 和多个追踪点验证拒绝、上限及乘法不溢出。用隔离棋谱核对 undo、重复落子、陈旧 scrub/replay 取消、声音/ponder/树事务不泄漏；覆盖异常 bounds、多屏/DPI、大字号/长本地化、触控/笔、macOS Control-click、release-trigger、Menu/Shift+F10、焦点与 Narrator；10 分钟 hover/drag/wheel/replay/popup 测帧时间、分配、线程、窗口、句柄、Timer 和 listener 不增长。",
+      "manual_acceptance": "在普通、noInput/InputSubboard、浮动/双引擎、数子、选择、插入、拖子、评论编辑、引擎对局和右键菜单状态覆盖主画布/toolbar 的全部按钮、modifier、双击、滚轮正负/零/同时间戳、子棋盘命中、胜率图拖扫、进入/离开与显式空路径；验证 removeInput 后 motion/wheel 路由、跨组件坐标和焦点不串线。引擎对局中分别组合上一手候选父开关与 only-first 开关，覆盖真实落子匹配/缺失、快照节点、空候选和多候选，核对主棋盘与兄弟候选视图结果一致且关闭 only-first 时恢复全部候选。再从菜单启动四种独立棋盘模式，覆盖三个按钮、窗口缩放/移动和相同棋谱动作。对空点/有子/盘外及主/独立棋盘核对 RightClickMenu/RightClickMenu2 分流，覆盖对局/KataGo Custom/allow/avoid/已追踪可见性、全部空点菜单动作、精确引擎命令与 analysis 请求；注入无引擎命令、启动/发送失败和编辑异常，核对空点门、GameInfo 保留、状态回滚、追踪异步启动/清空/常驻 teardown、弹窗反复显隐及 200ms 延迟，并以 tracking-engine-max-visits 的负数、0、INT_MAX 和多个追踪点验证拒绝、上限及乘法不溢出。用隔离棋谱核对 undo、重复落子、陈旧 scrub/replay 取消、声音/ponder/树事务不泄漏；覆盖异常 bounds、多屏/DPI、大字号/长本地化、触控/笔、macOS Control-click、release-trigger、Menu/Shift+F10、焦点与 Narrator；10 分钟 hover/drag/wheel/replay/popup 测帧时间、分配、线程、窗口、句柄、Timer 和 listener 不增长。",
       "status": "已盘点",
-      "evidence": "六个 pointer 来源共 23 个事件、274 条可达路径：既有三按钮 6 条、独立窗口 219 条；Input 精确为 clicked 2、pressed 22、released 5、entered 1、exited 2、dragged 4、moved 5、wheel 7，共 48 条；RightClickMenu 仅新增 1 条空 mouseExited。现有一项测试真实调用 Input.mousePressed 验证引擎对局胜率图命中；三项测试覆盖下游主棋盘 hover，其他胜率图测试直接调用 onMouseDragged。旧测试未执行 RightClickMenu 构造器或 dispatch 其 PopupMenuListener、MouseAdapter 或任一 ActionListener；追踪图标、TrackingEngine 请求序列化和 ensureTrackingEngine 回归测试仅是下游间接证据，不证明菜单入口、可见性、动作或回滚。没有 listener 挂卸、toolbar wheel/去重、选择、评论焦点、右键菜单动作/undo、拖子/插入事务、子棋盘、触控/DPI/键盘等价或无障碍测试。本轮仅建立静态基线，不运行旧 GUI、不写用户配置、不改棋谱、不联网、不启动引擎且不修改旧 Java。"
+      "evidence": "六个 pointer 来源共 23 个事件、274 条可达路径：既有三按钮 6 条、独立窗口 219 条；Input 精确为 clicked 2、pressed 22、released 5、entered 1、exited 2、dragged 4、moved 5、wheel 7，共 48 条；RightClickMenu 仅新增 1 条空 mouseExited。现有一项测试真实调用 Input.mousePressed 验证引擎对局胜率图命中；三项测试覆盖下游主棋盘 hover，其他胜率图测试直接调用 onMouseDragged。SnapshotMoveUiGateTest 直接调用 BoardRenderer.drawBranch，证明 only-first 会忽略快照标记，但不覆盖正常落子匹配、关闭开关、空候选或 AnalysisFrame 等兄弟视图一致性。旧测试未执行 RightClickMenu 构造器或 dispatch 其 PopupMenuListener、MouseAdapter 或任一 ActionListener；追踪图标、TrackingEngine 请求序列化和 ensureTrackingEngine 回归测试仅是下游间接证据，不证明菜单入口、可见性、动作或回滚。没有 listener 挂卸、toolbar wheel/去重、选择、评论焦点、右键菜单动作/undo、拖子/插入事务、子棋盘、触控/DPI/键盘等价或无障碍测试。本轮仅建立静态基线，不运行旧 GUI、不写用户配置、不改棋谱、不联网、不启动引擎且不修改旧 Java。"
     },
     {
       "id": "BOARD-FLOAT-INPUT-001",
@@ -3092,19 +3117,21 @@
       ],
       "java_evidence": [
         { "path": "src/main/java/featurecat/lizzie/gui/Input.java", "symbol": "AutoPlay autoPlay" },
-        { "path": "src/main/java/featurecat/lizzie/gui/StartAnaDialog.java", "symbol": "class StartAnaDialog" }
+        { "path": "src/main/java/featurecat/lizzie/gui/StartAnaDialog.java", "symbol": "class StartAnaDialog" },
+        { "path": "src/main/java/featurecat/lizzie/analysis/Leelaz.java", "symbol": "private void notifyAutoPlay(boolean playImmediately)" },
+        { "path": "src/main/java/featurecat/lizzie/analysis/Leelaz.java", "symbol": "public MoveData randomBestmove(" }
       ],
-      "config_keys": [],
+      "config_keys": ["check-random-visits"],
       "inputs_preconditions": "分析引擎可用；主窗口接收无 Alt/Shift 的 A 或 Primary+A。",
-      "success_behavior": "Primary+A 打开自动落子参数；无修饰 A 打开自动分析参数并在确认后启动任务。",
-      "failure_cancel_behavior": "取消自动分析重置工具栏且不启动任务；引擎失败或停止需恢复可交互状态并保留已完成结果。",
-      "data_io": "读取自动分析/落子参数，驱动棋盘与 GTP 分析任务。",
+      "success_behavior": "Primary+A 打开自动落子参数；无修饰 A 打开自动分析参数并在确认后启动任务。自动落子同样调用 Leelaz.randomBestmove(isAutoPlay=true)：它不读取 percents-random-visits，但外层 check-random-visits 决定是否计算最高访问量；每个合格次位候选先加入一次，满足 anaGameRandomPlayoutsDiff 比例时再重复加入一次，以重复项形成权重。",
+      "failure_cancel_behavior": "取消自动分析重置工具栏且不启动任务；引擎失败或停止需恢复可交互状态并保留已完成结果。旧版复用引擎对局随机函数产生隐式跨功能耦合：check-random-visits 关闭时最高访问量保持 0，正访问量除以 0 得 Infinity，使次位候选通常全部重复加权；开启时才按真实最高访问量筛权重。空候选仍会越界，最高访问量为零、NaN/Infinity 和无种子 Random 均缺少确定边界。目标版须显式分离自动落子与引擎对局策略并支持可注入随机源。",
+      "data_io": "读取自动分析/落子参数和共享 check-random-visits，驱动棋盘与 GTP 分析任务；自动落子不读取 percents-random-visits，却以最高访问量、anaGameRandomPlayoutsDiff 和候选重复项构造随机权重。",
       "external_dependencies": ["GTP 引擎进程"],
       "target_modules": ["Lizzie.Core", "Lizzie.Engine", "Lizzie.Desktop"],
       "automated_evidence": [],
-      "manual_acceptance": "覆盖两个对话框确认/取消、任务开始/停止、引擎失败、进度和工具栏恢复。",
+      "manual_acceptance": "覆盖两个对话框确认/取消、任务开始/停止、引擎失败、进度和工具栏恢复；固定候选与随机源，分别在 check-random-visits 开/关、最高访问量为零、空候选和 anaGameRandomPlayoutsDiff 边界验证每项权重及最终选择，确认自动落子不被引擎对局百分比意外改变。",
       "status": "已盘点",
-      "evidence": "Primary+A 与无修饰 A 的确认/取消条件路径已展开；任务生命周期和进度语义待纵切验证。"
+      "evidence": "Primary+A 与无修饰 A 的确认/取消条件路径已展开，并静态贯通 Leelaz.notifyAutoPlay 到 randomBestmove 的共享 check-random-visits 分支及重复候选加权；旧测试未直接覆盖该随机函数、空列表、除零或配置开关，任务生命周期、进度语义和动态分布仍待纵切验证。"
     },
     {
       "id": "EXTERNAL-PROGRAMS-001",

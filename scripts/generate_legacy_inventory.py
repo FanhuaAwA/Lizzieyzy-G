@@ -2221,8 +2221,8 @@ def validate_matrix(
     dict[str, list[str]],
     dict[str, list[str]],
 ]:
-    if matrix.get("schema_version") != 43:
-        raise ValueError("Matrix schema_version must be 43")
+    if matrix.get("schema_version") != 44:
+        raise ValueError("Matrix schema_version must be 44")
     allowed_statuses = matrix.get("allowed_statuses")
     if allowed_statuses != list(ALLOWED_STATUSES):
         raise ValueError("Matrix allowed_statuses differ from the repository contract")
@@ -2522,6 +2522,78 @@ def build_inventory(legacy_root: Path, matrix_path: Path) -> dict[str, Any]:
         matrix_ids_by_config_key,
         matrix_ids_by_menu_key,
         row_id="ENGINE-GAME-001",
+        source_path="src/main/java/featurecat/lizzie/gui/EnginePkConfig.java",
+        expected_config_keys={
+            "check-random-visits",
+            "engine-pk-ponder",
+            "first-engine-min-move",
+            "first-engine-resign-move-counts",
+            "first-engine-resign-winrate",
+            "percents-random-visits",
+            "second-engine-min-move",
+            "second-engine-resign-move-counts",
+            "second-engine-resign-winrate",
+            "show-previous-bestmoves-in-enginegame",
+            "show-previous-bestmoves-only-first-move",
+        },
+        expected_menu_keys={"Menu.newEngineGame"},
+        expected_input_cases={
+            "keyPressed:VK_E",
+            "InputIndependentMainBoard:keyPressed:VK_E",
+        },
+        expected_input_bindings={
+            "keyPressed:VK_E#2",
+            "InputIndependentMainBoard:keyPressed:VK_E#2",
+        },
+        required_evidence={
+            (
+                "src/main/java/featurecat/lizzie/gui/EnginePkConfig.java",
+                "private void applyChange()",
+            ),
+            (
+                "src/main/java/featurecat/lizzie/gui/DoubleDocument.java",
+                "public void insertString(",
+            ),
+            (
+                "src/main/java/featurecat/lizzie/gui/NewEngineGameDialog.java",
+                "new EnginePkConfig(false)",
+            ),
+            (
+                "src/main/java/featurecat/lizzie/gui/BottomToolbar.java",
+                "new EnginePkConfig(true)",
+            ),
+            (
+                "src/main/java/featurecat/lizzie/gui/BottomToolbar.java",
+                "btnStartPk.addActionListener",
+            ),
+            (
+                "src/main/java/featurecat/lizzie/analysis/Leelaz.java",
+                "public MoveData randomBestmove(",
+            ),
+            (
+                "src/main/java/featurecat/lizzie/analysis/Leelaz.java",
+                "public int getIntervalForGenmovePk()",
+            ),
+            (
+                "src/main/java/featurecat/lizzie/analysis/EngineManager.java",
+                "public void stopEngineGame(int resgnEngineIndex, boolean mannul)",
+            ),
+            (
+                "src/main/java/featurecat/lizzie/gui/BoardRenderer.java",
+                "private void drawBranch()",
+            ),
+            (
+                "src/main/java/featurecat/lizzie/gui/LizzieFrame.java",
+                "public List<MoveData> getBestMoves()",
+            ),
+        },
+    )
+    validate_workflow_guard(
+        matrix,
+        config_entries,
+        matrix_ids_by_config_key,
+        matrix_ids_by_menu_key,
+        row_id="ENGINE-GAME-001",
         source_path="src/main/java/featurecat/lizzie/gui/NewEngineGameDialog.java",
         expected_config_keys={
             "advance-black-time-txt",
@@ -2587,6 +2659,41 @@ def build_inventory(legacy_root: Path, matrix_path: Path) -> dict[str, Any]:
     if actual_engine_game_calls != expected_engine_game_calls:
         raise ValueError(
             f"startEngineGameDialog call sites changed: {actual_engine_game_calls}"
+        )
+    expected_engine_pk_config_calls = {
+        "src/main/java/featurecat/lizzie/gui/BottomToolbar.java": 1,
+        "src/main/java/featurecat/lizzie/gui/NewEngineGameDialog.java": 1,
+    }
+    actual_engine_pk_config_calls = {}
+    for path in (legacy_root / "src/main/java").rglob("*.java"):
+        count = strip_java_comments(
+            path.read_text(encoding="utf-8", errors="replace")
+        ).count("new EnginePkConfig(")
+        if count:
+            source_path = path.relative_to(legacy_root).as_posix()
+            actual_engine_pk_config_calls[source_path] = count
+    if actual_engine_pk_config_calls != expected_engine_pk_config_calls:
+        raise ValueError(
+            f"EnginePkConfig call sites changed: {actual_engine_pk_config_calls}"
+        )
+    expected_direct_engine_game_calls = {
+        "src/main/java/featurecat/lizzie/gui/BottomToolbar.java": 1,
+        "src/main/java/featurecat/lizzie/gui/NewEngineGameDialog.java": 1,
+    }
+    actual_direct_engine_game_calls = {}
+    for path in (legacy_root / "src/main/java").rglob("*.java"):
+        source = strip_java_comments(
+            path.read_text(encoding="utf-8", errors="replace")
+        )
+        count = source.count("startEngineGame();")
+        count += source.count("toolbar.startEngineGame())")
+        if count:
+            source_path = path.relative_to(legacy_root).as_posix()
+            actual_direct_engine_game_calls[source_path] = count
+    if actual_direct_engine_game_calls != expected_direct_engine_game_calls:
+        raise ValueError(
+            "Direct engine-game start call sites changed: "
+            f"{actual_direct_engine_game_calls}"
         )
     mapped_keys = sum(bool(entry["matrix_ids"]) for entry in config_entries)
     menu["keys"] = [
@@ -2665,7 +2772,7 @@ def build_inventory(legacy_root: Path, matrix_path: Path) -> dict[str, Any]:
         raise ValueError("Every normalized legacy input path must map to the matrix")
 
     return {
-        "schema_version": 43,
+        "schema_version": 44,
         "source": {
             "root": "../lizzieyzy-next-main",
             "version": read_legacy_version(legacy_root),

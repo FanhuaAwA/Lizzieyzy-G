@@ -1,5 +1,5 @@
 {
-  "schema_version": 43,
+  "schema_version": 44,
   "source": {
     "root": "../lizzieyzy-next-main",
     "version": "yzy2.5.3",
@@ -32,8 +32,8 @@
       "用户批准不迁移": 0
     },
     "active_config_leaf_keys": 596,
-    "mapped_config_leaf_keys": 255,
-    "unmapped_config_leaf_keys": 341,
+    "mapped_config_leaf_keys": 258,
+    "unmapped_config_leaf_keys": 338,
     "active_menu_resource_keys": 383,
     "mapped_menu_resource_keys": 110,
     "unmapped_menu_resource_keys": 273,
@@ -2972,7 +2972,10 @@
       {
         "key": "check-random-visits",
         "reference_count": 2,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "ANALYSIS-AUTO-001",
+          "ENGINE-GAME-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -8483,7 +8486,9 @@
       {
         "key": "percents-random-visits",
         "reference_count": 2,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "ENGINE-GAME-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -11665,7 +11670,8 @@
         "key": "show-previous-bestmoves-in-enginegame",
         "reference_count": 2,
         "matrix_ids": [
-          "BOARD-MAIN-INPUT-001"
+          "BOARD-MAIN-INPUT-001",
+          "ENGINE-GAME-001"
         ],
         "references": [
           {
@@ -11685,7 +11691,10 @@
       {
         "key": "show-previous-bestmoves-only-first-move",
         "reference_count": 2,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "BOARD-MAIN-INPUT-001",
+          "ENGINE-GAME-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
