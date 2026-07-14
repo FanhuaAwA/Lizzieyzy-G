@@ -1,5 +1,5 @@
 {
-  "schema_version": 32,
+  "schema_version": 33,
   "allowed_statuses": [
     "未盘点",
     "已盘点",
@@ -3552,6 +3552,67 @@
       "manual_acceptance": "覆盖无历史、少/足样本、三页切换、模型 rollover、热图与段位图 move/exit、tooltip 边界、模型切换及成功/失败/超限导入；在多 DPI、长中日韩/泰文、浅深高对比、键盘、触控和屏幕阅读器下确认信息等价，hover 不写模型、配置或棋谱。",
       "status": "已盘点",
       "evidence": "PlayerStrength 三个来源精确登记 entered/exited、moved/exited、moved/exited 共 6 个事件/6 条无条件路径；hover 只更新 rollover、命中点或段位提示并重绘，不执行文件、配置、网络或引擎操作。PlayerStrengthEstimatorTest 覆盖模型枚举、导入清理和估算分档，LizzieFrameRegressionTest 直接覆盖 tooltip、模型选择器可读名称、详情配色、评估卡规则文字、本地化标题布局和性能分布 helper，但没有 dispatch 这三组 listener 或验证键盘、触控、DPI、无障碍与模型导入资源上限。本轮未运行旧 GUI、读取用户模型或修改产品代码。"
+    },
+    {
+      "id": "GAME-KOMI-001",
+      "category": "棋盘与对局",
+      "legacy_entry": "顶部双层菜单中的 Menu.komi 文本框与增减按钮修改当前对局贴目；文本编辑可在按键或移出时提交，按钮单击步进 0.5，按住则连续步进",
+      "legacy_menu_keys": ["Menu.komi"],
+      "legacy_menu_labels": [],
+      "legacy_shortcuts": [],
+      "legacy_input_cases": [
+        "MenuKomiTextExit:mouseExited",
+        "MenuKomiUpHold:mousePressed",
+        "MenuKomiUpHold:mouseReleased",
+        "MenuKomiDownHold:mousePressed",
+        "MenuKomiDownHold:mouseReleased",
+        "MenuKomiUpHover:mouseEntered",
+        "MenuKomiUpHover:mouseExited",
+        "MenuKomiDownHover:mouseEntered",
+        "MenuKomiDownHover:mouseExited"
+      ],
+      "legacy_input_bindings": [
+        "MenuKomiTextExit:mouseExited#1",
+        "MenuKomiUpHold:mousePressed#1",
+        "MenuKomiUpHold:mouseReleased#1",
+        "MenuKomiDownHold:mousePressed#1",
+        "MenuKomiDownHold:mouseReleased#1",
+        "MenuKomiUpHover:mouseEntered#1",
+        "MenuKomiUpHover:mouseExited#1",
+        "MenuKomiDownHover:mouseEntered#1",
+        "MenuKomiDownHover:mouseExited#1"
+      ],
+      "java_evidence": [
+        { "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "symbol": "menu = new Menu()" },
+        { "path": "src/main/java/featurecat/lizzie/gui/Menu.java", "symbol": "txtKomi.addMouseListener" },
+        { "path": "src/main/java/featurecat/lizzie/gui/Menu.java", "symbol": "txtKomi.addKeyListener" },
+        { "path": "src/main/java/featurecat/lizzie/gui/Menu.java", "symbol": "txtKomi.addFocusListener" },
+        { "path": "src/main/java/featurecat/lizzie/gui/Menu.java", "symbol": "btnKomiUp.addMouseListener" },
+        { "path": "src/main/java/featurecat/lizzie/gui/Menu.java", "symbol": "btnKomiUp.addActionListener" },
+        { "path": "src/main/java/featurecat/lizzie/gui/Menu.java", "symbol": "btnKomiDown.addMouseListener" },
+        { "path": "src/main/java/featurecat/lizzie/gui/Menu.java", "symbol": "btnKomiDown.addActionListener" },
+        { "path": "src/main/java/featurecat/lizzie/gui/KomiDocument.java", "symbol": "public class KomiDocument extends PlainDocument" },
+        { "path": "src/main/java/featurecat/lizzie/analysis/GameInfo.java", "symbol": "public void setKomi(double komi)" },
+        { "path": "src/main/java/featurecat/lizzie/analysis/GameInfo.java", "symbol": "public void setKomiNoMenu(double komi)" },
+        { "path": "src/main/java/featurecat/lizzie/analysis/GameInfo.java", "symbol": "public void changeKomi()" },
+        { "path": "src/main/java/featurecat/lizzie/analysis/Leelaz.java", "symbol": "public void komiNoMenu(double komi)" },
+        { "path": "src/main/java/featurecat/lizzie/analysis/Leelaz.java", "symbol": "public void komi(double komi)" }
+      ],
+      "config_keys": ["show-top-tool-bar", "show-double-menu", "frame-font-size", "use-java-looks"],
+      "inputs_preconditions": "Menu 由 LizzieFrame 构造；show-top-tool-bar 与 show-double-menu 均为 true 时顶部贴目面板才可见，任一为 false 都会隐藏该控件。文本移出监听不区分鼠标按键，增减按钮的 press/release 监听也不检查按钮或修饰键。长按在 press 后约 400 ms 开始、随后约每 150 ms 重复；hover 几何监听只在高 DPI 缩放且未因 use-java-looks/Windows 桌面主题扩大控件时安装。按钮单击 ActionListener、文本 keyReleased 与 focusLost 是同一控件的必要兄弟行为，但不冒充本轮 pointer binding。",
+      "success_behavior": "有效文本与按钮步进更新 GameInfo 当前贴目并刷新界面；普通引擎对局向当前 GTP 引擎发送 komi、清除既有分析并在需要时恢复 ponder，双引擎对局向双方引擎发送相同贴目。文本路径使用 setKomiNoMenu，按钮路径使用 setKomi，后者还会在数子模式重算结果；文本值未变化时移出不重复提交，无效文本恢复当前值。目标版使用有类型且有合理边界的贴目控件，把单击、键盘步进和可取消的连续步进归一为一个命令，在 UI 调度器上原子更新棋局、引擎、计分和分析状态。",
+      "failure_cancel_behavior": "旧版每次 press 都创建非 daemon Thread，以非 volatile 的共享 pressed/start 跨线程通信；正常停止依赖 release，丢失捕获、重复 press、关闭窗口或中断均可能留下竞态、迟到更新或常驻线程，且后台线程直接读取 Swing 文本并修改棋局、引擎和 UI 状态。任意鼠标键都能启动重复，左键 release 后还可能由 ActionListener 再增加一步；按钮默认 setFocusable(false)，不在普通 Tab 顺序，F6 动态焦点路径理论可达但没有专项验证。AccessibilitySupport.applyToTree(topPanel) 可能早于 doubleMenu 把贴目按钮加入 topPanel，tooltip 转 accessible name 未必应用到实际按钮。KomiDocument 没有长度、finite 或业务范围上限，整段粘贴可绕过半目限制，指数文本可解析为 Infinity；按钮线程对单独负号的解析异常未捕获。双引擎命令依次发送，第二次失败时外部引擎、内存与显示可能部分提交，文本移出异常也可能只回滚显示。目标版必须拥有并取消 repeat 生命周期、限定指针按钮与数值、在失败时保持原状态或明确报告部分失败，并在引擎退出、索引失效、窗口关闭和失去捕获时安全停止。",
+      "data_io": "读写进程内 GameInfo.KM 与 changedKomi；普通路径通过 Leelaz 向当前 GTP 进程写 komi 命令、清除缓存候选并可恢复 ponder，双引擎路径向 first/second engine 各写一条命令。该入口本身不写配置、文件或网络；show-top-tool-bar、show-double-menu、frame-font-size、use-java-looks 仅决定可见性、布局、尺寸或 hover 监听安装。后续保存 SGF 时当前 KM 可被持久化，Yike 直播刷新依赖 changedKomi 保留手工覆盖。",
+      "external_dependencies": ["当前一个或两个 GTP 引擎进程", "Swing 事件顺序、窗口指针捕获、操作系统 DPI 与桌面主题"],
+      "target_modules": ["Lizzie.Core", "Lizzie.Engine", "Lizzie.Desktop"],
+      "automated_evidence": [
+        { "path": "src/test/java/featurecat/lizzie/gui/AccessibilitySupportTest.java", "symbol": "treePassUsesExistingTooltipsForIconOnlyControls" },
+        { "path": "src/test/java/featurecat/lizzie/gui/AccessibilitySupportTest.java", "symbol": "labelsAreAssociatedWithTheirInput" },
+        { "path": "src/test/java/featurecat/lizzie/gui/OnlineDialogYikeSessionStateTest.java", "symbol": "yikeLiveKomiKeepsManualOverrideOnRefresh" }
+      ],
+      "manual_acceptance": "覆盖文本有效值、相同值、空、单独负号、非法字符、整段粘贴、指数/Infinity、极大值及 key/focus/mouse-exit 顺序；左右按钮的左/中/右键、单击、双击、左键 release 后 ActionListener 额外步进、400/150 ms 边界、移出、失去捕获、切窗和关闭时取消。分别验证单引擎、双引擎、引擎退出、索引失效、第二引擎失败、分析清除/ponder 与 changedKomi/Yike 手工覆盖；逐一切换 show-top-tool-bar/show-double-menu，确认任一关闭时控件隐藏、二者恢复时控件可用，并在不同字号、100%/150%/200% DPI、原生/Java 主题、键盘、IME、触控和屏幕阅读器下确认可达、可读且无残留线程。",
+      "status": "已盘点",
+      "evidence": "Menu.java 的 5 个贴目 listener 来源精确登记为 9 个 public pointer 事件与 9 条无条件路径：文本移出 1、上调 press/release 2、下调 press/release 2、两个按钮 hover enter/exit 4。现有解析器保持文本 try/catch 与长按 Runnable/Thread 为原子语句，无需语法扩展；Menu.java 被加入完整 pointer 覆盖约束。AccessibilitySupportTest 只间接证明 icon-only 控件可沿用 tooltip 作为 accessible name、标签可关联输入框，OnlineDialogYikeSessionStateTest 直接证明 changeKomi 的直播手工覆盖语义；旧测试没有构造 Menu 或 dispatch 这些监听器，也未验证连续步进、线程取消、双引擎原子性、数值边界、DPI 或键盘可达。本轮未运行旧 GUI、发送引擎命令、修改用户配置或棋谱。"
     }
   ]
 }

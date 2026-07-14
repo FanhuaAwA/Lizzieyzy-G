@@ -599,9 +599,40 @@ INPUT_POINTER_SOURCES = (
         {"mouseMoved", "mouseExited"},
         {"mouseMoved": 6, "mouseExited": 15},
     ),
+    (
+        "MenuKomiTextExit",
+        "src/main/java/featurecat/lizzie/gui/Menu.java",
+        {"mouseExited"},
+        {"mouseExited": 1},
+    ),
+    (
+        "MenuKomiUpHold",
+        "src/main/java/featurecat/lizzie/gui/Menu.java",
+        {"mousePressed", "mouseReleased"},
+        {"mousePressed": 1, "mouseReleased": 1},
+    ),
+    (
+        "MenuKomiDownHold",
+        "src/main/java/featurecat/lizzie/gui/Menu.java",
+        {"mousePressed", "mouseReleased"},
+        {"mousePressed": 2, "mouseReleased": 2},
+    ),
+    (
+        "MenuKomiUpHover",
+        "src/main/java/featurecat/lizzie/gui/Menu.java",
+        {"mouseEntered", "mouseExited"},
+        {"mouseEntered": 1, "mouseExited": 2},
+    ),
+    (
+        "MenuKomiDownHover",
+        "src/main/java/featurecat/lizzie/gui/Menu.java",
+        {"mouseEntered", "mouseExited"},
+        {"mouseEntered": 2, "mouseExited": 3},
+    ),
 )
 FULL_POINTER_COVERAGE_PATHS = {
     "src/main/java/featurecat/lizzie/gui/LizzieFrame.java",
+    "src/main/java/featurecat/lizzie/gui/Menu.java",
 }
 INPUT_MODIFIER_CHECKS = (
     ("Alt", re.compile(r"\be\.isAltDown\s*\(\s*\)")),
@@ -1701,8 +1732,8 @@ def validate_matrix(
     dict[str, list[str]],
     dict[str, list[str]],
 ]:
-    if matrix.get("schema_version") != 32:
-        raise ValueError("Matrix schema_version must be 32")
+    if matrix.get("schema_version") != 33:
+        raise ValueError("Matrix schema_version must be 33")
     allowed_statuses = matrix.get("allowed_statuses")
     if allowed_statuses != list(ALLOWED_STATUSES):
         raise ValueError("Matrix allowed_statuses differ from the repository contract")
@@ -1953,7 +1984,7 @@ def build_inventory(legacy_root: Path, matrix_path: Path) -> dict[str, Any]:
         raise ValueError("Every normalized legacy input path must map to the matrix")
 
     return {
-        "schema_version": 32,
+        "schema_version": 33,
         "source": {
             "root": "../lizzieyzy-next-main",
             "version": read_legacy_version(legacy_root),
@@ -1972,7 +2003,7 @@ def build_inventory(legacy_root: Path, matrix_path: Path) -> dict[str, Any]:
             "Menu literal labels cover active string-literal menu constructors; dynamic labels remain represented by their resource or runtime source.",
             "Menu accelerators cover explicit Menu.java setAccelerator calls and direct OS.isWindows guards; other input bindings remain T-003 work.",
             "Input key bindings symbolically expand Input.java, InputIndependentMainBoard.java, InputIndependentSubboard.java, InputSubboard.java, FloatBoard.java, AnalysisFrame table/window, DrawPainting.java, ChooseMoreEngine.java, LoadEngine.java, OtherPrograms.java, TencentKifuDownload.java, FoxKifuDownload.java, BrowserFrame.java, and CaptureTsumeGoFrame.java key dispatch, condition evaluations, executed statements, empty-listener and empty-statement paths, and switch fall-through; controlIsPressed means Control on every platform plus Meta on macOS, and BrowserFrame dispatches Enter through getKeyChar.",
-            "Pointer bindings symbolically expand the main Input listener, the two indexed subboard listeners, FloatBoard, AnalysisFrame, DrawPainting, ChooseMoreEngine, LoadEngine, OtherPrograms, TencentKifuDownload, FoxKifuDownload, BrowserFrame load/stop/label listeners, JFontTextArea, JFontTextField, JIMSendTextPane, the two DemoScrollBarUI2 arrow-button listeners, JPaintTextPane, WindowMenuStrip, YikeLiveDialog, IndependentSubBoard and IndependentMainBoard lock/close/top-button plus window listeners, BlunderListPanel, SidebarHeaderPanel, BottomToolbar, ConfigDialog2 sidebar-nav/toggle-row/color-label listeners, MoreEngines, and the 33 indexed LizzieFrame listeners across mouse, motion, drag, wheel, and release condition evaluations, early returns, executed statements, and explicit no-action paths; data-dependent loops and click try/catch handlers are preserved as normalized atomic statements, while local boolean tracking retains a known value across loops that can only assign the same literal so impossible branches are pruned.",
+            "Pointer bindings symbolically expand the main Input listener, the two indexed subboard listeners, FloatBoard, AnalysisFrame, DrawPainting, ChooseMoreEngine, LoadEngine, OtherPrograms, TencentKifuDownload, FoxKifuDownload, BrowserFrame load/stop/label listeners, JFontTextArea, JFontTextField, JIMSendTextPane, the two DemoScrollBarUI2 arrow-button listeners, JPaintTextPane, WindowMenuStrip, YikeLiveDialog, IndependentSubBoard and IndependentMainBoard lock/close/top-button plus window listeners, BlunderListPanel, SidebarHeaderPanel, BottomToolbar, ConfigDialog2 sidebar-nav/toggle-row/color-label listeners, MoreEngines, the 33 indexed LizzieFrame listeners, and the 5 indexed Menu komi text/hold/hover listeners across mouse, motion, drag, wheel, and release condition evaluations, early returns, executed statements, and explicit no-action paths; data-dependent loops and click try/catch handlers are preserved as normalized atomic statements, while local boolean tracking retains a known value across loops that can only assign the same literal so impossible branches are pruned.",
             "Other key-listener and pointer-listener classes remain T-003 work.",
         ],
         "matrix_summary": {

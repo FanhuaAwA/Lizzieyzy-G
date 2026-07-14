@@ -1,5 +1,5 @@
 {
-  "schema_version": 32,
+  "schema_version": 33,
   "source": {
     "root": "../lizzieyzy-next-main",
     "version": "yzy2.5.3",
@@ -18,25 +18,25 @@
     "Menu literal labels cover active string-literal menu constructors; dynamic labels remain represented by their resource or runtime source.",
     "Menu accelerators cover explicit Menu.java setAccelerator calls and direct OS.isWindows guards; other input bindings remain T-003 work.",
     "Input key bindings symbolically expand Input.java, InputIndependentMainBoard.java, InputIndependentSubboard.java, InputSubboard.java, FloatBoard.java, AnalysisFrame table/window, DrawPainting.java, ChooseMoreEngine.java, LoadEngine.java, OtherPrograms.java, TencentKifuDownload.java, FoxKifuDownload.java, BrowserFrame.java, and CaptureTsumeGoFrame.java key dispatch, condition evaluations, executed statements, empty-listener and empty-statement paths, and switch fall-through; controlIsPressed means Control on every platform plus Meta on macOS, and BrowserFrame dispatches Enter through getKeyChar.",
-    "Pointer bindings symbolically expand the main Input listener, the two indexed subboard listeners, FloatBoard, AnalysisFrame, DrawPainting, ChooseMoreEngine, LoadEngine, OtherPrograms, TencentKifuDownload, FoxKifuDownload, BrowserFrame load/stop/label listeners, JFontTextArea, JFontTextField, JIMSendTextPane, the two DemoScrollBarUI2 arrow-button listeners, JPaintTextPane, WindowMenuStrip, YikeLiveDialog, IndependentSubBoard and IndependentMainBoard lock/close/top-button plus window listeners, BlunderListPanel, SidebarHeaderPanel, BottomToolbar, ConfigDialog2 sidebar-nav/toggle-row/color-label listeners, MoreEngines, and the 33 indexed LizzieFrame listeners across mouse, motion, drag, wheel, and release condition evaluations, early returns, executed statements, and explicit no-action paths; data-dependent loops and click try/catch handlers are preserved as normalized atomic statements, while local boolean tracking retains a known value across loops that can only assign the same literal so impossible branches are pruned.",
+    "Pointer bindings symbolically expand the main Input listener, the two indexed subboard listeners, FloatBoard, AnalysisFrame, DrawPainting, ChooseMoreEngine, LoadEngine, OtherPrograms, TencentKifuDownload, FoxKifuDownload, BrowserFrame load/stop/label listeners, JFontTextArea, JFontTextField, JIMSendTextPane, the two DemoScrollBarUI2 arrow-button listeners, JPaintTextPane, WindowMenuStrip, YikeLiveDialog, IndependentSubBoard and IndependentMainBoard lock/close/top-button plus window listeners, BlunderListPanel, SidebarHeaderPanel, BottomToolbar, ConfigDialog2 sidebar-nav/toggle-row/color-label listeners, MoreEngines, the 33 indexed LizzieFrame listeners, and the 5 indexed Menu komi text/hold/hover listeners across mouse, motion, drag, wheel, and release condition evaluations, early returns, executed statements, and explicit no-action paths; data-dependent loops and click try/catch handlers are preserved as normalized atomic statements, while local boolean tracking retains a known value across loops that can only assign the same literal so impossible branches are pruned.",
     "Other key-listener and pointer-listener classes remain T-003 work."
   ],
   "matrix_summary": {
-    "rows": 52,
+    "rows": 53,
     "statuses": {
       "未盘点": 0,
-      "已盘点": 52,
+      "已盘点": 53,
       "实施中": 0,
       "已实现待验证": 0,
       "已验证": 0,
       "用户批准不迁移": 0
     },
     "active_config_leaf_keys": 596,
-    "mapped_config_leaf_keys": 179,
-    "unmapped_config_leaf_keys": 417,
+    "mapped_config_leaf_keys": 181,
+    "unmapped_config_leaf_keys": 415,
     "active_menu_resource_keys": 383,
-    "mapped_menu_resource_keys": 98,
-    "unmapped_menu_resource_keys": 285,
+    "mapped_menu_resource_keys": 99,
+    "unmapped_menu_resource_keys": 284,
     "active_menu_literal_labels": 12,
     "mapped_menu_literal_labels": 12,
     "unmapped_menu_literal_labels": 0,
@@ -49,11 +49,11 @@
     "active_input_key_bindings": 365,
     "mapped_input_key_bindings": 365,
     "unmapped_input_key_bindings": 0,
-    "active_input_pointer_events": 159,
-    "mapped_input_pointer_events": 159,
+    "active_input_pointer_events": 168,
+    "mapped_input_pointer_events": 168,
     "unmapped_input_pointer_events": 0,
-    "active_input_pointer_bindings": 548,
-    "mapped_input_pointer_bindings": 548,
+    "active_input_pointer_bindings": 557,
+    "mapped_input_pointer_bindings": 557,
     "unmapped_input_pointer_bindings": 0
   },
   "config": {
@@ -5057,6 +5057,7 @@
         "reference_count": 3,
         "matrix_ids": [
           "ANALYSIS-PLAYER-STRENGTH-001",
+          "GAME-KOMI-001",
           "UI-TEXT-EDIT-001",
           "UI-WINDOW-MENU-STRIP-001"
         ],
@@ -10303,6 +10304,7 @@
         "key": "show-double-menu",
         "reference_count": 2,
         "matrix_ids": [
+          "GAME-KOMI-001",
           "KIFU-TEMP-SAVES-001"
         ],
         "references": [
@@ -12025,7 +12027,9 @@
       {
         "key": "show-top-tool-bar",
         "reference_count": 4,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "GAME-KOMI-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -13504,7 +13508,9 @@
       {
         "key": "use-java-looks",
         "reference_count": 4,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "GAME-KOMI-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -15884,7 +15890,9 @@
       },
       {
         "key": "Menu.komi",
-        "matrix_ids": [],
+        "matrix_ids": [
+          "GAME-KOMI-001"
+        ],
         "lines": [
           5640,
           5729
@@ -31304,10 +31312,40 @@
         "source": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java",
         "active_pointer_events": 2,
         "active_pointer_bindings": 2
+      },
+      {
+        "id": "MenuKomiTextExit",
+        "source": "src/main/java/featurecat/lizzie/gui/Menu.java",
+        "active_pointer_events": 1,
+        "active_pointer_bindings": 1
+      },
+      {
+        "id": "MenuKomiUpHold",
+        "source": "src/main/java/featurecat/lizzie/gui/Menu.java",
+        "active_pointer_events": 2,
+        "active_pointer_bindings": 2
+      },
+      {
+        "id": "MenuKomiDownHold",
+        "source": "src/main/java/featurecat/lizzie/gui/Menu.java",
+        "active_pointer_events": 2,
+        "active_pointer_bindings": 2
+      },
+      {
+        "id": "MenuKomiUpHover",
+        "source": "src/main/java/featurecat/lizzie/gui/Menu.java",
+        "active_pointer_events": 2,
+        "active_pointer_bindings": 2
+      },
+      {
+        "id": "MenuKomiDownHover",
+        "source": "src/main/java/featurecat/lizzie/gui/Menu.java",
+        "active_pointer_events": 2,
+        "active_pointer_bindings": 2
       }
     ],
-    "active_pointer_events": 159,
-    "active_pointer_bindings": 548,
+    "active_pointer_events": 168,
+    "active_pointer_bindings": 557,
     "pointer_events": [
       {
         "event_id": "InputIndependentSubboard:mouseClicked",
@@ -32897,6 +32935,96 @@
         "binding_count": 1,
         "matrix_ids": [
           "ANALYSIS-PLAYER-STRENGTH-001"
+        ]
+      },
+      {
+        "event_id": "MenuKomiTextExit:mouseExited",
+        "source_id": "MenuKomiTextExit",
+        "event": "mouseExited",
+        "line": 5696,
+        "binding_count": 1,
+        "matrix_ids": [
+          "GAME-KOMI-001"
+        ]
+      },
+      {
+        "event_id": "MenuKomiUpHold:mousePressed",
+        "source_id": "MenuKomiUpHold",
+        "event": "mousePressed",
+        "line": 5821,
+        "binding_count": 1,
+        "matrix_ids": [
+          "GAME-KOMI-001"
+        ]
+      },
+      {
+        "event_id": "MenuKomiUpHold:mouseReleased",
+        "source_id": "MenuKomiUpHold",
+        "event": "mouseReleased",
+        "line": 5864,
+        "binding_count": 1,
+        "matrix_ids": [
+          "GAME-KOMI-001"
+        ]
+      },
+      {
+        "event_id": "MenuKomiDownHold:mousePressed",
+        "source_id": "MenuKomiDownHold",
+        "event": "mousePressed",
+        "line": 5876,
+        "binding_count": 1,
+        "matrix_ids": [
+          "GAME-KOMI-001"
+        ]
+      },
+      {
+        "event_id": "MenuKomiDownHold:mouseReleased",
+        "source_id": "MenuKomiDownHold",
+        "event": "mouseReleased",
+        "line": 5919,
+        "binding_count": 1,
+        "matrix_ids": [
+          "GAME-KOMI-001"
+        ]
+      },
+      {
+        "event_id": "MenuKomiUpHover:mouseEntered",
+        "source_id": "MenuKomiUpHover",
+        "event": "mouseEntered",
+        "line": 5928,
+        "binding_count": 1,
+        "matrix_ids": [
+          "GAME-KOMI-001"
+        ]
+      },
+      {
+        "event_id": "MenuKomiUpHover:mouseExited",
+        "source_id": "MenuKomiUpHover",
+        "event": "mouseExited",
+        "line": 5944,
+        "binding_count": 1,
+        "matrix_ids": [
+          "GAME-KOMI-001"
+        ]
+      },
+      {
+        "event_id": "MenuKomiDownHover:mouseEntered",
+        "source_id": "MenuKomiDownHover",
+        "event": "mouseEntered",
+        "line": 5963,
+        "binding_count": 1,
+        "matrix_ids": [
+          "GAME-KOMI-001"
+        ]
+      },
+      {
+        "event_id": "MenuKomiDownHover:mouseExited",
+        "source_id": "MenuKomiDownHover",
+        "event": "mouseExited",
+        "line": 5979,
+        "binding_count": 1,
+        "matrix_ids": [
+          "GAME-KOMI-001"
         ]
       }
     ],
@@ -68274,6 +68402,231 @@
         ],
         "matrix_ids": [
           "ANALYSIS-PLAYER-STRENGTH-001"
+        ]
+      },
+      {
+        "binding": "MenuKomiTextExit:mouseExited#1",
+        "event_id": "MenuKomiTextExit:mouseExited",
+        "source_id": "MenuKomiTextExit",
+        "event": "mouseExited",
+        "line": 5696,
+        "conditions": [],
+        "statements": [
+          {
+            "line": 5698,
+            "statement": "try { double oriKomi = Lizzie.board.getHistory().getGameInfo().getKomi(); double newKomi = Double.parseDouble(txtKomi.getText()); if (newKomi == oriKomi) return; if (EngineManager.isEngineGame) { Lizzie.engineManager .engineList .get(EngineManager.engineGameInfo.firstEngineIndex) .sendCommand(\"komi \" + (newKomi == 0.0 ? \"0\" : newKomi)); Lizzie.engineManager .engineList .get(EngineManager.engineGameInfo.secondEngineIndex) .sendCommand(\"komi \" + (newKomi == 0.0 ? \"0\" : newKomi)); if (Lizzie.leelaz.isPondering()) Lizzie.leelaz.ponder(); Lizzie.board.getHistory().getGameInfo().setKomiNoMenu(newKomi); } else Lizzie.leelaz.komiNoMenu(newKomi); Lizzie.board.getHistory().getGameInfo().changeKomi(); Lizzie.frame.refresh(); } catch (Exception es) { txtKomi.setText(String.valueOf(Lizzie.board.getHistory().getGameInfo().getKomi())); es.printStackTrace(); }"
+          }
+        ],
+        "matrix_ids": [
+          "GAME-KOMI-001"
+        ]
+      },
+      {
+        "binding": "MenuKomiUpHold:mousePressed#1",
+        "event_id": "MenuKomiUpHold:mousePressed",
+        "source_id": "MenuKomiUpHold",
+        "event": "mousePressed",
+        "line": 5821,
+        "conditions": [],
+        "statements": [
+          {
+            "line": 5822,
+            "statement": "start = Instant.now();"
+          },
+          {
+            "line": 5823,
+            "statement": "pressed = true;"
+          },
+          {
+            "line": 5824,
+            "statement": "Runnable runnable = new Runnable() { public void run() { boolean started = false; while (pressed) { try { Thread.sleep(10); } catch (InterruptedException e) { e.printStackTrace(); } if ((started && Duration.between(start, Instant.now()).toMillis() > 150) || (!started && Duration.between(start, Instant.now()).toMillis() > 400)) { started = true; if (txtKomi.getText().trim().equals(\"\")) return; double newKomi = Double.parseDouble(txtKomi.getText().trim()) + 0.5; if (EngineManager.isEngineGame) { Lizzie.engineManager .engineList .get(EngineManager.engineGameInfo.firstEngineIndex) .sendCommand(\"komi \" + (newKomi == 0.0 ? \"0\" : newKomi)); Lizzie.engineManager .engineList .get(EngineManager.engineGameInfo.secondEngineIndex) .sendCommand(\"komi \" + (newKomi == 0.0 ? \"0\" : newKomi)); if (Lizzie.leelaz.isPondering()) Lizzie.leelaz.ponder(); Lizzie.board.getHistory().getGameInfo().setKomi(newKomi); } else Lizzie.leelaz.komi(newKomi); Lizzie.board.getHistory().getGameInfo().changeKomi(); start = Instant.now(); } } } };"
+          },
+          {
+            "line": 5859,
+            "statement": "Thread thread = new Thread(runnable);"
+          },
+          {
+            "line": 5860,
+            "statement": "thread.start();"
+          }
+        ],
+        "matrix_ids": [
+          "GAME-KOMI-001"
+        ]
+      },
+      {
+        "binding": "MenuKomiUpHold:mouseReleased#1",
+        "event_id": "MenuKomiUpHold:mouseReleased",
+        "source_id": "MenuKomiUpHold",
+        "event": "mouseReleased",
+        "line": 5864,
+        "conditions": [],
+        "statements": [
+          {
+            "line": 5865,
+            "statement": "pressed = false;"
+          },
+          {
+            "line": 5866,
+            "statement": "Lizzie.frame.refresh();"
+          }
+        ],
+        "matrix_ids": [
+          "GAME-KOMI-001"
+        ]
+      },
+      {
+        "binding": "MenuKomiDownHold:mousePressed#1",
+        "event_id": "MenuKomiDownHold:mousePressed",
+        "source_id": "MenuKomiDownHold",
+        "event": "mousePressed",
+        "line": 5876,
+        "conditions": [],
+        "statements": [
+          {
+            "line": 5877,
+            "statement": "start = Instant.now();"
+          },
+          {
+            "line": 5878,
+            "statement": "pressed = true;"
+          },
+          {
+            "line": 5879,
+            "statement": "Runnable runnable = new Runnable() { public void run() { boolean started = false; while (pressed) { try { Thread.sleep(10); } catch (InterruptedException e) { e.printStackTrace(); } if ((started && Duration.between(start, Instant.now()).toMillis() > 150) || (!started && Duration.between(start, Instant.now()).toMillis() > 400)) { started = true; if (txtKomi.getText().trim().equals(\"\")) return; double newKomi = Double.parseDouble(txtKomi.getText().trim()) - 0.5; if (EngineManager.isEngineGame) { Lizzie.engineManager .engineList .get(EngineManager.engineGameInfo.firstEngineIndex) .sendCommand(\"komi \" + (newKomi == 0.0 ? \"0\" : newKomi)); Lizzie.engineManager .engineList .get(EngineManager.engineGameInfo.secondEngineIndex) .sendCommand(\"komi \" + (newKomi == 0.0 ? \"0\" : newKomi)); if (Lizzie.leelaz.isPondering()) Lizzie.leelaz.ponder(); Lizzie.board.getHistory().getGameInfo().setKomi(newKomi); } else Lizzie.leelaz.komi(newKomi); Lizzie.board.getHistory().getGameInfo().changeKomi(); start = Instant.now(); } } } };"
+          },
+          {
+            "line": 5914,
+            "statement": "Thread thread = new Thread(runnable);"
+          },
+          {
+            "line": 5915,
+            "statement": "thread.start();"
+          }
+        ],
+        "matrix_ids": [
+          "GAME-KOMI-001"
+        ]
+      },
+      {
+        "binding": "MenuKomiDownHold:mouseReleased#1",
+        "event_id": "MenuKomiDownHold:mouseReleased",
+        "source_id": "MenuKomiDownHold",
+        "event": "mouseReleased",
+        "line": 5919,
+        "conditions": [],
+        "statements": [
+          {
+            "line": 5920,
+            "statement": "pressed = false;"
+          },
+          {
+            "line": 5921,
+            "statement": "Lizzie.frame.refresh();"
+          }
+        ],
+        "matrix_ids": [
+          "GAME-KOMI-001"
+        ]
+      },
+      {
+        "binding": "MenuKomiUpHover:mouseEntered#1",
+        "event_id": "MenuKomiUpHover:mouseEntered",
+        "source_id": "MenuKomiUpHover",
+        "event": "mouseEntered",
+        "line": 5928,
+        "conditions": [],
+        "statements": [
+          {
+            "line": 5929,
+            "statement": "btnKomiUp.setBounds( Lizzie.config.isFrameFontSmall() ? 67 : (Lizzie.config.isFrameFontMiddle() ? 80 : 97), Lizzie.config.isFrameFontSmall() ? 0 : (Lizzie.config.isFrameFontMiddle() ? 2 : 3), 13, Lizzie.config.isFrameFontSmall() ? 9 : (Lizzie.config.isFrameFontMiddle() ? 10 : 12));"
+          },
+          {
+            "line": 5940,
+            "statement": "btnKomiUp.setBackground(new Color(158, 158, 158));"
+          },
+          {
+            "line": 5941,
+            "statement": "btnKomiUp.setBorderPainted(false);"
+          }
+        ],
+        "matrix_ids": [
+          "GAME-KOMI-001"
+        ]
+      },
+      {
+        "binding": "MenuKomiUpHover:mouseExited#1",
+        "event_id": "MenuKomiUpHover:mouseExited",
+        "source_id": "MenuKomiUpHover",
+        "event": "mouseExited",
+        "line": 5944,
+        "conditions": [],
+        "statements": [
+          {
+            "line": 5945,
+            "statement": "btnKomiUp.setBounds( Lizzie.config.isFrameFontSmall() ? 66 : (Lizzie.config.isFrameFontMiddle() ? 79 : 96), Lizzie.config.isFrameFontSmall() ? -1 : (Lizzie.config.isFrameFontMiddle() ? 1 : 2), 15, Lizzie.config.isFrameFontSmall() ? 11 : (Lizzie.config.isFrameFontMiddle() ? 12 : 14));"
+          },
+          {
+            "line": 5956,
+            "statement": "btnKomiUp.setBackground(komiPanel.getBackground());"
+          },
+          {
+            "line": 5957,
+            "statement": "btnKomiUp.setBorderPainted(true);"
+          }
+        ],
+        "matrix_ids": [
+          "GAME-KOMI-001"
+        ]
+      },
+      {
+        "binding": "MenuKomiDownHover:mouseEntered#1",
+        "event_id": "MenuKomiDownHover:mouseEntered",
+        "source_id": "MenuKomiDownHover",
+        "event": "mouseEntered",
+        "line": 5963,
+        "conditions": [],
+        "statements": [
+          {
+            "line": 5964,
+            "statement": "btnKomiDown.setBounds( Lizzie.config.isFrameFontSmall() ? 67 : (Lizzie.config.isFrameFontMiddle() ? 80 : 97), Lizzie.config.isFrameFontSmall() ? 10 : (Lizzie.config.isFrameFontMiddle() ? 13 : 16), 13, Lizzie.config.isFrameFontSmall() ? 9 : (Lizzie.config.isFrameFontMiddle() ? 10 : 12));"
+          },
+          {
+            "line": 5975,
+            "statement": "btnKomiDown.setBackground(new Color(158, 158, 158));"
+          },
+          {
+            "line": 5976,
+            "statement": "btnKomiDown.setBorderPainted(false);"
+          }
+        ],
+        "matrix_ids": [
+          "GAME-KOMI-001"
+        ]
+      },
+      {
+        "binding": "MenuKomiDownHover:mouseExited#1",
+        "event_id": "MenuKomiDownHover:mouseExited",
+        "source_id": "MenuKomiDownHover",
+        "event": "mouseExited",
+        "line": 5979,
+        "conditions": [],
+        "statements": [
+          {
+            "line": 5980,
+            "statement": "btnKomiDown.setBounds( Lizzie.config.isFrameFontSmall() ? 66 : (Lizzie.config.isFrameFontMiddle() ? 79 : 96), Lizzie.config.isFrameFontSmall() ? 9 : (Lizzie.config.isFrameFontMiddle() ? 12 : 15), 15, Lizzie.config.isFrameFontSmall() ? 11 : (Lizzie.config.isFrameFontMiddle() ? 12 : 14));"
+          },
+          {
+            "line": 5991,
+            "statement": "btnKomiDown.setBackground(komiPanel.getBackground());"
+          },
+          {
+            "line": 5992,
+            "statement": "btnKomiDown.setBorderPainted(true);"
+          }
+        ],
+        "matrix_ids": [
+          "GAME-KOMI-001"
         ]
       }
     ]
