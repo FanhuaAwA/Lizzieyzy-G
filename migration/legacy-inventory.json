@@ -1,5 +1,5 @@
 {
-  "schema_version": 50,
+  "schema_version": 51,
   "source": {
     "root": "../lizzieyzy-next-main",
     "version": "yzy2.5.3",
@@ -32,11 +32,11 @@
       "用户批准不迁移": 0
     },
     "active_config_leaf_keys": 596,
-    "mapped_config_leaf_keys": 314,
-    "unmapped_config_leaf_keys": 282,
+    "mapped_config_leaf_keys": 316,
+    "unmapped_config_leaf_keys": 280,
     "active_menu_resource_keys": 383,
-    "mapped_menu_resource_keys": 118,
-    "unmapped_menu_resource_keys": 265,
+    "mapped_menu_resource_keys": 119,
+    "unmapped_menu_resource_keys": 264,
     "active_menu_literal_labels": 12,
     "mapped_menu_literal_labels": 12,
     "unmapped_menu_literal_labels": 0,
@@ -1237,7 +1237,9 @@
       {
         "key": "auto-load-kata-rules",
         "reference_count": 3,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "ANALYSIS-FULL-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -6127,7 +6129,9 @@
       {
         "key": "kata-rules",
         "reference_count": 2,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "ANALYSIS-FULL-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -16026,6 +16030,7 @@
       {
         "key": "Menu.engineRules",
         "matrix_ids": [
+          "ANALYSIS-FULL-001",
           "ENGINE-GTP-001"
         ],
         "lines": [
@@ -17241,7 +17246,9 @@
       },
       {
         "key": "Menu.rulesBtn",
-        "matrix_ids": [],
+        "matrix_ids": [
+          "ANALYSIS-FULL-001"
+        ],
         "lines": [
           6014
         ]
@@ -19210,6 +19217,7 @@
         ],
         "binding_count": 3,
         "matrix_ids": [
+          "ANALYSIS-FULL-001",
           "SETTINGS-ENGINE-001",
           "SETTINGS-GAME-001"
         ]
@@ -20048,6 +20056,7 @@
         ],
         "binding_count": 3,
         "matrix_ids": [
+          "ANALYSIS-FULL-001",
           "SETTINGS-ENGINE-001",
           "SETTINGS-GAME-001"
         ]
@@ -24900,6 +24909,7 @@
           }
         ],
         "matrix_ids": [
+          "ANALYSIS-FULL-001",
           "SETTINGS-GAME-001"
         ]
       },
@@ -29926,6 +29936,7 @@
           }
         ],
         "matrix_ids": [
+          "ANALYSIS-FULL-001",
           "SETTINGS-GAME-001"
         ]
       },

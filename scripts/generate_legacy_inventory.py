@@ -2221,8 +2221,8 @@ def validate_matrix(
     dict[str, list[str]],
     dict[str, list[str]],
 ]:
-    if matrix.get("schema_version") != 50:
-        raise ValueError("Matrix schema_version must be 50")
+    if matrix.get("schema_version") != 51:
+        raise ValueError("Matrix schema_version must be 51")
     allowed_statuses = matrix.get("allowed_statuses")
     if allowed_statuses != list(ALLOWED_STATUSES):
         raise ValueError("Matrix allowed_statuses differ from the repository contract")
@@ -2462,18 +2462,24 @@ def build_inventory(legacy_root: Path, matrix_path: Path) -> dict[str, Any]:
         expected_menu_keys={
             "Menu.batchAnalysisMode",
             "Menu.batchAnalyzeTable",
+            "Menu.engineRules",
             "Menu.flashAnalyzeAllBranches",
             "Menu.flashAnalyzeAllGame",
             "Menu.flashAnalyzePartGame",
             "Menu.flashAnalyzeSettings",
+            "Menu.rulesBtn",
         },
         expected_input_cases={
             "keyPressed:VK_B",
+            "keyPressed:VK_D",
             "InputIndependentMainBoard:keyPressed:VK_B",
+            "InputIndependentMainBoard:keyPressed:VK_D",
         },
         expected_input_bindings={
             "keyPressed:VK_B#2",
+            "keyPressed:VK_D#2",
             "InputIndependentMainBoard:keyPressed:VK_B#2",
+            "InputIndependentMainBoard:keyPressed:VK_D#2",
         },
         required_evidence={
             (
@@ -2533,6 +2539,22 @@ def build_inventory(legacy_root: Path, matrix_path: Path) -> dict[str, Any]:
                 "btnCancel.addActionListener",
             ),
             (
+                "src/main/java/featurecat/lizzie/gui/SetKataRules.java",
+                "public SetKataRules()",
+            ),
+            (
+                "src/main/java/featurecat/lizzie/gui/SetKataRules.java",
+                "btnApply.addActionListener",
+            ),
+            (
+                "src/main/java/featurecat/lizzie/gui/SetKataRules.java",
+                "public boolean getRules()",
+            ),
+            (
+                "src/main/java/featurecat/lizzie/analysis/Leelaz.java",
+                "private void runStartupCommandAction(StartupCommandAction action)",
+            ),
+            (
                 "src/main/java/featurecat/lizzie/analysis/AnalysisRequestBuilder.java",
                 "static void addRules(JSONObject request)",
             ),
@@ -2556,10 +2578,12 @@ def build_inventory(legacy_root: Path, matrix_path: Path) -> dict[str, Any]:
     expected_analysis_full_menu_keys = {
         "Menu.batchAnalysisMode",
         "Menu.batchAnalyzeTable",
+        "Menu.engineRules",
         "Menu.flashAnalyzeAllBranches",
         "Menu.flashAnalyzeAllGame",
         "Menu.flashAnalyzePartGame",
         "Menu.flashAnalyzeSettings",
+        "Menu.rulesBtn",
     }
     if set(analysis_full_row["legacy_menu_keys"]) != expected_analysis_full_menu_keys:
         raise ValueError("ANALYSIS-FULL-001 menu keys changed")
@@ -2575,7 +2599,9 @@ def build_inventory(legacy_root: Path, matrix_path: Path) -> dict[str, Any]:
         "analysis-start-move",
         "analysis-end-move",
         "analysis-use-current-rules",
+        "auto-load-kata-rules",
         "batch-analysis-playouts",
+        "kata-rules",
     }
     if set(analysis_full_row["config_keys"]) != expected_analysis_full_config_keys:
         raise ValueError("ANALYSIS-FULL-001 config keys changed")
@@ -2586,6 +2612,10 @@ def build_inventory(legacy_root: Path, matrix_path: Path) -> dict[str, Any]:
         },
         "src/main/java/featurecat/lizzie/gui/SetAnalysisRules.java": {
             "analysis-specific-rules",
+        },
+        "src/main/java/featurecat/lizzie/gui/SetKataRules.java": {
+            "auto-load-kata-rules",
+            "kata-rules",
         },
     }
     for source_path, expected_keys in expected_analysis_child_keys.items():
@@ -3422,6 +3452,22 @@ def build_inventory(legacy_root: Path, matrix_path: Path) -> dict[str, Any]:
             r"\bnew\s+SetAnalysisRules\s*\(",
             {"src/main/java/featurecat/lizzie/gui/AnalysisSettings.java": 1},
         ),
+        "SetKataRules constructor": (
+            r"\bnew\s+SetKataRules\s*\(",
+            {"src/main/java/featurecat/lizzie/gui/LizzieFrame.java": 1},
+        ),
+        "setRules entry": (
+            r"\bLizzie\.frame\s*\.\s*setRules\s*\(",
+            {
+                "src/main/java/featurecat/lizzie/gui/Input.java": 1,
+                "src/main/java/featurecat/lizzie/gui/InputIndependentMainBoard.java": 1,
+                "src/main/java/featurecat/lizzie/gui/Menu.java": 2,
+            },
+        ),
+        "SetKataRules.getRules": (
+            r"\bsetkatarules\s*\.\s*getRules\s*\(",
+            {"src/main/java/featurecat/lizzie/gui/LizzieFrame.java": 1},
+        ),
         "flashAnalyzePart": (
             r"\bLizzie\.frame\s*\.\s*flashAnalyzePart\s*\(",
             {
@@ -3682,10 +3728,16 @@ def build_inventory(legacy_root: Path, matrix_path: Path) -> dict[str, Any]:
         ),
         "analysis-start-move": r'optInt\(\s*"analysis-start-move"\s*,\s*-1\s*\)',
         "analysis-end-move": r'optInt\(\s*"analysis-end-move"\s*,\s*-1\s*\)',
+        "auto-load-kata-rules": (
+            r'optBoolean\(\s*"auto-load-kata-rules"\s*,\s*false\s*\)'
+        ),
+        "kata-rules": r'optString\(\s*"kata-rules"\s*,\s*""\s*\)',
     }
     for key, pattern in expected_analysis_defaults.items():
         if len(re.findall(pattern, config_source)) != 1:
             raise ValueError(f"{key} default changed")
+    if len(re.findall(r'public\s+String\s+currentKataGoRules\s*=\s*""\s*;', config_source)) != 1:
+        raise ValueError("currentKataGoRules default changed")
     analysis_engine_source = strip_java_comments(
         (legacy_root / "src/main/java/featurecat/lizzie/analysis/AnalysisEngine.java").read_text(
             encoding="utf-8", errors="replace"
@@ -3752,24 +3804,89 @@ def build_inventory(legacy_root: Path, matrix_path: Path) -> dict[str, Any]:
             encoding="utf-8", errors="replace"
         )
     )
-    def analysis_rule_action_body(button: str) -> str:
+    def java_method_body(source: str, owner: str, signature: str) -> str:
+        matches = list(re.finditer(signature, source))
+        if len(matches) != 1:
+            raise ValueError(f"{owner} method changed")
+        body_open = matches[0].end() - 1
+        return source[body_open + 1 : closing_brace(source, body_open)]
+
+    def rule_action_body(source: str, owner: str, button: str) -> str:
         marker = f"{button}.addActionListener"
-        if specific_rules_source.count(marker) != 1:
-            raise ValueError(f"SetAnalysisRules {button} handler changed")
-        listener_start = specific_rules_source.index(marker)
-        call_open = specific_rules_source.find("(", listener_start + len(marker))
+        if source.count(marker) != 1:
+            raise ValueError(f"{owner} {button} handler changed")
+        listener_start = source.index(marker)
+        call_open = source.find("(", listener_start + len(marker))
         if call_open < 0:
-            raise ValueError(f"SetAnalysisRules {button} handler changed")
-        call_close = closing_delimiter(specific_rules_source, call_open, "(", ")")
-        listener_call = specific_rules_source[call_open + 1 : call_close]
+            raise ValueError(f"{owner} {button} handler changed")
+        call_close = closing_delimiter(source, call_open, "(", ")")
+        listener_call = source[call_open + 1 : call_close]
         method_match = re.search(
             r"public\s+void\s+actionPerformed\s*\(\s*ActionEvent\s+\w+\s*\)\s*\{",
             listener_call,
         )
         if method_match is None:
-            raise ValueError(f"SetAnalysisRules {button} handler changed")
+            raise ValueError(f"{owner} {button} handler changed")
         body_open = method_match.end() - 1
         return listener_call[body_open + 1 : closing_brace(listener_call, body_open)]
+
+    def java_switch_case_body(
+        source: str, owner: str, current_case: str, next_case: str
+    ) -> str:
+        pattern = (
+            rf"case\s+{re.escape(current_case)}\s*:(.*?)"
+            rf"case\s+{re.escape(next_case)}\s*:"
+        )
+        matches = re.findall(pattern, source, re.DOTALL)
+        if len(matches) != 1:
+            raise ValueError(f"{owner} switch case changed")
+        return matches[0]
+
+    def assert_java_hash(owner: str, fragment: str, expected: str) -> None:
+        actual = hashlib.sha256(normalize_java(fragment).encode()).hexdigest()
+        if actual != expected:
+            raise ValueError(f"{owner} behavior changed")
+
+    input_source = strip_java_comments(
+        (legacy_root / "src/main/java/featurecat/lizzie/gui/Input.java").read_text(
+            encoding="utf-8", errors="replace"
+        )
+    )
+    independent_input_source = strip_java_comments(
+        (
+            legacy_root
+            / "src/main/java/featurecat/lizzie/gui/InputIndependentMainBoard.java"
+        ).read_text(encoding="utf-8", errors="replace")
+    )
+    menu_source = strip_java_comments(
+        (legacy_root / "src/main/java/featurecat/lizzie/gui/Menu.java").read_text(
+            encoding="utf-8", errors="replace"
+        )
+    )
+    for owner, source in (
+        ("Input Shift+D", input_source),
+        ("InputIndependentMainBoard Shift+D", independent_input_source),
+    ):
+        assert_java_hash(
+            owner,
+            java_switch_case_body(source, owner, "VK_D", "VK_R"),
+            "2f07fd78b832159c4fc629a54f99a5d0e7461d459e9bd579784f765c7966f8c9",
+        )
+    for button in ("engineRules", "setRules"):
+        assert_java_hash(
+            f"Menu {button}",
+            rule_action_body(menu_source, "Menu", button),
+            "4a027c60fa9422b8758c40b669e4e9392b6188c9f3ca2ca207fd5df5e9ed81e9",
+        )
+    assert_java_hash(
+        "LizzieFrame.setRules",
+        java_method_body(
+            lizzie_frame_source,
+            "LizzieFrame.setRules",
+            r"public\s+void\s+setRules\s*\(\s*\)\s*\{",
+        ),
+        "44796658e6813f6d32a5d70364623faba6552c126d63048dadf0ba7628af5085",
+    )
 
     expected_rule_action_hashes = {
         "btnApply": "c54170837ca4ce150091d87ed694308b3aa40d012647d7ac753834edf8fd2923",
@@ -3780,7 +3897,9 @@ def build_inventory(legacy_root: Path, matrix_path: Path) -> dict[str, Any]:
     }
     for button, expected_hash in expected_rule_action_hashes.items():
         body_hash = hashlib.sha256(
-            normalize_java(analysis_rule_action_body(button)).encode()
+            normalize_java(
+                rule_action_body(specific_rules_source, "SetAnalysisRules", button)
+            ).encode()
         ).hexdigest()
         if body_hash != expected_hash:
             raise ValueError(f"SetAnalysisRules {button} handler changed")
@@ -3801,7 +3920,7 @@ def build_inventory(legacy_root: Path, matrix_path: Path) -> dict[str, Any]:
         "rdoButtonGo": ("hasButton", "true"),
         "rdoNoButtonGo": ("hasButton", "false"),
     }
-    apply_block = analysis_rule_action_body("btnApply")
+    apply_block = rule_action_body(specific_rules_source, "SetAnalysisRules", "btnApply")
     actual_specific_rule_pairs = re.findall(
         r'if\s*\(\s*(rdo\w+)\.isSelected\(\)\s*\)\s*'
         r'jo\.put\(\s*"([^"]+)"\s*,\s*("[^"]*"|true|false)\s*\)',
@@ -3860,7 +3979,7 @@ def build_inventory(legacy_root: Path, matrix_path: Path) -> dict[str, Any]:
         ),
     }
     for button, (expected_selected, expected_enabled) in expected_rule_presets.items():
-        block = analysis_rule_action_body(button)
+        block = rule_action_body(specific_rules_source, "SetAnalysisRules", button)
         selected_pairs = re.findall(r"\b(rdo\w+)\.setSelected\((true|false)\)", block)
         enabled_pairs = re.findall(r"\b(rdo\w+)\.setEnabled\((true|false)\)", block)
         selected = dict(selected_pairs)
@@ -3886,11 +4005,85 @@ def build_inventory(legacy_root: Path, matrix_path: Path) -> dict[str, Any]:
     )
     if re.search(r"\.\s*getRules\s*\(", analysis_settings_source):
         raise ValueError("AnalysisSettings now calls SetAnalysisRules.getRules")
+    kata_rules_source = strip_java_comments(
+        (legacy_root / "src/main/java/featurecat/lizzie/gui/SetKataRules.java").read_text(
+            encoding="utf-8", errors="replace"
+        )
+    )
+    assert_java_hash(
+        "SetKataRules constructor",
+        java_method_body(
+            kata_rules_source,
+            "SetKataRules constructor",
+            r"public\s+SetKataRules\s*\(\s*\)\s*\{",
+        ),
+        "875075090122d074c992fccf869062f5610e22f292d2309741527bae5d63f830",
+    )
+    expected_kata_rule_action_hashes = {
+        "btnApply": "3aaba553407306415a757dcfd93cd35c046a0f2d110f4e223dc2994c9e4a02eb",
+        "btnCancel": "31d7e75cadae8ba11fa81d31d309b2438992de04215d02e6cdcbf2df06e40628",
+        "btnChnRule": "a93d3869eb4daca03158e2a777b004f786ce2e058cb7a4f053a31050076ecc53",
+        "btnJpnRule": "71906286f378abd0952e73e74bf719880e89a42cf4d70ad495f1fdd9a079c128",
+        "btnTTRule": "ea20fdac317f17f6db83b9f9f302b5c96a1c6dcf3a33175758f202e53f76ac93",
+        "btnChnOldRule": "a09777e95a55483ca894bda3b31829b24b4893b0fd8761c10fa3d3599795ec25",
+    }
+    for button, expected_hash in expected_kata_rule_action_hashes.items():
+        body_hash = hashlib.sha256(
+            normalize_java(rule_action_body(kata_rules_source, "SetKataRules", button)).encode()
+        ).hexdigest()
+        if body_hash != expected_hash:
+            raise ValueError(f"SetKataRules {button} handler changed")
+    kata_apply_block = rule_action_body(kata_rules_source, "SetKataRules", "btnApply")
+    expected_kata_rule_commit = (
+        r"if\s*\(\s*chkbxAutoLoadRules\.isSelected\(\)\s*\)\s*\{\s*"
+        r"Lizzie\.config\.autoLoadKataRules\s*=\s*true\s*;\s*"
+        r"Lizzie\.config\.kataRules\s*=\s*jo\.toString\(\)\s*;\s*"
+        r"Lizzie\.config\.uiConfig\.put\(\s*\"kata-rules\"\s*,\s*"
+        r"Lizzie\.config\.kataRules\s*\)\s*;\s*"
+        r"Lizzie\.config\.uiConfig\.put\(\s*\"auto-load-kata-rules\"\s*,\s*true\s*\)\s*;\s*"
+        r"\}\s*else\s*\{\s*Lizzie\.config\.autoLoadKataRules\s*=\s*false\s*;\s*"
+        r"Lizzie\.config\.uiConfig\.put\(\s*\"auto-load-kata-rules\"\s*,\s*false\s*\)\s*;\s*\}"
+    )
+    if len(re.findall(expected_kata_rule_commit, kata_apply_block)) != 1:
+        raise ValueError("SetKataRules auto-load commit changed")
+    expected_kata_live_flow = (
+        r"Lizzie\.board\.clearBestMovesAfter\(\s*Lizzie\.board\.getHistory\(\)\.getStart\(\)\s*\)\s*;.*?"
+        r"Lizzie\.leelaz\.sendCommand\(\s*\"kata-set-rules \"\s*\+\s*jo\.toString\(\)\s*\)\s*;.*?"
+        r"Lizzie\.leelaz\.getParameterScadule\(\s*false\s*\)\s*;\s*"
+        r"Lizzie\.leelaz\.sendCommand\(\s*\"kata-get-rules\"\s*\)\s*;.*?setVisible\(\s*false\s*\)"
+    )
+    if len(re.findall(expected_kata_live_flow, kata_apply_block, re.DOTALL)) != 1:
+        raise ValueError("SetKataRules live command flow changed")
+    kata_get_rules_body = java_method_body(
+        kata_rules_source,
+        "SetKataRules.getRules",
+        r"public\s+boolean\s+getRules\s*\(\s*\)\s*\{",
+    )
+    if hashlib.sha256(normalize_java(kata_get_rules_body).encode()).hexdigest() != (
+        "706619a0b922c98e97eaafa696998702ce41ad156d5be7b8418cab14087aab4e"
+    ):
+        raise ValueError("SetKataRules getRules parsing changed")
+    kata_query_flow = (
+        r"Lizzie\.leelaz\.getRcentLine\s*=\s*true\s*;\s*"
+        r"Lizzie\.leelaz\.nameCmd\(\s*\)\s*;\s*"
+        r"Lizzie\.leelaz\.sendCommand\(\s*\"kata-get-rules\"\s*\)\s*;"
+    )
+    if len(re.findall(kata_query_flow, kata_rules_source)) != 1:
+        raise ValueError("SetKataRules query flow changed")
     request_builder_source = strip_java_comments(
         (
             legacy_root
             / "src/main/java/featurecat/lizzie/analysis/AnalysisRequestBuilder.java"
         ).read_text(encoding="utf-8", errors="replace")
+    )
+    assert_java_hash(
+        "AnalysisRequestBuilder.buildRequest",
+        java_method_body(
+            request_builder_source,
+            "AnalysisRequestBuilder.buildRequest",
+            r"public\s+static\s+JSONObject\s+buildRequest\s*\([^)]*\)\s*\{",
+        ),
+        "e08b751677f4ee403faa93af63b7546f84ad63469770df0170299cc388a51604",
     )
     if len(re.findall(r"\baddRules\(\s*request\s*\)", request_builder_source)) != 1:
         raise ValueError("AnalysisRequestBuilder rule dispatch changed")
@@ -3901,12 +4094,97 @@ def build_inventory(legacy_root: Path, matrix_path: Path) -> dict[str, Any]:
         r"request\.put\(\s*\"rules\"\s*,\s*ruleSettings\s*\)\s*;\s*\}\s*"
         r"else\s+request\.put\(\s*\"rules\"\s*,\s*\"tromp-taylor\"\s*\)"
     )
-    for consumer, source in {
-        "AnalysisEngine": analysis_engine_source,
-        "AnalysisRequestBuilder": request_builder_source,
-    }.items():
-        if len(re.findall(local_specific_rule_flow, source)) != 1:
+    local_rule_consumers = {
+        "AnalysisEngine": java_method_body(
+            analysis_engine_source,
+            "AnalysisEngine.sendRequest",
+            r"public\s+boolean\s+sendRequest\s*\(\s*BoardHistoryNode\s+analyzeNode\s*\)\s*\{",
+        ),
+        "AnalysisRequestBuilder": java_method_body(
+            request_builder_source,
+            "AnalysisRequestBuilder.addRules",
+            r"static\s+void\s+addRules\s*\(\s*JSONObject\s+request\s*\)\s*\{",
+        ),
+    }
+    expected_local_rule_consumer_hashes = {
+        "AnalysisEngine": "4ed08eb20560539bd1364b816c23e19f29b11790e01a3bedb1f437d771eb3a8f",
+        "AnalysisRequestBuilder": "6351ba5dae1a75ab2aed5e255c3860f63f2a5316804af33983db04d6725a1f99",
+    }
+    for consumer, body in local_rule_consumers.items():
+        assert_java_hash(
+            f"{consumer} local rule consumer",
+            body,
+            expected_local_rule_consumer_hashes[consumer],
+        )
+        if len(re.findall(local_specific_rule_flow, body)) != 1:
             raise ValueError(f"{consumer} specific rule flow changed")
+    local_current_rule_flow = (
+        r"else\s+if\s*\(\s*!Lizzie\.config\.currentKataGoRules\.equals\(\s*\"\"\s*\)\s*\)\s*\{\s*"
+        r"ruleSettings\s*=\s*new\s+JSONObject\(\s*new\s+String\(\s*"
+        r"Lizzie\.config\.currentKataGoRules\.substring\(\s*2\s*\)\s*\)\s*\)\s*;\s*"
+        r"request\.put\(\s*\"rules\"\s*,\s*ruleSettings\s*\)\s*;\s*\}\s*"
+        r"else\s+if\s*\(\s*Lizzie\.config\.autoLoadKataRules\s*&&\s*"
+        r"!Lizzie\.config\.kataRules\.equals\(\s*\"\"\s*\)\s*\)\s*\{\s*"
+        r"ruleSettings\s*=\s*new\s+JSONObject\(\s*Lizzie\.config\.kataRules\s*\)\s*;\s*"
+        r"request\.put\(\s*\"rules\"\s*,\s*ruleSettings\s*\)\s*;\s*\}\s*"
+        r"else\s+request\.put\(\s*\"rules\"\s*,\s*\"tromp-taylor\"\s*\)"
+    )
+    for consumer, body in local_rule_consumers.items():
+        if len(re.findall(local_current_rule_flow, body)) != 1:
+            raise ValueError(f"{consumer} current/auto-load rule flow changed")
+    leelaz_source = strip_java_comments(
+        (legacy_root / "src/main/java/featurecat/lizzie/analysis/Leelaz.java").read_text(
+            encoding="utf-8", errors="replace"
+        )
+    )
+    assert_java_hash(
+        "Leelaz.runStartupCommandAction",
+        java_method_body(
+            leelaz_source,
+            "Leelaz.runStartupCommandAction",
+            r"private\s+void\s+runStartupCommandAction\s*\(\s*"
+            r"StartupCommandAction\s+action\s*\)\s*\{",
+        ),
+        "623edeca6f0cf3dfeda127e2469f768025b362dea7e9c624d952b4e02c065f72",
+    )
+    assert_java_hash(
+        "Leelaz.read",
+        java_method_body(
+            leelaz_source,
+            "Leelaz.read",
+            r"private\s+void\s+read\s*\(\s*\)\s*\{",
+        ),
+        "a313ee18fc510ed92905b8d5c68d0396e1d2f475d2801adcb4fed44b0358ef2f",
+    )
+    assert_java_hash(
+        "Leelaz.nameCmd",
+        java_method_body(
+            leelaz_source,
+            "Leelaz.nameCmd",
+            r"public\s+void\s+nameCmd\s*\(\s*\)\s*\{",
+        ),
+        "34e98dccacc9e5378a16ee4410f114a68e720c36b530c6bfbaf3efe62f121829",
+    )
+    startup_rule_flow = (
+        r"if\s*\(\s*Lizzie\.config\.autoLoadKataRules\s*\)\s*\{\s*"
+        r"sendCommand\(\s*\"kata-set-rules \"\s*\+\s*Lizzie\.config\.kataRules\s*\)\s*;\s*\}"
+    )
+    if len(re.findall(startup_rule_flow, leelaz_source)) != 1:
+        raise ValueError("KataGo startup auto-load rule flow changed")
+    rule_reply_bridge = (
+        r"recentRulesLine\s*=\s*line\s*;\s*"
+        r"Lizzie\.config\.currentKataGoRules\s*=\s*line\s*;\s*"
+        r"getSuicidalAndRules\(\s*\)\s*;\s*getRcentLine\s*=\s*false\s*;"
+    )
+    if len(re.findall(rule_reply_bridge, leelaz_source)) != 1:
+        raise ValueError("KataGo current-rule reply bridge changed")
+    name_command_flow = (
+        r"public\s+void\s+nameCmd\s*\(\s*\)\s*\{\s*"
+        r"if\s*\(\s*isKatago\s*\)\s*sendCommand\(\s*\"stop\"\s*\)\s*;\s*"
+        r"else\s+sendCommand\(\s*\"name\"\s*\)\s*;"
+    )
+    if len(re.findall(name_command_flow, leelaz_source)) != 1:
+        raise ValueError("SetKataRules open-time engine command changed")
     get_rules_flow = (
         r"public\s+void\s+getRules\s*\(\s*\)\s*\{\s*"
         r"if\s*\(\s*!Lizzie\.config\.analysisSpecificRules\.equals\(\s*\"\"\s*\)\s*\)\s*\{\s*"
@@ -3923,6 +4201,31 @@ def build_inventory(legacy_root: Path, matrix_path: Path) -> dict[str, Any]:
     )
     if len(re.findall(remote_rule_flow, analysis_engine_source, re.DOTALL)) != 1:
         raise ValueError("Remote GTP specific rule flow changed")
+    remote_method_body = java_method_body(
+        analysis_engine_source,
+        "AnalysisEngine.remoteGtpRules",
+        r"private\s+String\s+remoteGtpRules\s*\(\s*\)\s*\{",
+    )
+    assert_java_hash(
+        "AnalysisEngine.remoteGtpRules",
+        remote_method_body,
+        "adf3133ebfa28a34e07e54c015be4f0ce8594732173f13043e45eff83687ff94",
+    )
+    assert_java_hash(
+        "AnalysisEngine.buildRemoteGtpSetupCommands",
+        java_method_body(
+            analysis_engine_source,
+            "AnalysisEngine.buildRemoteGtpSetupCommands",
+            r"private\s+List<String>\s+buildRemoteGtpSetupCommands\s*\(\s*"
+            r"BoardHistoryNode\s+analyzeNode\s*\)\s*\{",
+        ),
+        "5a3a22023fed297785471b672f59e2c7ece2ca3898e41cbf841d58f607409fbc",
+    )
+    if any(
+        field in remote_method_body
+        for field in ("currentKataGoRules", "autoLoadKataRules", "kataRules")
+    ):
+        raise ValueError("Remote GTP unexpectedly consumes current/auto-load rules")
     if len(re.findall(r'commands\.add\(\s*"kata-set-rules "\s*\+\s*remoteGtpRules\(\)\s*\)', analysis_engine_source)) != 1:
         raise ValueError("Remote GTP rule dispatch changed")
     mapped_keys = sum(bool(entry["matrix_ids"]) for entry in config_entries)
