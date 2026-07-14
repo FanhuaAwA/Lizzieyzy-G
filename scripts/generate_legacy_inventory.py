@@ -2221,8 +2221,8 @@ def validate_matrix(
     dict[str, list[str]],
     dict[str, list[str]],
 ]:
-    if matrix.get("schema_version") != 46:
-        raise ValueError("Matrix schema_version must be 46")
+    if matrix.get("schema_version") != 47:
+        raise ValueError("Matrix schema_version must be 47")
     allowed_statuses = matrix.get("allowed_statuses")
     if allowed_statuses != list(ALLOWED_STATUSES):
         raise ValueError("Matrix allowed_statuses differ from the repository contract")
@@ -2596,6 +2596,109 @@ def build_inventory(legacy_root: Path, matrix_path: Path) -> dict[str, Any]:
         matrix_ids_by_config_key,
         matrix_ids_by_menu_key,
         row_id="SETTINGS-ENGINE-001",
+        source_path="src/main/java/featurecat/lizzie/gui/SetKataPDA.java",
+        expected_config_keys={
+            "auto-pda",
+            "chk-auto-pda",
+            "chk-dym-pda",
+            "chk-static-pda",
+            "dym-pda-cap",
+            "static-pda-cur",
+        },
+        expected_menu_keys={"Menu.engineParameters", "Menu.paramsBtn"},
+        expected_input_cases={
+            "keyPressed:VK_X",
+            "keyPressed:VK_D",
+            "InputIndependentMainBoard:keyPressed:VK_X",
+            "InputIndependentMainBoard:keyPressed:VK_D",
+        },
+        expected_input_bindings={
+            "keyPressed:VK_X#2",
+            "keyPressed:VK_D#1",
+            "InputIndependentMainBoard:keyPressed:VK_X#2",
+            "InputIndependentMainBoard:keyPressed:VK_D#1",
+        },
+        required_evidence={
+            (
+                "src/main/java/featurecat/lizzie/gui/Menu.java",
+                "more2.addActionListener",
+            ),
+            (
+                "src/main/java/featurecat/lizzie/gui/Menu.java",
+                "setPda = new SetKataPDA();",
+            ),
+            (
+                "src/main/java/featurecat/lizzie/gui/Menu.java",
+                "txtPDA.addKeyListener",
+            ),
+            (
+                "src/main/java/featurecat/lizzie/gui/Menu.java",
+                "public void showPda(boolean show)",
+            ),
+            (
+                "src/main/java/featurecat/lizzie/gui/SetKataPDA.java",
+                "public class SetKataPDA extends JDialog",
+            ),
+            (
+                "src/main/java/featurecat/lizzie/gui/SetKataPDA.java",
+                "btnApply.addActionListener",
+            ),
+            (
+                "src/main/java/featurecat/lizzie/Lizzie.java",
+                "public static void initializeAfterVersionCheck(boolean isEngineGame, Leelaz engine)",
+            ),
+            (
+                "src/main/java/featurecat/lizzie/analysis/Leelaz.java",
+                "private StartupCommandAction checkNameAndVersion(String[] params)",
+            ),
+            (
+                "src/main/java/featurecat/lizzie/analysis/Leelaz.java",
+                "private void runStartupCommandAction(StartupCommandAction action)",
+            ),
+            (
+                "src/main/java/featurecat/lizzie/analysis/Leelaz.java",
+                "private void parseLineForGenmovePk(String line) throws IOException",
+            ),
+            (
+                "src/main/java/featurecat/lizzie/analysis/Leelaz.java",
+                "private void parseLine(String line)",
+            ),
+            (
+                "src/main/java/featurecat/lizzie/analysis/Leelaz.java",
+                "public void maybeAjustPDA(BoardHistoryNode node)",
+            ),
+            (
+                "src/main/java/featurecat/lizzie/analysis/EngineManager.java",
+                "if (newEng.isKataGoPda)",
+            ),
+            (
+                "src/main/java/featurecat/lizzie/rules/BoardHistoryNode.java",
+                "Lizzie.leelaz.maybeAjustPDA(node);",
+            ),
+            (
+                "src/main/java/featurecat/lizzie/rules/BoardData.java",
+                "pda = Lizzie.leelaz.pda;",
+            ),
+            (
+                "src/main/java/featurecat/lizzie/rules/BoardData.java",
+                "pda2 = Lizzie.leelaz2.pda;",
+            ),
+            (
+                "src/main/java/featurecat/lizzie/gui/GtpConsolePane.java",
+                'command.startsWith("dympdacap")',
+            ),
+            (
+                "src/main/java/featurecat/lizzie/Config.java",
+                "private void writeConfig(JSONObject config, File file)",
+            ),
+        },
+    )
+    validate_workflow_guard(
+        matrix,
+        config_entries,
+        matrix_ids_by_config_key,
+        matrix_ids_by_menu_key,
+        row_id="SETTINGS-ENGINE-001",
         source_path="src/main/java/featurecat/lizzie/gui/SetKataEngines.java",
         expected_config_keys={
             "auto-load-txt-kata-engine-pda",
@@ -2839,6 +2942,8 @@ def build_inventory(legacy_root: Path, matrix_path: Path) -> dict[str, Any]:
     actual_engine_parameter_calls: dict[str, int] = {}
     actual_set_kata_engine_calls: dict[str, int] = {}
     actual_set_leela_engine_calls: dict[str, int] = {}
+    actual_set_kata_pda_calls: dict[str, int] = {}
+    actual_kata_pda_entry_calls: dict[str, int] = {}
     for path in main_java_files:
         source_path = path.relative_to(legacy_root).as_posix()
         source = strip_java_comments(path.read_text(encoding="utf-8", errors="replace"))
@@ -2851,6 +2956,12 @@ def build_inventory(legacy_root: Path, matrix_path: Path) -> dict[str, Any]:
         set_leela_count = source.count("new SetLeelaEngines(")
         if set_leela_count:
             actual_set_leela_engine_calls[source_path] = set_leela_count
+        set_kata_pda_count = source.count("new SetKataPDA(")
+        if set_kata_pda_count:
+            actual_set_kata_pda_calls[source_path] = set_kata_pda_count
+        kata_pda_entry_count = source.count("more2.addActionListener(")
+        if kata_pda_entry_count:
+            actual_kata_pda_entry_calls[source_path] = kata_pda_entry_count
     if actual_engine_parameter_calls != expected_engine_parameter_calls:
         raise ValueError(f"setLzSaiEngine call sites changed: {actual_engine_parameter_calls}")
     expected_set_kata_engine_calls = {
@@ -2868,6 +2979,22 @@ def build_inventory(legacy_root: Path, matrix_path: Path) -> dict[str, Any]:
         raise ValueError(
             "SetLeelaEngines constructor call sites changed: "
             f"{actual_set_leela_engine_calls}"
+        )
+    expected_set_kata_pda_calls = {
+        "src/main/java/featurecat/lizzie/gui/Menu.java": 2,
+    }
+    if actual_set_kata_pda_calls != expected_set_kata_pda_calls:
+        raise ValueError(
+            "SetKataPDA constructor call sites changed: "
+            f"{actual_set_kata_pda_calls}"
+        )
+    expected_kata_pda_entry_calls = {
+        "src/main/java/featurecat/lizzie/gui/Menu.java": 1,
+    }
+    if actual_kata_pda_entry_calls != expected_kata_pda_entry_calls:
+        raise ValueError(
+            "SetKataPDA entry call sites changed: "
+            f"{actual_kata_pda_entry_calls}"
         )
     mapped_keys = sum(bool(entry["matrix_ids"]) for entry in config_entries)
     menu["keys"] = [
@@ -2946,7 +3073,7 @@ def build_inventory(legacy_root: Path, matrix_path: Path) -> dict[str, Any]:
         raise ValueError("Every normalized legacy input path must map to the matrix")
 
     return {
-        "schema_version": 46,
+        "schema_version": 47,
         "source": {
             "root": "../lizzieyzy-next-main",
             "version": read_legacy_version(legacy_root),

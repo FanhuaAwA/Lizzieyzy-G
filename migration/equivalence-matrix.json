@@ -1,5 +1,5 @@
 {
-  "schema_version": 46,
+  "schema_version": 47,
   "allowed_statuses": [
     "未盘点",
     "已盘点",
@@ -2657,7 +2657,7 @@
     {
       "id": "SETTINGS-ENGINE-001",
       "category": "设置与引擎",
-      "legacy_entry": "Alt+X 打开多引擎设置；主棋盘、独立棋盘、菜单项和详细工具栏均可调用 LizzieFrame.setLzSaiEngine，已加载 KataGo 时打开 SetKataEngines，否则打开 SetLeelaEngines",
+      "legacy_entry": "Alt+X 打开多引擎设置；主棋盘、独立棋盘、菜单项和详细工具栏均可调用 LizzieFrame.setLzSaiEngine，已加载 KataGo 时打开 SetKataEngines，否则打开 SetLeelaEngines。顶部 PDA `...` 控件在主引擎或引擎对局任一参赛引擎被识别为 KataGoPda 时显示，点击后先释放旧实例再新建 SetKataPDA",
       "legacy_menu_keys": ["Menu.engineParameters", "Menu.paramsBtn"],
       "legacy_menu_labels": [],
       "legacy_shortcuts": [],
@@ -2708,9 +2708,26 @@
         { "path": "src/main/java/featurecat/lizzie/analysis/Leelaz.java", "symbol": "private Leelaz resolveDefaultCommandMirrorEngine()" },
         { "path": "src/main/java/featurecat/lizzie/analysis/Leelaz.java", "symbol": "private void sendCommandToLeelaz(String command, Runnable onResponse, boolean failOnSendError)" },
         { "path": "src/main/java/featurecat/lizzie/analysis/EngineManager.java", "symbol": "if (Lizzie.config.autoLoadLzsaiEngineVisits)" },
-        { "path": "src/main/java/featurecat/lizzie/Config.java", "symbol": "private void writeConfig(JSONObject config, File file)" }
+        { "path": "src/main/java/featurecat/lizzie/Config.java", "symbol": "private void writeConfig(JSONObject config, File file)" },
+        { "path": "src/main/java/featurecat/lizzie/gui/Menu.java", "symbol": "more2.addActionListener" },
+        { "path": "src/main/java/featurecat/lizzie/gui/Menu.java", "symbol": "setPda = new SetKataPDA();" },
+        { "path": "src/main/java/featurecat/lizzie/gui/Menu.java", "symbol": "txtPDA.addKeyListener" },
+        { "path": "src/main/java/featurecat/lizzie/gui/Menu.java", "symbol": "public void showPda(boolean show)" },
+        { "path": "src/main/java/featurecat/lizzie/gui/SetKataPDA.java", "symbol": "public class SetKataPDA extends JDialog" },
+        { "path": "src/main/java/featurecat/lizzie/gui/SetKataPDA.java", "symbol": "public SetKataPDA()" },
+        { "path": "src/main/java/featurecat/lizzie/gui/SetKataPDA.java", "symbol": "btnApply.addActionListener" },
+        { "path": "src/main/java/featurecat/lizzie/Lizzie.java", "symbol": "public static void initializeAfterVersionCheck(boolean isEngineGame, Leelaz engine)" },
+        { "path": "src/main/java/featurecat/lizzie/analysis/Leelaz.java", "symbol": "private void parseLineForGenmovePk(String line) throws IOException" },
+        { "path": "src/main/java/featurecat/lizzie/analysis/Leelaz.java", "symbol": "private void parseLine(String line)" },
+        { "path": "src/main/java/featurecat/lizzie/analysis/Leelaz.java", "symbol": "public void maybeAjustPDA(BoardHistoryNode node)" },
+        { "path": "src/main/java/featurecat/lizzie/analysis/EngineManager.java", "symbol": "if (newEng.isKataGoPda)" },
+        { "path": "src/main/java/featurecat/lizzie/rules/BoardHistoryNode.java", "symbol": "Lizzie.leelaz.maybeAjustPDA(node);" },
+        { "path": "src/main/java/featurecat/lizzie/rules/BoardData.java", "symbol": "pda = Lizzie.leelaz.pda;" },
+        { "path": "src/main/java/featurecat/lizzie/rules/BoardData.java", "symbol": "pda2 = Lizzie.leelaz2.pda;" },
+        { "path": "src/main/java/featurecat/lizzie/gui/GtpConsolePane.java", "symbol": "command.startsWith(\"dympdacap\")" }
       ],
       "config_keys": [
+        "auto-pda",
         "autoload-Lzsai-enginelagbuffer",
         "autoload-Lzsai-enginemem",
         "autoload-Lzsai-engineresign",
@@ -2724,11 +2741,16 @@
         "chk-lzsai-enginemem",
         "chk-lzsai-engineresign",
         "chk-lzsai-enginevisits",
+        "chk-auto-pda",
+        "chk-dym-pda",
         "chk-kata-engine-pda",
         "chk-kata-engine-threads",
         "chk-kata-engine-wrn",
+        "chk-static-pda",
+        "dym-pda-cap",
         "show-pda-in-menu",
         "show-wrn-in-menu",
+        "static-pda-cur",
         "txt-lzsai-enginelagbuffer",
         "txt-lzsai-enginemem",
         "txt-lzsai-engineresign",
@@ -2737,19 +2759,20 @@
         "txt-kata-engine-threads",
         "txt-kata-engine-wrn"
       ],
-      "inputs_preconditions": "Alt+X 的多引擎设置可随时打开；X 分支 Shift 优先，所以 Alt+Shift+X 打开综合设置，Ctrl/Meta+Alt+X 仍走多引擎。D 分支 Alt 优先，所以 Alt+Shift+D、Ctrl/Meta+Alt+D 都打开引擎参数而非规则。Alt+D、Menu.engineParameters 和详细工具栏 Menu.paramsBtn 都调用 setLzSaiEngine：EngineManager 非空且当前引擎已 loaded 才继续，isKatago 选择 SetKataEngines，任何其他已加载引擎都选择 SetLeelaEngines，没有 Leela/Sai capability gate。两个对话框均未以 Lizzie.frame 为显式 owner，是非模态、不可调整大小、always-on-top 的绝对布局 JDialog；PDA 引擎隐藏普通 PDA 控件，人机或 genmove 引擎对局禁用 WRN 编辑。",
-      "success_behavior": "SetKataEngines 显示 PDA、analysisWideRootNoise 和 numSearchThreads 三组启用/自动加载设置，以及是否把 PDA/WRN 暴露在顶部工具栏。确定时先更新两个顶部工具栏显示键；非 PDA 引擎再更新并立即 setPda，WRN 启用时发送 kata-set-param analysisWideRootNoise <原文本>并清除起点后的候选，关闭时发送 0，线程启用时把空白或非正整数解析为基准测试结果或处理器数推荐值后发送 kata-set-param numSearchThreads <值>；随后更新 13 键对应的内存字段/uiConfig、刷新菜单，若 Apply 末尾当前引擎仍报告 pondering 则再次 ponder。勾选自动加载会把当时 PDA/WRN 文本复制到 auto-load-txt 键且关闭自动加载不会清除旧快照；后续 KataGo 启动由 Leelaz.setKataEnginePara 应用 PDA、解析后的线程和 WRN。线程的 chk 或 autoload 任一为真都会跨重载应用，和 PDA/WRN 只有 autoload 才在启动应用不同；首次 KataGo 维护默认和 benchmark 还能覆盖并立即保存推荐线程。SetLeelaEngines 显示 Maximum Memory Use、Visits、Lagbuffer 和 Resign Percentage 四组启用/自动加载/原文文本。确定先把四组三字段全部写入全局 Config；每个 chk 为真时依次向当前引擎发送对应 lz-setoption，普通双引擎模式还会进入第二引擎的镜像分支；随后把 12 键写入 uiConfig、隐藏窗口，末尾仍 pondering 时再次 ponder。引擎名称识别把所有非 KataGo 都归为 LEELA_SAI，冷启动仅在同组 chk&&autoload 同时为真时按相同顺序应用四条命令。目标版必须以不可变草稿、逐字段有限范围/能力校验、冻结目标引擎集合和可取消 GTP 事务实现，只有所有目标引擎接受后才原子发布配置与 UI 状态。",
-      "failure_cancel_behavior": "无引擎或未 loaded 时只提示。两个对话框的取消按钮和标题栏 X 都只隐藏而不 dispose；每次入口新建非模态窗口，没有单实例保护，多个旧快照窗口可后提交覆盖新值并泄漏顶层资源。窗口打开后切换/重启引擎，Apply 仍操作当时全局当前引擎。普通双引擎镜像若目标是 KataGo，会把 lz- 前缀机械替换为 kata- 并发送无等价语义的 kata-setoption；若目标是 Leela 0.11，则触发 leela0110Ponder(true) 后 return，设置命令被丢弃。确定不调用 Config.save，磁盘持久化依赖后续全局非原子截断保存。SetLeelaEngines 先改全部内存字段，再依次发送启用组命令，最后逐键 JSONObject.put；发送不等待 ACK，写流不可用/拒绝/崩溃默认只记日志，任一步失败都不回滚。关闭某组只是不再发送命令，不向运行引擎恢复默认值，故 UI/Config 与引擎仍可分裂；取消也无法撤销其他并发窗口已提交的状态。四个 JTextField 只有 Swing 默认文本文档，没有数值 Document 或解析校验；交互输入和对话框回填会过滤/替换 LF，但仍可发送空白、文本、负数、越界、超长、CR/NUL 和其他控制字符。界面声称 memory 128..131072 MiB、visits 0..1000000000（0 无限）、lagbuffer 0..3000、resign -1..30，却不强制范围。外部 config.txt 的四个字符串在冷启动 setLeelaSaiEnginePara 中绕过文本框直接拼入 GTP，CR/LF/NUL 可注入或破坏命令/响应绑定；超大内存/visits 还可造成资源拒绝服务。关闭 chk 只禁用 autoload 控件而不清除其 selected 状态，可持久化 chk=false/autoload=true 的矛盾组合；冷启动要求二者都真而不应用，但 EngineManager 仅在非 genmove 的分析模式引擎对局中只检查 visits autoload，仍会无视 chk/用户值给双方强制发送 Visits=1000000000。SetKataEngines 的有限范围、dormant 线程、启动异常和全局回读风险保持不变。两个窗口均没有默认按钮、Escape、mnemonic、明确焦点顺序或 labelFor；错误缺少文本/可访问播报，工具栏入口不可聚焦，固定坐标/主屏居中忽略长本地化、多显示器和 per-monitor DPI；图标流未显式关闭且缺资源可能抛未捕获 IllegalArgumentException。目标版必须拒绝单行协议非法字符和非有限/越界/超资源值，按参数与引擎能力确认，错误/取消/X 时不改配置或任何引擎状态，并释放窗口及订阅。",
-      "data_io": "Config 对 Kata 13 键及 Leela/Sai 12 键的各 chk/autoload 默认 false、各 txt/auto-load-txt 默认空，show-wrn-in-menu 与 show-pda-in-menu 默认 true。SetLeelaEngines 总是加载并写回四个 txt，即使对应 chk 关闭；autoload 关闭不会清除文本。对话框只改内存 uiConfig，不直接落盘；Config.save 最终以 FileOutputStream 直接截断 config.txt，无临时文件、原子替换或备份。运行期四个 Leela/Sai 文本进入 lz-setoption；启动自动加载由每个引擎实例的 name 识别回调触发，所有非 KataGo 都走该分支，并直接使用配置字符串。双引擎镜像的 KataGo `kata-setoption` 转换、Leela 0.11 ponder 后丢命令，以及 EngineManager 仅在非 genmove 分析模式引擎对局中的 Visits=1000000000 覆盖是兄弟写路径。Kata 侧仍可向当前/镜像引擎发送 setPda、kata-set-param，并由首次推荐/benchmark 改线程键。配置输入、GTP 命令/输出、资源和旧未知键均按不可信数据处理；目标兼容层须保留未知键并原子保存、备份和失败恢复。",
+      "inputs_preconditions": "Alt+X 的多引擎设置可随时打开；X 分支 Shift 优先，所以 Alt+Shift+X 打开综合设置，Ctrl/Meta+Alt+X 仍走多引擎。D 分支 Alt 优先，所以 Alt+Shift+D、Ctrl/Meta+Alt+D 都打开引擎参数而非规则。Alt+D、Menu.engineParameters 和详细工具栏 Menu.paramsBtn 都调用 setLzSaiEngine：EngineManager 非空且当前引擎已 loaded 才继续，isKatago 选择 SetKataEngines，任何其他已加载引擎都选择 SetLeelaEngines，没有 Leela/Sai capability gate。SetKataEngines 与 SetLeelaEngines 均未以 Lizzie.frame 为显式 owner，是非模态、不可调整大小、always-on-top 的绝对布局 JDialog；PDA 引擎隐藏普通 PDA 控件，人机或 genmove 引擎对局禁用 WRN 编辑。定制 PDA 入口是顶部不可聚焦的 more2 `...` 按钮：普通模式只看全局主引擎，engine-game 任一参赛引擎报告 isKataGoPda 时显示；打开时先 dispose Menu 保存的旧 SetKataPDA 再创建新实例。对话框构造却只从全局 Lizzie.leelaz 读取 pda/pdaCap/isStaticPda，Apply 才重新读取可变的 engine-game 索引，第一引擎是 PDA 就选第一，否则不经能力、loaded、索引或空值校验直接选第二；窗口打开后的引擎切换、对局变化或仅第二引擎为 PDA 可令显示快照与实际目标不同。",
+      "success_behavior": "SetKataEngines 显示 PDA、analysisWideRootNoise 和 numSearchThreads 三组启用/自动加载设置，以及是否把 PDA/WRN 暴露在顶部工具栏。确定时先更新两个顶部工具栏显示键；非 PDA 引擎再更新并立即 setPda，WRN 启用时发送 kata-set-param analysisWideRootNoise <原文本>并清除起点后的候选，关闭时发送 0，线程启用时把空白或非正整数解析为基准测试结果或处理器数推荐值后发送 kata-set-param numSearchThreads <值>；随后更新 13 键对应的内存字段/uiConfig、刷新菜单，若 Apply 末尾当前引擎仍报告 pondering 则再次 ponder。勾选自动加载会把当时 PDA/WRN 文本复制到 auto-load-txt 键且关闭自动加载不会清除旧快照；后续 KataGo 启动由 Leelaz.setKataEnginePara 应用 PDA、解析后的线程和 WRN。线程的 chk 或 autoload 任一为真都会跨重载应用，和 PDA/WRN 只有 autoload 才在启动应用不同；首次 KataGo 维护默认和 benchmark 还能覆盖并立即保存推荐线程。SetLeelaEngines 显示 Maximum Memory Use、Visits、Lagbuffer 和 Resign Percentage 四组启用/自动加载/原文文本。确定先把四组三字段全部写入全局 Config；每个 chk 为真时依次向当前引擎发送对应 lz-setoption，普通双引擎模式还会进入第二引擎的镜像分支；随后把 12 键写入 uiConfig、隐藏窗口，末尾仍 pondering 时再次 ponder。引擎名称识别把所有非 KataGo 都归为 LEELA_SAI，冷启动仅在同组 chk&&autoload 同时为真时按相同顺序应用四条命令。SetKataPDA 的动态、静态、禁用三模式由 ButtonGroup 互斥。动态先把目标实例 pda 置零，再发送 `pda 0`、更新顶部文本，随后发送规范化后的 `dympdacap <double>`，最后更新 pdaCap/isStaticPda；静态先发送规范化后的 `pda <double>`，再更新目标 pda/isStaticPda 与顶部文本；禁用发送 `pda 0` 后把目标 pda 与顶部文本置零。动态/静态仅在勾选自动加载时以规范化 double 重建 auto-pda，未勾选则保留旧 AutoPDA 并原样写回；dym-pda-cap/static-pda-cur 始终保存文本框原文而非规范化命令值。之后统一写 chk-auto-pda/chk-dym-pda/chk-static-pda 等六键。动态只拒绝解析失败或等于零，静态只要求可解析，两者均接受 NaN、Infinity、巨大指数和无业务边界的值；禁用模式无论是否勾选自动加载都把 auto-pda 覆盖为 `pda 0`。目标版必须以不可变草稿、逐字段有限范围/能力校验、冻结目标引擎集合和可取消 GTP 事务实现，只有所有目标引擎接受后才原子发布配置与 UI 状态。",
+      "failure_cancel_behavior": "无引擎或未 loaded 时只提示。SetKataEngines 与 SetLeelaEngines 的取消按钮和标题栏 X 都只隐藏而不 dispose；每次入口新建非模态窗口，没有单实例保护，多个旧快照窗口可后提交覆盖新值并泄漏顶层资源。窗口打开后切换/重启引擎，Apply 仍操作当时全局当前引擎。普通双引擎镜像若目标是 KataGo，会把 lz- 前缀机械替换为 kata- 并发送无等价语义的 kata-setoption；若目标是 Leela 0.11，则触发 leela0110Ponder(true) 后 return，设置命令被丢弃。确定不调用 Config.save，磁盘持久化依赖后续全局非原子截断保存。SetLeelaEngines 先改全部内存字段，再依次发送启用组命令，最后逐键 JSONObject.put；发送不等待 ACK，写流不可用/拒绝/崩溃默认只记日志，任一步失败都不回滚。关闭某组只是不再发送命令，不向运行引擎恢复默认值，故 UI/Config 与引擎仍可分裂；取消也无法撤销其他并发窗口已提交的状态。四个 JTextField 只有 Swing 默认文本文档，没有数值 Document 或解析校验；交互输入和对话框回填会过滤/替换 LF，但仍可发送空白、文本、负数、越界、超长、CR/NUL 和其他控制字符。界面声称 memory 128..131072 MiB、visits 0..1000000000（0 无限）、lagbuffer 0..3000、resign -1..30，却不强制范围。外部 config.txt 的四个字符串在冷启动 setLeelaSaiEnginePara 中绕过文本框直接拼入 GTP，CR/LF/NUL 可注入或破坏命令/响应绑定；超大内存/visits 还可造成资源拒绝服务。关闭 chk 只禁用 autoload 控件而不清除其 selected 状态，可持久化 chk=false/autoload=true 的矛盾组合；冷启动要求二者都真而不应用，但 EngineManager 仅在非 genmove 的分析模式引擎对局中只检查 visits autoload，仍会无视 chk/用户值给双方强制发送 Visits=1000000000。SetKataEngines 的有限范围、dormant 线程、启动异常和全局回读风险保持不变。SetKataPDA 的 Cancel/X 同样只隐藏，但 Menu 下次打开会 dispose 旧实例，不存在同一入口累积多个旧窗口；它仍在 Apply 时才解析可变目标，普通双引擎发送还会镜像到未做 PDA capability gate 的副引擎，末尾却只 ponder 可随回合变化的全局当前 Lizzie.leelaz。动态分支在第一条命令前已把实例 pda 清零，并在第二条命令前改顶部 UI；静态/禁用也交错发送与状态变更，最后才逐键写配置，发送不等 ACK，任何拒绝、迟到响应、写流故障、引擎崩溃或 JSONObject.put 失败都不回滚。静态/禁用不清除 isDymPda/pdaCap；EngineManager.startEngineForPk 的参赛引擎初始/复用棋盘同步路径仅当 newEng.isKataGoPda 时才重发 dympdacap，但不检查动态、静态或禁用模式，而 restartEngineForPk 重启同步路径没有这条发送。BoardHistoryNode 的首个让子白节点也可能按陈旧 isDymPda 重发 auto-pda 或动态系数。外部 auto-pda 原文可含 CR/LF/NUL 并在 pda/PDACap 回包或让子恢复中直接送入底层 `command + LF`，可注入命令或破坏响应绑定；坏 dym/static 字符串在先发命令后解析失败，只打印异常并留下半更新状态。三个 PDA 模式和 autoload 还可由外部配置形成同时真、均假或空命令矛盾。三个设置窗口均没有默认按钮、Escape、mnemonic、明确焦点顺序或 labelFor；SetKataPDA 的所有模式/autoload 与 more2 明确不可聚焦，引擎解析线程直接更新 Swing 控件，固定坐标/主屏居中忽略长本地化、多显示器和 per-monitor DPI；图标流未显式关闭且缺资源可能抛未捕获 IllegalArgumentException。目标版必须拒绝单行协议非法字符和非有限/越界/超资源值，按参数与引擎能力确认，错误/取消/X 时不改配置或任何引擎状态，并释放窗口、线程及订阅。",
+      "data_io": "Config 对 Kata 13 键及 Leela/Sai 12 键的各 chk/autoload 默认 false、各 txt/auto-load-txt 默认空，show-wrn-in-menu 与 show-pda-in-menu 默认 true；定制 PDA 的 chk-auto-pda/chk-dym-pda/chk-static-pda 默认 false，auto-pda/dym-pda-cap/static-pda-cur 默认空。SetLeelaEngines 总是加载并写回四个 txt，即使对应 chk 关闭；autoload 关闭不会清除文本。三个对话框都只改内存 uiConfig，不直接落盘；Config.save 最终以 FileOutputStream 直接截断 config.txt，无临时文件、原子替换或备份。运行期四个 Leela/Sai 文本进入 lz-setoption；启动自动加载由每个引擎实例的 name 识别回调触发，所有非 KataGo 都走该分支，并直接使用配置字符串。定制 PDA 仅以大小写敏感的 `KataGoPda` 名称前缀识别，启动先发 getpda/getdympdacap；两套解析器在 pda/PDACap 回包时可能按全局六键重发原始 auto-pda、解析动态/静态值并从非 EDT 线程更新顶部控件。EngineManager.startEngineForPk 的参赛引擎初始/复用棋盘同步路径仅在 newEng.isKataGoPda 时发送实例 dympdacap，且不检查动态、静态或禁用模式；BoardHistoryNode 每次新增节点调用 maybeAjustPDA，GtpConsolePane 可直接改 pda/dympdacap 运行态而不改六键，顶部 txtPDA 又走普通 `kata-set-param playoutDoublingAdvantage` 而非定制 PDA 协议；BoardData 把主/副实例 pda/pda2 记录进分析节点。双引擎镜像的 KataGo `kata-setoption` 转换、Leela 0.11 ponder 后丢命令，以及 EngineManager 仅在非 genmove 分析模式引擎对局中的 Visits=1000000000 覆盖是其他兄弟写路径。Kata 侧仍可向当前/镜像引擎发送 setPda、kata-set-param，并由首次推荐/benchmark 改线程键。配置输入、GTP 命令/输出、资源和旧未知键均按不可信数据处理；目标兼容层须保留未知键并原子保存、备份和失败恢复。",
       "external_dependencies": ["已加载且支持相应参数的 KataGo 或 Leela/Sai GTP 引擎", "可选双引擎会话", "可选系统浏览器与外部说明链接", "可选 KataGo benchmark 结果"],
       "target_modules": ["Lizzie.Engine", "Lizzie.Desktop"],
       "automated_evidence": [
         { "path": "src/test/java/featurecat/lizzie/analysis/LeelazKataGoThreadSettingsTest.java", "symbol": "enabledManualThreadSettingIsAppliedWhenEngineReloads" },
-        { "path": "src/test/java/featurecat/lizzie/analysis/LeelazKataGoThreadSettingsTest.java", "symbol": "autoloadThreadSettingTargetsTheEngineBeingInitialized" }
+        { "path": "src/test/java/featurecat/lizzie/analysis/LeelazKataGoThreadSettingsTest.java", "symbol": "autoloadThreadSettingTargetsTheEngineBeingInitialized" },
+        { "path": "src/test/java/featurecat/lizzie/gui/AccessibilitySupportTest.java", "symbol": "treePassUsesReadableTooltipInsteadOfSymbolOnlyButtonText" }
       ],
-      "manual_acceptance": "在隔离配置和可录制的确定性 GTP 中，从主棋盘 Alt+D、独立棋盘 Alt+D、Menu.engineParameters 和详细工具栏 Menu.paramsBtn 四入口覆盖无引擎、未 loaded、KataGo、KataGo PDA、Leela、Sai、Sayuri 和不支持 lz-setoption 的其他非 KataGo 分流；另用 Alt+X 覆盖多引擎设置，并精确验证 Alt+Shift/Ctrl+Alt/Meta+Alt 的 D/X 优先级。Kata 侧按既有 13 键验收。Leela/Sai 侧逐组覆盖 memory/visits/lagbuffer/resign 的 chk/autoload 四种组合、即时应用、关闭后运行值不复位、冷启动、普通双引擎镜像、KataGo 副引擎的 kata-setoption、Leela 0.11 副引擎 ponder 后丢命令、非 genmove 分析模式引擎对局的 Visits 强制覆盖、pondering、窗口打开后切换/重启引擎，逐字核对 12 键和命令顺序。对四组 UI 分别输入空白、文本、前缀数字、边界、越界、巨大数、CR/NUL、LF 过滤和超长值；另在外部配置中注入 CR/LF/NUL，覆盖冷启动直拼。注入不支持、命令拒绝、迟到响应、输出流不可用、崩溃、JSONObject.put 与保存失败，确认目标版无配置/引擎/UI 半提交或额外命令。分别用取消、Escape、X、重复打开和并发旧窗口验证状态不变、焦点返回及资源释放；最后用真实 Leela/Sai 覆盖启动、即时应用、取消、重启继承和正常退出，并在三平台、多屏、多 DPI、大字号、键盘和屏幕阅读器下验证布局、标签关联、名称、焦点、错误与禁用态。",
+      "manual_acceptance": "在隔离配置和可录制的确定性 GTP 中，从主棋盘 Alt+D、独立棋盘 Alt+D、Menu.engineParameters 和详细工具栏 Menu.paramsBtn 四入口覆盖无引擎、未 loaded、KataGo、KataGo PDA、Leela、Sai、Sayuri 和不支持 lz-setoption 的其他非 KataGo 分流；另用 Alt+X 覆盖多引擎设置，并精确验证 Alt+Shift/Ctrl+Alt/Meta+Alt 的 D/X 优先级。Kata 侧按既有 13 键验收。Leela/Sai 侧逐组覆盖 memory/visits/lagbuffer/resign 的 chk/autoload 四种组合、即时应用、关闭后运行值不复位、冷启动、普通双引擎镜像、KataGo 副引擎的 kata-setoption、Leela 0.11 副引擎 ponder 后丢命令、非 genmove 分析模式引擎对局的 Visits 强制覆盖、pondering、窗口打开后切换/重启引擎，逐字核对 12 键和命令顺序。对四组 UI 分别输入空白、文本、前缀数字、边界、越界、巨大数、CR/NUL、LF 过滤和超长值；另在外部配置中注入 CR/LF/NUL，覆盖冷启动直拼。SetKataPDA 另从 more2 覆盖普通主引擎、仅第一/仅第二/双方/双方均非 PDA 的 engine-game 排列、窗口打开后切换或结束对局、动态/静态/禁用乘自动加载开关、命令顺序、顶部显示、六键、取消/X/重复打开及主副运行态；覆盖 name 大小写、getpda/getdympdacap 回包乱序/重复/迟到、EngineManager 对局恢复、首个让子白节点、GtpConsole 手工命令和顶部 txtPDA 兄弟入口。两数值字段覆盖空白、文本、±0、负数、边界、NaN、±Infinity、巨大指数和超长值；外部六键覆盖两个模式同时真/均假、auto 真但空命令及 auto-pda/dym/static 的 CR/LF/NUL。注入不支持、命令拒绝、迟到响应、输出流不可用、崩溃、JSONObject.put 与保存失败，确认目标版无配置/引擎/UI 半提交或额外命令。分别用取消、Escape、X、重复打开和并发旧窗口验证状态不变、焦点返回及资源释放；最后用真实 Leela/Sai 与 KataGoPda 覆盖启动、即时应用、取消、重启继承、让子恢复和正常退出，并在三平台、多屏、多 DPI、大字号、键盘和屏幕阅读器下验证布局、标签关联、名称、焦点、错误与禁用态，同时证明解析/恢复线程可取消且不泄漏。",
       "status": "已盘点",
-      "evidence": "SETTINGS-ENGINE-001 当前关联 SetKataEngines 13 键与 SetLeelaEngines 12 键。四个 setLzSaiEngine 调用点、两个唯一构造点、两个菜单/工具栏资源入口、两对话框确定/取消/X、默认值、即时命令、Leelaz 名称识别/启动分派/双引擎镜像/底层发送、Config 非原子写入、非 genmove 分析模式引擎对局 Visits 覆盖及 Kata 参数回读/benchmark 均已静态贯通并由 schema 46 guard 锁定。旧测试仅 LeelazKataGoThreadSettingsTest 两项覆盖 Kata 线程重载目标实例；没有测试构造 SetLeelaEngines 或覆盖其 12 键、四条 lz-setoption、自动加载、取消、范围、持久化和错误分支。已登记非模态 always-on-top 多窗口旧快照、取消只隐藏、无 Config.save、冷启动配置命令注入、范围/资源上限、关闭不复位、矛盾 chk/autoload、分析模式 engine-game 覆盖、KataGo `kata-setoption` 转换、Leela 0.11 丢命令、分步半提交、固定 DPI 和无障碍缺口；隐藏且配置读写已注释的 Kata rootPolicyTemperature 控件不是活跃功能/配置键。"
+      "evidence": "SETTINGS-ENGINE-001 当前关联 SetKataEngines 13 键、SetLeelaEngines 12 键与 SetKataPDA 六键。四个 setLzSaiEngine 调用点、两个普通参数唯一构造点、SetKataPDA 的 Menu 单入口/两个分支构造点、菜单/工具栏显隐、三个对话框确定/取消/X、默认值、即时命令、Leelaz 名称识别/启动分派/双引擎镜像/底层发送、两套 PDA 回包解析、EngineManager 对局覆盖、BoardHistoryNode 让子恢复、GtpConsole/顶部 PDA 兄弟入口、BoardData 分析记录、Config 非原子写入、非 genmove 分析模式引擎对局 Visits 覆盖及 Kata 参数回读/benchmark 均已静态贯通并由 schema 47 guard 锁定。旧测试仅 LeelazKataGoThreadSettingsTest 两项覆盖 Kata 线程重载目标实例；AccessibilitySupportTest 只用伪 `...` 按钮间接证明 tooltip 可转为 accessible name。没有测试构造 SetLeelaEngines 或 SetKataPDA，也不覆盖六键、三模式、pda/dympdacap/getpda/getdympdacap、自动加载、对局目标、让子恢复、取消、范围、持久化、错误或线程分支。已登记普通参数窗口的多旧快照、SetKataPDA 下次打开才 dispose、取消只隐藏、无 Config.save、冷启动配置命令注入、非有限/范围/资源上限、关闭不复位、矛盾模式/autoload、运行态与六键漂移、错误引擎/ponder 目标、分析模式 engine-game 覆盖、KataGo `kata-setoption` 转换、Leela 0.11 丢命令、分步半提交、非 EDT 更新、固定 DPI 和无障碍缺口；隐藏且配置读写已注释的 Kata rootPolicyTemperature 控件不是活跃功能/配置键。"
     },
     {
       "id": "SETTINGS-GENERAL-001",

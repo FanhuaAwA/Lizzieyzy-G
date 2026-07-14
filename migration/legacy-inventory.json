@@ -1,5 +1,5 @@
 {
-  "schema_version": 46,
+  "schema_version": 47,
   "source": {
     "root": "../lizzieyzy-next-main",
     "version": "yzy2.5.3",
@@ -32,8 +32,8 @@
       "用户批准不迁移": 0
     },
     "active_config_leaf_keys": 596,
-    "mapped_config_leaf_keys": 283,
-    "unmapped_config_leaf_keys": 313,
+    "mapped_config_leaf_keys": 289,
+    "unmapped_config_leaf_keys": 307,
     "active_menu_resource_keys": 383,
     "mapped_menu_resource_keys": 111,
     "unmapped_menu_resource_keys": 272,
@@ -1264,7 +1264,9 @@
       {
         "key": "auto-pda",
         "reference_count": 2,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "SETTINGS-ENGINE-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -3031,7 +3033,9 @@
       {
         "key": "chk-auto-pda",
         "reference_count": 2,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "SETTINGS-ENGINE-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -3050,7 +3054,9 @@
       {
         "key": "chk-dym-pda",
         "reference_count": 2,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "SETTINGS-ENGINE-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -3222,7 +3228,9 @@
       {
         "key": "chk-static-pda",
         "reference_count": 2,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "SETTINGS-ENGINE-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -4156,7 +4164,9 @@
       {
         "key": "dym-pda-cap",
         "reference_count": 2,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "SETTINGS-ENGINE-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -12849,7 +12859,9 @@
       {
         "key": "static-pda-cur",
         "reference_count": 2,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "SETTINGS-ENGINE-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
