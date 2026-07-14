@@ -1,5 +1,5 @@
 {
-  "schema_version": 29,
+  "schema_version": 30,
   "allowed_statuses": [
     "未盘点",
     "已盘点",
@@ -1461,10 +1461,32 @@
     {
       "id": "BOARD-MAIN-INPUT-001",
       "category": "棋盘与对局",
-      "legacy_entry": "IndependentMainBoard 的三个悬停窗口按钮、无边框主棋盘窗口及 Menu 独立棋盘模式入口接收点击、按下、拖动、进入/离开、滚轮、释放和移动输入",
+      "legacy_entry": "主窗口 Input 在 mainPanel 与 toolbar 接收点击、按下、释放、进入/离开、拖动、移动和滚轮；IndependentMainBoard 的三个悬停窗口按钮、无边框棋盘窗口及 Menu 独立棋盘模式入口接收同族输入",
       "legacy_menu_keys": [
         "Menu.independentMainBoard",
         "Menu.independentMainBoard2",
+        "Menu.scoreGame",
+        "Menu.addBlack",
+        "Menu.addWhite",
+        "Menu.alternatelyMoves",
+        "Menu.insertBlack",
+        "Menu.insertWhite",
+        "Menu.allowDoubleClick",
+        "Menu.allowDrag",
+        "Menu.allowClickReview",
+        "Menu.selectAllowToolTipText",
+        "Menu.selectAvoidToolTipText",
+        "Menu.clearSelectToolTipText",
+        "Menu.selectLimitCustomMoves",
+        "Menu.selectLimitAllMoves",
+        "Menu.selectLimitOneMove",
+        "Menu.largeSubBoard",
+        "Menu.subBoard",
+        "Menu.variationPane",
+        "Menu.winrateGraph",
+        "Menu.showVariationOnMouse",
+        "Menu.noRefreshOnMouse",
+        "Menu.showMouseOverWinrateGraph",
         "Menu.independentBoardMode",
         "Menu.indepBothBoard",
         "Menu.indepMainBoard",
@@ -1487,7 +1509,15 @@
         "IndependentMainBoardWindow:mouseEntered",
         "IndependentMainBoardWindow:mouseWheelMoved",
         "IndependentMainBoardWindow:mouseReleased",
-        "IndependentMainBoardWindow:mouseMoved"
+        "IndependentMainBoardWindow:mouseMoved",
+        "Input:mouseClicked",
+        "Input:mousePressed",
+        "Input:mouseReleased",
+        "Input:mouseEntered",
+        "Input:mouseExited",
+        "Input:mouseDragged",
+        "Input:mouseMoved",
+        "Input:mouseWheelMoved"
       ],
       "legacy_input_bindings": [
         "IndependentMainBoardLockButton:mouseExited#1",
@@ -1714,9 +1744,105 @@
         "IndependentMainBoardWindow:mouseMoved#169",
         "IndependentMainBoardWindow:mouseMoved#170",
         "IndependentMainBoardWindow:mouseMoved#171",
-        "IndependentMainBoardWindow:mouseMoved#172"
+        "IndependentMainBoardWindow:mouseMoved#172",
+        "Input:mouseClicked#1",
+        "Input:mouseClicked#2",
+        "Input:mousePressed#1",
+        "Input:mousePressed#2",
+        "Input:mousePressed#3",
+        "Input:mousePressed#4",
+        "Input:mousePressed#5",
+        "Input:mousePressed#6",
+        "Input:mousePressed#7",
+        "Input:mousePressed#8",
+        "Input:mousePressed#9",
+        "Input:mousePressed#10",
+        "Input:mousePressed#11",
+        "Input:mousePressed#12",
+        "Input:mousePressed#13",
+        "Input:mousePressed#14",
+        "Input:mousePressed#15",
+        "Input:mousePressed#16",
+        "Input:mousePressed#17",
+        "Input:mousePressed#18",
+        "Input:mousePressed#19",
+        "Input:mousePressed#20",
+        "Input:mousePressed#21",
+        "Input:mousePressed#22",
+        "Input:mouseReleased#1",
+        "Input:mouseReleased#2",
+        "Input:mouseReleased#3",
+        "Input:mouseReleased#4",
+        "Input:mouseReleased#5",
+        "Input:mouseEntered#1",
+        "Input:mouseExited#1",
+        "Input:mouseExited#2",
+        "Input:mouseDragged#1",
+        "Input:mouseDragged#2",
+        "Input:mouseDragged#3",
+        "Input:mouseDragged#4",
+        "Input:mouseMoved#1",
+        "Input:mouseMoved#2",
+        "Input:mouseMoved#3",
+        "Input:mouseMoved#4",
+        "Input:mouseMoved#5",
+        "Input:mouseWheelMoved#1",
+        "Input:mouseWheelMoved#2",
+        "Input:mouseWheelMoved#3",
+        "Input:mouseWheelMoved#4",
+        "Input:mouseWheelMoved#5",
+        "Input:mouseWheelMoved#6",
+        "Input:mouseWheelMoved#7"
       ],
       "java_evidence": [
+        {
+          "path": "src/main/java/featurecat/lizzie/gui/Input.java",
+          "symbol": "public class Input implements MouseListener"
+        },
+        {
+          "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java",
+          "symbol": "public void addInput(boolean forEngineGame)"
+        },
+        {
+          "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java",
+          "symbol": "public void removeInput(boolean forEngineGame)"
+        },
+        {
+          "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java",
+          "symbol": "public boolean processSubboardMouseWheelMoved(MouseWheelEvent e)"
+        },
+        {
+          "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java",
+          "symbol": "public boolean processPressOnSub(MouseEvent e)"
+        },
+        {
+          "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java",
+          "symbol": "public boolean onMouseMoved(int x, int y)"
+        },
+        {
+          "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java",
+          "symbol": "public void onMouseDragged(int x, int y)"
+        },
+        {
+          "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java",
+          "symbol": "public void insertMove(int[] coords, boolean isBlack)"
+        },
+        {
+          "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java",
+          "symbol": "public void autoReplayBranch()"
+        },
+        {
+          "path": "src/main/java/featurecat/lizzie/gui/LizzieFrame.java",
+          "symbol": "public void stopTemporaryBoard()"
+        },
+        {
+          "path": "src/main/java/featurecat/lizzie/rules/Board.java",
+          "symbol": "public void setPressStoneInfo(int[] coords, boolean fromRightClick)"
+        },
+        {
+          "path": "src/main/java/featurecat/lizzie/gui/Menu.java",
+          "symbol": "clearSelect = new JFontButton(iconClear)"
+        },
         {
           "path": "src/main/java/featurecat/lizzie/gui/IndependentMainBoard.java",
           "symbol": "public IndependentMainBoard()"
@@ -1799,20 +1925,32 @@
         "allow-double-click",
         "allow-drag",
         "auto-replay-branch",
+        "auto-replay-display-entire-variations-first",
+        "display-entire-variations-first-seconds",
+        "enable-click-review",
+        "large-subboard",
+        "no-refresh-on-sub",
         "norefresh-onmouse-move",
         "replay-branch-interval-seconds",
         "show-move-rect",
+        "show-mouse-over-winrate-graph",
         "show-next-move-blunder",
         "show-right-menu",
+        "select-allow-moves",
+        "select-avoid-moves",
+        "show-subboard",
         "show-suggestion-variations",
+        "show-variation-graph",
+        "show-winrate-graph",
         "extra-mode",
         "play-sound",
-        "show-previous-bestmoves-in-enginegame"
+        "show-previous-bestmoves-in-enginegame",
+        "use-play-mode"
       ],
-      "inputs_preconditions": "独立主棋盘已由启动恢复、菜单、快捷键、设置或自定义布局创建并显示；监听器挂在无边框 JFrame，棋盘模式、引擎对局、选择/插入/拖子状态、右键菜单、候选与 renderer 命中共同决定分支。三个 19×19 图标按钮的 ActionListener、windowClosing、component resize 与 paint 不冒充 pointer binding，但属于同一生命周期验收；旧按钮均 setFocusable(false)、没有可访问名称/状态或独立键盘动作，并且默认隐藏到 hover。",
-      "success_behavior": "锁定、关闭和置顶按钮在 hover 时整组显隐，动作分别更新锁定/边缘状态、切换窗口与模式、切换 always-on-top。窗口点击可清除 Alt 选择；按下覆盖数子、框选、手动引擎落子、双击跳手、SGF 标记、普通/插黑/插白落子、右键菜单与悔棋；拖动覆盖选择框、棋子编辑及四边等边缩放/移动；滚轮在变化预览内调长度，否则前进/后退；释放提交选择或拖子并可用中键播放变化；移动更新问题手/候选 hover、自动变化、落点框、press stone、重绘和边缘光标。目标版以 Avalonia 原生命令、Pointer 事件、Window 移动/缩放和单一坐标服务重建，必须保持独立板语义与主窗口 Input 的已知优先级差异；窗口工具栏命令必须可聚焦、显示焦点、用 Enter/Space 激活，并向辅助技术暴露名称、按钮角色及锁定/置顶当前状态。",
-      "failure_cancel_behavior": "旧版显式空路径、非法按钮/零滚轮、模式早退和无坐标分支不得误落子。迁移不得复刻这些破坏边界：独立拖子起点未传给共享 DraggedReleased，后者误用主窗口 startcoords；目标已有棋子或异常可在 playSound=false、GameInfo/Draggedmode 半更新后返回且无事务/finally；数子与中键变化调用主 renderer 坐标/variation，可能作用错误交点；右键菜单禁用或离盘可直接 undo，双击第一下可能已落子，Alt 选择可先发送分析再被 clicked 清除。replayBranch 裸线程无 owner/cancel/finally，隐藏窗口不停止；恢复/拖动 bounds 无类型、最小尺寸、工作区或 DPI 校验，零/巨大/离屏尺寸可崩溃或耗尽资源。目标必须原子编辑棋谱、finally 恢复声音/ponder、按窗口取消重放、验证 bounds，并让取消/关闭无全局副作用。",
-      "data_io": "ui-persist 的 independent-main-board 保存 x/y/width/height，自定义布局用 independent-main-board 保存布尔可见性并以 independent-main-board-position 保存数组；锁定、置顶、显示、候选/变化、允许双击/拖子、自动重放、问题手/落点框、右键菜单、声音、额外棋盘模式及引擎对局历史显示键影响本窗口或紧邻提交链。运行态会修改棋谱树/SGF 标记、allow/avoid 分析字符串、历史位置、renderer 缓存、hover/drag/select/menu 状态、全局声音与引擎 pondering；旧配置多先写内存 JSON，随后统一保存。目标需保留未知配置并以 typed、原子、可回滚写入替代同名异型和分步全局修改。",
+      "inputs_preconditions": "主窗口 Input 总挂接 mainPanel 的 MouseMotionListener 与 toolbar 的 MouseWheelListener；addInput 再挂接 mainPanel 的 click/key/wheel，removeInput 只移除后三者并切到 InputSubboard，因此 noInput 下 motion 与 toolbar wheel 仍会到达。主/独立棋盘模式、引擎对局、选择/插入/拖子、右键菜单、候选、子棋盘和 renderer 命中共同决定优先级。独立棋盘已由启动恢复、菜单、快捷键、设置或布局创建；三个 19×19 图标按钮的 ActionListener、windowClosing、resize 与 paint 不冒充 pointer binding，但属于生命周期验收，且旧按钮不可聚焦、无可访问名称/状态并默认隐藏到 hover。",
+      "success_behavior": "主窗口点击清除 Alt 选择；按下依次处理数子、临时拖子、右键菜单、框选、评论焦点、子棋盘、手动引擎/浮动棋盘、双击跳手、SGF 标记、普通/插黑/插白落子、右键菜单与悔棋；释放提交框选/拖子或中键播放变化；拖动处理框选、棋子编辑及胜率图 scrub；移动更新临时拖子、候选/问题手/自动变化/落点框并清理 press stone；滚轮先交子棋盘，再按变化预览或历史前进/后退。独立窗口另覆盖三个 hover 按钮和等边缩放/移动。目标版以 Avalonia 原生命令、Pointer 事件、Window 移动/缩放和单一坐标服务重建，保持主/独立板优先级及显式空路径；工具栏命令须可聚焦、有可见焦点、支持 Enter/Space，并暴露名称、角色及锁定/置顶状态。",
+      "failure_cancel_behavior": "旧版显式空路径、非法按钮/零滚轮、模式早退和无坐标分支不得误落子。迁移不得复刻这些破坏边界：removeInput 后 motion 与 toolbar wheel 仍生效，gtpShortKey 增删又不严格幂等；toolbar 坐标被当作 mainPanel 坐标，可能误命中子棋盘；全局 wheelWhen 跨组件丢弃同/回退时间戳，零旋转也可压掉后续事件；高频移动会抢焦点，queued graph scrub 无 owner/generation 取消。四副棋盘第四象限左击递增候选后漏 return，可继续触发主棋盘动作；单副棋盘中键 press 切布局后 release 又播放变化；数子模式只拦 press；stopTemporaryBoard 还误用白方快照恢复黑方候选状态。按下任何按钮可先结束评论编辑，双击第一下可能先落子，右键菜单禁用或离盘可直接 undo；拖子/插入和中键多步变化缺事务/finally，目标占用或异常可遗留 playSound=false、Draggedmode 或半更新棋谱，bothSync 还可能重复落子。独立拖子另误用主窗口 startcoords，数子/中键误用主 renderer；其 replayBranch 裸线程、bounds、资源与 DPI 风险保持。目标必须按输入 owner 正确挂卸并统一坐标，原子编辑棋谱、finally 恢复声音/ponder、取消陈旧 scrub/重放、验证 bounds，且取消/关闭无全局副作用。",
+      "data_io": "主窗口 Input 读取按钮/modifier/组件坐标与 wheel timestamp，改动棋谱历史、落子/SGF 标记、allow/avoid、选择/拖子/hover/press/menu/评论焦点、renderer 缓存、声音和引擎 pondering；toolbar wheel 与 mainPanel 共用 wheelWhen。ui-persist 的 independent-main-board 保存 bounds，布局保存可见性与位置；主/独立窗口紧邻链还读取允许双击/拖子、自动重放、子棋盘/胜率图/变化图、问题手/落点框、右键菜单、声音、额外棋盘模式和引擎对局历史键。目标需保留未知配置，以 typed、原子、可回滚写入替代同名异型和分步全局修改。",
       "external_dependencies": [
         "操作系统窗口管理",
         "分析引擎（候选、ponder、手动引擎对局与变化重放）"
@@ -1830,11 +1968,27 @@
         {
           "path": "src/test/java/featurecat/lizzie/gui/MoveOnlyUiGateTest.java",
           "symbol": "void independentMainBoardBlunderHoverKeepsRealMove()"
+        },
+        {
+          "path": "src/test/java/featurecat/lizzie/gui/WinrateGraphEnginePkModeHitTest.java",
+          "symbol": "void engineGameMousePressedOnGraphScrubPixelUsesWinrateNavigation()"
+        },
+        {
+          "path": "src/test/java/featurecat/lizzie/gui/MoveOnlyUiGateTest.java",
+          "symbol": "void lizzieFrameMouseHoverIgnoresSnapshotNextMarker()"
+        },
+        {
+          "path": "src/test/java/featurecat/lizzie/gui/MoveOnlyUiGateTest.java",
+          "symbol": "void lizzieFrameMouseHoverKeepsRealNextMove()"
+        },
+        {
+          "path": "src/test/java/featurecat/lizzie/gui/MoveOnlyUiGateTest.java",
+          "symbol": "void suggestionTablePreviewClearsWhenMouseReturnsToBoardCandidate()"
         }
       ],
-      "manual_acceptance": "从两个直接菜单项和四种独立棋盘模式启动/切换窗口；覆盖三个按钮、系统关闭、所有鼠标按钮与 modifier、数子/选择/插入/引擎对局/右键菜单/临时拖子、双击、标记、拖子到空点/占用点/原点、滚轮正负/零、分支/中键变化、候选/问题手/自动重放及离盘清理。用隔离棋谱和故障注入核对取消、异常、undo、声音/ponder/树事务不泄漏；用隔离配置测试错误类型、负/零/极大/离屏 bounds、显示器拔插、多屏负坐标与 100–200% DPI。再做浅/深/高对比、长本地化、触控、资源缺失、反复打开隐藏和 10 分钟 hover/resize/replay，测帧时间、分配、线程、窗口、句柄和 listener 不增长；纯键盘逐项 Tab 到锁定/关闭/置顶命令，确认可见焦点及 Enter/Space 动作，并用 Narrator 核对名称、按钮角色、锁定/置顶状态变化和关闭后的焦点恢复。",
+      "manual_acceptance": "在普通、noInput/InputSubboard、浮动/双引擎、数子、选择、插入、拖子、评论编辑、引擎对局和右键菜单状态覆盖主画布/toolbar 的全部按钮、modifier、双击、滚轮正负/零/同时间戳、子棋盘命中、胜率图拖扫、进入/离开与显式空路径；验证 removeInput 后 motion/wheel 路由、跨组件坐标和焦点不串线。再从菜单启动四种独立棋盘模式，覆盖三个按钮、窗口缩放/移动和相同棋谱动作。用隔离棋谱、故障注入核对 undo、重复落子、陈旧 scrub/replay 取消、声音/ponder/树事务不泄漏；覆盖异常 bounds、多屏/DPI、触控/笔、键盘等价入口和 Narrator；10 分钟 hover/drag/wheel/replay 测帧时间、分配、线程、窗口、句柄和 listener 不增长。",
       "status": "已盘点",
-      "evidence": "四个 pointer 来源共 14 个事件、225 条可达路径：三按钮 6 条；窗口 clicked 2、pressed 19、dragged 10、exited 4、entered 2、wheel 5、released 5、moved 172。生成器以局部布尔赋值剪枝，并在循环只能赋同一字面量时保留相同已知值，排除 24 条不可能的 mouseMoved 组合。现有两项专项测试绕过构造并只反射 isNextMoveBlunderTarget；没有 listener dispatch、按钮、落子/编辑事务、菜单、bounds、线程取消、资源、性能、DPI、键盘、触控或无障碍测试。本轮仅建立基线，不运行旧 GUI、不写用户配置、不改棋谱、不联网、不启动引擎且不修改旧 Java。"
+      "evidence": "五个 pointer 来源共 22 个事件、273 条可达路径：既有三按钮 6 条、独立窗口 219 条；Input 精确为 clicked 2、pressed 22、released 5、entered 1、exited 2、dragged 4、moved 5、wheel 7，共 48 条。现有一项测试真实调用 Input.mousePressed 验证引擎对局胜率图命中；三项测试覆盖下游主棋盘 hover，其他胜率图测试直接调用 onMouseDragged。没有 listener 挂卸、toolbar wheel/去重、选择、评论焦点、右键 undo、拖子/插入事务、子棋盘、触控/DPI/键盘等价或无障碍测试。本轮仅建立基线，不运行旧 GUI、不写用户配置、不改棋谱、不联网、不启动引擎且不修改旧 Java。"
     },
     {
       "id": "BOARD-FLOAT-INPUT-001",

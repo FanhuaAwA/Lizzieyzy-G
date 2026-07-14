@@ -1,5 +1,5 @@
 {
-  "schema_version": 29,
+  "schema_version": 30,
   "source": {
     "root": "../lizzieyzy-next-main",
     "version": "yzy2.5.3",
@@ -18,7 +18,7 @@
     "Menu literal labels cover active string-literal menu constructors; dynamic labels remain represented by their resource or runtime source.",
     "Menu accelerators cover explicit Menu.java setAccelerator calls and direct OS.isWindows guards; other input bindings remain T-003 work.",
     "Input key bindings symbolically expand Input.java, InputIndependentMainBoard.java, InputIndependentSubboard.java, InputSubboard.java, FloatBoard.java, AnalysisFrame table/window, DrawPainting.java, ChooseMoreEngine.java, LoadEngine.java, OtherPrograms.java, TencentKifuDownload.java, FoxKifuDownload.java, BrowserFrame.java, and CaptureTsumeGoFrame.java key dispatch, condition evaluations, executed statements, empty-listener and empty-statement paths, and switch fall-through; controlIsPressed means Control on every platform plus Meta on macOS, and BrowserFrame dispatches Enter through getKeyChar.",
-    "Pointer bindings symbolically expand the two indexed subboard listeners plus FloatBoard, AnalysisFrame, DrawPainting, ChooseMoreEngine, LoadEngine, OtherPrograms, TencentKifuDownload, FoxKifuDownload, BrowserFrame load/stop/label listeners, JFontTextArea, JFontTextField, JIMSendTextPane, the two DemoScrollBarUI2 arrow-button listeners, JPaintTextPane, WindowMenuStrip, YikeLiveDialog, IndependentSubBoard and IndependentMainBoard lock/close/top-button plus window listeners, BlunderListPanel, SidebarHeaderPanel, BottomToolbar, and ConfigDialog2 sidebar-nav/toggle-row/color-label listeners across mouse, motion, drag, wheel, and release condition evaluations, early returns, executed statements, and explicit no-action paths; data-dependent loops and click try/catch handlers are preserved as normalized atomic statements, while local boolean tracking retains a known value across loops that can only assign the same literal so impossible branches are pruned.",
+    "Pointer bindings symbolically expand the main Input listener, the two indexed subboard listeners, FloatBoard, AnalysisFrame, DrawPainting, ChooseMoreEngine, LoadEngine, OtherPrograms, TencentKifuDownload, FoxKifuDownload, BrowserFrame load/stop/label listeners, JFontTextArea, JFontTextField, JIMSendTextPane, the two DemoScrollBarUI2 arrow-button listeners, JPaintTextPane, WindowMenuStrip, YikeLiveDialog, IndependentSubBoard and IndependentMainBoard lock/close/top-button plus window listeners, BlunderListPanel, SidebarHeaderPanel, BottomToolbar, and ConfigDialog2 sidebar-nav/toggle-row/color-label listeners across mouse, motion, drag, wheel, and release condition evaluations, early returns, executed statements, and explicit no-action paths; data-dependent loops and click try/catch handlers are preserved as normalized atomic statements, while local boolean tracking retains a known value across loops that can only assign the same literal so impossible branches are pruned.",
     "Other key-listener and pointer-listener classes remain T-003 work."
   ],
   "matrix_summary": {
@@ -32,11 +32,11 @@
       "用户批准不迁移": 0
     },
     "active_config_leaf_keys": 596,
-    "mapped_config_leaf_keys": 140,
-    "unmapped_config_leaf_keys": 456,
+    "mapped_config_leaf_keys": 146,
+    "unmapped_config_leaf_keys": 450,
     "active_menu_resource_keys": 383,
-    "mapped_menu_resource_keys": 70,
-    "unmapped_menu_resource_keys": 313,
+    "mapped_menu_resource_keys": 92,
+    "unmapped_menu_resource_keys": 291,
     "active_menu_literal_labels": 12,
     "mapped_menu_literal_labels": 12,
     "unmapped_menu_literal_labels": 0,
@@ -49,11 +49,11 @@
     "active_input_key_bindings": 365,
     "mapped_input_key_bindings": 365,
     "unmapped_input_key_bindings": 0,
-    "active_input_pointer_events": 102,
-    "mapped_input_pointer_events": 102,
+    "active_input_pointer_events": 110,
+    "mapped_input_pointer_events": 110,
     "unmapped_input_pointer_events": 0,
-    "active_input_pointer_bindings": 394,
-    "mapped_input_pointer_bindings": 394,
+    "active_input_pointer_bindings": 442,
+    "mapped_input_pointer_bindings": 442,
     "unmapped_input_pointer_bindings": 0
   },
   "config": {
@@ -1309,7 +1309,9 @@
       {
         "key": "auto-replay-display-entire-variations-first",
         "reference_count": 2,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "BOARD-MAIN-INPUT-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -4023,7 +4025,9 @@
       {
         "key": "display-entire-variations-first-seconds",
         "reference_count": 2,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "BOARD-MAIN-INPUT-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -4081,6 +4085,7 @@
         "key": "enable-click-review",
         "reference_count": 3,
         "matrix_ids": [
+          "BOARD-MAIN-INPUT-001",
           "SETTINGS-GENERAL-001"
         ],
         "references": [
@@ -6328,7 +6333,9 @@
       {
         "key": "large-subboard",
         "reference_count": 6,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "BOARD-MAIN-INPUT-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -7979,6 +7986,7 @@
         "key": "no-refresh-on-sub",
         "reference_count": 3,
         "matrix_ids": [
+          "BOARD-MAIN-INPUT-001",
           "SETTINGS-GENERAL-001",
           "UI-LAYOUT-001"
         ],
@@ -9450,7 +9458,9 @@
       {
         "key": "select-allow-moves",
         "reference_count": 9,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "BOARD-MAIN-INPUT-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -9542,7 +9552,9 @@
       {
         "key": "select-avoid-moves",
         "reference_count": 9,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "BOARD-MAIN-INPUT-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -10857,6 +10869,7 @@
         "key": "show-mouse-over-winrate-graph",
         "reference_count": 3,
         "matrix_ids": [
+          "BOARD-MAIN-INPUT-001",
           "SETTINGS-GENERAL-001"
         ],
         "references": [
@@ -11728,6 +11741,7 @@
         "key": "show-subboard",
         "reference_count": 9,
         "matrix_ids": [
+          "BOARD-MAIN-INPUT-001",
           "SETTINGS-GENERAL-001",
           "UI-LAYOUT-001"
         ],
@@ -12024,6 +12038,7 @@
         "key": "show-variation-graph",
         "reference_count": 6,
         "matrix_ids": [
+          "BOARD-MAIN-INPUT-001",
           "SETTINGS-GENERAL-001"
         ],
         "references": [
@@ -12106,6 +12121,7 @@
         "key": "show-winrate-graph",
         "reference_count": 6,
         "matrix_ids": [
+          "BOARD-MAIN-INPUT-001",
           "SETTINGS-GENERAL-001"
         ],
         "references": [
@@ -13584,7 +13600,9 @@
       {
         "key": "use-play-mode",
         "reference_count": 3,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "BOARD-MAIN-INPUT-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -14585,14 +14603,18 @@
       },
       {
         "key": "Menu.addBlack",
-        "matrix_ids": [],
+        "matrix_ids": [
+          "BOARD-MAIN-INPUT-001"
+        ],
         "lines": [
           3593
         ]
       },
       {
         "key": "Menu.addWhite",
-        "matrix_ids": [],
+        "matrix_ids": [
+          "BOARD-MAIN-INPUT-001"
+        ],
         "lines": [
           3608
         ]
@@ -14613,28 +14635,36 @@
       },
       {
         "key": "Menu.allowClickReview",
-        "matrix_ids": [],
+        "matrix_ids": [
+          "BOARD-MAIN-INPUT-001"
+        ],
         "lines": [
           3660
         ]
       },
       {
         "key": "Menu.allowDoubleClick",
-        "matrix_ids": [],
+        "matrix_ids": [
+          "BOARD-MAIN-INPUT-001"
+        ],
         "lines": [
           3638
         ]
       },
       {
         "key": "Menu.allowDrag",
-        "matrix_ids": [],
+        "matrix_ids": [
+          "BOARD-MAIN-INPUT-001"
+        ],
         "lines": [
           3649
         ]
       },
       {
         "key": "Menu.alternatelyMoves",
-        "matrix_ids": [],
+        "matrix_ids": [
+          "BOARD-MAIN-INPUT-001"
+        ],
         "lines": [
           3623
         ]
@@ -15017,7 +15047,9 @@
       },
       {
         "key": "Menu.clearSelectToolTipText",
-        "matrix_ids": [],
+        "matrix_ids": [
+          "BOARD-MAIN-INPUT-001"
+        ],
         "lines": [
           7581
         ]
@@ -15589,14 +15621,18 @@
       },
       {
         "key": "Menu.insertBlack",
-        "matrix_ids": [],
+        "matrix_ids": [
+          "BOARD-MAIN-INPUT-001"
+        ],
         "lines": [
           3673
         ]
       },
       {
         "key": "Menu.insertWhite",
-        "matrix_ids": [],
+        "matrix_ids": [
+          "BOARD-MAIN-INPUT-001"
+        ],
         "lines": [
           3684
         ]
@@ -15777,7 +15813,9 @@
       },
       {
         "key": "Menu.largeSubBoard",
-        "matrix_ids": [],
+        "matrix_ids": [
+          "BOARD-MAIN-INPUT-001"
+        ],
         "lines": [
           896
         ]
@@ -16133,7 +16171,9 @@
       },
       {
         "key": "Menu.noRefreshOnMouse",
-        "matrix_ids": [],
+        "matrix_ids": [
+          "BOARD-MAIN-INPUT-001"
+        ],
         "lines": [
           1467
         ]
@@ -16557,7 +16597,9 @@
       },
       {
         "key": "Menu.scoreGame",
-        "matrix_ids": [],
+        "matrix_ids": [
+          "BOARD-MAIN-INPUT-001"
+        ],
         "lines": [
           3001
         ]
@@ -16571,21 +16613,27 @@
       },
       {
         "key": "Menu.selectAllowToolTipText",
-        "matrix_ids": [],
+        "matrix_ids": [
+          "BOARD-MAIN-INPUT-001"
+        ],
         "lines": [
           7173
         ]
       },
       {
         "key": "Menu.selectAvoidToolTipText",
-        "matrix_ids": [],
+        "matrix_ids": [
+          "BOARD-MAIN-INPUT-001"
+        ],
         "lines": [
           7206
         ]
       },
       {
         "key": "Menu.selectLimitAllMoves",
-        "matrix_ids": [],
+        "matrix_ids": [
+          "BOARD-MAIN-INPUT-001"
+        ],
         "lines": [
           7277,
           7445,
@@ -16595,7 +16643,9 @@
       },
       {
         "key": "Menu.selectLimitCustomMoves",
-        "matrix_ids": [],
+        "matrix_ids": [
+          "BOARD-MAIN-INPUT-001"
+        ],
         "lines": [
           7236,
           7404,
@@ -16605,7 +16655,9 @@
       },
       {
         "key": "Menu.selectLimitOneMove",
-        "matrix_ids": [],
+        "matrix_ids": [
+          "BOARD-MAIN-INPUT-001"
+        ],
         "lines": [
           7280,
           7448,
@@ -16867,7 +16919,9 @@
       },
       {
         "key": "Menu.showMouseOverWinrateGraph",
-        "matrix_ids": [],
+        "matrix_ids": [
+          "BOARD-MAIN-INPUT-001"
+        ],
         "lines": [
           1545
         ]
@@ -16981,7 +17035,9 @@
       },
       {
         "key": "Menu.showVariationOnMouse",
-        "matrix_ids": [],
+        "matrix_ids": [
+          "BOARD-MAIN-INPUT-001"
+        ],
         "lines": [
           1452
         ]
@@ -17089,7 +17145,9 @@
       },
       {
         "key": "Menu.subBoard",
-        "matrix_ids": [],
+        "matrix_ids": [
+          "BOARD-MAIN-INPUT-001"
+        ],
         "lines": [
           1090
         ]
@@ -17235,7 +17293,9 @@
       },
       {
         "key": "Menu.variationPane",
-        "matrix_ids": [],
+        "matrix_ids": [
+          "BOARD-MAIN-INPUT-001"
+        ],
         "lines": [
           1125
         ]
@@ -17317,7 +17377,9 @@
       },
       {
         "key": "Menu.winrateGraph",
-        "matrix_ids": [],
+        "matrix_ids": [
+          "BOARD-MAIN-INPUT-001"
+        ],
         "lines": [
           1101
         ]
@@ -30943,10 +31005,16 @@
         "source": "src/main/java/featurecat/lizzie/gui/IndependentMainBoard.java",
         "active_pointer_events": 8,
         "active_pointer_bindings": 219
+      },
+      {
+        "id": "Input",
+        "source": "src/main/java/featurecat/lizzie/gui/Input.java",
+        "active_pointer_events": 8,
+        "active_pointer_bindings": 48
       }
     ],
-    "active_pointer_events": 102,
-    "active_pointer_bindings": 394,
+    "active_pointer_events": 110,
+    "active_pointer_bindings": 442,
     "pointer_events": [
       {
         "event_id": "InputIndependentSubboard:mouseClicked",
@@ -31964,6 +32032,86 @@
         "event": "mouseMoved",
         "line": 500,
         "binding_count": 172,
+        "matrix_ids": [
+          "BOARD-MAIN-INPUT-001"
+        ]
+      },
+      {
+        "event_id": "Input:mouseClicked",
+        "source_id": "Input",
+        "event": "mouseClicked",
+        "line": 19,
+        "binding_count": 2,
+        "matrix_ids": [
+          "BOARD-MAIN-INPUT-001"
+        ]
+      },
+      {
+        "event_id": "Input:mousePressed",
+        "source_id": "Input",
+        "event": "mousePressed",
+        "line": 27,
+        "binding_count": 22,
+        "matrix_ids": [
+          "BOARD-MAIN-INPUT-001"
+        ]
+      },
+      {
+        "event_id": "Input:mouseReleased",
+        "source_id": "Input",
+        "event": "mouseReleased",
+        "line": 106,
+        "binding_count": 5,
+        "matrix_ids": [
+          "BOARD-MAIN-INPUT-001"
+        ]
+      },
+      {
+        "event_id": "Input:mouseEntered",
+        "source_id": "Input",
+        "event": "mouseEntered",
+        "line": 128,
+        "binding_count": 1,
+        "matrix_ids": [
+          "BOARD-MAIN-INPUT-001"
+        ]
+      },
+      {
+        "event_id": "Input:mouseExited",
+        "source_id": "Input",
+        "event": "mouseExited",
+        "line": 133,
+        "binding_count": 2,
+        "matrix_ids": [
+          "BOARD-MAIN-INPUT-001"
+        ]
+      },
+      {
+        "event_id": "Input:mouseDragged",
+        "source_id": "Input",
+        "event": "mouseDragged",
+        "line": 138,
+        "binding_count": 4,
+        "matrix_ids": [
+          "BOARD-MAIN-INPUT-001"
+        ]
+      },
+      {
+        "event_id": "Input:mouseMoved",
+        "source_id": "Input",
+        "event": "mouseMoved",
+        "line": 157,
+        "binding_count": 5,
+        "matrix_ids": [
+          "BOARD-MAIN-INPUT-001"
+        ]
+      },
+      {
+        "event_id": "Input:mouseWheelMoved",
+        "source_id": "Input",
+        "event": "mouseWheelMoved",
+        "line": 818,
+        "binding_count": 7,
         "matrix_ids": [
           "BOARD-MAIN-INPUT-001"
         ]
@@ -62413,6 +62561,1996 @@
             "statement": "right = false;"
           }
         ],
+        "matrix_ids": [
+          "BOARD-MAIN-INPUT-001"
+        ]
+      },
+      {
+        "binding": "Input:mouseClicked#1",
+        "event_id": "Input:mouseClicked",
+        "source_id": "Input",
+        "event": "mouseClicked",
+        "line": 19,
+        "conditions": [
+          {
+            "expression": "e.isAltDown() && !SwingUtilities.isMiddleMouseButton(e) && (LizzieFrame.allowcoords != \"\" || LizzieFrame.avoidcoords != \"\")",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 23,
+            "statement": "LizzieFrame.menu.clearSelect.doClick();"
+          }
+        ],
+        "matrix_ids": [
+          "BOARD-MAIN-INPUT-001"
+        ]
+      },
+      {
+        "binding": "Input:mouseClicked#2",
+        "event_id": "Input:mouseClicked",
+        "source_id": "Input",
+        "event": "mouseClicked",
+        "line": 19,
+        "conditions": [
+          {
+            "expression": "e.isAltDown() && !SwingUtilities.isMiddleMouseButton(e) && (LizzieFrame.allowcoords != \"\" || LizzieFrame.avoidcoords != \"\")",
+            "expected": false
+          }
+        ],
+        "statements": [],
+        "matrix_ids": [
+          "BOARD-MAIN-INPUT-001"
+        ]
+      },
+      {
+        "binding": "Input:mousePressed#1",
+        "event_id": "Input:mousePressed",
+        "source_id": "Input",
+        "event": "mousePressed",
+        "line": 27,
+        "conditions": [
+          {
+            "expression": "Lizzie.frame.isInScoreMode",
+            "expected": true
+          },
+          {
+            "expression": "e.getButton() == MouseEvent.BUTTON1",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 30,
+            "statement": "Lizzie.frame.leftClickInScoreMode(Utils.zoomOut(e.getX()), Utils.zoomOut(e.getY()));"
+          },
+          {
+            "line": 31,
+            "statement": "return;"
+          }
+        ],
+        "matrix_ids": [
+          "BOARD-MAIN-INPUT-001"
+        ]
+      },
+      {
+        "binding": "Input:mousePressed#2",
+        "event_id": "Input:mousePressed",
+        "source_id": "Input",
+        "event": "mousePressed",
+        "line": 27,
+        "conditions": [
+          {
+            "expression": "Lizzie.frame.isInScoreMode",
+            "expected": true
+          },
+          {
+            "expression": "e.getButton() == MouseEvent.BUTTON1",
+            "expected": false
+          }
+        ],
+        "statements": [
+          {
+            "line": 31,
+            "statement": "return;"
+          }
+        ],
+        "matrix_ids": [
+          "BOARD-MAIN-INPUT-001"
+        ]
+      },
+      {
+        "binding": "Input:mousePressed#3",
+        "event_id": "Input:mousePressed",
+        "source_id": "Input",
+        "event": "mousePressed",
+        "line": 27,
+        "conditions": [
+          {
+            "expression": "Lizzie.frame.isInScoreMode",
+            "expected": false
+          },
+          {
+            "expression": "tempDrag",
+            "expected": false
+          },
+          {
+            "expression": "Lizzie.frame.isShowingRightMenu",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 37,
+            "statement": "return;"
+          }
+        ],
+        "matrix_ids": [
+          "BOARD-MAIN-INPUT-001"
+        ]
+      },
+      {
+        "binding": "Input:mousePressed#4",
+        "event_id": "Input:mousePressed",
+        "source_id": "Input",
+        "event": "mousePressed",
+        "line": 27,
+        "conditions": [
+          {
+            "expression": "Lizzie.frame.isInScoreMode",
+            "expected": false
+          },
+          {
+            "expression": "tempDrag",
+            "expected": false
+          },
+          {
+            "expression": "Lizzie.frame.isShowingRightMenu",
+            "expected": false
+          },
+          {
+            "expression": "!SwingUtilities.isMiddleMouseButton(e) && (selectMode || e.isAltDown())",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 39,
+            "statement": "Lizzie.frame.selectPressed(Utils.zoomOut(e.getX()), Utils.zoomOut(e.getY()), e.isAltDown());"
+          },
+          {
+            "line": 40,
+            "statement": "return;"
+          }
+        ],
+        "matrix_ids": [
+          "BOARD-MAIN-INPUT-001"
+        ]
+      },
+      {
+        "binding": "Input:mousePressed#5",
+        "event_id": "Input:mousePressed",
+        "source_id": "Input",
+        "event": "mousePressed",
+        "line": 27,
+        "conditions": [
+          {
+            "expression": "Lizzie.frame.isInScoreMode",
+            "expected": false
+          },
+          {
+            "expression": "tempDrag",
+            "expected": false
+          },
+          {
+            "expression": "Lizzie.frame.isShowingRightMenu",
+            "expected": false
+          },
+          {
+            "expression": "!SwingUtilities.isMiddleMouseButton(e) && (selectMode || e.isAltDown())",
+            "expected": false
+          },
+          {
+            "expression": "Lizzie.frame.processPressOnSub(e)",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 42,
+            "statement": "Lizzie.frame.processCommentMousePressed(e);"
+          },
+          {
+            "line": 47,
+            "statement": "Lizzie.frame.refresh();"
+          },
+          {
+            "line": 48,
+            "statement": "return;"
+          }
+        ],
+        "matrix_ids": [
+          "BOARD-MAIN-INPUT-001"
+        ]
+      },
+      {
+        "binding": "Input:mousePressed#6",
+        "event_id": "Input:mousePressed",
+        "source_id": "Input",
+        "event": "mousePressed",
+        "line": 27,
+        "conditions": [
+          {
+            "expression": "Lizzie.frame.isInScoreMode",
+            "expected": false
+          },
+          {
+            "expression": "tempDrag",
+            "expected": false
+          },
+          {
+            "expression": "Lizzie.frame.isShowingRightMenu",
+            "expected": false
+          },
+          {
+            "expression": "!SwingUtilities.isMiddleMouseButton(e) && (selectMode || e.isAltDown())",
+            "expected": false
+          },
+          {
+            "expression": "Lizzie.frame.processPressOnSub(e)",
+            "expected": false
+          },
+          {
+            "expression": "EngineManager.isEngineGame",
+            "expected": true
+          },
+          {
+            "expression": "e.getButton() == MouseEvent.BUTTON1",
+            "expected": true
+          },
+          {
+            "expression": "Lizzie.frame.hasWinrateGraphTargetAt(x, y)",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 42,
+            "statement": "Lizzie.frame.processCommentMousePressed(e);"
+          },
+          {
+            "line": 52,
+            "statement": "int x = Utils.zoomOut(e.getX());"
+          },
+          {
+            "line": 53,
+            "statement": "int y = Utils.zoomOut(e.getY());"
+          },
+          {
+            "line": 55,
+            "statement": "Lizzie.frame.onClickedWinrateOnly(x, y);"
+          },
+          {
+            "line": 60,
+            "statement": "return;"
+          }
+        ],
+        "matrix_ids": [
+          "BOARD-MAIN-INPUT-001"
+        ]
+      },
+      {
+        "binding": "Input:mousePressed#7",
+        "event_id": "Input:mousePressed",
+        "source_id": "Input",
+        "event": "mousePressed",
+        "line": 27,
+        "conditions": [
+          {
+            "expression": "Lizzie.frame.isInScoreMode",
+            "expected": false
+          },
+          {
+            "expression": "tempDrag",
+            "expected": false
+          },
+          {
+            "expression": "Lizzie.frame.isShowingRightMenu",
+            "expected": false
+          },
+          {
+            "expression": "!SwingUtilities.isMiddleMouseButton(e) && (selectMode || e.isAltDown())",
+            "expected": false
+          },
+          {
+            "expression": "Lizzie.frame.processPressOnSub(e)",
+            "expected": false
+          },
+          {
+            "expression": "EngineManager.isEngineGame",
+            "expected": true
+          },
+          {
+            "expression": "e.getButton() == MouseEvent.BUTTON1",
+            "expected": true
+          },
+          {
+            "expression": "Lizzie.frame.hasWinrateGraphTargetAt(x, y)",
+            "expected": false
+          }
+        ],
+        "statements": [
+          {
+            "line": 42,
+            "statement": "Lizzie.frame.processCommentMousePressed(e);"
+          },
+          {
+            "line": 52,
+            "statement": "int x = Utils.zoomOut(e.getX());"
+          },
+          {
+            "line": 53,
+            "statement": "int y = Utils.zoomOut(e.getY());"
+          },
+          {
+            "line": 57,
+            "statement": "Lizzie.frame.onClickedForManul(x, y);"
+          },
+          {
+            "line": 60,
+            "statement": "return;"
+          }
+        ],
+        "matrix_ids": [
+          "BOARD-MAIN-INPUT-001"
+        ]
+      },
+      {
+        "binding": "Input:mousePressed#8",
+        "event_id": "Input:mousePressed",
+        "source_id": "Input",
+        "event": "mousePressed",
+        "line": 27,
+        "conditions": [
+          {
+            "expression": "Lizzie.frame.isInScoreMode",
+            "expected": false
+          },
+          {
+            "expression": "tempDrag",
+            "expected": false
+          },
+          {
+            "expression": "Lizzie.frame.isShowingRightMenu",
+            "expected": false
+          },
+          {
+            "expression": "!SwingUtilities.isMiddleMouseButton(e) && (selectMode || e.isAltDown())",
+            "expected": false
+          },
+          {
+            "expression": "Lizzie.frame.processPressOnSub(e)",
+            "expected": false
+          },
+          {
+            "expression": "EngineManager.isEngineGame",
+            "expected": true
+          },
+          {
+            "expression": "e.getButton() == MouseEvent.BUTTON1",
+            "expected": false
+          }
+        ],
+        "statements": [
+          {
+            "line": 42,
+            "statement": "Lizzie.frame.processCommentMousePressed(e);"
+          },
+          {
+            "line": 60,
+            "statement": "return;"
+          }
+        ],
+        "matrix_ids": [
+          "BOARD-MAIN-INPUT-001"
+        ]
+      },
+      {
+        "binding": "Input:mousePressed#9",
+        "event_id": "Input:mousePressed",
+        "source_id": "Input",
+        "event": "mousePressed",
+        "line": 27,
+        "conditions": [
+          {
+            "expression": "Lizzie.frame.isInScoreMode",
+            "expected": false
+          },
+          {
+            "expression": "tempDrag",
+            "expected": false
+          },
+          {
+            "expression": "Lizzie.frame.isShowingRightMenu",
+            "expected": false
+          },
+          {
+            "expression": "!SwingUtilities.isMiddleMouseButton(e) && (selectMode || e.isAltDown())",
+            "expected": false
+          },
+          {
+            "expression": "Lizzie.frame.processPressOnSub(e)",
+            "expected": false
+          },
+          {
+            "expression": "EngineManager.isEngineGame",
+            "expected": false
+          },
+          {
+            "expression": "Lizzie.config.isFloatBoardMode()",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 42,
+            "statement": "Lizzie.frame.processCommentMousePressed(e);"
+          },
+          {
+            "line": 63,
+            "statement": "Lizzie.frame.onClickedWinrateOnly(Utils.zoomOut(e.getX()), Utils.zoomOut(e.getY()));"
+          },
+          {
+            "line": 64,
+            "statement": "return;"
+          }
+        ],
+        "matrix_ids": [
+          "BOARD-MAIN-INPUT-001"
+        ]
+      },
+      {
+        "binding": "Input:mousePressed#10",
+        "event_id": "Input:mousePressed",
+        "source_id": "Input",
+        "event": "mousePressed",
+        "line": 27,
+        "conditions": [
+          {
+            "expression": "Lizzie.frame.isInScoreMode",
+            "expected": false
+          },
+          {
+            "expression": "tempDrag",
+            "expected": false
+          },
+          {
+            "expression": "Lizzie.frame.isShowingRightMenu",
+            "expected": false
+          },
+          {
+            "expression": "!SwingUtilities.isMiddleMouseButton(e) && (selectMode || e.isAltDown())",
+            "expected": false
+          },
+          {
+            "expression": "Lizzie.frame.processPressOnSub(e)",
+            "expected": false
+          },
+          {
+            "expression": "EngineManager.isEngineGame",
+            "expected": false
+          },
+          {
+            "expression": "Lizzie.config.isFloatBoardMode()",
+            "expected": false
+          },
+          {
+            "expression": "e.getButton() == MouseEvent.BUTTON1",
+            "expected": true
+          },
+          {
+            "expression": "e.getClickCount() == 2 && !Lizzie.frame.isTrying && !Lizzie.frame.isPlayingAgainstLeelaz && !Lizzie.frame.isAnaPlayingAgainstLeelaz && Lizzie.config.allowDoubleClick",
+            "expected": false
+          },
+          {
+            "expression": "Lizzie.frame.tryToMarkup(Utils.zoomOut(e.getX()), Utils.zoomOut(e.getY()))",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 42,
+            "statement": "Lizzie.frame.processCommentMousePressed(e);"
+          },
+          {
+            "line": 75,
+            "statement": "return;"
+          }
+        ],
+        "matrix_ids": [
+          "BOARD-MAIN-INPUT-001"
+        ]
+      },
+      {
+        "binding": "Input:mousePressed#11",
+        "event_id": "Input:mousePressed",
+        "source_id": "Input",
+        "event": "mousePressed",
+        "line": 27,
+        "conditions": [
+          {
+            "expression": "Lizzie.frame.isInScoreMode",
+            "expected": false
+          },
+          {
+            "expression": "tempDrag",
+            "expected": false
+          },
+          {
+            "expression": "Lizzie.frame.isShowingRightMenu",
+            "expected": false
+          },
+          {
+            "expression": "!SwingUtilities.isMiddleMouseButton(e) && (selectMode || e.isAltDown())",
+            "expected": false
+          },
+          {
+            "expression": "Lizzie.frame.processPressOnSub(e)",
+            "expected": false
+          },
+          {
+            "expression": "EngineManager.isEngineGame",
+            "expected": false
+          },
+          {
+            "expression": "Lizzie.config.isFloatBoardMode()",
+            "expected": false
+          },
+          {
+            "expression": "e.getButton() == MouseEvent.BUTTON1",
+            "expected": false
+          },
+          {
+            "expression": "e.getButton() == MouseEvent.BUTTON3",
+            "expected": true
+          },
+          {
+            "expression": "Lizzie.frame.onClickedRight(Utils.zoomOut(e.getX()), Utils.zoomOut(e.getY()))",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 42,
+            "statement": "Lizzie.frame.processCommentMousePressed(e);"
+          },
+          {
+            "line": 97,
+            "statement": "return;"
+          }
+        ],
+        "matrix_ids": [
+          "BOARD-MAIN-INPUT-001"
+        ]
+      },
+      {
+        "binding": "Input:mousePressed#12",
+        "event_id": "Input:mousePressed",
+        "source_id": "Input",
+        "event": "mousePressed",
+        "line": 27,
+        "conditions": [
+          {
+            "expression": "Lizzie.frame.isInScoreMode",
+            "expected": false
+          },
+          {
+            "expression": "tempDrag",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 34,
+            "statement": "Lizzie.frame.DraggedReleased(Utils.zoomOut(e.getX()), Utils.zoomOut(e.getY()));"
+          },
+          {
+            "line": 35,
+            "statement": "tempDrag = false;"
+          }
+        ],
+        "matrix_ids": [
+          "BOARD-MAIN-INPUT-001"
+        ]
+      },
+      {
+        "binding": "Input:mousePressed#13",
+        "event_id": "Input:mousePressed",
+        "source_id": "Input",
+        "event": "mousePressed",
+        "line": 27,
+        "conditions": [
+          {
+            "expression": "Lizzie.frame.isInScoreMode",
+            "expected": false
+          },
+          {
+            "expression": "tempDrag",
+            "expected": false
+          },
+          {
+            "expression": "Lizzie.frame.isShowingRightMenu",
+            "expected": false
+          },
+          {
+            "expression": "!SwingUtilities.isMiddleMouseButton(e) && (selectMode || e.isAltDown())",
+            "expected": false
+          },
+          {
+            "expression": "Lizzie.frame.processPressOnSub(e)",
+            "expected": false
+          },
+          {
+            "expression": "EngineManager.isEngineGame",
+            "expected": false
+          },
+          {
+            "expression": "Lizzie.config.isFloatBoardMode()",
+            "expected": false
+          },
+          {
+            "expression": "e.getButton() == MouseEvent.BUTTON1",
+            "expected": true
+          },
+          {
+            "expression": "e.getClickCount() == 2 && !Lizzie.frame.isTrying && !Lizzie.frame.isPlayingAgainstLeelaz && !Lizzie.frame.isAnaPlayingAgainstLeelaz && Lizzie.config.allowDoubleClick",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 42,
+            "statement": "Lizzie.frame.processCommentMousePressed(e);"
+          },
+          {
+            "line": 73,
+            "statement": "Lizzie.frame.onDoubleClicked(Utils.zoomOut(e.getX()), Utils.zoomOut(e.getY()));"
+          }
+        ],
+        "matrix_ids": [
+          "BOARD-MAIN-INPUT-001"
+        ]
+      },
+      {
+        "binding": "Input:mousePressed#14",
+        "event_id": "Input:mousePressed",
+        "source_id": "Input",
+        "event": "mousePressed",
+        "line": 27,
+        "conditions": [
+          {
+            "expression": "Lizzie.frame.isInScoreMode",
+            "expected": false
+          },
+          {
+            "expression": "tempDrag",
+            "expected": false
+          },
+          {
+            "expression": "Lizzie.frame.isShowingRightMenu",
+            "expected": false
+          },
+          {
+            "expression": "!SwingUtilities.isMiddleMouseButton(e) && (selectMode || e.isAltDown())",
+            "expected": false
+          },
+          {
+            "expression": "Lizzie.frame.processPressOnSub(e)",
+            "expected": false
+          },
+          {
+            "expression": "EngineManager.isEngineGame",
+            "expected": false
+          },
+          {
+            "expression": "Lizzie.config.isFloatBoardMode()",
+            "expected": false
+          },
+          {
+            "expression": "e.getButton() == MouseEvent.BUTTON1",
+            "expected": true
+          },
+          {
+            "expression": "e.getClickCount() == 2 && !Lizzie.frame.isTrying && !Lizzie.frame.isPlayingAgainstLeelaz && !Lizzie.frame.isAnaPlayingAgainstLeelaz && Lizzie.config.allowDoubleClick",
+            "expected": false
+          },
+          {
+            "expression": "Lizzie.frame.tryToMarkup(Utils.zoomOut(e.getX()), Utils.zoomOut(e.getY()))",
+            "expected": false
+          },
+          {
+            "expression": "insert == 0",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 42,
+            "statement": "Lizzie.frame.processCommentMousePressed(e);"
+          },
+          {
+            "line": 77,
+            "statement": "Lizzie.frame.onClicked(Utils.zoomOut(e.getX()), Utils.zoomOut(e.getY()));"
+          }
+        ],
+        "matrix_ids": [
+          "BOARD-MAIN-INPUT-001"
+        ]
+      },
+      {
+        "binding": "Input:mousePressed#15",
+        "event_id": "Input:mousePressed",
+        "source_id": "Input",
+        "event": "mousePressed",
+        "line": 27,
+        "conditions": [
+          {
+            "expression": "Lizzie.frame.isInScoreMode",
+            "expected": false
+          },
+          {
+            "expression": "tempDrag",
+            "expected": false
+          },
+          {
+            "expression": "Lizzie.frame.isShowingRightMenu",
+            "expected": false
+          },
+          {
+            "expression": "!SwingUtilities.isMiddleMouseButton(e) && (selectMode || e.isAltDown())",
+            "expected": false
+          },
+          {
+            "expression": "Lizzie.frame.processPressOnSub(e)",
+            "expected": false
+          },
+          {
+            "expression": "EngineManager.isEngineGame",
+            "expected": false
+          },
+          {
+            "expression": "Lizzie.config.isFloatBoardMode()",
+            "expected": false
+          },
+          {
+            "expression": "e.getButton() == MouseEvent.BUTTON1",
+            "expected": true
+          },
+          {
+            "expression": "e.getClickCount() == 2 && !Lizzie.frame.isTrying && !Lizzie.frame.isPlayingAgainstLeelaz && !Lizzie.frame.isAnaPlayingAgainstLeelaz && Lizzie.config.allowDoubleClick",
+            "expected": false
+          },
+          {
+            "expression": "Lizzie.frame.tryToMarkup(Utils.zoomOut(e.getX()), Utils.zoomOut(e.getY()))",
+            "expected": false
+          },
+          {
+            "expression": "insert == 0",
+            "expected": false
+          },
+          {
+            "expression": "insert == 1",
+            "expected": true
+          },
+          {
+            "expression": "Lizzie.frame.iscoordsempty(Utils.zoomOut(e.getX()), Utils.zoomOut(e.getY()))",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 42,
+            "statement": "Lizzie.frame.processCommentMousePressed(e);"
+          },
+          {
+            "line": 80,
+            "statement": "int[] coords = Lizzie.frame.convertmousexytocoords( Utils.zoomOut(e.getX()), Utils.zoomOut(e.getY()));"
+          },
+          {
+            "line": 83,
+            "statement": "Lizzie.frame.insertMove(coords, true);"
+          }
+        ],
+        "matrix_ids": [
+          "BOARD-MAIN-INPUT-001"
+        ]
+      },
+      {
+        "binding": "Input:mousePressed#16",
+        "event_id": "Input:mousePressed",
+        "source_id": "Input",
+        "event": "mousePressed",
+        "line": 27,
+        "conditions": [
+          {
+            "expression": "Lizzie.frame.isInScoreMode",
+            "expected": false
+          },
+          {
+            "expression": "tempDrag",
+            "expected": false
+          },
+          {
+            "expression": "Lizzie.frame.isShowingRightMenu",
+            "expected": false
+          },
+          {
+            "expression": "!SwingUtilities.isMiddleMouseButton(e) && (selectMode || e.isAltDown())",
+            "expected": false
+          },
+          {
+            "expression": "Lizzie.frame.processPressOnSub(e)",
+            "expected": false
+          },
+          {
+            "expression": "EngineManager.isEngineGame",
+            "expected": false
+          },
+          {
+            "expression": "Lizzie.config.isFloatBoardMode()",
+            "expected": false
+          },
+          {
+            "expression": "e.getButton() == MouseEvent.BUTTON1",
+            "expected": true
+          },
+          {
+            "expression": "e.getClickCount() == 2 && !Lizzie.frame.isTrying && !Lizzie.frame.isPlayingAgainstLeelaz && !Lizzie.frame.isAnaPlayingAgainstLeelaz && Lizzie.config.allowDoubleClick",
+            "expected": false
+          },
+          {
+            "expression": "Lizzie.frame.tryToMarkup(Utils.zoomOut(e.getX()), Utils.zoomOut(e.getY()))",
+            "expected": false
+          },
+          {
+            "expression": "insert == 0",
+            "expected": false
+          },
+          {
+            "expression": "insert == 1",
+            "expected": true
+          },
+          {
+            "expression": "Lizzie.frame.iscoordsempty(Utils.zoomOut(e.getX()), Utils.zoomOut(e.getY()))",
+            "expected": false
+          }
+        ],
+        "statements": [
+          {
+            "line": 42,
+            "statement": "Lizzie.frame.processCommentMousePressed(e);"
+          }
+        ],
+        "matrix_ids": [
+          "BOARD-MAIN-INPUT-001"
+        ]
+      },
+      {
+        "binding": "Input:mousePressed#17",
+        "event_id": "Input:mousePressed",
+        "source_id": "Input",
+        "event": "mousePressed",
+        "line": 27,
+        "conditions": [
+          {
+            "expression": "Lizzie.frame.isInScoreMode",
+            "expected": false
+          },
+          {
+            "expression": "tempDrag",
+            "expected": false
+          },
+          {
+            "expression": "Lizzie.frame.isShowingRightMenu",
+            "expected": false
+          },
+          {
+            "expression": "!SwingUtilities.isMiddleMouseButton(e) && (selectMode || e.isAltDown())",
+            "expected": false
+          },
+          {
+            "expression": "Lizzie.frame.processPressOnSub(e)",
+            "expected": false
+          },
+          {
+            "expression": "EngineManager.isEngineGame",
+            "expected": false
+          },
+          {
+            "expression": "Lizzie.config.isFloatBoardMode()",
+            "expected": false
+          },
+          {
+            "expression": "e.getButton() == MouseEvent.BUTTON1",
+            "expected": true
+          },
+          {
+            "expression": "e.getClickCount() == 2 && !Lizzie.frame.isTrying && !Lizzie.frame.isPlayingAgainstLeelaz && !Lizzie.frame.isAnaPlayingAgainstLeelaz && Lizzie.config.allowDoubleClick",
+            "expected": false
+          },
+          {
+            "expression": "Lizzie.frame.tryToMarkup(Utils.zoomOut(e.getX()), Utils.zoomOut(e.getY()))",
+            "expected": false
+          },
+          {
+            "expression": "insert == 0",
+            "expected": false
+          },
+          {
+            "expression": "insert == 1",
+            "expected": false
+          },
+          {
+            "expression": "insert == 2",
+            "expected": true
+          },
+          {
+            "expression": "Lizzie.frame.iscoordsempty(Utils.zoomOut(e.getX()), Utils.zoomOut(e.getY()))",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 42,
+            "statement": "Lizzie.frame.processCommentMousePressed(e);"
+          },
+          {
+            "line": 87,
+            "statement": "int[] coords = Lizzie.frame.convertmousexytocoords( Utils.zoomOut(e.getX()), Utils.zoomOut(e.getY()));"
+          },
+          {
+            "line": 90,
+            "statement": "Lizzie.frame.insertMove(coords, false);"
+          }
+        ],
+        "matrix_ids": [
+          "BOARD-MAIN-INPUT-001"
+        ]
+      },
+      {
+        "binding": "Input:mousePressed#18",
+        "event_id": "Input:mousePressed",
+        "source_id": "Input",
+        "event": "mousePressed",
+        "line": 27,
+        "conditions": [
+          {
+            "expression": "Lizzie.frame.isInScoreMode",
+            "expected": false
+          },
+          {
+            "expression": "tempDrag",
+            "expected": false
+          },
+          {
+            "expression": "Lizzie.frame.isShowingRightMenu",
+            "expected": false
+          },
+          {
+            "expression": "!SwingUtilities.isMiddleMouseButton(e) && (selectMode || e.isAltDown())",
+            "expected": false
+          },
+          {
+            "expression": "Lizzie.frame.processPressOnSub(e)",
+            "expected": false
+          },
+          {
+            "expression": "EngineManager.isEngineGame",
+            "expected": false
+          },
+          {
+            "expression": "Lizzie.config.isFloatBoardMode()",
+            "expected": false
+          },
+          {
+            "expression": "e.getButton() == MouseEvent.BUTTON1",
+            "expected": true
+          },
+          {
+            "expression": "e.getClickCount() == 2 && !Lizzie.frame.isTrying && !Lizzie.frame.isPlayingAgainstLeelaz && !Lizzie.frame.isAnaPlayingAgainstLeelaz && Lizzie.config.allowDoubleClick",
+            "expected": false
+          },
+          {
+            "expression": "Lizzie.frame.tryToMarkup(Utils.zoomOut(e.getX()), Utils.zoomOut(e.getY()))",
+            "expected": false
+          },
+          {
+            "expression": "insert == 0",
+            "expected": false
+          },
+          {
+            "expression": "insert == 1",
+            "expected": false
+          },
+          {
+            "expression": "insert == 2",
+            "expected": true
+          },
+          {
+            "expression": "Lizzie.frame.iscoordsempty(Utils.zoomOut(e.getX()), Utils.zoomOut(e.getY()))",
+            "expected": false
+          }
+        ],
+        "statements": [
+          {
+            "line": 42,
+            "statement": "Lizzie.frame.processCommentMousePressed(e);"
+          }
+        ],
+        "matrix_ids": [
+          "BOARD-MAIN-INPUT-001"
+        ]
+      },
+      {
+        "binding": "Input:mousePressed#19",
+        "event_id": "Input:mousePressed",
+        "source_id": "Input",
+        "event": "mousePressed",
+        "line": 27,
+        "conditions": [
+          {
+            "expression": "Lizzie.frame.isInScoreMode",
+            "expected": false
+          },
+          {
+            "expression": "tempDrag",
+            "expected": false
+          },
+          {
+            "expression": "Lizzie.frame.isShowingRightMenu",
+            "expected": false
+          },
+          {
+            "expression": "!SwingUtilities.isMiddleMouseButton(e) && (selectMode || e.isAltDown())",
+            "expected": false
+          },
+          {
+            "expression": "Lizzie.frame.processPressOnSub(e)",
+            "expected": false
+          },
+          {
+            "expression": "EngineManager.isEngineGame",
+            "expected": false
+          },
+          {
+            "expression": "Lizzie.config.isFloatBoardMode()",
+            "expected": false
+          },
+          {
+            "expression": "e.getButton() == MouseEvent.BUTTON1",
+            "expected": true
+          },
+          {
+            "expression": "e.getClickCount() == 2 && !Lizzie.frame.isTrying && !Lizzie.frame.isPlayingAgainstLeelaz && !Lizzie.frame.isAnaPlayingAgainstLeelaz && Lizzie.config.allowDoubleClick",
+            "expected": false
+          },
+          {
+            "expression": "Lizzie.frame.tryToMarkup(Utils.zoomOut(e.getX()), Utils.zoomOut(e.getY()))",
+            "expected": false
+          },
+          {
+            "expression": "insert == 0",
+            "expected": false
+          },
+          {
+            "expression": "insert == 1",
+            "expected": false
+          },
+          {
+            "expression": "insert == 2",
+            "expected": false
+          }
+        ],
+        "statements": [
+          {
+            "line": 42,
+            "statement": "Lizzie.frame.processCommentMousePressed(e);"
+          }
+        ],
+        "matrix_ids": [
+          "BOARD-MAIN-INPUT-001"
+        ]
+      },
+      {
+        "binding": "Input:mousePressed#20",
+        "event_id": "Input:mousePressed",
+        "source_id": "Input",
+        "event": "mousePressed",
+        "line": 27,
+        "conditions": [
+          {
+            "expression": "Lizzie.frame.isInScoreMode",
+            "expected": false
+          },
+          {
+            "expression": "tempDrag",
+            "expected": false
+          },
+          {
+            "expression": "Lizzie.frame.isShowingRightMenu",
+            "expected": false
+          },
+          {
+            "expression": "!SwingUtilities.isMiddleMouseButton(e) && (selectMode || e.isAltDown())",
+            "expected": false
+          },
+          {
+            "expression": "Lizzie.frame.processPressOnSub(e)",
+            "expected": false
+          },
+          {
+            "expression": "EngineManager.isEngineGame",
+            "expected": false
+          },
+          {
+            "expression": "Lizzie.config.isFloatBoardMode()",
+            "expected": false
+          },
+          {
+            "expression": "e.getButton() == MouseEvent.BUTTON1",
+            "expected": false
+          },
+          {
+            "expression": "e.getButton() == MouseEvent.BUTTON3",
+            "expected": true
+          },
+          {
+            "expression": "Lizzie.frame.onClickedRight(Utils.zoomOut(e.getX()), Utils.zoomOut(e.getY()))",
+            "expected": false
+          },
+          {
+            "expression": "!Lizzie.frame.openRightClickMenu(Utils.zoomOut(e.getX()), Utils.zoomOut(e.getY()))",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 42,
+            "statement": "Lizzie.frame.processCommentMousePressed(e);"
+          },
+          {
+            "line": 99,
+            "statement": "Lizzie.frame.undoForRightClick();"
+          }
+        ],
+        "matrix_ids": [
+          "BOARD-MAIN-INPUT-001"
+        ]
+      },
+      {
+        "binding": "Input:mousePressed#21",
+        "event_id": "Input:mousePressed",
+        "source_id": "Input",
+        "event": "mousePressed",
+        "line": 27,
+        "conditions": [
+          {
+            "expression": "Lizzie.frame.isInScoreMode",
+            "expected": false
+          },
+          {
+            "expression": "tempDrag",
+            "expected": false
+          },
+          {
+            "expression": "Lizzie.frame.isShowingRightMenu",
+            "expected": false
+          },
+          {
+            "expression": "!SwingUtilities.isMiddleMouseButton(e) && (selectMode || e.isAltDown())",
+            "expected": false
+          },
+          {
+            "expression": "Lizzie.frame.processPressOnSub(e)",
+            "expected": false
+          },
+          {
+            "expression": "EngineManager.isEngineGame",
+            "expected": false
+          },
+          {
+            "expression": "Lizzie.config.isFloatBoardMode()",
+            "expected": false
+          },
+          {
+            "expression": "e.getButton() == MouseEvent.BUTTON1",
+            "expected": false
+          },
+          {
+            "expression": "e.getButton() == MouseEvent.BUTTON3",
+            "expected": true
+          },
+          {
+            "expression": "Lizzie.frame.onClickedRight(Utils.zoomOut(e.getX()), Utils.zoomOut(e.getY()))",
+            "expected": false
+          },
+          {
+            "expression": "!Lizzie.frame.openRightClickMenu(Utils.zoomOut(e.getX()), Utils.zoomOut(e.getY()))",
+            "expected": false
+          }
+        ],
+        "statements": [
+          {
+            "line": 42,
+            "statement": "Lizzie.frame.processCommentMousePressed(e);"
+          }
+        ],
+        "matrix_ids": [
+          "BOARD-MAIN-INPUT-001"
+        ]
+      },
+      {
+        "binding": "Input:mousePressed#22",
+        "event_id": "Input:mousePressed",
+        "source_id": "Input",
+        "event": "mousePressed",
+        "line": 27,
+        "conditions": [
+          {
+            "expression": "Lizzie.frame.isInScoreMode",
+            "expected": false
+          },
+          {
+            "expression": "tempDrag",
+            "expected": false
+          },
+          {
+            "expression": "Lizzie.frame.isShowingRightMenu",
+            "expected": false
+          },
+          {
+            "expression": "!SwingUtilities.isMiddleMouseButton(e) && (selectMode || e.isAltDown())",
+            "expected": false
+          },
+          {
+            "expression": "Lizzie.frame.processPressOnSub(e)",
+            "expected": false
+          },
+          {
+            "expression": "EngineManager.isEngineGame",
+            "expected": false
+          },
+          {
+            "expression": "Lizzie.config.isFloatBoardMode()",
+            "expected": false
+          },
+          {
+            "expression": "e.getButton() == MouseEvent.BUTTON1",
+            "expected": false
+          },
+          {
+            "expression": "e.getButton() == MouseEvent.BUTTON3",
+            "expected": false
+          }
+        ],
+        "statements": [
+          {
+            "line": 42,
+            "statement": "Lizzie.frame.processCommentMousePressed(e);"
+          }
+        ],
+        "matrix_ids": [
+          "BOARD-MAIN-INPUT-001"
+        ]
+      },
+      {
+        "binding": "Input:mouseReleased#1",
+        "event_id": "Input:mouseReleased",
+        "source_id": "Input",
+        "event": "mouseReleased",
+        "line": 106,
+        "conditions": [
+          {
+            "expression": "selectMode || (e.isAltDown() && e.getButton() != MouseEvent.BUTTON2)",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 108,
+            "statement": "Lizzie.frame.selectReleased(Utils.zoomOut(e.getX()), Utils.zoomOut(e.getY()));"
+          },
+          {
+            "line": 109,
+            "statement": "return;"
+          }
+        ],
+        "matrix_ids": [
+          "BOARD-MAIN-INPUT-001"
+        ]
+      },
+      {
+        "binding": "Input:mouseReleased#2",
+        "event_id": "Input:mouseReleased",
+        "source_id": "Input",
+        "event": "mouseReleased",
+        "line": 106,
+        "conditions": [
+          {
+            "expression": "selectMode || (e.isAltDown() && e.getButton() != MouseEvent.BUTTON2)",
+            "expected": false
+          },
+          {
+            "expression": "Draggedmode && !Lizzie.frame.isTrying && !LizzieFrame.urlSgf && !Lizzie.frame.isPlayingAgainstLeelaz && !Lizzie.frame.isAnaPlayingAgainstLeelaz && Lizzie.config.allowDrag",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 117,
+            "statement": "Lizzie.frame.DraggedReleased(Utils.zoomOut(e.getX()), Utils.zoomOut(e.getY()));"
+          },
+          {
+            "line": 118,
+            "statement": "return;"
+          }
+        ],
+        "matrix_ids": [
+          "BOARD-MAIN-INPUT-001"
+        ]
+      },
+      {
+        "binding": "Input:mouseReleased#3",
+        "event_id": "Input:mouseReleased",
+        "source_id": "Input",
+        "event": "mouseReleased",
+        "line": 106,
+        "conditions": [
+          {
+            "expression": "selectMode || (e.isAltDown() && e.getButton() != MouseEvent.BUTTON2)",
+            "expected": false
+          },
+          {
+            "expression": "Draggedmode && !Lizzie.frame.isTrying && !LizzieFrame.urlSgf && !Lizzie.frame.isPlayingAgainstLeelaz && !Lizzie.frame.isAnaPlayingAgainstLeelaz && Lizzie.config.allowDrag",
+            "expected": false
+          },
+          {
+            "expression": "SwingUtilities.isMiddleMouseButton(e)",
+            "expected": true
+          },
+          {
+            "expression": "Lizzie.frame.isShowingRightMenu",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 122,
+            "statement": "return;"
+          }
+        ],
+        "matrix_ids": [
+          "BOARD-MAIN-INPUT-001"
+        ]
+      },
+      {
+        "binding": "Input:mouseReleased#4",
+        "event_id": "Input:mouseReleased",
+        "source_id": "Input",
+        "event": "mouseReleased",
+        "line": 106,
+        "conditions": [
+          {
+            "expression": "selectMode || (e.isAltDown() && e.getButton() != MouseEvent.BUTTON2)",
+            "expected": false
+          },
+          {
+            "expression": "Draggedmode && !Lizzie.frame.isTrying && !LizzieFrame.urlSgf && !Lizzie.frame.isPlayingAgainstLeelaz && !Lizzie.frame.isAnaPlayingAgainstLeelaz && Lizzie.config.allowDrag",
+            "expected": false
+          },
+          {
+            "expression": "SwingUtilities.isMiddleMouseButton(e)",
+            "expected": true
+          },
+          {
+            "expression": "Lizzie.frame.isShowingRightMenu",
+            "expected": false
+          }
+        ],
+        "statements": [
+          {
+            "line": 123,
+            "statement": "Lizzie.frame.playCurrentVariation();"
+          }
+        ],
+        "matrix_ids": [
+          "BOARD-MAIN-INPUT-001"
+        ]
+      },
+      {
+        "binding": "Input:mouseReleased#5",
+        "event_id": "Input:mouseReleased",
+        "source_id": "Input",
+        "event": "mouseReleased",
+        "line": 106,
+        "conditions": [
+          {
+            "expression": "selectMode || (e.isAltDown() && e.getButton() != MouseEvent.BUTTON2)",
+            "expected": false
+          },
+          {
+            "expression": "Draggedmode && !Lizzie.frame.isTrying && !LizzieFrame.urlSgf && !Lizzie.frame.isPlayingAgainstLeelaz && !Lizzie.frame.isAnaPlayingAgainstLeelaz && Lizzie.config.allowDrag",
+            "expected": false
+          },
+          {
+            "expression": "SwingUtilities.isMiddleMouseButton(e)",
+            "expected": false
+          }
+        ],
+        "statements": [],
+        "matrix_ids": [
+          "BOARD-MAIN-INPUT-001"
+        ]
+      },
+      {
+        "binding": "Input:mouseEntered#1",
+        "event_id": "Input:mouseEntered",
+        "source_id": "Input",
+        "event": "mouseEntered",
+        "line": 128,
+        "conditions": [],
+        "statements": [
+          {
+            "line": 129,
+            "statement": "Lizzie.frame.stopTemporaryBoardMaybe();"
+          }
+        ],
+        "matrix_ids": [
+          "BOARD-MAIN-INPUT-001"
+        ]
+      },
+      {
+        "binding": "Input:mouseExited#1",
+        "event_id": "Input:mouseExited",
+        "source_id": "Input",
+        "event": "mouseExited",
+        "line": 133,
+        "conditions": [
+          {
+            "expression": "!Lizzie.frame.isShowingRightMenu",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 134,
+            "statement": "Lizzie.frame.onMouseExited();"
+          }
+        ],
+        "matrix_ids": [
+          "BOARD-MAIN-INPUT-001"
+        ]
+      },
+      {
+        "binding": "Input:mouseExited#2",
+        "event_id": "Input:mouseExited",
+        "source_id": "Input",
+        "event": "mouseExited",
+        "line": 133,
+        "conditions": [
+          {
+            "expression": "!Lizzie.frame.isShowingRightMenu",
+            "expected": false
+          }
+        ],
+        "statements": [],
+        "matrix_ids": [
+          "BOARD-MAIN-INPUT-001"
+        ]
+      },
+      {
+        "binding": "Input:mouseDragged#1",
+        "event_id": "Input:mouseDragged",
+        "source_id": "Input",
+        "event": "mouseDragged",
+        "line": 138,
+        "conditions": [
+          {
+            "expression": "Lizzie.frame.isPlayingAgainstLeelaz || Lizzie.frame.isContributing",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 139,
+            "statement": "return;"
+          }
+        ],
+        "matrix_ids": [
+          "BOARD-MAIN-INPUT-001"
+        ]
+      },
+      {
+        "binding": "Input:mouseDragged#2",
+        "event_id": "Input:mouseDragged",
+        "source_id": "Input",
+        "event": "mouseDragged",
+        "line": 138,
+        "conditions": [
+          {
+            "expression": "Lizzie.frame.isPlayingAgainstLeelaz || Lizzie.frame.isContributing",
+            "expected": false
+          },
+          {
+            "expression": "!SwingUtilities.isMiddleMouseButton(e) && (selectMode || e.isAltDown())",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 141,
+            "statement": "Lizzie.frame.selectDragged(Utils.zoomOut(e.getX()), Utils.zoomOut(e.getY()));"
+          },
+          {
+            "line": 142,
+            "statement": "return;"
+          }
+        ],
+        "matrix_ids": [
+          "BOARD-MAIN-INPUT-001"
+        ]
+      },
+      {
+        "binding": "Input:mouseDragged#3",
+        "event_id": "Input:mouseDragged",
+        "source_id": "Input",
+        "event": "mouseDragged",
+        "line": 138,
+        "conditions": [
+          {
+            "expression": "Lizzie.frame.isPlayingAgainstLeelaz || Lizzie.frame.isContributing",
+            "expected": false
+          },
+          {
+            "expression": "!SwingUtilities.isMiddleMouseButton(e) && (selectMode || e.isAltDown())",
+            "expected": false
+          },
+          {
+            "expression": "Draggedmode && !Lizzie.frame.isTrying && !LizzieFrame.urlSgf && !Lizzie.frame.isPlayingAgainstLeelaz && !Lizzie.frame.isAnaPlayingAgainstLeelaz && Lizzie.config.allowDrag",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 150,
+            "statement": "Lizzie.frame.DraggedDragged(Utils.zoomOut(e.getX()), Utils.zoomOut(e.getY()));"
+          },
+          {
+            "line": 151,
+            "statement": "return;"
+          }
+        ],
+        "matrix_ids": [
+          "BOARD-MAIN-INPUT-001"
+        ]
+      },
+      {
+        "binding": "Input:mouseDragged#4",
+        "event_id": "Input:mouseDragged",
+        "source_id": "Input",
+        "event": "mouseDragged",
+        "line": 138,
+        "conditions": [
+          {
+            "expression": "Lizzie.frame.isPlayingAgainstLeelaz || Lizzie.frame.isContributing",
+            "expected": false
+          },
+          {
+            "expression": "!SwingUtilities.isMiddleMouseButton(e) && (selectMode || e.isAltDown())",
+            "expected": false
+          },
+          {
+            "expression": "Draggedmode && !Lizzie.frame.isTrying && !LizzieFrame.urlSgf && !Lizzie.frame.isPlayingAgainstLeelaz && !Lizzie.frame.isAnaPlayingAgainstLeelaz && Lizzie.config.allowDrag",
+            "expected": false
+          }
+        ],
+        "statements": [
+          {
+            "line": 153,
+            "statement": "Lizzie.frame.onMouseDragged(Utils.zoomOut(e.getX()), Utils.zoomOut(e.getY()));"
+          }
+        ],
+        "matrix_ids": [
+          "BOARD-MAIN-INPUT-001"
+        ]
+      },
+      {
+        "binding": "Input:mouseMoved#1",
+        "event_id": "Input:mouseMoved",
+        "source_id": "Input",
+        "event": "mouseMoved",
+        "line": 157,
+        "conditions": [
+          {
+            "expression": "tempDrag",
+            "expected": false
+          },
+          {
+            "expression": "selectMode || e.isAltDown()",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 161,
+            "statement": "return;"
+          }
+        ],
+        "matrix_ids": [
+          "BOARD-MAIN-INPUT-001"
+        ]
+      },
+      {
+        "binding": "Input:mouseMoved#2",
+        "event_id": "Input:mouseMoved",
+        "source_id": "Input",
+        "event": "mouseMoved",
+        "line": 157,
+        "conditions": [
+          {
+            "expression": "tempDrag",
+            "expected": false
+          },
+          {
+            "expression": "selectMode || e.isAltDown()",
+            "expected": false
+          },
+          {
+            "expression": "Draggedmode && !Lizzie.frame.isTrying && !LizzieFrame.urlSgf && !Lizzie.frame.isPlayingAgainstLeelaz && !Lizzie.frame.isAnaPlayingAgainstLeelaz && Lizzie.config.allowDrag",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 169,
+            "statement": "Lizzie.frame.DraggedMoved(Utils.zoomOut(e.getX()), Utils.zoomOut(e.getY()));"
+          },
+          {
+            "line": 170,
+            "statement": "return;"
+          }
+        ],
+        "matrix_ids": [
+          "BOARD-MAIN-INPUT-001"
+        ]
+      },
+      {
+        "binding": "Input:mouseMoved#3",
+        "event_id": "Input:mouseMoved",
+        "source_id": "Input",
+        "event": "mouseMoved",
+        "line": 157,
+        "conditions": [
+          {
+            "expression": "tempDrag",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 158,
+            "statement": "Lizzie.frame.DraggedDragged(Utils.zoomOut(e.getX()), Utils.zoomOut(e.getY()));"
+          }
+        ],
+        "matrix_ids": [
+          "BOARD-MAIN-INPUT-001"
+        ]
+      },
+      {
+        "binding": "Input:mouseMoved#4",
+        "event_id": "Input:mouseMoved",
+        "source_id": "Input",
+        "event": "mouseMoved",
+        "line": 157,
+        "conditions": [
+          {
+            "expression": "tempDrag",
+            "expected": false
+          },
+          {
+            "expression": "selectMode || e.isAltDown()",
+            "expected": false
+          },
+          {
+            "expression": "Draggedmode && !Lizzie.frame.isTrying && !LizzieFrame.urlSgf && !Lizzie.frame.isPlayingAgainstLeelaz && !Lizzie.frame.isAnaPlayingAgainstLeelaz && Lizzie.config.allowDrag",
+            "expected": false
+          },
+          {
+            "expression": "!Lizzie.frame.onMouseMoved(Utils.zoomOut(e.getX()), Utils.zoomOut(e.getY()))",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 173,
+            "statement": "Lizzie.board.clearPressStoneInfo(null);"
+          }
+        ],
+        "matrix_ids": [
+          "BOARD-MAIN-INPUT-001"
+        ]
+      },
+      {
+        "binding": "Input:mouseMoved#5",
+        "event_id": "Input:mouseMoved",
+        "source_id": "Input",
+        "event": "mouseMoved",
+        "line": 157,
+        "conditions": [
+          {
+            "expression": "tempDrag",
+            "expected": false
+          },
+          {
+            "expression": "selectMode || e.isAltDown()",
+            "expected": false
+          },
+          {
+            "expression": "Draggedmode && !Lizzie.frame.isTrying && !LizzieFrame.urlSgf && !Lizzie.frame.isPlayingAgainstLeelaz && !Lizzie.frame.isAnaPlayingAgainstLeelaz && Lizzie.config.allowDrag",
+            "expected": false
+          },
+          {
+            "expression": "!Lizzie.frame.onMouseMoved(Utils.zoomOut(e.getX()), Utils.zoomOut(e.getY()))",
+            "expected": false
+          }
+        ],
+        "statements": [],
+        "matrix_ids": [
+          "BOARD-MAIN-INPUT-001"
+        ]
+      },
+      {
+        "binding": "Input:mouseWheelMoved#1",
+        "event_id": "Input:mouseWheelMoved",
+        "source_id": "Input",
+        "event": "mouseWheelMoved",
+        "line": 818,
+        "conditions": [
+          {
+            "expression": "Lizzie.frame.processSubboardMouseWheelMoved(e)",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 826,
+            "statement": "return;"
+          }
+        ],
+        "matrix_ids": [
+          "BOARD-MAIN-INPUT-001"
+        ]
+      },
+      {
+        "binding": "Input:mouseWheelMoved#2",
+        "event_id": "Input:mouseWheelMoved",
+        "source_id": "Input",
+        "event": "mouseWheelMoved",
+        "line": 818,
+        "conditions": [
+          {
+            "expression": "Lizzie.frame.processSubboardMouseWheelMoved(e)",
+            "expected": false
+          },
+          {
+            "expression": "e.getWhen() - wheelWhen > 0",
+            "expected": true
+          },
+          {
+            "expression": "e.getWheelRotation() > 0",
+            "expected": true
+          },
+          {
+            "expression": "LizzieFrame.boardRenderer.isShowingBranch() || (Lizzie.config.isDoubleEngineMode() && LizzieFrame.boardRenderer2.isShowingBranch())",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 829,
+            "statement": "wheelWhen = e.getWhen();"
+          },
+          {
+            "line": 834,
+            "statement": "Lizzie.frame.doBranch(1);"
+          },
+          {
+            "line": 835,
+            "statement": "Lizzie.frame.refresh();"
+          }
+        ],
+        "matrix_ids": [
+          "BOARD-MAIN-INPUT-001"
+        ]
+      },
+      {
+        "binding": "Input:mouseWheelMoved#3",
+        "event_id": "Input:mouseWheelMoved",
+        "source_id": "Input",
+        "event": "mouseWheelMoved",
+        "line": 818,
+        "conditions": [
+          {
+            "expression": "Lizzie.frame.processSubboardMouseWheelMoved(e)",
+            "expected": false
+          },
+          {
+            "expression": "e.getWhen() - wheelWhen > 0",
+            "expected": true
+          },
+          {
+            "expression": "e.getWheelRotation() > 0",
+            "expected": true
+          },
+          {
+            "expression": "LizzieFrame.boardRenderer.isShowingBranch() || (Lizzie.config.isDoubleEngineMode() && LizzieFrame.boardRenderer2.isShowingBranch())",
+            "expected": false
+          }
+        ],
+        "statements": [
+          {
+            "line": 829,
+            "statement": "wheelWhen = e.getWhen();"
+          },
+          {
+            "line": 837,
+            "statement": "redo();"
+          }
+        ],
+        "matrix_ids": [
+          "BOARD-MAIN-INPUT-001"
+        ]
+      },
+      {
+        "binding": "Input:mouseWheelMoved#4",
+        "event_id": "Input:mouseWheelMoved",
+        "source_id": "Input",
+        "event": "mouseWheelMoved",
+        "line": 818,
+        "conditions": [
+          {
+            "expression": "Lizzie.frame.processSubboardMouseWheelMoved(e)",
+            "expected": false
+          },
+          {
+            "expression": "e.getWhen() - wheelWhen > 0",
+            "expected": true
+          },
+          {
+            "expression": "e.getWheelRotation() > 0",
+            "expected": false
+          },
+          {
+            "expression": "e.getWheelRotation() < 0",
+            "expected": true
+          },
+          {
+            "expression": "LizzieFrame.boardRenderer.isShowingBranch() || (Lizzie.config.isDoubleEngineMode() && LizzieFrame.boardRenderer2.isShowingBranch())",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 829,
+            "statement": "wheelWhen = e.getWhen();"
+          },
+          {
+            "line": 843,
+            "statement": "Lizzie.frame.doBranch(-1);"
+          },
+          {
+            "line": 844,
+            "statement": "Lizzie.frame.refresh();"
+          }
+        ],
+        "matrix_ids": [
+          "BOARD-MAIN-INPUT-001"
+        ]
+      },
+      {
+        "binding": "Input:mouseWheelMoved#5",
+        "event_id": "Input:mouseWheelMoved",
+        "source_id": "Input",
+        "event": "mouseWheelMoved",
+        "line": 818,
+        "conditions": [
+          {
+            "expression": "Lizzie.frame.processSubboardMouseWheelMoved(e)",
+            "expected": false
+          },
+          {
+            "expression": "e.getWhen() - wheelWhen > 0",
+            "expected": true
+          },
+          {
+            "expression": "e.getWheelRotation() > 0",
+            "expected": false
+          },
+          {
+            "expression": "e.getWheelRotation() < 0",
+            "expected": true
+          },
+          {
+            "expression": "LizzieFrame.boardRenderer.isShowingBranch() || (Lizzie.config.isDoubleEngineMode() && LizzieFrame.boardRenderer2.isShowingBranch())",
+            "expected": false
+          }
+        ],
+        "statements": [
+          {
+            "line": 829,
+            "statement": "wheelWhen = e.getWhen();"
+          },
+          {
+            "line": 846,
+            "statement": "undo();"
+          }
+        ],
+        "matrix_ids": [
+          "BOARD-MAIN-INPUT-001"
+        ]
+      },
+      {
+        "binding": "Input:mouseWheelMoved#6",
+        "event_id": "Input:mouseWheelMoved",
+        "source_id": "Input",
+        "event": "mouseWheelMoved",
+        "line": 818,
+        "conditions": [
+          {
+            "expression": "Lizzie.frame.processSubboardMouseWheelMoved(e)",
+            "expected": false
+          },
+          {
+            "expression": "e.getWhen() - wheelWhen > 0",
+            "expected": true
+          },
+          {
+            "expression": "e.getWheelRotation() > 0",
+            "expected": false
+          },
+          {
+            "expression": "e.getWheelRotation() < 0",
+            "expected": false
+          }
+        ],
+        "statements": [
+          {
+            "line": 829,
+            "statement": "wheelWhen = e.getWhen();"
+          }
+        ],
+        "matrix_ids": [
+          "BOARD-MAIN-INPUT-001"
+        ]
+      },
+      {
+        "binding": "Input:mouseWheelMoved#7",
+        "event_id": "Input:mouseWheelMoved",
+        "source_id": "Input",
+        "event": "mouseWheelMoved",
+        "line": 818,
+        "conditions": [
+          {
+            "expression": "Lizzie.frame.processSubboardMouseWheelMoved(e)",
+            "expected": false
+          },
+          {
+            "expression": "e.getWhen() - wheelWhen > 0",
+            "expected": false
+          }
+        ],
+        "statements": [],
         "matrix_ids": [
           "BOARD-MAIN-INPUT-001"
         ]
