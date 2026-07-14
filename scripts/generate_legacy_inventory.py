@@ -2221,8 +2221,8 @@ def validate_matrix(
     dict[str, list[str]],
     dict[str, list[str]],
 ]:
-    if matrix.get("schema_version") != 45:
-        raise ValueError("Matrix schema_version must be 45")
+    if matrix.get("schema_version") != 46:
+        raise ValueError("Matrix schema_version must be 46")
     allowed_statuses = matrix.get("allowed_statuses")
     if allowed_statuses != list(ALLOWED_STATUSES):
         raise ValueError("Matrix allowed_statuses differ from the repository contract")
@@ -2522,6 +2522,80 @@ def build_inventory(legacy_root: Path, matrix_path: Path) -> dict[str, Any]:
         matrix_ids_by_config_key,
         matrix_ids_by_menu_key,
         row_id="SETTINGS-ENGINE-001",
+        source_path="src/main/java/featurecat/lizzie/gui/SetLeelaEngines.java",
+        expected_config_keys={
+            "autoload-Lzsai-enginelagbuffer",
+            "autoload-Lzsai-enginemem",
+            "autoload-Lzsai-engineresign",
+            "autoload-Lzsai-enginevisits",
+            "chk-lzsai-enginelagbuffer",
+            "chk-lzsai-enginemem",
+            "chk-lzsai-engineresign",
+            "chk-lzsai-enginevisits",
+            "txt-lzsai-enginelagbuffer",
+            "txt-lzsai-enginemem",
+            "txt-lzsai-engineresign",
+            "txt-lzsai-enginevisits",
+        },
+        expected_menu_keys={"Menu.engineParameters", "Menu.paramsBtn"},
+        expected_input_cases={
+            "keyPressed:VK_X",
+            "keyPressed:VK_D",
+            "InputIndependentMainBoard:keyPressed:VK_X",
+            "InputIndependentMainBoard:keyPressed:VK_D",
+        },
+        expected_input_bindings={
+            "keyPressed:VK_X#2",
+            "keyPressed:VK_D#1",
+            "InputIndependentMainBoard:keyPressed:VK_X#2",
+            "InputIndependentMainBoard:keyPressed:VK_D#1",
+        },
+        required_evidence={
+            ("src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "new SetLeelaEngines()"),
+            (
+                "src/main/java/featurecat/lizzie/gui/SetLeelaEngines.java",
+                "public class SetLeelaEngines extends JDialog",
+            ),
+            (
+                "src/main/java/featurecat/lizzie/gui/SetLeelaEngines.java",
+                "btnApply.addActionListener",
+            ),
+            (
+                "src/main/java/featurecat/lizzie/analysis/Leelaz.java",
+                "private void setLeelaSaiEnginePara()",
+            ),
+            (
+                "src/main/java/featurecat/lizzie/analysis/Leelaz.java",
+                "private StartupCommandAction checkNameAndVersion(String[] params)",
+            ),
+            (
+                "src/main/java/featurecat/lizzie/analysis/Leelaz.java",
+                "private void runStartupCommandAction(StartupCommandAction action)",
+            ),
+            (
+                "src/main/java/featurecat/lizzie/analysis/Leelaz.java",
+                "private Leelaz resolveDefaultCommandMirrorEngine()",
+            ),
+            (
+                "src/main/java/featurecat/lizzie/analysis/Leelaz.java",
+                "private void sendCommandToLeelaz(String command, Runnable onResponse, boolean failOnSendError)",
+            ),
+            (
+                "src/main/java/featurecat/lizzie/analysis/EngineManager.java",
+                "if (Lizzie.config.autoLoadLzsaiEngineVisits)",
+            ),
+            (
+                "src/main/java/featurecat/lizzie/Config.java",
+                "private void writeConfig(JSONObject config, File file)",
+            ),
+        },
+    )
+    validate_workflow_guard(
+        matrix,
+        config_entries,
+        matrix_ids_by_config_key,
+        matrix_ids_by_menu_key,
+        row_id="SETTINGS-ENGINE-001",
         source_path="src/main/java/featurecat/lizzie/gui/SetKataEngines.java",
         expected_config_keys={
             "auto-load-txt-kata-engine-pda",
@@ -2764,6 +2838,7 @@ def build_inventory(legacy_root: Path, matrix_path: Path) -> dict[str, Any]:
     }
     actual_engine_parameter_calls: dict[str, int] = {}
     actual_set_kata_engine_calls: dict[str, int] = {}
+    actual_set_leela_engine_calls: dict[str, int] = {}
     for path in main_java_files:
         source_path = path.relative_to(legacy_root).as_posix()
         source = strip_java_comments(path.read_text(encoding="utf-8", errors="replace"))
@@ -2773,6 +2848,9 @@ def build_inventory(legacy_root: Path, matrix_path: Path) -> dict[str, Any]:
         set_kata_count = source.count("new SetKataEngines(")
         if set_kata_count:
             actual_set_kata_engine_calls[source_path] = set_kata_count
+        set_leela_count = source.count("new SetLeelaEngines(")
+        if set_leela_count:
+            actual_set_leela_engine_calls[source_path] = set_leela_count
     if actual_engine_parameter_calls != expected_engine_parameter_calls:
         raise ValueError(f"setLzSaiEngine call sites changed: {actual_engine_parameter_calls}")
     expected_set_kata_engine_calls = {
@@ -2782,6 +2860,14 @@ def build_inventory(legacy_root: Path, matrix_path: Path) -> dict[str, Any]:
         raise ValueError(
             "SetKataEngines constructor call sites changed: "
             f"{actual_set_kata_engine_calls}"
+        )
+    expected_set_leela_engine_calls = {
+        "src/main/java/featurecat/lizzie/gui/LizzieFrame.java": 1,
+    }
+    if actual_set_leela_engine_calls != expected_set_leela_engine_calls:
+        raise ValueError(
+            "SetLeelaEngines constructor call sites changed: "
+            f"{actual_set_leela_engine_calls}"
         )
     mapped_keys = sum(bool(entry["matrix_ids"]) for entry in config_entries)
     menu["keys"] = [
@@ -2860,7 +2946,7 @@ def build_inventory(legacy_root: Path, matrix_path: Path) -> dict[str, Any]:
         raise ValueError("Every normalized legacy input path must map to the matrix")
 
     return {
-        "schema_version": 45,
+        "schema_version": 46,
         "source": {
             "root": "../lizzieyzy-next-main",
             "version": read_legacy_version(legacy_root),

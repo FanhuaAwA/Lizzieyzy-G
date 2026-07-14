@@ -1,5 +1,5 @@
 {
-  "schema_version": 45,
+  "schema_version": 46,
   "source": {
     "root": "../lizzieyzy-next-main",
     "version": "yzy2.5.3",
@@ -32,8 +32,8 @@
       "用户批准不迁移": 0
     },
     "active_config_leaf_keys": 596,
-    "mapped_config_leaf_keys": 271,
-    "unmapped_config_leaf_keys": 325,
+    "mapped_config_leaf_keys": 283,
+    "unmapped_config_leaf_keys": 313,
     "active_menu_resource_keys": 383,
     "mapped_menu_resource_keys": 111,
     "unmapped_menu_resource_keys": 272,
@@ -1447,7 +1447,9 @@
       {
         "key": "autoload-Lzsai-enginelagbuffer",
         "reference_count": 2,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "SETTINGS-ENGINE-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -1466,7 +1468,9 @@
       {
         "key": "autoload-Lzsai-enginemem",
         "reference_count": 2,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "SETTINGS-ENGINE-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -1485,7 +1489,9 @@
       {
         "key": "autoload-Lzsai-engineresign",
         "reference_count": 2,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "SETTINGS-ENGINE-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -1504,7 +1510,9 @@
       {
         "key": "autoload-Lzsai-enginevisits",
         "reference_count": 2,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "SETTINGS-ENGINE-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -3130,7 +3138,9 @@
       {
         "key": "chk-lzsai-enginelagbuffer",
         "reference_count": 2,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "SETTINGS-ENGINE-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -3149,7 +3159,9 @@
       {
         "key": "chk-lzsai-enginemem",
         "reference_count": 2,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "SETTINGS-ENGINE-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -3168,7 +3180,9 @@
       {
         "key": "chk-lzsai-engineresign",
         "reference_count": 2,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "SETTINGS-ENGINE-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -3187,7 +3201,9 @@
       {
         "key": "chk-lzsai-enginevisits",
         "reference_count": 2,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "SETTINGS-ENGINE-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -13582,7 +13598,9 @@
       {
         "key": "txt-lzsai-enginelagbuffer",
         "reference_count": 2,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "SETTINGS-ENGINE-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -13601,7 +13619,9 @@
       {
         "key": "txt-lzsai-enginemem",
         "reference_count": 2,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "SETTINGS-ENGINE-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -13620,7 +13640,9 @@
       {
         "key": "txt-lzsai-engineresign",
         "reference_count": 2,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "SETTINGS-ENGINE-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -13639,7 +13661,9 @@
       {
         "key": "txt-lzsai-enginevisits",
         "reference_count": 2,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "SETTINGS-ENGINE-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
