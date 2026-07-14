@@ -2221,8 +2221,8 @@ def validate_matrix(
     dict[str, list[str]],
     dict[str, list[str]],
 ]:
-    if matrix.get("schema_version") != 44:
-        raise ValueError("Matrix schema_version must be 44")
+    if matrix.get("schema_version") != 45:
+        raise ValueError("Matrix schema_version must be 45")
     allowed_statuses = matrix.get("allowed_statuses")
     if allowed_statuses != list(ALLOWED_STATUSES):
         raise ValueError("Matrix allowed_statuses differ from the repository contract")
@@ -2521,6 +2521,68 @@ def build_inventory(legacy_root: Path, matrix_path: Path) -> dict[str, Any]:
         config_entries,
         matrix_ids_by_config_key,
         matrix_ids_by_menu_key,
+        row_id="SETTINGS-ENGINE-001",
+        source_path="src/main/java/featurecat/lizzie/gui/SetKataEngines.java",
+        expected_config_keys={
+            "auto-load-txt-kata-engine-pda",
+            "auto-load-txt-kata-engine-wrn",
+            "autoload-kata-engine-pda",
+            "autoload-kata-engine-threads",
+            "autoload-kata-engine-wrn",
+            "chk-kata-engine-pda",
+            "chk-kata-engine-threads",
+            "chk-kata-engine-wrn",
+            "show-pda-in-menu",
+            "show-wrn-in-menu",
+            "txt-kata-engine-pda",
+            "txt-kata-engine-threads",
+            "txt-kata-engine-wrn",
+        },
+        expected_menu_keys={"Menu.engineParameters", "Menu.paramsBtn"},
+        expected_input_cases={
+            "keyPressed:VK_X",
+            "keyPressed:VK_D",
+            "InputIndependentMainBoard:keyPressed:VK_X",
+            "InputIndependentMainBoard:keyPressed:VK_D",
+        },
+        expected_input_bindings={
+            "keyPressed:VK_X#2",
+            "keyPressed:VK_D#1",
+            "InputIndependentMainBoard:keyPressed:VK_X#2",
+            "InputIndependentMainBoard:keyPressed:VK_D#1",
+        },
+        required_evidence={
+            ("src/main/java/featurecat/lizzie/gui/Input.java", "Lizzie.frame.setLzSaiEngine();"),
+            (
+                "src/main/java/featurecat/lizzie/gui/InputIndependentMainBoard.java",
+                "Lizzie.frame.setLzSaiEngine();",
+            ),
+            (
+                "src/main/java/featurecat/lizzie/gui/Menu.java",
+                'resourceBundle.getString("Menu.engineParameters")',
+            ),
+            (
+                "src/main/java/featurecat/lizzie/gui/Menu.java",
+                'resourceBundle.getString("Menu.paramsBtn")',
+            ),
+            ("src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "public void setLzSaiEngine()"),
+            ("src/main/java/featurecat/lizzie/gui/LizzieFrame.java", "new SetKataEngines()"),
+            (
+                "src/main/java/featurecat/lizzie/gui/SetKataEngines.java",
+                "btnApply.addActionListener",
+            ),
+            ("src/main/java/featurecat/lizzie/analysis/Leelaz.java", "private void setKataEnginePara()"),
+            (
+                "src/main/java/featurecat/lizzie/util/Utils.java",
+                "public static String resolveKataGoThreadsValue(",
+            ),
+        },
+    )
+    validate_workflow_guard(
+        matrix,
+        config_entries,
+        matrix_ids_by_config_key,
+        matrix_ids_by_menu_key,
         row_id="ENGINE-GAME-001",
         source_path="src/main/java/featurecat/lizzie/gui/EnginePkConfig.java",
         expected_config_keys={
@@ -2695,6 +2757,32 @@ def build_inventory(legacy_root: Path, matrix_path: Path) -> dict[str, Any]:
             "Direct engine-game start call sites changed: "
             f"{actual_direct_engine_game_calls}"
         )
+    expected_engine_parameter_calls = {
+        "src/main/java/featurecat/lizzie/gui/Input.java": 1,
+        "src/main/java/featurecat/lizzie/gui/InputIndependentMainBoard.java": 1,
+        "src/main/java/featurecat/lizzie/gui/Menu.java": 2,
+    }
+    actual_engine_parameter_calls: dict[str, int] = {}
+    actual_set_kata_engine_calls: dict[str, int] = {}
+    for path in main_java_files:
+        source_path = path.relative_to(legacy_root).as_posix()
+        source = strip_java_comments(path.read_text(encoding="utf-8", errors="replace"))
+        set_parameter_count = source.count("setLzSaiEngine();")
+        if set_parameter_count:
+            actual_engine_parameter_calls[source_path] = set_parameter_count
+        set_kata_count = source.count("new SetKataEngines(")
+        if set_kata_count:
+            actual_set_kata_engine_calls[source_path] = set_kata_count
+    if actual_engine_parameter_calls != expected_engine_parameter_calls:
+        raise ValueError(f"setLzSaiEngine call sites changed: {actual_engine_parameter_calls}")
+    expected_set_kata_engine_calls = {
+        "src/main/java/featurecat/lizzie/gui/LizzieFrame.java": 1,
+    }
+    if actual_set_kata_engine_calls != expected_set_kata_engine_calls:
+        raise ValueError(
+            "SetKataEngines constructor call sites changed: "
+            f"{actual_set_kata_engine_calls}"
+        )
     mapped_keys = sum(bool(entry["matrix_ids"]) for entry in config_entries)
     menu["keys"] = [
         {
@@ -2772,7 +2860,7 @@ def build_inventory(legacy_root: Path, matrix_path: Path) -> dict[str, Any]:
         raise ValueError("Every normalized legacy input path must map to the matrix")
 
     return {
-        "schema_version": 44,
+        "schema_version": 45,
         "source": {
             "root": "../lizzieyzy-next-main",
             "version": read_legacy_version(legacy_root),
