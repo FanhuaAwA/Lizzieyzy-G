@@ -1,5 +1,5 @@
 {
-  "schema_version": 33,
+  "schema_version": 34,
   "source": {
     "root": "../lizzieyzy-next-main",
     "version": "yzy2.5.3",
@@ -18,25 +18,25 @@
     "Menu literal labels cover active string-literal menu constructors; dynamic labels remain represented by their resource or runtime source.",
     "Menu accelerators cover explicit Menu.java setAccelerator calls and direct OS.isWindows guards; other input bindings remain T-003 work.",
     "Input key bindings symbolically expand Input.java, InputIndependentMainBoard.java, InputIndependentSubboard.java, InputSubboard.java, FloatBoard.java, AnalysisFrame table/window, DrawPainting.java, ChooseMoreEngine.java, LoadEngine.java, OtherPrograms.java, TencentKifuDownload.java, FoxKifuDownload.java, BrowserFrame.java, and CaptureTsumeGoFrame.java key dispatch, condition evaluations, executed statements, empty-listener and empty-statement paths, and switch fall-through; controlIsPressed means Control on every platform plus Meta on macOS, and BrowserFrame dispatches Enter through getKeyChar.",
-    "Pointer bindings symbolically expand the main Input listener, the two indexed subboard listeners, FloatBoard, AnalysisFrame, DrawPainting, ChooseMoreEngine, LoadEngine, OtherPrograms, TencentKifuDownload, FoxKifuDownload, BrowserFrame load/stop/label listeners, JFontTextArea, JFontTextField, JIMSendTextPane, the two DemoScrollBarUI2 arrow-button listeners, JPaintTextPane, WindowMenuStrip, YikeLiveDialog, IndependentSubBoard and IndependentMainBoard lock/close/top-button plus window listeners, BlunderListPanel, SidebarHeaderPanel, BottomToolbar, ConfigDialog2 sidebar-nav/toggle-row/color-label listeners, MoreEngines, the 33 indexed LizzieFrame listeners, and the 5 indexed Menu komi text/hold/hover listeners across mouse, motion, drag, wheel, and release condition evaluations, early returns, executed statements, and explicit no-action paths; data-dependent loops and click try/catch handlers are preserved as normalized atomic statements, while local boolean tracking retains a known value across loops that can only assign the same literal so impossible branches are pruned.",
+    "Pointer bindings symbolically expand the main Input listener, the two indexed subboard listeners, FloatBoard, AnalysisFrame, DrawPainting, ChooseMoreEngine, LoadEngine, OtherPrograms, TencentKifuDownload, FoxKifuDownload, BrowserFrame load/stop/label listeners, JFontTextArea, JFontTextField, JIMSendTextPane, the two DemoScrollBarUI2 arrow-button listeners, JPaintTextPane, WindowMenuStrip, YikeLiveDialog, IndependentSubBoard and IndependentMainBoard lock/close/top-button plus window listeners, BlunderListPanel, SidebarHeaderPanel, BottomToolbar, ConfigDialog2 sidebar-nav/toggle-row/color-label listeners, MoreEngines, the 33 indexed LizzieFrame listeners, the 5 indexed Menu komi text/hold/hover listeners, and the 7 indexed MoveListFrame table/match-panel/header groups across mouse, motion, drag, wheel, and release condition evaluations, early returns, executed statements, and explicit no-action paths; data-dependent loops and click try/catch handlers are preserved as normalized atomic statements, local boolean tracking retains a known value across loops that can only assign the same literal, and direct variable-to-integer comparisons prune contradictory paths.",
     "Other key-listener and pointer-listener classes remain T-003 work."
   ],
   "matrix_summary": {
-    "rows": 53,
+    "rows": 54,
     "statuses": {
       "未盘点": 0,
-      "已盘点": 53,
+      "已盘点": 54,
       "实施中": 0,
       "已实现待验证": 0,
       "已验证": 0,
       "用户批准不迁移": 0
     },
     "active_config_leaf_keys": 596,
-    "mapped_config_leaf_keys": 181,
-    "unmapped_config_leaf_keys": 415,
+    "mapped_config_leaf_keys": 211,
+    "unmapped_config_leaf_keys": 385,
     "active_menu_resource_keys": 383,
-    "mapped_menu_resource_keys": 99,
-    "unmapped_menu_resource_keys": 284,
+    "mapped_menu_resource_keys": 101,
+    "unmapped_menu_resource_keys": 282,
     "active_menu_literal_labels": 12,
     "mapped_menu_literal_labels": 12,
     "unmapped_menu_literal_labels": 0,
@@ -49,11 +49,11 @@
     "active_input_key_bindings": 365,
     "mapped_input_key_bindings": 365,
     "unmapped_input_key_bindings": 0,
-    "active_input_pointer_events": 168,
-    "mapped_input_pointer_events": 168,
+    "active_input_pointer_events": 179,
+    "mapped_input_pointer_events": 179,
     "unmapped_input_pointer_events": 0,
-    "active_input_pointer_bindings": 557,
-    "mapped_input_pointer_bindings": 557,
+    "active_input_pointer_bindings": 598,
+    "mapped_input_pointer_bindings": 598,
     "unmapped_input_pointer_bindings": 0
   },
   "config": {
@@ -886,6 +886,7 @@
         "key": "analyze-update-interval-centisec",
         "reference_count": 2,
         "matrix_ids": [
+          "ANALYSIS-HAWKEYE-001",
           "UI-BLUNDER-SCROLLBAR-001"
         ],
         "references": [
@@ -2091,7 +2092,9 @@
       {
         "key": "badMoves",
         "reference_count": 2,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "ANALYSIS-HAWKEYE-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -2110,7 +2113,9 @@
       {
         "key": "badmoves-always-ontop",
         "reference_count": 3,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "ANALYSIS-HAWKEYE-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -2135,7 +2140,9 @@
       {
         "key": "badmoves-list-position",
         "reference_count": 11,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "ANALYSIS-HAWKEYE-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -4546,6 +4553,7 @@
         "key": "extra-mode",
         "reference_count": 4,
         "matrix_ids": [
+          "ANALYSIS-HAWKEYE-001",
           "BOARD-MAIN-INPUT-001",
           "UI-BLUNDER-SCROLLBAR-001"
         ],
@@ -4930,7 +4938,9 @@
       {
         "key": "font-name",
         "reference_count": 7,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "ANALYSIS-HAWKEYE-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/gui/ConfigDialog2.java",
@@ -5056,6 +5066,7 @@
         "key": "frame-font-size",
         "reference_count": 3,
         "matrix_ids": [
+          "ANALYSIS-HAWKEYE-001",
           "ANALYSIS-PLAYER-STRENGTH-001",
           "GAME-KOMI-001",
           "UI-TEXT-EDIT-001",
@@ -5085,7 +5096,9 @@
       {
         "key": "game-statistics-custom-end",
         "reference_count": 2,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "ANALYSIS-HAWKEYE-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -5104,7 +5117,9 @@
       {
         "key": "game-statistics-custom-start",
         "reference_count": 2,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "ANALYSIS-HAWKEYE-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -6906,7 +6921,9 @@
       {
         "key": "loss-panel-select-winrate",
         "reference_count": 2,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "ANALYSIS-HAWKEYE-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -7171,7 +7188,9 @@
       {
         "key": "match-ai-firstmove",
         "reference_count": 2,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "ANALYSIS-HAWKEYE-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -7190,7 +7209,9 @@
       {
         "key": "match-ai-lastmove",
         "reference_count": 3,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "ANALYSIS-HAWKEYE-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -7215,7 +7236,9 @@
       {
         "key": "match-ai-moves",
         "reference_count": 2,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "ANALYSIS-HAWKEYE-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -7234,7 +7257,9 @@
       {
         "key": "match-ai-percents-playouts",
         "reference_count": 2,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "ANALYSIS-HAWKEYE-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -7334,7 +7359,9 @@
       {
         "key": "middle-end-move",
         "reference_count": 2,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "ANALYSIS-HAWKEYE-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -7441,7 +7468,9 @@
       {
         "key": "move-list-filter-current",
         "reference_count": 7,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "ANALYSIS-HAWKEYE-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -7490,7 +7519,9 @@
       {
         "key": "move-list-score-threshold",
         "reference_count": 1,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "ANALYSIS-HAWKEYE-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -7503,7 +7534,9 @@
       {
         "key": "move-list-visits-threshold",
         "reference_count": 1,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "ANALYSIS-HAWKEYE-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -7516,7 +7549,9 @@
       {
         "key": "move-list-winrate-threshold",
         "reference_count": 1,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "ANALYSIS-HAWKEYE-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -7609,7 +7644,9 @@
       {
         "key": "moveList-selected-branch",
         "reference_count": 2,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "ANALYSIS-HAWKEYE-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -7628,7 +7665,9 @@
       {
         "key": "movelist-selected-index",
         "reference_count": 2,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "ANALYSIS-HAWKEYE-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -7647,7 +7686,9 @@
       {
         "key": "movelist-selected-indextop",
         "reference_count": 2,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "ANALYSIS-HAWKEYE-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -7666,7 +7707,9 @@
       {
         "key": "movelist-top-curnode",
         "reference_count": 2,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "ANALYSIS-HAWKEYE-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -8149,7 +8192,9 @@
       {
         "key": "opening-end-move",
         "reference_count": 2,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "ANALYSIS-HAWKEYE-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -9162,7 +9207,9 @@
       {
         "key": "score-diff-range1",
         "reference_count": 4,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "ANALYSIS-HAWKEYE-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -9193,7 +9240,9 @@
       {
         "key": "score-diff-range2",
         "reference_count": 4,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "ANALYSIS-HAWKEYE-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -9244,6 +9293,7 @@
         "key": "score-loss-threshold-1",
         "reference_count": 2,
         "matrix_ids": [
+          "ANALYSIS-HAWKEYE-001",
           "ANALYSIS-PLAYER-STRENGTH-001"
         ],
         "references": [
@@ -9265,6 +9315,7 @@
         "key": "score-loss-threshold-2",
         "reference_count": 2,
         "matrix_ids": [
+          "ANALYSIS-HAWKEYE-001",
           "ANALYSIS-PLAYER-STRENGTH-001"
         ],
         "references": [
@@ -9286,6 +9337,7 @@
         "key": "score-loss-threshold-3",
         "reference_count": 2,
         "matrix_ids": [
+          "ANALYSIS-HAWKEYE-001",
           "ANALYSIS-PLAYER-STRENGTH-001"
         ],
         "references": [
@@ -9307,6 +9359,7 @@
         "key": "score-loss-threshold-4",
         "reference_count": 2,
         "matrix_ids": [
+          "ANALYSIS-HAWKEYE-001",
           "ANALYSIS-PLAYER-STRENGTH-001"
         ],
         "references": [
@@ -9328,6 +9381,7 @@
         "key": "score-loss-threshold-5",
         "reference_count": 2,
         "matrix_ids": [
+          "ANALYSIS-HAWKEYE-001",
           "ANALYSIS-PLAYER-STRENGTH-001"
         ],
         "references": [
@@ -9955,7 +10009,9 @@
       {
         "key": "show-badmoves-frame",
         "reference_count": 5,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "ANALYSIS-HAWKEYE-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/analysis/EngineManager.java",
@@ -9992,7 +10048,9 @@
       {
         "key": "show-basic-btn",
         "reference_count": 2,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "ANALYSIS-HAWKEYE-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -10304,6 +10362,7 @@
         "key": "show-double-menu",
         "reference_count": 2,
         "matrix_ids": [
+          "ANALYSIS-HAWKEYE-001",
           "GAME-KOMI-001",
           "KIFU-TEMP-SAVES-001"
         ],
@@ -10818,7 +10877,9 @@
       {
         "key": "show-katago-score-lead-with-komi",
         "reference_count": 4,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "ANALYSIS-HAWKEYE-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -11035,7 +11096,9 @@
       {
         "key": "show-movelist-matchai",
         "reference_count": 2,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "ANALYSIS-HAWKEYE-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -12028,6 +12091,7 @@
         "key": "show-top-tool-bar",
         "reference_count": 4,
         "matrix_ids": [
+          "ANALYSIS-HAWKEYE-001",
           "GAME-KOMI-001"
         ],
         "references": [
@@ -12280,7 +12344,9 @@
       {
         "key": "show-winrate-matchai",
         "reference_count": 2,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "ANALYSIS-HAWKEYE-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -13273,6 +13339,7 @@
         "key": "ui-font-name",
         "reference_count": 8,
         "matrix_ids": [
+          "ANALYSIS-HAWKEYE-001",
           "UI-BLUNDER-SCROLLBAR-001",
           "UI-TEXT-EDIT-001"
         ],
@@ -14063,6 +14130,7 @@
         "key": "win-loss-threshold-1",
         "reference_count": 2,
         "matrix_ids": [
+          "ANALYSIS-HAWKEYE-001",
           "ANALYSIS-PLAYER-STRENGTH-001",
           "UI-BLUNDER-SCROLLBAR-001"
         ],
@@ -14085,6 +14153,7 @@
         "key": "win-loss-threshold-2",
         "reference_count": 2,
         "matrix_ids": [
+          "ANALYSIS-HAWKEYE-001",
           "ANALYSIS-PLAYER-STRENGTH-001",
           "UI-BLUNDER-SCROLLBAR-001"
         ],
@@ -14107,6 +14176,7 @@
         "key": "win-loss-threshold-3",
         "reference_count": 2,
         "matrix_ids": [
+          "ANALYSIS-HAWKEYE-001",
           "ANALYSIS-PLAYER-STRENGTH-001",
           "UI-BLUNDER-SCROLLBAR-001"
         ],
@@ -14129,6 +14199,7 @@
         "key": "win-loss-threshold-4",
         "reference_count": 2,
         "matrix_ids": [
+          "ANALYSIS-HAWKEYE-001",
           "ANALYSIS-PLAYER-STRENGTH-001",
           "UI-BLUNDER-SCROLLBAR-001"
         ],
@@ -14151,6 +14222,7 @@
         "key": "win-loss-threshold-5",
         "reference_count": 2,
         "matrix_ids": [
+          "ANALYSIS-HAWKEYE-001",
           "ANALYSIS-PLAYER-STRENGTH-001",
           "UI-BLUNDER-SCROLLBAR-001"
         ],
@@ -14234,7 +14306,9 @@
       {
         "key": "winrate-diff-range1",
         "reference_count": 4,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "ANALYSIS-HAWKEYE-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -14265,7 +14339,9 @@
       {
         "key": "winrate-diff-range2",
         "reference_count": 4,
-        "matrix_ids": [],
+        "matrix_ids": [
+          "ANALYSIS-HAWKEYE-001"
+        ],
         "references": [
           {
             "path": "src/main/java/featurecat/lizzie/Config.java",
@@ -14973,7 +15049,9 @@
       },
       {
         "key": "Menu.btnHawkeye.toolTipText",
-        "matrix_ids": [],
+        "matrix_ids": [
+          "ANALYSIS-HAWKEYE-001"
+        ],
         "lines": [
           7998
         ]
@@ -15546,7 +15624,9 @@
       },
       {
         "key": "Menu.hawkEye",
-        "matrix_ids": [],
+        "matrix_ids": [
+          "ANALYSIS-HAWKEYE-001"
+        ],
         "lines": [
           1342,
           3192
@@ -31342,10 +31422,52 @@
         "source": "src/main/java/featurecat/lizzie/gui/Menu.java",
         "active_pointer_events": 2,
         "active_pointer_bindings": 2
+      },
+      {
+        "id": "MoveListFullTableClick",
+        "source": "src/main/java/featurecat/lizzie/gui/MoveListFrame.java",
+        "active_pointer_events": 1,
+        "active_pointer_bindings": 3
+      },
+      {
+        "id": "MoveListMinTable1Click",
+        "source": "src/main/java/featurecat/lizzie/gui/MoveListFrame.java",
+        "active_pointer_events": 1,
+        "active_pointer_bindings": 3
+      },
+      {
+        "id": "MoveListMinTable2Click",
+        "source": "src/main/java/featurecat/lizzie/gui/MoveListFrame.java",
+        "active_pointer_events": 1,
+        "active_pointer_bindings": 3
+      },
+      {
+        "id": "MoveListMatchPanelPointer",
+        "source": "src/main/java/featurecat/lizzie/gui/MoveListFrame.java",
+        "active_pointer_events": 5,
+        "active_pointer_bindings": 20
+      },
+      {
+        "id": "MoveListFullHeaderRelease",
+        "source": "src/main/java/featurecat/lizzie/gui/MoveListFrame.java",
+        "active_pointer_events": 1,
+        "active_pointer_bindings": 4
+      },
+      {
+        "id": "MoveListMin1HeaderRelease",
+        "source": "src/main/java/featurecat/lizzie/gui/MoveListFrame.java",
+        "active_pointer_events": 1,
+        "active_pointer_bindings": 4
+      },
+      {
+        "id": "MoveListMin2HeaderRelease",
+        "source": "src/main/java/featurecat/lizzie/gui/MoveListFrame.java",
+        "active_pointer_events": 1,
+        "active_pointer_bindings": 4
       }
     ],
-    "active_pointer_events": 168,
-    "active_pointer_bindings": 557,
+    "active_pointer_events": 179,
+    "active_pointer_bindings": 598,
     "pointer_events": [
       {
         "event_id": "InputIndependentSubboard:mouseClicked",
@@ -33025,6 +33147,116 @@
         "binding_count": 1,
         "matrix_ids": [
           "GAME-KOMI-001"
+        ]
+      },
+      {
+        "event_id": "MoveListFullTableClick:mouseClicked",
+        "source_id": "MoveListFullTableClick",
+        "event": "mouseClicked",
+        "line": 1539,
+        "binding_count": 3,
+        "matrix_ids": [
+          "ANALYSIS-HAWKEYE-001"
+        ]
+      },
+      {
+        "event_id": "MoveListMinTable1Click:mouseClicked",
+        "source_id": "MoveListMinTable1Click",
+        "event": "mouseClicked",
+        "line": 1594,
+        "binding_count": 3,
+        "matrix_ids": [
+          "ANALYSIS-HAWKEYE-001"
+        ]
+      },
+      {
+        "event_id": "MoveListMinTable2Click:mouseClicked",
+        "source_id": "MoveListMinTable2Click",
+        "event": "mouseClicked",
+        "line": 1630,
+        "binding_count": 3,
+        "matrix_ids": [
+          "ANALYSIS-HAWKEYE-001"
+        ]
+      },
+      {
+        "event_id": "MoveListMatchPanelPointer:mousePressed",
+        "source_id": "MoveListMatchPanelPointer",
+        "event": "mousePressed",
+        "line": 1691,
+        "binding_count": 5,
+        "matrix_ids": [
+          "ANALYSIS-HAWKEYE-001"
+        ]
+      },
+      {
+        "event_id": "MoveListMatchPanelPointer:mouseExited",
+        "source_id": "MoveListMatchPanelPointer",
+        "event": "mouseExited",
+        "line": 1711,
+        "binding_count": 2,
+        "matrix_ids": [
+          "ANALYSIS-HAWKEYE-001"
+        ]
+      },
+      {
+        "event_id": "MoveListMatchPanelPointer:mouseMoved",
+        "source_id": "MoveListMatchPanelPointer",
+        "event": "mouseMoved",
+        "line": 1723,
+        "binding_count": 8,
+        "matrix_ids": [
+          "ANALYSIS-HAWKEYE-001"
+        ]
+      },
+      {
+        "event_id": "MoveListMatchPanelPointer:mouseDragged",
+        "source_id": "MoveListMatchPanelPointer",
+        "event": "mouseDragged",
+        "line": 1762,
+        "binding_count": 2,
+        "matrix_ids": [
+          "ANALYSIS-HAWKEYE-001"
+        ]
+      },
+      {
+        "event_id": "MoveListMatchPanelPointer:mouseWheelMoved",
+        "source_id": "MoveListMatchPanelPointer",
+        "event": "mouseWheelMoved",
+        "line": 1772,
+        "binding_count": 3,
+        "matrix_ids": [
+          "ANALYSIS-HAWKEYE-001"
+        ]
+      },
+      {
+        "event_id": "MoveListFullHeaderRelease:mouseReleased",
+        "source_id": "MoveListFullHeaderRelease",
+        "event": "mouseReleased",
+        "line": 1785,
+        "binding_count": 4,
+        "matrix_ids": [
+          "ANALYSIS-HAWKEYE-001"
+        ]
+      },
+      {
+        "event_id": "MoveListMin1HeaderRelease:mouseReleased",
+        "source_id": "MoveListMin1HeaderRelease",
+        "event": "mouseReleased",
+        "line": 1805,
+        "binding_count": 4,
+        "matrix_ids": [
+          "ANALYSIS-HAWKEYE-001"
+        ]
+      },
+      {
+        "event_id": "MoveListMin2HeaderRelease:mouseReleased",
+        "source_id": "MoveListMin2HeaderRelease",
+        "event": "mouseReleased",
+        "line": 1825,
+        "binding_count": 4,
+        "matrix_ids": [
+          "ANALYSIS-HAWKEYE-001"
         ]
       }
     ],
@@ -68627,6 +68859,1522 @@
         ],
         "matrix_ids": [
           "GAME-KOMI-001"
+        ]
+      },
+      {
+        "binding": "MoveListFullTableClick:mouseClicked#1",
+        "event_id": "MoveListFullTableClick:mouseClicked",
+        "source_id": "MoveListFullTableClick",
+        "event": "mouseClicked",
+        "line": 1539,
+        "conditions": [
+          {
+            "expression": "e.getButton() == MouseEvent.BUTTON3",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 1541,
+            "statement": "exportFull.show(table, e.getX(), e.getY());"
+          },
+          {
+            "line": 1542,
+            "statement": "return;"
+          }
+        ],
+        "matrix_ids": [
+          "ANALYSIS-HAWKEYE-001"
+        ]
+      },
+      {
+        "binding": "MoveListFullTableClick:mouseClicked#2",
+        "event_id": "MoveListFullTableClick:mouseClicked",
+        "source_id": "MoveListFullTableClick",
+        "event": "mouseClicked",
+        "line": 1539,
+        "conditions": [
+          {
+            "expression": "e.getButton() == MouseEvent.BUTTON3",
+            "expected": false
+          },
+          {
+            "expression": "row >= 0 && col >= 0",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 1544,
+            "statement": "int row = table.rowAtPoint(e.getPoint());"
+          },
+          {
+            "line": 1545,
+            "statement": "int col = table.columnAtPoint(e.getPoint());"
+          },
+          {
+            "line": 1547,
+            "statement": "try { handleTableDoubleClick(row, col); } catch (Exception ex) { ex.printStackTrace(); }"
+          }
+        ],
+        "matrix_ids": [
+          "ANALYSIS-HAWKEYE-001"
+        ]
+      },
+      {
+        "binding": "MoveListFullTableClick:mouseClicked#3",
+        "event_id": "MoveListFullTableClick:mouseClicked",
+        "source_id": "MoveListFullTableClick",
+        "event": "mouseClicked",
+        "line": 1539,
+        "conditions": [
+          {
+            "expression": "e.getButton() == MouseEvent.BUTTON3",
+            "expected": false
+          },
+          {
+            "expression": "row >= 0 && col >= 0",
+            "expected": false
+          }
+        ],
+        "statements": [
+          {
+            "line": 1544,
+            "statement": "int row = table.rowAtPoint(e.getPoint());"
+          },
+          {
+            "line": 1545,
+            "statement": "int col = table.columnAtPoint(e.getPoint());"
+          }
+        ],
+        "matrix_ids": [
+          "ANALYSIS-HAWKEYE-001"
+        ]
+      },
+      {
+        "binding": "MoveListMinTable1Click:mouseClicked#1",
+        "event_id": "MoveListMinTable1Click:mouseClicked",
+        "source_id": "MoveListMinTable1Click",
+        "event": "mouseClicked",
+        "line": 1594,
+        "conditions": [
+          {
+            "expression": "e.getButton() == MouseEvent.BUTTON3",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 1596,
+            "statement": "exportMin1.show(minTable1, e.getX(), e.getY());"
+          },
+          {
+            "line": 1597,
+            "statement": "return;"
+          }
+        ],
+        "matrix_ids": [
+          "ANALYSIS-HAWKEYE-001"
+        ]
+      },
+      {
+        "binding": "MoveListMinTable1Click:mouseClicked#2",
+        "event_id": "MoveListMinTable1Click:mouseClicked",
+        "source_id": "MoveListMinTable1Click",
+        "event": "mouseClicked",
+        "line": 1594,
+        "conditions": [
+          {
+            "expression": "e.getButton() == MouseEvent.BUTTON3",
+            "expected": false
+          },
+          {
+            "expression": "row >= 0 && col >= 0",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 1599,
+            "statement": "int row = minTable1.rowAtPoint(e.getPoint());"
+          },
+          {
+            "line": 1600,
+            "statement": "int col = minTable1.columnAtPoint(e.getPoint());"
+          },
+          {
+            "line": 1602,
+            "statement": "try { handleTableDoubleClickMin1(row, col); } catch (Exception ex) { ex.printStackTrace(); }"
+          }
+        ],
+        "matrix_ids": [
+          "ANALYSIS-HAWKEYE-001"
+        ]
+      },
+      {
+        "binding": "MoveListMinTable1Click:mouseClicked#3",
+        "event_id": "MoveListMinTable1Click:mouseClicked",
+        "source_id": "MoveListMinTable1Click",
+        "event": "mouseClicked",
+        "line": 1594,
+        "conditions": [
+          {
+            "expression": "e.getButton() == MouseEvent.BUTTON3",
+            "expected": false
+          },
+          {
+            "expression": "row >= 0 && col >= 0",
+            "expected": false
+          }
+        ],
+        "statements": [
+          {
+            "line": 1599,
+            "statement": "int row = minTable1.rowAtPoint(e.getPoint());"
+          },
+          {
+            "line": 1600,
+            "statement": "int col = minTable1.columnAtPoint(e.getPoint());"
+          }
+        ],
+        "matrix_ids": [
+          "ANALYSIS-HAWKEYE-001"
+        ]
+      },
+      {
+        "binding": "MoveListMinTable2Click:mouseClicked#1",
+        "event_id": "MoveListMinTable2Click:mouseClicked",
+        "source_id": "MoveListMinTable2Click",
+        "event": "mouseClicked",
+        "line": 1630,
+        "conditions": [
+          {
+            "expression": "e.getButton() == MouseEvent.BUTTON3",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 1632,
+            "statement": "exportMin2.show(minTable2, e.getX(), e.getY());"
+          },
+          {
+            "line": 1633,
+            "statement": "return;"
+          }
+        ],
+        "matrix_ids": [
+          "ANALYSIS-HAWKEYE-001"
+        ]
+      },
+      {
+        "binding": "MoveListMinTable2Click:mouseClicked#2",
+        "event_id": "MoveListMinTable2Click:mouseClicked",
+        "source_id": "MoveListMinTable2Click",
+        "event": "mouseClicked",
+        "line": 1630,
+        "conditions": [
+          {
+            "expression": "e.getButton() == MouseEvent.BUTTON3",
+            "expected": false
+          },
+          {
+            "expression": "row >= 0 && col >= 0",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 1635,
+            "statement": "int row = minTable2.rowAtPoint(e.getPoint());"
+          },
+          {
+            "line": 1636,
+            "statement": "int col = minTable2.columnAtPoint(e.getPoint());"
+          },
+          {
+            "line": 1638,
+            "statement": "try { handleTableDoubleClickMin2(row, col); } catch (Exception ex) { ex.printStackTrace(); }"
+          }
+        ],
+        "matrix_ids": [
+          "ANALYSIS-HAWKEYE-001"
+        ]
+      },
+      {
+        "binding": "MoveListMinTable2Click:mouseClicked#3",
+        "event_id": "MoveListMinTable2Click:mouseClicked",
+        "source_id": "MoveListMinTable2Click",
+        "event": "mouseClicked",
+        "line": 1630,
+        "conditions": [
+          {
+            "expression": "e.getButton() == MouseEvent.BUTTON3",
+            "expected": false
+          },
+          {
+            "expression": "row >= 0 && col >= 0",
+            "expected": false
+          }
+        ],
+        "statements": [
+          {
+            "line": 1635,
+            "statement": "int row = minTable2.rowAtPoint(e.getPoint());"
+          },
+          {
+            "line": 1636,
+            "statement": "int col = minTable2.columnAtPoint(e.getPoint());"
+          }
+        ],
+        "matrix_ids": [
+          "ANALYSIS-HAWKEYE-001"
+        ]
+      },
+      {
+        "binding": "MoveListMatchPanelPointer:mousePressed#1",
+        "event_id": "MoveListMatchPanelPointer:mousePressed",
+        "source_id": "MoveListMatchPanelPointer",
+        "event": "mousePressed",
+        "line": 1691,
+        "conditions": [
+          {
+            "expression": "selectedIndex >= 7",
+            "expected": true
+          },
+          {
+            "expression": "index < 0",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 1693,
+            "statement": "int index = getMouseOverBigMistakeIndex(e.getX());"
+          },
+          {
+            "line": 1694,
+            "statement": "return;"
+          }
+        ],
+        "matrix_ids": [
+          "ANALYSIS-HAWKEYE-001"
+        ]
+      },
+      {
+        "binding": "MoveListMatchPanelPointer:mousePressed#2",
+        "event_id": "MoveListMatchPanelPointer:mousePressed",
+        "source_id": "MoveListMatchPanelPointer",
+        "event": "mousePressed",
+        "line": 1691,
+        "conditions": [
+          {
+            "expression": "selectedIndex >= 7",
+            "expected": false
+          },
+          {
+            "expression": "Lizzie.board.isPkBoard || selectedIndex >= 4",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 1701,
+            "statement": "return;"
+          }
+        ],
+        "matrix_ids": [
+          "ANALYSIS-HAWKEYE-001"
+        ]
+      },
+      {
+        "binding": "MoveListMatchPanelPointer:mousePressed#3",
+        "event_id": "MoveListMatchPanelPointer:mousePressed",
+        "source_id": "MoveListMatchPanelPointer",
+        "event": "mousePressed",
+        "line": 1691,
+        "conditions": [
+          {
+            "expression": "selectedIndex >= 7",
+            "expected": true
+          },
+          {
+            "expression": "index < 0",
+            "expected": false
+          },
+          {
+            "expression": "BigMistakeList.size() > index",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 1693,
+            "statement": "int index = getMouseOverBigMistakeIndex(e.getX());"
+          },
+          {
+            "line": 1696,
+            "statement": "Lizzie.board.goToMoveNumberBeyondBranch(BigMistakeList.get(index).moveNumber - 1);"
+          },
+          {
+            "line": 1697,
+            "statement": "Lizzie.frame.clickbadmove = BigMistakeList.get(index).coords;"
+          },
+          {
+            "line": 1705,
+            "statement": "repaint();"
+          }
+        ],
+        "matrix_ids": [
+          "ANALYSIS-HAWKEYE-001"
+        ]
+      },
+      {
+        "binding": "MoveListMatchPanelPointer:mousePressed#4",
+        "event_id": "MoveListMatchPanelPointer:mousePressed",
+        "source_id": "MoveListMatchPanelPointer",
+        "event": "mousePressed",
+        "line": 1691,
+        "conditions": [
+          {
+            "expression": "selectedIndex >= 7",
+            "expected": true
+          },
+          {
+            "expression": "index < 0",
+            "expected": false
+          },
+          {
+            "expression": "BigMistakeList.size() > index",
+            "expected": false
+          }
+        ],
+        "statements": [
+          {
+            "line": 1693,
+            "statement": "int index = getMouseOverBigMistakeIndex(e.getX());"
+          },
+          {
+            "line": 1705,
+            "statement": "repaint();"
+          }
+        ],
+        "matrix_ids": [
+          "ANALYSIS-HAWKEYE-001"
+        ]
+      },
+      {
+        "binding": "MoveListMatchPanelPointer:mousePressed#5",
+        "event_id": "MoveListMatchPanelPointer:mousePressed",
+        "source_id": "MoveListMatchPanelPointer",
+        "event": "mousePressed",
+        "line": 1691,
+        "conditions": [
+          {
+            "expression": "selectedIndex >= 7",
+            "expected": false
+          },
+          {
+            "expression": "Lizzie.board.isPkBoard || selectedIndex >= 4",
+            "expected": false
+          }
+        ],
+        "statements": [
+          {
+            "line": 1702,
+            "statement": "int moveNumber = moveNumber(e.getX(), e.getY());"
+          },
+          {
+            "line": 1703,
+            "statement": "Lizzie.board.goToMoveNumberBeyondBranch(moveNumber);"
+          },
+          {
+            "line": 1705,
+            "statement": "repaint();"
+          }
+        ],
+        "matrix_ids": [
+          "ANALYSIS-HAWKEYE-001"
+        ]
+      },
+      {
+        "binding": "MoveListMatchPanelPointer:mouseExited#1",
+        "event_id": "MoveListMatchPanelPointer:mouseExited",
+        "source_id": "MoveListMatchPanelPointer",
+        "event": "mouseExited",
+        "line": 1711,
+        "conditions": [
+          {
+            "expression": "curMouseOverNode != null",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 1713,
+            "statement": "curMouseOverNode = null;"
+          },
+          {
+            "line": 1714,
+            "statement": "repaint();"
+          },
+          {
+            "line": 1716,
+            "statement": "mouseOverBigMistakeIndex = -1;"
+          }
+        ],
+        "matrix_ids": [
+          "ANALYSIS-HAWKEYE-001"
+        ]
+      },
+      {
+        "binding": "MoveListMatchPanelPointer:mouseExited#2",
+        "event_id": "MoveListMatchPanelPointer:mouseExited",
+        "source_id": "MoveListMatchPanelPointer",
+        "event": "mouseExited",
+        "line": 1711,
+        "conditions": [
+          {
+            "expression": "curMouseOverNode != null",
+            "expected": false
+          }
+        ],
+        "statements": [
+          {
+            "line": 1716,
+            "statement": "mouseOverBigMistakeIndex = -1;"
+          }
+        ],
+        "matrix_ids": [
+          "ANALYSIS-HAWKEYE-001"
+        ]
+      },
+      {
+        "binding": "MoveListMatchPanelPointer:mouseMoved#1",
+        "event_id": "MoveListMatchPanelPointer:mouseMoved",
+        "source_id": "MoveListMatchPanelPointer",
+        "event": "mouseMoved",
+        "line": 1723,
+        "conditions": [
+          {
+            "expression": "selectedIndex >= 7",
+            "expected": true
+          },
+          {
+            "expression": "selectedIndex == 0",
+            "expected": false
+          }
+        ],
+        "statements": [
+          {
+            "line": 1725,
+            "statement": "mouseOverBigMistakeIndex = getMouseOverBigMistakeIndex(e.getX());"
+          }
+        ],
+        "matrix_ids": [
+          "ANALYSIS-HAWKEYE-001"
+        ]
+      },
+      {
+        "binding": "MoveListMatchPanelPointer:mouseMoved#2",
+        "event_id": "MoveListMatchPanelPointer:mouseMoved",
+        "source_id": "MoveListMatchPanelPointer",
+        "event": "mouseMoved",
+        "line": 1723,
+        "conditions": [
+          {
+            "expression": "selectedIndex >= 7",
+            "expected": false
+          },
+          {
+            "expression": "selectedIndex == 0",
+            "expected": true
+          },
+          {
+            "expression": "moveNumber >= 0",
+            "expected": true
+          },
+          {
+            "expression": "curMoveNumber > moveNumber",
+            "expected": true
+          },
+          {
+            "expression": "!(curMouseOverNode == curNode && noRefresh)",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 1728,
+            "statement": "int moveNumber = moveNumber(e.getX(), e.getY());"
+          },
+          {
+            "line": 1729,
+            "statement": "boolean noRefresh = false;"
+          },
+          {
+            "line": 1731,
+            "statement": "BoardHistoryNode curNode = Lizzie.board.getHistory().getCurrentHistoryNode();"
+          },
+          {
+            "line": 1732,
+            "statement": "BoardHistoryNode mouseOverNode = curNode;"
+          },
+          {
+            "line": 1733,
+            "statement": "int curMoveNumber = mouseOverNode.getData().moveNumber;"
+          },
+          {
+            "line": 1735,
+            "statement": "for (int i = 0; i < curMoveNumber - moveNumber; i++) { if (mouseOverNode.previous().isPresent()) mouseOverNode = mouseOverNode.previous().get(); else { noRefresh = true; break; } }"
+          },
+          {
+            "line": 1753,
+            "statement": "curMouseOverNode = mouseOverNode;"
+          },
+          {
+            "line": 1754,
+            "statement": "repaint();"
+          }
+        ],
+        "matrix_ids": [
+          "ANALYSIS-HAWKEYE-001"
+        ]
+      },
+      {
+        "binding": "MoveListMatchPanelPointer:mouseMoved#3",
+        "event_id": "MoveListMatchPanelPointer:mouseMoved",
+        "source_id": "MoveListMatchPanelPointer",
+        "event": "mouseMoved",
+        "line": 1723,
+        "conditions": [
+          {
+            "expression": "selectedIndex >= 7",
+            "expected": false
+          },
+          {
+            "expression": "selectedIndex == 0",
+            "expected": true
+          },
+          {
+            "expression": "moveNumber >= 0",
+            "expected": true
+          },
+          {
+            "expression": "curMoveNumber > moveNumber",
+            "expected": true
+          },
+          {
+            "expression": "!(curMouseOverNode == curNode && noRefresh)",
+            "expected": false
+          }
+        ],
+        "statements": [
+          {
+            "line": 1728,
+            "statement": "int moveNumber = moveNumber(e.getX(), e.getY());"
+          },
+          {
+            "line": 1729,
+            "statement": "boolean noRefresh = false;"
+          },
+          {
+            "line": 1731,
+            "statement": "BoardHistoryNode curNode = Lizzie.board.getHistory().getCurrentHistoryNode();"
+          },
+          {
+            "line": 1732,
+            "statement": "BoardHistoryNode mouseOverNode = curNode;"
+          },
+          {
+            "line": 1733,
+            "statement": "int curMoveNumber = mouseOverNode.getData().moveNumber;"
+          },
+          {
+            "line": 1735,
+            "statement": "for (int i = 0; i < curMoveNumber - moveNumber; i++) { if (mouseOverNode.previous().isPresent()) mouseOverNode = mouseOverNode.previous().get(); else { noRefresh = true; break; } }"
+          },
+          {
+            "line": 1753,
+            "statement": "curMouseOverNode = mouseOverNode;"
+          }
+        ],
+        "matrix_ids": [
+          "ANALYSIS-HAWKEYE-001"
+        ]
+      },
+      {
+        "binding": "MoveListMatchPanelPointer:mouseMoved#4",
+        "event_id": "MoveListMatchPanelPointer:mouseMoved",
+        "source_id": "MoveListMatchPanelPointer",
+        "event": "mouseMoved",
+        "line": 1723,
+        "conditions": [
+          {
+            "expression": "selectedIndex >= 7",
+            "expected": false
+          },
+          {
+            "expression": "selectedIndex == 0",
+            "expected": true
+          },
+          {
+            "expression": "moveNumber >= 0",
+            "expected": true
+          },
+          {
+            "expression": "curMoveNumber > moveNumber",
+            "expected": false
+          },
+          {
+            "expression": "curMoveNumber < moveNumber",
+            "expected": true
+          },
+          {
+            "expression": "!(curMouseOverNode == curNode && noRefresh)",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 1728,
+            "statement": "int moveNumber = moveNumber(e.getX(), e.getY());"
+          },
+          {
+            "line": 1729,
+            "statement": "boolean noRefresh = false;"
+          },
+          {
+            "line": 1731,
+            "statement": "BoardHistoryNode curNode = Lizzie.board.getHistory().getCurrentHistoryNode();"
+          },
+          {
+            "line": 1732,
+            "statement": "BoardHistoryNode mouseOverNode = curNode;"
+          },
+          {
+            "line": 1733,
+            "statement": "int curMoveNumber = mouseOverNode.getData().moveNumber;"
+          },
+          {
+            "line": 1744,
+            "statement": "for (int i = 0; i < moveNumber - curMoveNumber; i++) { if (mouseOverNode.next().isPresent()) mouseOverNode = mouseOverNode.next().get(); else { noRefresh = true; break; } }"
+          },
+          {
+            "line": 1753,
+            "statement": "curMouseOverNode = mouseOverNode;"
+          },
+          {
+            "line": 1754,
+            "statement": "repaint();"
+          }
+        ],
+        "matrix_ids": [
+          "ANALYSIS-HAWKEYE-001"
+        ]
+      },
+      {
+        "binding": "MoveListMatchPanelPointer:mouseMoved#5",
+        "event_id": "MoveListMatchPanelPointer:mouseMoved",
+        "source_id": "MoveListMatchPanelPointer",
+        "event": "mouseMoved",
+        "line": 1723,
+        "conditions": [
+          {
+            "expression": "selectedIndex >= 7",
+            "expected": false
+          },
+          {
+            "expression": "selectedIndex == 0",
+            "expected": true
+          },
+          {
+            "expression": "moveNumber >= 0",
+            "expected": true
+          },
+          {
+            "expression": "curMoveNumber > moveNumber",
+            "expected": false
+          },
+          {
+            "expression": "curMoveNumber < moveNumber",
+            "expected": true
+          },
+          {
+            "expression": "!(curMouseOverNode == curNode && noRefresh)",
+            "expected": false
+          }
+        ],
+        "statements": [
+          {
+            "line": 1728,
+            "statement": "int moveNumber = moveNumber(e.getX(), e.getY());"
+          },
+          {
+            "line": 1729,
+            "statement": "boolean noRefresh = false;"
+          },
+          {
+            "line": 1731,
+            "statement": "BoardHistoryNode curNode = Lizzie.board.getHistory().getCurrentHistoryNode();"
+          },
+          {
+            "line": 1732,
+            "statement": "BoardHistoryNode mouseOverNode = curNode;"
+          },
+          {
+            "line": 1733,
+            "statement": "int curMoveNumber = mouseOverNode.getData().moveNumber;"
+          },
+          {
+            "line": 1744,
+            "statement": "for (int i = 0; i < moveNumber - curMoveNumber; i++) { if (mouseOverNode.next().isPresent()) mouseOverNode = mouseOverNode.next().get(); else { noRefresh = true; break; } }"
+          },
+          {
+            "line": 1753,
+            "statement": "curMouseOverNode = mouseOverNode;"
+          }
+        ],
+        "matrix_ids": [
+          "ANALYSIS-HAWKEYE-001"
+        ]
+      },
+      {
+        "binding": "MoveListMatchPanelPointer:mouseMoved#6",
+        "event_id": "MoveListMatchPanelPointer:mouseMoved",
+        "source_id": "MoveListMatchPanelPointer",
+        "event": "mouseMoved",
+        "line": 1723,
+        "conditions": [
+          {
+            "expression": "selectedIndex >= 7",
+            "expected": false
+          },
+          {
+            "expression": "selectedIndex == 0",
+            "expected": true
+          },
+          {
+            "expression": "moveNumber >= 0",
+            "expected": true
+          },
+          {
+            "expression": "curMoveNumber > moveNumber",
+            "expected": false
+          },
+          {
+            "expression": "curMoveNumber < moveNumber",
+            "expected": false
+          }
+        ],
+        "statements": [
+          {
+            "line": 1728,
+            "statement": "int moveNumber = moveNumber(e.getX(), e.getY());"
+          },
+          {
+            "line": 1729,
+            "statement": "boolean noRefresh = false;"
+          },
+          {
+            "line": 1731,
+            "statement": "BoardHistoryNode curNode = Lizzie.board.getHistory().getCurrentHistoryNode();"
+          },
+          {
+            "line": 1732,
+            "statement": "BoardHistoryNode mouseOverNode = curNode;"
+          },
+          {
+            "line": 1733,
+            "statement": "int curMoveNumber = mouseOverNode.getData().moveNumber;"
+          },
+          {
+            "line": 1753,
+            "statement": "curMouseOverNode = mouseOverNode;"
+          },
+          {
+            "line": 1754,
+            "statement": "repaint();"
+          }
+        ],
+        "matrix_ids": [
+          "ANALYSIS-HAWKEYE-001"
+        ]
+      },
+      {
+        "binding": "MoveListMatchPanelPointer:mouseMoved#7",
+        "event_id": "MoveListMatchPanelPointer:mouseMoved",
+        "source_id": "MoveListMatchPanelPointer",
+        "event": "mouseMoved",
+        "line": 1723,
+        "conditions": [
+          {
+            "expression": "selectedIndex >= 7",
+            "expected": false
+          },
+          {
+            "expression": "selectedIndex == 0",
+            "expected": true
+          },
+          {
+            "expression": "moveNumber >= 0",
+            "expected": false
+          }
+        ],
+        "statements": [
+          {
+            "line": 1728,
+            "statement": "int moveNumber = moveNumber(e.getX(), e.getY());"
+          },
+          {
+            "line": 1729,
+            "statement": "boolean noRefresh = false;"
+          }
+        ],
+        "matrix_ids": [
+          "ANALYSIS-HAWKEYE-001"
+        ]
+      },
+      {
+        "binding": "MoveListMatchPanelPointer:mouseMoved#8",
+        "event_id": "MoveListMatchPanelPointer:mouseMoved",
+        "source_id": "MoveListMatchPanelPointer",
+        "event": "mouseMoved",
+        "line": 1723,
+        "conditions": [
+          {
+            "expression": "selectedIndex >= 7",
+            "expected": false
+          },
+          {
+            "expression": "selectedIndex == 0",
+            "expected": false
+          }
+        ],
+        "statements": [],
+        "matrix_ids": [
+          "ANALYSIS-HAWKEYE-001"
+        ]
+      },
+      {
+        "binding": "MoveListMatchPanelPointer:mouseDragged#1",
+        "event_id": "MoveListMatchPanelPointer:mouseDragged",
+        "source_id": "MoveListMatchPanelPointer",
+        "event": "mouseDragged",
+        "line": 1762,
+        "conditions": [
+          {
+            "expression": "Lizzie.board.isPkBoard || selectedIndex >= 4",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 1763,
+            "statement": "return;"
+          }
+        ],
+        "matrix_ids": [
+          "ANALYSIS-HAWKEYE-001"
+        ]
+      },
+      {
+        "binding": "MoveListMatchPanelPointer:mouseDragged#2",
+        "event_id": "MoveListMatchPanelPointer:mouseDragged",
+        "source_id": "MoveListMatchPanelPointer",
+        "event": "mouseDragged",
+        "line": 1762,
+        "conditions": [
+          {
+            "expression": "Lizzie.board.isPkBoard || selectedIndex >= 4",
+            "expected": false
+          }
+        ],
+        "statements": [
+          {
+            "line": 1764,
+            "statement": "int moveNumber = moveNumber(e.getX(), e.getY());"
+          },
+          {
+            "line": 1765,
+            "statement": "Lizzie.board.goToMoveNumberBeyondBranch(moveNumber);"
+          },
+          {
+            "line": 1766,
+            "statement": "repaint();"
+          }
+        ],
+        "matrix_ids": [
+          "ANALYSIS-HAWKEYE-001"
+        ]
+      },
+      {
+        "binding": "MoveListMatchPanelPointer:mouseWheelMoved#1",
+        "event_id": "MoveListMatchPanelPointer:mouseWheelMoved",
+        "source_id": "MoveListMatchPanelPointer",
+        "event": "mouseWheelMoved",
+        "line": 1772,
+        "conditions": [
+          {
+            "expression": "e.getWheelRotation() > 0",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 1774,
+            "statement": "Lizzie.board.nextMove(true);"
+          },
+          {
+            "line": 1775,
+            "statement": "repaint();"
+          }
+        ],
+        "matrix_ids": [
+          "ANALYSIS-HAWKEYE-001"
+        ]
+      },
+      {
+        "binding": "MoveListMatchPanelPointer:mouseWheelMoved#2",
+        "event_id": "MoveListMatchPanelPointer:mouseWheelMoved",
+        "source_id": "MoveListMatchPanelPointer",
+        "event": "mouseWheelMoved",
+        "line": 1772,
+        "conditions": [
+          {
+            "expression": "e.getWheelRotation() > 0",
+            "expected": false
+          },
+          {
+            "expression": "e.getWheelRotation() < 0",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 1777,
+            "statement": "Lizzie.board.previousMove(true);"
+          },
+          {
+            "line": 1778,
+            "statement": "repaint();"
+          }
+        ],
+        "matrix_ids": [
+          "ANALYSIS-HAWKEYE-001"
+        ]
+      },
+      {
+        "binding": "MoveListMatchPanelPointer:mouseWheelMoved#3",
+        "event_id": "MoveListMatchPanelPointer:mouseWheelMoved",
+        "source_id": "MoveListMatchPanelPointer",
+        "event": "mouseWheelMoved",
+        "line": 1772,
+        "conditions": [
+          {
+            "expression": "e.getWheelRotation() > 0",
+            "expected": false
+          },
+          {
+            "expression": "e.getWheelRotation() < 0",
+            "expected": false
+          }
+        ],
+        "statements": [],
+        "matrix_ids": [
+          "ANALYSIS-HAWKEYE-001"
+        ]
+      },
+      {
+        "binding": "MoveListFullHeaderRelease:mouseReleased#1",
+        "event_id": "MoveListFullHeaderRelease:mouseReleased",
+        "source_id": "MoveListFullHeaderRelease",
+        "event": "mouseReleased",
+        "line": 1785,
+        "conditions": [
+          {
+            "expression": "sortnum == 3 || (isKatago && sortnum == 4)",
+            "expected": true
+          },
+          {
+            "expression": "isOriginOrder",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 1786,
+            "statement": "int pick = header.columnAtPoint(e.getPoint());"
+          },
+          {
+            "line": 1787,
+            "statement": "sortnum = pick;"
+          },
+          {
+            "line": 1790,
+            "statement": "isOriginOrder = false;"
+          },
+          {
+            "line": 1791,
+            "statement": "issorted = false;"
+          },
+          {
+            "line": 1800,
+            "statement": "table.repaint();"
+          }
+        ],
+        "matrix_ids": [
+          "ANALYSIS-HAWKEYE-001"
+        ]
+      },
+      {
+        "binding": "MoveListFullHeaderRelease:mouseReleased#2",
+        "event_id": "MoveListFullHeaderRelease:mouseReleased",
+        "source_id": "MoveListFullHeaderRelease",
+        "event": "mouseReleased",
+        "line": 1785,
+        "conditions": [
+          {
+            "expression": "sortnum == 3 || (isKatago && sortnum == 4)",
+            "expected": true
+          },
+          {
+            "expression": "isOriginOrder",
+            "expected": false
+          },
+          {
+            "expression": "!issorted",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 1786,
+            "statement": "int pick = header.columnAtPoint(e.getPoint());"
+          },
+          {
+            "line": 1787,
+            "statement": "sortnum = pick;"
+          },
+          {
+            "line": 1792,
+            "statement": "issorted = true;"
+          },
+          {
+            "line": 1800,
+            "statement": "table.repaint();"
+          }
+        ],
+        "matrix_ids": [
+          "ANALYSIS-HAWKEYE-001"
+        ]
+      },
+      {
+        "binding": "MoveListFullHeaderRelease:mouseReleased#3",
+        "event_id": "MoveListFullHeaderRelease:mouseReleased",
+        "source_id": "MoveListFullHeaderRelease",
+        "event": "mouseReleased",
+        "line": 1785,
+        "conditions": [
+          {
+            "expression": "sortnum == 3 || (isKatago && sortnum == 4)",
+            "expected": true
+          },
+          {
+            "expression": "isOriginOrder",
+            "expected": false
+          },
+          {
+            "expression": "!issorted",
+            "expected": false
+          }
+        ],
+        "statements": [
+          {
+            "line": 1786,
+            "statement": "int pick = header.columnAtPoint(e.getPoint());"
+          },
+          {
+            "line": 1787,
+            "statement": "sortnum = pick;"
+          },
+          {
+            "line": 1794,
+            "statement": "isOriginOrder = true;"
+          },
+          {
+            "line": 1795,
+            "statement": "issorted = false;"
+          },
+          {
+            "line": 1800,
+            "statement": "table.repaint();"
+          }
+        ],
+        "matrix_ids": [
+          "ANALYSIS-HAWKEYE-001"
+        ]
+      },
+      {
+        "binding": "MoveListFullHeaderRelease:mouseReleased#4",
+        "event_id": "MoveListFullHeaderRelease:mouseReleased",
+        "source_id": "MoveListFullHeaderRelease",
+        "event": "mouseReleased",
+        "line": 1785,
+        "conditions": [
+          {
+            "expression": "sortnum == 3 || (isKatago && sortnum == 4)",
+            "expected": false
+          }
+        ],
+        "statements": [
+          {
+            "line": 1786,
+            "statement": "int pick = header.columnAtPoint(e.getPoint());"
+          },
+          {
+            "line": 1787,
+            "statement": "sortnum = pick;"
+          },
+          {
+            "line": 1798,
+            "statement": "issorted = !issorted;"
+          },
+          {
+            "line": 1800,
+            "statement": "table.repaint();"
+          }
+        ],
+        "matrix_ids": [
+          "ANALYSIS-HAWKEYE-001"
+        ]
+      },
+      {
+        "binding": "MoveListMin1HeaderRelease:mouseReleased#1",
+        "event_id": "MoveListMin1HeaderRelease:mouseReleased",
+        "source_id": "MoveListMin1HeaderRelease",
+        "event": "mouseReleased",
+        "line": 1805,
+        "conditions": [
+          {
+            "expression": "sortnum == 2 || (isKatago && sortnum == 3)",
+            "expected": true
+          },
+          {
+            "expression": "isOriginOrder",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 1806,
+            "statement": "int pick = headerMint1.columnAtPoint(e.getPoint());"
+          },
+          {
+            "line": 1807,
+            "statement": "sortnum = pick;"
+          },
+          {
+            "line": 1810,
+            "statement": "isOriginOrder = false;"
+          },
+          {
+            "line": 1811,
+            "statement": "issorted = false;"
+          },
+          {
+            "line": 1820,
+            "statement": "minTable1.repaint();"
+          }
+        ],
+        "matrix_ids": [
+          "ANALYSIS-HAWKEYE-001"
+        ]
+      },
+      {
+        "binding": "MoveListMin1HeaderRelease:mouseReleased#2",
+        "event_id": "MoveListMin1HeaderRelease:mouseReleased",
+        "source_id": "MoveListMin1HeaderRelease",
+        "event": "mouseReleased",
+        "line": 1805,
+        "conditions": [
+          {
+            "expression": "sortnum == 2 || (isKatago && sortnum == 3)",
+            "expected": true
+          },
+          {
+            "expression": "isOriginOrder",
+            "expected": false
+          },
+          {
+            "expression": "!issorted",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 1806,
+            "statement": "int pick = headerMint1.columnAtPoint(e.getPoint());"
+          },
+          {
+            "line": 1807,
+            "statement": "sortnum = pick;"
+          },
+          {
+            "line": 1812,
+            "statement": "issorted = true;"
+          },
+          {
+            "line": 1820,
+            "statement": "minTable1.repaint();"
+          }
+        ],
+        "matrix_ids": [
+          "ANALYSIS-HAWKEYE-001"
+        ]
+      },
+      {
+        "binding": "MoveListMin1HeaderRelease:mouseReleased#3",
+        "event_id": "MoveListMin1HeaderRelease:mouseReleased",
+        "source_id": "MoveListMin1HeaderRelease",
+        "event": "mouseReleased",
+        "line": 1805,
+        "conditions": [
+          {
+            "expression": "sortnum == 2 || (isKatago && sortnum == 3)",
+            "expected": true
+          },
+          {
+            "expression": "isOriginOrder",
+            "expected": false
+          },
+          {
+            "expression": "!issorted",
+            "expected": false
+          }
+        ],
+        "statements": [
+          {
+            "line": 1806,
+            "statement": "int pick = headerMint1.columnAtPoint(e.getPoint());"
+          },
+          {
+            "line": 1807,
+            "statement": "sortnum = pick;"
+          },
+          {
+            "line": 1814,
+            "statement": "isOriginOrder = true;"
+          },
+          {
+            "line": 1815,
+            "statement": "issorted = false;"
+          },
+          {
+            "line": 1820,
+            "statement": "minTable1.repaint();"
+          }
+        ],
+        "matrix_ids": [
+          "ANALYSIS-HAWKEYE-001"
+        ]
+      },
+      {
+        "binding": "MoveListMin1HeaderRelease:mouseReleased#4",
+        "event_id": "MoveListMin1HeaderRelease:mouseReleased",
+        "source_id": "MoveListMin1HeaderRelease",
+        "event": "mouseReleased",
+        "line": 1805,
+        "conditions": [
+          {
+            "expression": "sortnum == 2 || (isKatago && sortnum == 3)",
+            "expected": false
+          }
+        ],
+        "statements": [
+          {
+            "line": 1806,
+            "statement": "int pick = headerMint1.columnAtPoint(e.getPoint());"
+          },
+          {
+            "line": 1807,
+            "statement": "sortnum = pick;"
+          },
+          {
+            "line": 1818,
+            "statement": "issorted = !issorted;"
+          },
+          {
+            "line": 1820,
+            "statement": "minTable1.repaint();"
+          }
+        ],
+        "matrix_ids": [
+          "ANALYSIS-HAWKEYE-001"
+        ]
+      },
+      {
+        "binding": "MoveListMin2HeaderRelease:mouseReleased#1",
+        "event_id": "MoveListMin2HeaderRelease:mouseReleased",
+        "source_id": "MoveListMin2HeaderRelease",
+        "event": "mouseReleased",
+        "line": 1825,
+        "conditions": [
+          {
+            "expression": "sortnum == 2 || (isKatago && sortnum == 3)",
+            "expected": true
+          },
+          {
+            "expression": "isOriginOrder",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 1826,
+            "statement": "int pick = headerMint2.columnAtPoint(e.getPoint());"
+          },
+          {
+            "line": 1827,
+            "statement": "sortnum = pick;"
+          },
+          {
+            "line": 1830,
+            "statement": "isOriginOrder = false;"
+          },
+          {
+            "line": 1831,
+            "statement": "issorted = false;"
+          },
+          {
+            "line": 1840,
+            "statement": "minTable2.repaint();"
+          }
+        ],
+        "matrix_ids": [
+          "ANALYSIS-HAWKEYE-001"
+        ]
+      },
+      {
+        "binding": "MoveListMin2HeaderRelease:mouseReleased#2",
+        "event_id": "MoveListMin2HeaderRelease:mouseReleased",
+        "source_id": "MoveListMin2HeaderRelease",
+        "event": "mouseReleased",
+        "line": 1825,
+        "conditions": [
+          {
+            "expression": "sortnum == 2 || (isKatago && sortnum == 3)",
+            "expected": true
+          },
+          {
+            "expression": "isOriginOrder",
+            "expected": false
+          },
+          {
+            "expression": "!issorted",
+            "expected": true
+          }
+        ],
+        "statements": [
+          {
+            "line": 1826,
+            "statement": "int pick = headerMint2.columnAtPoint(e.getPoint());"
+          },
+          {
+            "line": 1827,
+            "statement": "sortnum = pick;"
+          },
+          {
+            "line": 1832,
+            "statement": "issorted = true;"
+          },
+          {
+            "line": 1840,
+            "statement": "minTable2.repaint();"
+          }
+        ],
+        "matrix_ids": [
+          "ANALYSIS-HAWKEYE-001"
+        ]
+      },
+      {
+        "binding": "MoveListMin2HeaderRelease:mouseReleased#3",
+        "event_id": "MoveListMin2HeaderRelease:mouseReleased",
+        "source_id": "MoveListMin2HeaderRelease",
+        "event": "mouseReleased",
+        "line": 1825,
+        "conditions": [
+          {
+            "expression": "sortnum == 2 || (isKatago && sortnum == 3)",
+            "expected": true
+          },
+          {
+            "expression": "isOriginOrder",
+            "expected": false
+          },
+          {
+            "expression": "!issorted",
+            "expected": false
+          }
+        ],
+        "statements": [
+          {
+            "line": 1826,
+            "statement": "int pick = headerMint2.columnAtPoint(e.getPoint());"
+          },
+          {
+            "line": 1827,
+            "statement": "sortnum = pick;"
+          },
+          {
+            "line": 1834,
+            "statement": "isOriginOrder = true;"
+          },
+          {
+            "line": 1835,
+            "statement": "issorted = false;"
+          },
+          {
+            "line": 1840,
+            "statement": "minTable2.repaint();"
+          }
+        ],
+        "matrix_ids": [
+          "ANALYSIS-HAWKEYE-001"
+        ]
+      },
+      {
+        "binding": "MoveListMin2HeaderRelease:mouseReleased#4",
+        "event_id": "MoveListMin2HeaderRelease:mouseReleased",
+        "source_id": "MoveListMin2HeaderRelease",
+        "event": "mouseReleased",
+        "line": 1825,
+        "conditions": [
+          {
+            "expression": "sortnum == 2 || (isKatago && sortnum == 3)",
+            "expected": false
+          }
+        ],
+        "statements": [
+          {
+            "line": 1826,
+            "statement": "int pick = headerMint2.columnAtPoint(e.getPoint());"
+          },
+          {
+            "line": 1827,
+            "statement": "sortnum = pick;"
+          },
+          {
+            "line": 1838,
+            "statement": "issorted = !issorted;"
+          },
+          {
+            "line": 1840,
+            "statement": "minTable2.repaint();"
+          }
+        ],
+        "matrix_ids": [
+          "ANALYSIS-HAWKEYE-001"
         ]
       }
     ]

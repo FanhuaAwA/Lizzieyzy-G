@@ -629,10 +629,60 @@ INPUT_POINTER_SOURCES = (
         {"mouseEntered", "mouseExited"},
         {"mouseEntered": 2, "mouseExited": 3},
     ),
+    (
+        "MoveListFullTableClick",
+        "src/main/java/featurecat/lizzie/gui/MoveListFrame.java",
+        {"mouseClicked"},
+        {"mouseClicked": 1},
+    ),
+    (
+        "MoveListMinTable1Click",
+        "src/main/java/featurecat/lizzie/gui/MoveListFrame.java",
+        {"mouseClicked"},
+        {"mouseClicked": 2},
+    ),
+    (
+        "MoveListMinTable2Click",
+        "src/main/java/featurecat/lizzie/gui/MoveListFrame.java",
+        {"mouseClicked"},
+        {"mouseClicked": 3},
+    ),
+    (
+        "MoveListMatchPanelPointer",
+        "src/main/java/featurecat/lizzie/gui/MoveListFrame.java",
+        {"mousePressed", "mouseExited", "mouseMoved", "mouseDragged", "mouseWheelMoved"},
+        {
+            "mousePressed": 1,
+            "mouseExited": 1,
+            "mouseMoved": 1,
+            "mouseDragged": 1,
+            "mouseWheelMoved": 1,
+        },
+        {"selectedIndex"},
+    ),
+    (
+        "MoveListFullHeaderRelease",
+        "src/main/java/featurecat/lizzie/gui/MoveListFrame.java",
+        {"mouseReleased"},
+        {"mouseReleased": 1},
+    ),
+    (
+        "MoveListMin1HeaderRelease",
+        "src/main/java/featurecat/lizzie/gui/MoveListFrame.java",
+        {"mouseReleased"},
+        {"mouseReleased": 2},
+    ),
+    (
+        "MoveListMin2HeaderRelease",
+        "src/main/java/featurecat/lizzie/gui/MoveListFrame.java",
+        {"mouseReleased"},
+        {"mouseReleased": 3},
+    ),
 )
 FULL_POINTER_COVERAGE_PATHS = {
     "src/main/java/featurecat/lizzie/gui/LizzieFrame.java",
     "src/main/java/featurecat/lizzie/gui/Menu.java",
+    "src/main/java/featurecat/lizzie/gui/MoveListFrame.java",
 }
 INPUT_MODIFIER_CHECKS = (
     ("Alt", re.compile(r"\be\.isAltDown\s*\(\s*\)")),
@@ -979,13 +1029,128 @@ def parse_java_sequence(source: str, start: int, end: int) -> list[dict[str, Any
     return nodes
 
 
+def known_boolean_expression(expression: str, values: dict[str, bool]) -> bool | None:
+    expression = expression.strip()
+    if expression in values:
+        return values[expression]
+    if expression.startswith("(") and expression.endswith(")"):
+        depth = 0
+        closes_at_end = True
+        for index, char in enumerate(expression):
+            depth += char == "("
+            depth -= char == ")"
+            if depth == 0 and index != len(expression) - 1:
+                closes_at_end = False
+                break
+        if closes_at_end:
+            return known_boolean_expression(expression[1:-1], values)
+    for operator in ("||", "&&"):
+        depth = 0
+        parts: list[str] = []
+        start = 0
+        index = 0
+        while index < len(expression) - 1:
+            char = expression[index]
+            depth += char == "("
+            depth -= char == ")"
+            if depth == 0 and expression.startswith(operator, index):
+                parts.append(expression[start:index])
+                start = index + 2
+                index += 1
+            index += 1
+        if parts:
+            parts.append(expression[start:])
+            results = [known_boolean_expression(part, values) for part in parts]
+            if operator == "||":
+                if True in results:
+                    return True
+                return False if None not in results else None
+            if False in results:
+                return False
+            return True if None not in results else None
+    if expression.startswith("!"):
+        value = known_boolean_expression(expression[1:], values)
+        return None if value is None else not value
+    return None
+
+
+def condition_value_identifiers(values: dict[str, bool]) -> set[str]:
+    return {
+        name
+        for expression in values
+        for name in re.findall(r"[A-Za-z_$][\w$]*", expression)
+        if name not in {"true", "false"}
+    }
+
+
+def invalidate_condition_value(values: dict[str, bool], name: str) -> None:
+    reference = re.compile(rf"(?<![\w$]){re.escape(name)}(?![\w$])")
+    for expression in list(values):
+        if reference.search(expression):
+            values.pop(expression)
+
+
+def integer_conditions_are_consistent(
+    conditions: list[dict[str, Any]], stable_integer_variables: set[str]
+) -> bool:
+    bounds: dict[str, list[Any]] = {}
+    opposite = {
+        "==": "!=",
+        "!=": "==",
+        ">": "<=",
+        ">=": "<",
+        "<": ">=",
+        "<=": ">",
+    }
+    for condition in conditions:
+        match = re.fullmatch(
+            r"([A-Za-z_$][\w$]*)\s*(==|!=|>=|<=|>|<)\s*(-?\d+)",
+            condition["expression"],
+        )
+        if not match:
+            continue
+        name, operator, literal = match.group(1), match.group(2), int(match.group(3))
+        if name not in stable_integer_variables:
+            continue
+        if not condition["expected"]:
+            operator = opposite[operator]
+        lower, upper, excluded = bounds.setdefault(name, [None, None, set()])
+        if operator == "==":
+            lower = max(lower if lower is not None else literal, literal)
+            upper = min(upper if upper is not None else literal, literal)
+        elif operator == "!=":
+            excluded.add(literal)
+        elif operator == ">":
+            lower = max(lower if lower is not None else literal + 1, literal + 1)
+        elif operator == ">=":
+            lower = max(lower if lower is not None else literal, literal)
+        elif operator == "<":
+            upper = min(upper if upper is not None else literal - 1, literal - 1)
+        else:
+            upper = min(upper if upper is not None else literal, literal)
+        bounds[name] = [lower, upper, excluded]
+        if lower is not None and upper is not None and (
+            lower > upper or (lower == upper and lower in excluded)
+        ):
+            return False
+    return True
+
+
 def branch_path(path: dict[str, Any], expression: str, expected: bool) -> dict[str, Any] | None:
     values = path["condition_values"]
+    known_value = known_boolean_expression(expression, values)
+    if known_value is not None:
+        return path if known_value == expected else None
     if expression in values:
         return path if values[expression] == expected else None
+    conditions = [*path["conditions"], {"expression": expression, "expected": expected}]
+    if not integer_conditions_are_consistent(
+        conditions, path.get("stable_integer_variables", set())
+    ):
+        return None
     return {
         **path,
-        "conditions": [*path["conditions"], {"expression": expression, "expected": expected}],
+        "conditions": conditions,
         "condition_values": {**values, expression: expected},
     }
 
@@ -1015,14 +1180,16 @@ def execute_java_nodes(
                         node["statement"],
                     )
                     if assignment:
-                        values[assignment.group(1)] = assignment.group(2) == "true"
+                        name = assignment.group(1)
+                        invalidate_condition_value(values, name)
+                        values[name] = assignment.group(2) == "true"
                     elif node["statement"].startswith("for "):
                         loop_statement = node["statement"]
                         literal_assignments = re.findall(
                             r"(?<![\w$.])([A-Za-z_$][\w$]*)\s*=\s*(true|false)\s*;",
                             loop_statement,
                         )
-                        for name in {name for name, _ in literal_assignments}:
+                        for name in condition_value_identifiers(values):
                             literals = [
                                 literal
                                 for assigned_name, literal in literal_assignments
@@ -1039,13 +1206,25 @@ def execute_java_nodes(
                                 loop_statement,
                             )
                             assigned_values = {literal == "true" for literal in literals}
-                            if (
-                                len(simple_writes) != len(literals)
-                                or other_write
-                                or len(assigned_values) != 1
-                                or values.get(name) not in assigned_values
-                            ):
-                                values.pop(name, None)
+                            has_write = bool(simple_writes or other_write)
+                            can_preserve = (
+                                has_write
+                                and len(simple_writes) == len(literals)
+                                and not other_write
+                                and len(assigned_values) == 1
+                                and values.get(name) in assigned_values
+                            )
+                            if has_write and not can_preserve:
+                                invalidate_condition_value(values, name)
+                    else:
+                        for name in condition_value_identifiers(values):
+                            write = re.search(
+                                rf"(?:\b{re.escape(name)}\s*(?:=(?!=)|[+\-*/%&|^]=|\+\+|--)|"
+                                rf"(?:\+\+|--)\s*\b{re.escape(name)}\b)",
+                                node["statement"],
+                            )
+                            if write:
+                                invalidate_condition_value(values, name)
                     candidate["condition_values"] = values
                 updated.append(candidate)
             continuing = updated
@@ -1093,6 +1272,63 @@ def validate_input_parser() -> None:
     statements = [[action["statement"] for action in path["actions"]] for path in completed]
     if continuing or statements != [["first();"], ["second();"]]:
         raise ValueError("Input binding parser fall-through self-check failed")
+    bounded_initial = {**initial[0], "stable_integer_variables": {"selectedIndex"}}
+    bounded = branch_path(bounded_initial, "selectedIndex >= 7", True)
+    if bounded is None or branch_path(bounded, "selectedIndex == 0", True) is not None:
+        raise ValueError("Input binding parser integer-condition self-check failed")
+    floating = branch_path(initial[0], "x > 0", True)
+    if floating is None or branch_path(floating, "x < 1", True) is None:
+        raise ValueError("Input binding parser untyped-number self-check failed")
+    boolean_path = {
+        **initial[0],
+        "condition_values": {"noRefresh": False},
+    }
+    if branch_path(boolean_path, "!(sameNode && noRefresh)", False) is not None:
+        raise ValueError("Input binding parser boolean-expression self-check failed")
+    precedence_values = {"x": False, "y": False}
+    if known_boolean_expression("!x && y", precedence_values) is not False:
+        raise ValueError("Input binding parser boolean-and precedence self-check failed")
+    precedence_values = {"x": True, "y": True}
+    if known_boolean_expression("!x || y", precedence_values) is not True:
+        raise ValueError("Input binding parser boolean-or precedence self-check failed")
+    reassigned = "boolean a = false; a = ready(); if (a && other()) hit();"
+    continuing, completed = execute_java_nodes(
+        parse_java_sequence(reassigned, 0, len(reassigned)),
+        initial,
+        True,
+    )
+    completed.extend(continuing)
+    if not any(
+        any(action["statement"] == "hit();" for action in path["actions"])
+        for path in completed
+    ):
+        raise ValueError("Input binding parser boolean-reassignment self-check failed")
+    loop_reassigned = "boolean a = false; for (;;) { a = ready(); } if (a) hit();"
+    continuing, completed = execute_java_nodes(
+        parse_java_sequence(loop_reassigned, 0, len(loop_reassigned)),
+        initial,
+        True,
+    )
+    completed.extend(continuing)
+    if not any(
+        any(action["statement"] == "hit();" for action in path["actions"])
+        for path in completed
+    ):
+        raise ValueError("Input binding parser loop-reassignment self-check failed")
+    composite_reassigned = (
+        "if (a && b) first(); a = true; b = true; if (a && b) second();"
+    )
+    continuing, completed = execute_java_nodes(
+        parse_java_sequence(composite_reassigned, 0, len(composite_reassigned)),
+        initial,
+        True,
+    )
+    completed.extend(continuing)
+    if not completed or any(
+        not any(action["statement"] == "second();" for action in path["actions"])
+        for path in completed
+    ):
+        raise ValueError("Input binding parser composite-cache self-check failed")
     returning = "if (stop()) return; after();"
     continuing, completed = execute_java_nodes(
         parse_java_sequence(returning, 0, len(returning)), initial
@@ -1551,6 +1787,7 @@ def collect_pointer_source(
     source_path: str,
     expected_events: set[str],
     method_ordinals: dict[str, int] | None = None,
+    stable_integer_variables: set[str] | None = None,
 ) -> dict[str, Any]:
     input_path = legacy_root / source_path
     source = strip_java_comments(input_path.read_text(encoding="utf-8", errors="replace"))
@@ -1558,6 +1795,10 @@ def collect_pointer_source(
     bindings: list[dict[str, Any]] = []
     seen_events: set[str] = set()
     event_ordinals: dict[str, int] = {}
+    stable_integer_variables = stable_integer_variables or set()
+    for name in stable_integer_variables:
+        if not re.search(rf"\b(?:int|Integer)\s+{re.escape(name)}\b", source):
+            raise ValueError(f"{input_path.name} does not declare stable integer {name}")
     if method_ordinals is not None:
         if set(method_ordinals) != expected_events or any(
             ordinal < 1 for ordinal in method_ordinals.values()
@@ -1573,10 +1814,27 @@ def collect_pointer_source(
         seen_events.add(event)
         open_brace = method_match.end() - 1
         method_end = closing_brace(source, open_brace)
+        method_source = source[open_brace + 1 : method_end]
+        for name in stable_integer_variables:
+            mutation = re.search(
+                rf"(?:\b{re.escape(name)}\s*(?:=(?!=)|[+\-*/%&|^]=|\+\+|--)|"
+                rf"(?:\+\+|--)\s*\b{re.escape(name)}\b)",
+                method_source,
+            )
+            if mutation:
+                raise ValueError(f"{input_path.name} mutates stable integer {name}")
         nodes = parse_java_sequence(source, open_brace + 1, method_end)
         continuing, completed = execute_java_nodes(
             nodes,
-            [{"conditions": [], "condition_values": {}, "actions": [], "case_chain": []}],
+            [
+                {
+                    "conditions": [],
+                    "condition_values": {},
+                    "stable_integer_variables": stable_integer_variables,
+                    "actions": [],
+                    "case_chain": [],
+                }
+            ],
             True,
         )
         completed.extend(continuing)
@@ -1641,7 +1899,7 @@ def collect_input_cases(legacy_root: Path) -> dict[str, Any]:
         for source in INPUT_POINTER_SOURCES:
             if source[1] != source_path:
                 continue
-            if len(source) != 4:
+            if len(source) not in {4, 5}:
                 raise ValueError(f"{source_path} full pointer coverage requires method ordinals")
             expected_events, method_ordinals = source[2], source[3]
             selected_pairs.extend((event, method_ordinals[event]) for event in expected_events)
@@ -1732,8 +1990,8 @@ def validate_matrix(
     dict[str, list[str]],
     dict[str, list[str]],
 ]:
-    if matrix.get("schema_version") != 33:
-        raise ValueError("Matrix schema_version must be 33")
+    if matrix.get("schema_version") != 34:
+        raise ValueError("Matrix schema_version must be 34")
     allowed_statuses = matrix.get("allowed_statuses")
     if allowed_statuses != list(ALLOWED_STATUSES):
         raise ValueError("Matrix allowed_statuses differ from the repository contract")
@@ -1984,7 +2242,7 @@ def build_inventory(legacy_root: Path, matrix_path: Path) -> dict[str, Any]:
         raise ValueError("Every normalized legacy input path must map to the matrix")
 
     return {
-        "schema_version": 33,
+        "schema_version": 34,
         "source": {
             "root": "../lizzieyzy-next-main",
             "version": read_legacy_version(legacy_root),
@@ -2003,7 +2261,7 @@ def build_inventory(legacy_root: Path, matrix_path: Path) -> dict[str, Any]:
             "Menu literal labels cover active string-literal menu constructors; dynamic labels remain represented by their resource or runtime source.",
             "Menu accelerators cover explicit Menu.java setAccelerator calls and direct OS.isWindows guards; other input bindings remain T-003 work.",
             "Input key bindings symbolically expand Input.java, InputIndependentMainBoard.java, InputIndependentSubboard.java, InputSubboard.java, FloatBoard.java, AnalysisFrame table/window, DrawPainting.java, ChooseMoreEngine.java, LoadEngine.java, OtherPrograms.java, TencentKifuDownload.java, FoxKifuDownload.java, BrowserFrame.java, and CaptureTsumeGoFrame.java key dispatch, condition evaluations, executed statements, empty-listener and empty-statement paths, and switch fall-through; controlIsPressed means Control on every platform plus Meta on macOS, and BrowserFrame dispatches Enter through getKeyChar.",
-            "Pointer bindings symbolically expand the main Input listener, the two indexed subboard listeners, FloatBoard, AnalysisFrame, DrawPainting, ChooseMoreEngine, LoadEngine, OtherPrograms, TencentKifuDownload, FoxKifuDownload, BrowserFrame load/stop/label listeners, JFontTextArea, JFontTextField, JIMSendTextPane, the two DemoScrollBarUI2 arrow-button listeners, JPaintTextPane, WindowMenuStrip, YikeLiveDialog, IndependentSubBoard and IndependentMainBoard lock/close/top-button plus window listeners, BlunderListPanel, SidebarHeaderPanel, BottomToolbar, ConfigDialog2 sidebar-nav/toggle-row/color-label listeners, MoreEngines, the 33 indexed LizzieFrame listeners, and the 5 indexed Menu komi text/hold/hover listeners across mouse, motion, drag, wheel, and release condition evaluations, early returns, executed statements, and explicit no-action paths; data-dependent loops and click try/catch handlers are preserved as normalized atomic statements, while local boolean tracking retains a known value across loops that can only assign the same literal so impossible branches are pruned.",
+            "Pointer bindings symbolically expand the main Input listener, the two indexed subboard listeners, FloatBoard, AnalysisFrame, DrawPainting, ChooseMoreEngine, LoadEngine, OtherPrograms, TencentKifuDownload, FoxKifuDownload, BrowserFrame load/stop/label listeners, JFontTextArea, JFontTextField, JIMSendTextPane, the two DemoScrollBarUI2 arrow-button listeners, JPaintTextPane, WindowMenuStrip, YikeLiveDialog, IndependentSubBoard and IndependentMainBoard lock/close/top-button plus window listeners, BlunderListPanel, SidebarHeaderPanel, BottomToolbar, ConfigDialog2 sidebar-nav/toggle-row/color-label listeners, MoreEngines, the 33 indexed LizzieFrame listeners, the 5 indexed Menu komi text/hold/hover listeners, and the 7 indexed MoveListFrame table/match-panel/header groups across mouse, motion, drag, wheel, and release condition evaluations, early returns, executed statements, and explicit no-action paths; data-dependent loops and click try/catch handlers are preserved as normalized atomic statements, local boolean tracking retains a known value across loops that can only assign the same literal, and direct variable-to-integer comparisons prune contradictory paths.",
             "Other key-listener and pointer-listener classes remain T-003 work.",
         ],
         "matrix_summary": {
